@@ -6,8 +6,6 @@ import Jupyter from "base/js/namespace";
 import {Presenter} from "./presenter";
 import {Sorter} from "./sorter";
 
-let {toolbar} = Jupyter;
-
 class NBPresent {
   constructor() {
     this.tree = new Baobab();
@@ -22,10 +20,10 @@ class NBPresent {
   }
 
   initToolbar() {
-    toolbar.add_buttons_group([{
+    Jupyter.toolbar.add_buttons_group([{
       label: 'nbpresent',
       icon: 'fa-gift',
-      callback: this.present,
+      callback: () => this.present(),
       id: 'start_nbpresent'
     }]);
   }
