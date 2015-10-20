@@ -2,7 +2,7 @@
 
 .nbpresent_sorter{
   position: fixed;
-  width: 180px;
+  width: 200px;
   right: 0;
   bottom: 0;
   top: 107px;
@@ -13,22 +13,28 @@
 
   &.offscreen {
     transition: right 0.2s;
-    right: -185px;
+    right: -205px;
   }
 
   .slides_wrap {
-    width: 100%;
-    overflow-x: auto;
-
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
 
     .slide {
+      position: absolute;
       width: 160px;
       height: 90px;
+      border: solid 1px #eee;
       border-radius: 2px;
-      box-shadow: 0px 2px 5px rgba(0,0,0,0.25);
-      float: left;
       margin: 10px 10px 10px 10px;
       background-color: #fff;
+
+      &.dragging {
+        box-shadow: 0px 2px 5px rgba(0,0,0,0.25);
+        z-index: 9999;
+        opacity: 0.9;
+      }
     }
   }
 }

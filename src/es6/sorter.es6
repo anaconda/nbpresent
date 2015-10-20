@@ -21,61 +21,106 @@ class Sorter {
     this.$slides = this.$view.append("div")
       .classed({slides_wrap: 1});
 
+    this.$empty = this.$slides.append("h3")
+      .classed({empty: 1})
+      .text("No slides yet.");
+
     this.slides = this.tree.select(["slides"]);
-    this.slides.on("update", ()=> this.draw(this.slides.get()));
+    this.slides.on("update", () => this.draw());
+
+    this.draw();
   }
 
   initDrag(){
-    let that = this;
+    let that = this,
+      dragOrigin;
+
 
     this.drag = d3.behavior.drag()
       .on("dragstart", function(d){
-        d3.select(this)
-          .style({
-            position: "fixed",
-          });
-
+        let slide = d3.select(this);
+        slide
+          .classed({dragging: 1});
+        dragOrigin = parseFloat(slide.style("top"));
       })
       .on("drag", function(d){
-        let {clientX, clientY} = d3.event.sourceEvent;
         d3.select(this)
           .style({
-            left: `${clientX}px`,
-            top: `${clientY}px`,
+            top: `${dragOrigin += d3.event.dy}px`,
           });
       })
-      .on("dragend", function(d){
-        d3.select(this)
-          .style({
-            position: null,
-            left: null
-          });
-        let tgt = d3.event.sourceEvent.target,
-          td = d3.select(tgt).datum();
+      .on("dragend", function(d, i){
+        let $slide = d3.select(this)
+          .classed({dragging: 0});
 
-        td && td.key && that.moveSlide(d.key, td.key);
+        let top = parseFloat($slide.style("top")),
+          slides = that.sortedSlides(),
+          slideN = Math.floor(top / that.slideHeight()),
+          after;
+
+        console.log({slideN, top});
+
+        if(top < that.slideHeight() || slideN < 0){
+          after = null;
+        }else if(slideN > slides.length || !slides[slideN]){
+          after = slides.slice(-1)[0].key;
+        }else{
+          after = slides[slideN].key;
+        }
+        console.log("after", after);
+
+        if(d.key !== after){
+          that.removeSlide(d.key);
+          that.appendSlide(d.key, after);
+        }
+
+        that.draw();
       });
   }
 
-  draw(slides){
-    slides = d3.entries(slides);
+  // put in tree?
+  sortedSlides(){
+    let slides = d3.entries(this.slides.get());
 
-    console.table(slides.map((d)=> d.value));
+    slides.sort(
+      (a, b) => a.value.prev === null || a.value.next == b.key ? -1 : 1
+    )
+
+    return slides;
+  }
+
+  slideHeight() {
+    return 100;
+  }
+
+  draw(){
+    let that = this;
+
+    let slides = this.sortedSlides();
+
+    console.table(slides.map(({value}) => value));
 
     let $slide = this.$slides.selectAll(".slide")
-      .data(slides, (d) => d.key)
-      .sort((a, b) => a.value.prev === null || a.value.next == b.key ? -1 : 1);
+      .data(slides, (d) => d.key);
 
     $slide.enter().append("div")
       .classed({slide: 1})
-      .call(this.initSlide, this);
+      .text((d) => d.key)
+      .call(this.drag)
+      .style({
+        left: "200px"
+      });
+
+    $slide
+      .transition()
+      .style({
+        left: "0px",
+        top: (d, i) => `${i * this.slideHeight()}px`
+      });
+
+    this.$empty.style({opacity: 1 * !$slide[0].length });
   }
 
-  initSlide(slide, that){
-    slide
-      .text((d) => d.key)
-      .call(that.drag);
-  }
 
   initToolbar(){
     this.$toolbar = this.$view.append("div")
@@ -90,7 +135,10 @@ class Sorter {
     $slide_actions.selectAll(".btn")
       .data([{
         icon: "plus-square-o",
-        on: {click: () => this.appendSlide()}
+        on: {click: () => {
+          let last = this.sortedSlides().slice(-1);
+          this.appendSlide(null, last.length ? last[0].key : null );
+        }}
       }, {
         icon: "youtube-play",
         on: {click: () => this.play()}
@@ -125,43 +173,33 @@ class Sorter {
     this.slides.set([id, "prev"], null);
   }
 
-  moveSlide(id, after=null, before=null){
-    console.log("move", id, after, before);
-    this.removeSlide(id);
+  appendSlide(id=null, after=null){
+    console.log("append", id, after);
+    let slides = this.sortedSlides(),
+      prev,
+      next;
 
-    let prev, next;
-
-    if(after){
-      prev = after;
-      next = this.slides.get(after).next;
-      this.slides.set([after, "next"], id);
-      next && this.slides.set([next, "prev"], id);
-    }else if(before){
-      prev = before;
-      next = this.slides.get(before).prev;
-      prev && this.slides.set([prev, "next"], id);
-      this.slides.set([before, "prev"], id);
+    if(!after){
+      prev = null;
+      next = slides.length ? slides[0].key : null;
+    }else{
+      prev = this.slides.get([after]);
+      next = prev.next;
+      prev = prev.id;
     }
+
+    if(!id){
+      id = this.nextId();
+      this.slides.set(id, {id});
+    }
+
+    console.log(id, prev, next);
 
     this.slides.set([id, "prev"], prev);
     this.slides.set([id, "next"], next);
-  }
 
-  appendSlide(after=null){
-    let slides = d3.entries(this.slides.get())
-
-    let prev = slides.filter((d) => d.value.next === after);
-
-    prev = prev.length ? prev[0] : null;
-
-    let id = this.nextId();
-    this.slides.set(id, {id,
-      prev: prev ? prev.key : null,
-      next: prev ? prev.value.next : null
-    });
-
-    prev && this.slides.set([prev.key, "next"], id);
-    prev && prev.value.next && this.slides.set([prev.value.next, "prev"], id);
+    prev && this.slides.set([prev, "next"], id);
+    next && this.slides.set([next, "prev"], id);
   }
 
   show(){
@@ -175,7 +213,7 @@ class Sorter {
     d3.select("#notebook-container")
       .style({
         width: visible ? "auto" : null,
-        "margin-right": visible ? "200px" : null,
+        "margin-right": visible ? "220px" : null,
         "margin-left": visible ? "20px" : null,
       });
 
