@@ -72,7 +72,7 @@ class Sorter {
         }
 
         if(d.key !== after){
-          that.removeSlide(d.key);
+          that.unlinkSlide(d.key);
           that.selectedSlide.set(that.appendSlide(after, d.key));
         }else{
           that.draw();
@@ -118,6 +118,13 @@ class Sorter {
         left: "200px"
       });
 
+    $slide.exit()
+      .transition()
+      .style({
+        left: "200px"
+      })
+      .remove();
+
     let selected = this.selectedSlide.get();
 
     $slide
@@ -153,6 +160,9 @@ class Sorter {
         icon: "plus-square-o",
         on: {click: () => this.addSlide() }
       }, {
+        icon: "trash",
+        on: {click: () => this.removeSlide(this.selectedSlide.get() )}
+      }, {
         icon: "youtube-play",
         on: {click: () => this.play()}
       }])
@@ -187,13 +197,21 @@ class Sorter {
     return uuid.v4();
   }
 
-  removeSlide(id){
+  unlinkSlide(id){
     let {prev} = this.slides.get(id),
       next = this.nextSlide(id);
 
     next && this.slides.set([next, "prev"], prev);
     console.log("remove", {prev, next, id});
     this.slides.set([id, "prev"], REMOVED);
+  }
+
+  removeSlide(id){
+    if(!id){
+      return;
+    }
+    this.unlinkSlide(id);
+    this.slides.unset(id);
   }
 
   nextSlide(id){
