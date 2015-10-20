@@ -1,0 +1,34 @@
+package:
+  name: nbpresent
+  version: 0.1.0
+
+extra:
+  channels:
+    - bokeh
+
+build:
+  number: 1
+  script:
+    - ls
+    - npm install .
+    - npm run build
+    - python setup.py install
+
+source:
+  path: ../
+
+requirements:
+  build:
+    - nodejs
+    - python
+  run:
+    - notebook
+
+test:
+  imports:
+    - nbpresent
+
+about:
+  summary: Next generation slides for Jupyter Notebooks
+  license_file: LICENSE
+  license: BSD License

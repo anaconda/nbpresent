@@ -5,8 +5,7 @@
   },
   "dependencies": {
     "baobab": "~2.0.1",
-    "d3": "~3.5.6",
-    "watch": "~0.16.0"
+    "d3": "~3.5.6"
   },
   "description": "This will be the home of the next generation of slide authoring presentation for [Jupyter Notebooks](https://github.com/jupyter/notebook).",
   "devDependencies": {
@@ -29,7 +28,7 @@
       "strict": 0
     }
   },
-  "license": "BSD",
+  "license": "BSD-3-Clause",
   "main": "index.js",
   "name": "nbpresent",
   "repository": {
