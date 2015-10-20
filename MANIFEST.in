@@ -1,0 +1,12 @@
+include LICENSE
+include *.rst
+include *.md
+include *.json
+include *.txt
+
+recursive-include . *.ipynb
+recursive-include nbpresent *.*
+
+recursive-exclude . __pycache__
+recursive-exclude . *.py[co]
+recursive-exclude node_modules *.*
