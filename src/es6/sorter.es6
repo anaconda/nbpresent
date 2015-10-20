@@ -112,7 +112,11 @@ class Sorter {
       });
 
     $slide
+      .style({
+        "z-index": (d, i) => i
+      })
       .transition()
+      .delay((d, i) => i * 100)
       .style({
         left: "0px",
         top: (d, i) => `${i * this.slideHeight()}px`
@@ -171,6 +175,7 @@ class Sorter {
     next && this.slides.set([next, "prev"], prev);
     this.slides.set([id, "next"], null);
     this.slides.set([id, "prev"], null);
+    this.tree.commit();
   }
 
   appendSlide(id=null, after=null){
