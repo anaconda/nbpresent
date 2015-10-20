@@ -8,7 +8,7 @@ class Sorter {
     this.visible = this.tree.select("visible");
     this.visible.set(false);
 
-    this.$view = d3.select("body")
+    this.$view = d3.select("#header")
       .append("div")
       .classed({
         nbpresent_sorter: 1,
@@ -53,7 +53,7 @@ class Sorter {
         let tgt = d3.event.sourceEvent.target,
           td = d3.select(tgt).datum();
 
-        that.moveSlide(d.key, td.key);
+        td && td.key && that.moveSlide(d.key, td.key);
       });
   }
 
@@ -89,15 +89,18 @@ class Sorter {
 
     $slide_actions.selectAll(".btn")
       .data([{
-          icon: "plus-square-o",
-          on: {click: () => this.appendSlide()}
+        icon: "plus-square-o",
+        on: {click: () => this.appendSlide()}
+      }, {
+        icon: "youtube-play",
+        on: {click: () => this.play()}
       }])
       .enter()
       .append("a")
-      .classed({btn: 1, "btn-default": 1, "btn-lg": 1})
+      .classed({btn: 1, "btn-default": 1, "btn-xs": 1})
       .call(function($btn){
         let icon = $btn.append("i")
-          .classed({fa: 1})
+          .classed({fa: 1, "fa-fw": 1})
           .each(function(d){
             d3.select(this).classed(`fa-${d.icon}`, 1);
           });
@@ -167,7 +170,16 @@ class Sorter {
   }
 
   update(){
-    this.$view.classed({offscreen: !this.visible.get()});
+    let visible = this.visible.get();
+    this.$view.classed({offscreen: !visible});
+    d3.select("#notebook-container")
+      .style({
+        width: visible ? "auto" : null,
+        "margin-right": visible ? "200px" : null,
+        "margin-left": visible ? "20px" : null,
+      });
+
+
     let $slide = this.$slides.selectAll(".slide_thumb")
       .data(this.tree.get("slides"), d => d.id);
 
