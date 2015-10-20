@@ -28,6 +28,9 @@ class Sorter {
       .text("No slides yet.");
 
     this.slides = this.tree.select(["slides"]);
+    this.selectedSlide = this.tree.select("selectedSlide");
+
+    this.selectedSlide.on("update", () => this.draw());
     this.slides.on("update", () => this.draw());
 
     this.draw();
@@ -40,9 +43,9 @@ class Sorter {
 
     this.drag = d3.behavior.drag()
       .on("dragstart", function(d){
-        let slide = d3.select(this);
-        slide
+        let slide = d3.select(this)
           .classed({dragging: 1});
+
         dragOrigin = parseFloat(slide.style("top"));
       })
       .on("drag", function(d){
@@ -70,7 +73,9 @@ class Sorter {
 
         if(d.key !== after){
           that.removeSlide(d.key);
-          that.appendSlide(after, d.key);
+          that.selectedSlide.set(that.appendSlide(after, d.key));
+        }else{
+          that.draw();
         }
       });
   }
@@ -80,7 +85,7 @@ class Sorter {
     let slides = d3.entries(this.slides.get());
 
     slides.sort(
-      (a, b) => a.value.prev === null || a.key === b.value.prev ? -1 : 1
+      (a, b) => (a.value.prev === null) || (a.key === b.value.prev) ? -1 : 1
     )
 
     return slides;
@@ -104,13 +109,23 @@ class Sorter {
       .classed({slide: 1})
       .text((d) => d.key)
       .call(this.drag)
+      .on("mousedown", function(d){
+        that.selectedSlide.set(
+          that.selectedSlide.get() === d.key ? null : d.key
+        );
+      })
       .style({
         left: "200px"
       });
 
+    let selected = this.selectedSlide.get();
+
     $slide
       .style({
         "z-index": (d, i) => i
+      })
+      .classed({
+        active: (d) => d.key === selected
       })
       .transition()
       .delay((d, i) => i * 10)
@@ -136,10 +151,7 @@ class Sorter {
     $slide_actions.selectAll(".btn")
       .data([{
         icon: "plus-square-o",
-        on: {click: () => {
-          let last = this.sortedSlides().slice(-1);
-          this.appendSlide(last.length ? last[0].key : null);
-        }}
+        on: {click: () => this.addSlide() }
       }, {
         icon: "youtube-play",
         on: {click: () => this.play()}
@@ -160,6 +172,15 @@ class Sorter {
           $btn.on(key, d.on[key]);
         });
       });
+  }
+
+  addSlide(){
+    let last = this.sortedSlides().slice(-1),
+      selected = this.selectedSlide.get(),
+      appended = this.appendSlide(
+        selected ? selected : last.length ? last[0].key : null
+      );
+    this.selectedSlide.set(appended);
   }
 
   nextId(){
@@ -184,17 +205,17 @@ class Sorter {
 
   appendSlide(prev, id=null){
     let next = this.nextSlide(prev);
-    console.log("append", {prev, id, next})
+
     if(!id){
       id = this.nextId();
       this.slides.set(id, {id, prev});
     }else{
-      console.log("get", this.slides.get(id));
       this.slides.set([id, "prev"], prev);
-      console.log("set", this.slides.get(id));
     }
 
     next && this.slides.set([next, "prev"], id);
+
+    return id;
   }
 
   show(){
