@@ -1,6 +1,8 @@
 import d3 from "d3";
 import uuid from "node-uuid";
 
+let REMOVED = "<removed>";
+
 class Sorter {
   constructor(tree) {
     this.tree = tree;
@@ -58,8 +60,6 @@ class Sorter {
           slideN = Math.floor(top / that.slideHeight()),
           after;
 
-        console.log({slideN, top});
-
         if(top < that.slideHeight() || slideN < 0){
           after = null;
         }else if(slideN > slides.length || !slides[slideN]){
@@ -67,14 +67,11 @@ class Sorter {
         }else{
           after = slides[slideN].key;
         }
-        console.log("after", after);
 
         if(d.key !== after){
           that.removeSlide(d.key);
-          that.appendSlide(d.key, after);
+          that.appendSlide(after, d.key);
         }
-
-        that.draw();
       });
   }
 
@@ -83,7 +80,7 @@ class Sorter {
     let slides = d3.entries(this.slides.get());
 
     slides.sort(
-      (a, b) => a.value.prev === null || a.value.next == b.key ? -1 : 1
+      (a, b) => a.value.prev === null || a.key === b.value.prev ? -1 : 1
     )
 
     return slides;
@@ -116,7 +113,7 @@ class Sorter {
         "z-index": (d, i) => i
       })
       .transition()
-      .delay((d, i) => i * 100)
+      .delay((d, i) => i * 10)
       .style({
         left: "0px",
         top: (d, i) => `${i * this.slideHeight()}px`
@@ -141,7 +138,7 @@ class Sorter {
         icon: "plus-square-o",
         on: {click: () => {
           let last = this.sortedSlides().slice(-1);
-          this.appendSlide(null, last.length ? last[0].key : null );
+          this.appendSlide(last.length ? last[0].key : null);
         }}
       }, {
         icon: "youtube-play",
@@ -170,40 +167,33 @@ class Sorter {
   }
 
   removeSlide(id){
-    let {prev, next} = this.slides.get(id);
-    prev && this.slides.set([prev, "next"], next);
+    let {prev} = this.slides.get(id),
+      next = this.nextSlide(id);
+
     next && this.slides.set([next, "prev"], prev);
-    this.slides.set([id, "next"], null);
-    this.slides.set([id, "prev"], null);
-    this.tree.commit();
+    console.log("remove", {prev, next, id});
+    this.slides.set([id, "prev"], REMOVED);
   }
 
-  appendSlide(id=null, after=null){
-    console.log("append", id, after);
+  nextSlide(id){
     let slides = this.sortedSlides(),
-      prev,
-      next;
+      next = slides.filter((d) => d.value.prev === id);
 
-    if(!after){
-      prev = null;
-      next = slides.length ? slides[0].key : null;
-    }else{
-      prev = this.slides.get([after]);
-      next = prev.next;
-      prev = prev.id;
-    }
+    return next.length ? next[0].key : null;
+  }
 
+  appendSlide(prev, id=null){
+    let next = this.nextSlide(prev);
+    console.log("append", {prev, id, next})
     if(!id){
       id = this.nextId();
-      this.slides.set(id, {id});
+      this.slides.set(id, {id, prev});
+    }else{
+      console.log("get", this.slides.get(id));
+      this.slides.set([id, "prev"], prev);
+      console.log("set", this.slides.get(id));
     }
 
-    console.log(id, prev, next);
-
-    this.slides.set([id, "prev"], prev);
-    this.slides.set([id, "next"], next);
-
-    prev && this.slides.set([prev, "next"], id);
     next && this.slides.set([next, "prev"], id);
   }
 
