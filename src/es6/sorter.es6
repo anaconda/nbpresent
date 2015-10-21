@@ -36,12 +36,27 @@ class Sorter {
     this.selectedRegion = this.tree.select("selectedRegion");
 
     this.selectedSlide.on("update", () => {
+      let slide = this.selectedSlide.get();
       this.draw();
       if(this.editor){
-        this.editSlide(this.selectedSlide.get());
+        this.editSlide(slide);
       }
     });
-    this.selectedRegion.on("update", () => this.draw());
+    this.selectedRegion.on("update", () => {
+      let region = this.selectedRegion.get();
+      if(region){
+        let content = this.slides.get(
+          [region[0], "regions", region[1], "content"]);
+        if(content){
+          let cell = Jupyter.notebook.get_cells().filter(function(cell, idx){
+            if(cell.metadata.slides && cell.metadata.slides.id == content.cell){
+              Jupyter.notebook.select(idx);
+            };
+          });
+        }
+      }
+      this.draw();
+    });
     this.slides.on("update", () => this.draw());
 
     this.draw();
@@ -153,28 +168,34 @@ class Sorter {
 
     let $region = $slide.select("svg")
       .selectAll(".region")
-      .data((d) => d3.entries(d.value.regions))
+      .data((slide) => d3.entries(slide.value.regions).map((region) => {
+        return {slide, region};
+      }))
 
     $region.enter()
       .append("rect")
       .classed({region: 1})
-      .on("click", (d)=> this.selectedRegion.set(d.key));
+      .on("click", (d)=> this.selectedRegion.set([d.slide.key, d.region.key]));
 
     $region.exit()
       .remove();
 
-    let selectedRegion = this.selectedRegion.get();
+    let sRegion = this.selectedRegion.get();
 
     $region
       .classed({
-        active: (d) => d.key === selectedRegion,
-        "has-content": (d) => d.value.content
+        active: (d) => {
+          return sRegion &&
+            d.slide.key == sRegion[0] &&
+            d.region.key === sRegion[1];
+        },
+        "has-content": (d) => d.region.value.content
       })
       .attr({
-        x: (d) => d.value.x * 160,
-        y: (d) => d.value.y * 90,
-        width: (d) => d.value.width * 160,
-        height: (d) => d.value.height * 90,
+        x: (d) => d.region.value.x * 160,
+        y: (d) => d.region.value.y * 90,
+        width: (d) => d.region.value.width * 160,
+        height: (d) => d.region.value.height * 90,
       });
 
     this.$empty.style({opacity: 1 * !$slide[0].length });
@@ -227,12 +248,11 @@ class Sorter {
   }
 
   linkContent(part){
-    let slide = this.selectedSlide.get(),
-      region = this.selectedRegion.get(),
+    let region = this.selectedRegion.get(),
       cell = Jupyter.notebook.get_selected_cell(),
       cellId;
 
-    if(!(slide && region && cell)){
+    if(!(region && cell)){
       return;
     }
 
@@ -242,7 +262,7 @@ class Sorter {
 
     cellId = cell.metadata.slides.id;
 
-    this.slides.set([slide, "regions", region, "content"], {
+    this.slides.set([region[0], "regions", region[1], "content"], {
       cell: cellId,
       part
     });
