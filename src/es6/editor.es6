@@ -1,5 +1,16 @@
 import d3 from "d3";
 
+let directions = [
+  "nw",
+  "n",
+  "ne",
+  "e",
+  "se",
+  "s",
+  "sw",
+  "w"
+];
+
 class Editor{
   constructor(slide) {
     this.slide = slide;
@@ -35,11 +46,12 @@ class Editor{
     let that = this,
       {x, y} = this;
 
-    let dragX, dragY;
+    let dragX, dragY, dragWidth, dragHeight;
 
     this.regionDrag = d3.behavior.drag()
+      .origin((d) => d)
       .on("dragstart", function(d){
-        let $region = d3.select(this)
+        let $region = d3.select(this.parentNode)
           .classed({dragging: 1});
         dragX = d.value.x;
         dragY = d.value.y;
@@ -47,13 +59,13 @@ class Editor{
       .on("drag", function(d){
         dragX += x.invert(d3.event.dx);
         dragY += y.invert(d3.event.dy);
-        let $region = d3.select(this)
+        let $region = d3.select(this.parentNode)
           .attr({
             transform: (d) => `translate(${[x(dragX), y(dragY)]})`
           });
       })
       .on("dragend", function(d){
-        let $region = d3.select(this)
+        let $region = d3.select(this.parentNode)
           .classed({dragging: 0});
 
         that.regions.merge(d.key, {
@@ -61,6 +73,69 @@ class Editor{
           y: dragY,
         });
       });
+
+    this.handleDrag = d3.behavior.drag()
+      .origin((d) => d)
+      .on("dragstart", function(d){
+        let $handle = d3.select(this)
+          .classed({dragging: 1});
+        dragX = d.region.value.x;
+        dragY = d.region.value.y;
+        dragWidth = d.region.value.width;
+        dragHeight = d.region.value.height;
+      })
+      .on("drag", function(d){
+        let $handle = d3.select(this),
+          $region = d3.select(this.parentNode);
+
+        let dx = x.invert(d3.event.dx),
+          dy = y.invert(d3.event.dy);
+
+        if(/n/.test(d.dir)){ dragY += dy; dragHeight -= dy; }
+        if(/e/.test(d.dir)){ dragWidth += dx; }
+        if(/s/.test(d.dir)){ dragHeight += dy; }
+        if(/w/.test(d.dir)){ dragX += dx; dragWidth -= dx; }
+
+        $region
+          .attr({
+            transform: (d) => `translate(${[x(dragX), y(dragY)]})`
+          })
+          .select(".region-bg")
+          .attr({
+            width: x(dragWidth),
+            height: y(dragHeight),
+          });
+
+        $region
+          .selectAll(".handle")
+          .attr({
+            cx: (d) => {
+              return x(
+                /w/.test(d.dir) ? 0 :
+                /e/.test(d.dir) ? dragWidth :
+                dragWidth / 2
+              )
+            },
+            cy: (d) => y(
+              /n/.test(d.dir) ? 0 :
+              /s/.test(d.dir) ? dragHeight :
+              dragHeight / 2
+            )
+          })
+
+      })
+      .on("dragend", function(d){
+        let $handle = d3.select(this)
+          .classed({dragging: 0});
+
+        that.regions.merge(d.region.key, {
+          x: dragX,
+          y: dragY,
+          width: dragWidth,
+          height: dragHeight
+        });
+      });
+
   }
 
   padding(){
@@ -84,6 +159,7 @@ class Editor{
 
     this.x.range([0, width]);
     this.y.range([0, height]);
+    let {x, y} = this;
 
     this.$bg.style({
       left: `${(uibb.width - width) / 2}px`,
@@ -96,23 +172,38 @@ class Editor{
 
     let regions = d3.entries(this.regions.get());
 
-    console.table(regions.map(({value}) => value));
+    //console.table(regions.map(({value}) => value));
 
     let $region = this.$svg.selectAll(".region")
       .data(regions, (d) => d.key);
 
     $region.exit().remove();
 
+    let regionData = (region) => {
+      return directions.map((dir) => {
+        return {region, dir};
+      })
+    };
+
     $region.enter()
       .append("g")
       .classed({"region": 1})
-      .call(function($region){
+      .call(($region) => {
         $region.append("rect")
-          .classed({"region-bg": 1});
-      })
-      .call(this.regionDrag);
+          .classed({"region-bg": 1})
+          .call(this.regionDrag);
 
-    let {x, y} = this;
+        let $handle = $region.selectAll(".handle")
+          .data(regionData);
+
+        $handle.enter()
+          .append("circle")
+          .classed({handle: 1})
+          .attr({
+            r: 5
+          })
+          .call(this.handleDrag);
+      });
 
     $region.attr({
         transform: (d) => `translate(${[x(d.value.x), y(d.value.y)]})`
@@ -122,6 +213,23 @@ class Editor{
         width: (d) => x(d.value.width),
         height: (d) => y(d.value.height)
       });
+
+    $region.selectAll(".handle")
+      .data(regionData)
+      .attr({
+        cx: (d) => {
+          return x(
+            /w/.test(d.dir) ? 0 :
+            /e/.test(d.dir) ? d.region.value.width :
+            d.region.value.width / 2
+          )
+        },
+        cy: (d) => y(
+          /n/.test(d.dir) ? 0 :
+          /s/.test(d.dir) ? d.region.value.height :
+          d.region.value.height / 2
+        )
+      })
   }
 }
 
