@@ -32,7 +32,12 @@ class Sorter {
     this.slides = this.tree.select(["slides"]);
     this.selectedSlide = this.tree.select("selectedSlide");
 
-    this.selectedSlide.on("update", () => this.draw());
+    this.selectedSlide.on("update", () => {
+      this.draw();
+      if(this.editor){
+        this.editSlide(this.selectedSlide.get());
+      }
+    });
     this.slides.on("update", () => this.draw());
 
     this.draw();
@@ -41,7 +46,6 @@ class Sorter {
   initDrag(){
     let that = this,
       dragOrigin;
-
 
     this.drag = d3.behavior.drag()
       .on("dragstart", function(d){
@@ -199,11 +203,12 @@ class Sorter {
   }
 
   editSlide(id){
-    if(!id){
-      return;
-    }
     if(this.editor){
       this.editor.destroy();
+    }
+
+    if(!id){
+      return;
     }
     this.editor = new Editor(this.slides.select(id));
   }
@@ -239,12 +244,6 @@ class Sorter {
     return {
       id, prev,
       regions: {
-        main: {
-          x: 0.1,
-          y: 0.1,
-          width: 0.8,
-          height: 0.8
-        }
       }
     }
   }

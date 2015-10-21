@@ -1,4 +1,5 @@
 import d3 from "d3";
+import uuid from "node-uuid";
 
 let directions = [
   "nw",
@@ -16,30 +17,72 @@ class Editor{
     this.slide = slide;
     this.regions = this.slide.select("regions");
 
-    this.x = d3.scale.linear();
-    this.y = d3.scale.linear();
+    this.x = d3.scale.linear().domain([0, 100]);
+    this.y = d3.scale.linear().domain([0, 100]);
 
     this.initUI();
     this.initBehavior();
 
     this.update();
 
-    this.slide.on("update", ()=> { this.update(); });
+    this.slide.on("update", ()=> { this.killed || this.update(); });
   }
 
   destroy() {
-    this.$ui.remove();
+    this.$ui.transition()
+      .style({opacity: 0})
+      .remove();
+    this.killed = true;
   }
 
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({"nbpresent-editor": 1});
+      .classed({"nbpresent-editor": 1})
+      .style({opacity: 0});
+
+    this.initToolbar();
 
     this.$bg = this.$ui.append("div")
       .classed({"slide-bg": 1});
 
     this.$svg = this.$bg.append("svg");
+
+    this.$ui.transition()
+      .style({opacity: 1});
+  }
+
+  initToolbar(){
+    this.$toolbar = this.$ui.append("div")
+      .classed({
+        editor_toolbar: 1,
+        "btn-toolbar": 1
+      });
+
+    let $region_actions = this.$toolbar.append("div")
+      .classed({"btn-group": 1});
+
+    $region_actions.selectAll(".btn")
+      .data([{
+        icon: "plus-square-o",
+        on: {click: () => this.addRegion() }
+      }])
+      .enter()
+      .append("a")
+      .classed({btn: 1, "btn-default": 1, "btn-xs": 1})
+      .call(function($btn){
+        let icon = $btn.append("i")
+          .classed({fa: 1, "fa-fw": 1})
+          .each(function(d){
+            d3.select(this).classed(`fa-${d.icon}`, 1);
+          });
+      })
+      .each(function(d){
+        let $btn = d3.select(this);
+        Object.keys(d.on).map((key)=>{
+          $btn.on(key, d.on[key]);
+        });
+      });
   }
 
   initBehavior(){
@@ -48,8 +91,9 @@ class Editor{
 
     let dragX, dragY, dragWidth, dragHeight;
 
+    let mouse = () => d3.mouse(this.$ui);
+
     this.regionDrag = d3.behavior.drag()
-      .origin((d) => d)
       .on("dragstart", function(d){
         let $region = d3.select(this.parentNode)
           .classed({dragging: 1});
@@ -75,7 +119,7 @@ class Editor{
       });
 
     this.handleDrag = d3.behavior.drag()
-      .origin((d) => d)
+      .origin((d) => { return {x:0, y:0}; })
       .on("dragstart", function(d){
         let $handle = d3.select(this)
           .classed({dragging: 1});
@@ -121,8 +165,7 @@ class Editor{
               /s/.test(d.dir) ? dragHeight :
               dragHeight / 2
             )
-          })
-
+          });
       })
       .on("dragend", function(d){
         let $handle = d3.select(this)
@@ -136,6 +179,17 @@ class Editor{
         });
       });
 
+  }
+
+  addRegion(){
+    let id = uuid.v4();
+    this.regions.set(id, {
+      id,
+      x: 10,
+      y: 10,
+      width: 80,
+      height: 80
+    });
   }
 
   padding(){
