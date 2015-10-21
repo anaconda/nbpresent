@@ -113,7 +113,6 @@ class Sorter {
 
     $slide.enter().append("div")
       .classed({slide: 1})
-      .text((d) => d.key)
       .call(this.drag)
       .on("mousedown", function(d){
         that.selectedSlide.set(
@@ -122,7 +121,8 @@ class Sorter {
       })
       .style({
         left: "200px"
-      });
+      })
+      .append("svg");
 
     $slide.exit()
       .transition()
@@ -146,6 +146,24 @@ class Sorter {
         left: "0px",
         top: (d, i) => `${i * this.slideHeight()}px`
       });
+
+    let $region = $slide.select("svg")
+      .selectAll(".region")
+      .data((d) => d3.entries(d.value.regions))
+
+    $region.enter()
+      .append("rect")
+      .classed({region: 1});
+
+    $region.exit()
+      .remove();
+
+    $region.attr({
+      x: (d) => d.value.x * 160,
+      y: (d) => d.value.y * 90,
+      width: (d) => d.value.width * 160,
+      height: (d) => d.value.height * 90,
+    });
 
     this.$empty.style({opacity: 1 * !$slide[0].length });
   }
@@ -210,6 +228,7 @@ class Sorter {
     if(!id){
       return;
     }
+    // TODO: do this with an id and big tree ref?
     this.editor = new Editor(this.slides.select(id));
   }
 
@@ -277,14 +296,6 @@ class Sorter {
         "margin-right": visible ? "220px" : null,
         "margin-left": visible ? "20px" : null,
       });
-
-
-    let $slide = this.$slides.selectAll(".slide_thumb")
-      .data(this.tree.get("slides"), d => d.id);
-
-    $slide.enter()
-      .append("div")
-      .classed({slide_thumb: 1});
   }
 }
 

@@ -17,8 +17,8 @@ class Editor{
     this.slide = slide;
     this.regions = this.slide.select("regions");
 
-    this.x = d3.scale.linear().domain([0, 100]);
-    this.y = d3.scale.linear().domain([0, 100]);
+    this.x = d3.scale.linear();
+    this.y = d3.scale.linear();
 
     this.initUI();
     this.initBehavior();
@@ -185,10 +185,10 @@ class Editor{
     let id = uuid.v4();
     this.regions.set(id, {
       id,
-      x: 10,
-      y: 10,
-      width: 80,
-      height: 80
+      x: 0.1,
+      y: 0.1,
+      width: 0.8,
+      height: 0.8
     });
   }
 
