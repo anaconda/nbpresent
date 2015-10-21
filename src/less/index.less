@@ -1,12 +1,13 @@
 @jpy-brand: #f37626;
 @active: #337ab7;
+@HACK-header-height: 107px;
 
 .nbpresent_sorter{
   position: fixed;
   width: 200px;
   right: 0;
   bottom: 0;
-  top: 107px;
+  top: @HACK-header-height;
   color: @jpy-brand;
   box-shadow: -5px 0 -5px rgba(0,0,0,0.25);
   transition: right 0.2s;
@@ -42,5 +43,25 @@
         opacity: 0.9;
       }
     }
+  }
+}
+
+.nbpresent-editor {
+  position: fixed;
+  top: @HACK-header-height;
+  left: 0;
+  bottom: 0;
+  right: 200px;
+  background-color: rgba(50, 50, 50, 0.5);
+  z-index: 9999;
+
+  .slide-bg {
+    background-color: #fff;
+    position: absolute;
+  }
+
+  .region-bg {
+    fill: transparent;
+    stroke: @jpy-brand;
   }
 }

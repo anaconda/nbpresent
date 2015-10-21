@@ -1,6 +1,8 @@
 import d3 from "d3";
 import uuid from "node-uuid";
 
+import {Editor} from "./editor";
+
 let REMOVED = "<removed>";
 
 class Sorter {
@@ -100,7 +102,7 @@ class Sorter {
 
     let slides = this.sortedSlides();
 
-    console.table(slides.map(({value}) => value));
+    //console.table(slides.map(({value}) => value));
 
     let $slide = this.$slides.selectAll(".slide")
       .data(slides, (d) => d.key);
@@ -161,7 +163,10 @@ class Sorter {
         on: {click: () => this.addSlide() }
       }, {
         icon: "trash",
-        on: {click: () => this.removeSlide(this.selectedSlide.get() )}
+        on: {click: () => this.removeSlide(this.selectedSlide.get()) }
+      }, {
+        icon: "edit",
+        on: {click: () => this.editSlide(this.selectedSlide.get()) }
       }, {
         icon: "youtube-play",
         on: {click: () => this.play()}
@@ -193,6 +198,16 @@ class Sorter {
     this.selectedSlide.set(appended);
   }
 
+  editSlide(id){
+    if(!id){
+      return;
+    }
+    if(this.editor){
+      this.editor.destroy();
+    }
+    this.editor = new Editor(this.slides.select(id));
+  }
+
   nextId(){
     return uuid.v4();
   }
@@ -202,7 +217,6 @@ class Sorter {
       next = this.nextSlide(id);
 
     next && this.slides.set([next, "prev"], prev);
-    console.log("remove", {prev, next, id});
     this.slides.set([id, "prev"], REMOVED);
   }
 
@@ -221,12 +235,26 @@ class Sorter {
     return next.length ? next[0].key : null;
   }
 
+  newSlide(id, prev){
+    return {
+      id, prev,
+      regions: {
+        main: {
+          x: 0.1,
+          y: 0.1,
+          width: 0.8,
+          height: 0.8
+        }
+      }
+    }
+  }
+
   appendSlide(prev, id=null){
     let next = this.nextSlide(prev);
 
     if(!id){
       id = this.nextId();
-      this.slides.set(id, {id, prev});
+      this.slides.set(id, this.newSlide(id, prev));
     }else{
       this.slides.set([id, "prev"], prev);
     }
