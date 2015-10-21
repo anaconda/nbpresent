@@ -1,6 +1,8 @@
 import d3 from "d3";
 import uuid from "node-uuid";
 
+import Jupyter from "base/js/namespace";
+
 import {Editor} from "./editor";
 
 let REMOVED = "<removed>";
@@ -31,6 +33,7 @@ class Sorter {
 
     this.slides = this.tree.select(["slides"]);
     this.selectedSlide = this.tree.select("selectedSlide");
+    this.selectedRegion = this.tree.select("selectedRegion");
 
     this.selectedSlide.on("update", () => {
       this.draw();
@@ -38,6 +41,7 @@ class Sorter {
         this.editSlide(this.selectedSlide.get());
       }
     });
+    this.selectedRegion.on("update", () => this.draw());
     this.slides.on("update", () => this.draw());
 
     this.draw();
@@ -131,14 +135,14 @@ class Sorter {
       })
       .remove();
 
-    let selected = this.selectedSlide.get();
+    let selectedSlide = this.selectedSlide.get();
 
     $slide
       .style({
         "z-index": (d, i) => i
       })
       .classed({
-        active: (d) => d.key === selected
+        active: (d) => d.key === selectedSlide
       })
       .transition()
       .delay((d, i) => i * 10)
@@ -153,17 +157,25 @@ class Sorter {
 
     $region.enter()
       .append("rect")
-      .classed({region: 1});
+      .classed({region: 1})
+      .on("click", (d)=> this.selectedRegion.set(d.key));
 
     $region.exit()
       .remove();
 
-    $region.attr({
-      x: (d) => d.value.x * 160,
-      y: (d) => d.value.y * 90,
-      width: (d) => d.value.width * 160,
-      height: (d) => d.value.height * 90,
-    });
+    let selectedRegion = this.selectedRegion.get();
+
+    $region
+      .classed({
+        active: (d) => d.key === selectedRegion,
+        "has-content": (d) => d.value.content
+      })
+      .attr({
+        x: (d) => d.value.x * 160,
+        y: (d) => d.value.y * 90,
+        width: (d) => d.value.width * 160,
+        height: (d) => d.value.height * 90,
+      });
 
     this.$empty.style({opacity: 1 * !$slide[0].length });
   }
@@ -190,8 +202,11 @@ class Sorter {
         icon: "edit",
         on: {click: () => this.editSlide(this.selectedSlide.get()) }
       }, {
-        icon: "youtube-play",
-        on: {click: () => this.play()}
+        icon: "external-link-square",
+        on: {click: () => this.linkContent("source")}
+      }, {
+        icon: "external-link",
+        on: {click: () => this.linkContent("output")}
       }])
       .enter()
       .append("a")
@@ -211,6 +226,28 @@ class Sorter {
       });
   }
 
+  linkContent(part){
+    let slide = this.selectedSlide.get(),
+      region = this.selectedRegion.get(),
+      cell = Jupyter.notebook.get_selected_cell(),
+      cellId;
+
+    if(!(slide && region && cell)){
+      return;
+    }
+
+    if(!cell.metadata.slides){
+      cell.metadata.slides = {id: this.nextId()};
+    }
+
+    cellId = cell.metadata.slides.id;
+
+    this.slides.set([slide, "regions", region, "content"], {
+      cell: cellId,
+      part
+    });
+  }
+
   addSlide(){
     let last = this.sortedSlides().slice(-1),
       selected = this.selectedSlide.get(),
@@ -222,7 +259,11 @@ class Sorter {
 
   editSlide(id){
     if(this.editor){
+      if(this.editor.slide.get("id") === id){
+        id = null;
+      }
       this.editor.destroy();
+      this.editor = null;
     }
 
     if(!id){

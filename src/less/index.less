@@ -42,6 +42,22 @@
         z-index: 9999;
         opacity: 0.9;
       }
+
+      .region {
+        fill: rgba(255,255,255,0.5);
+        stroke: rgba(128,128,128,0.5);
+
+        &.active {
+          stroke: @jpy-brand;
+        }
+
+        &.has-content{
+          fill: rgba(128,128,128,0.5);
+          &.active {
+            fill: @jpy-brand;
+          }
+        }
+      }
     }
   }
 }
