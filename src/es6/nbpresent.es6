@@ -6,7 +6,7 @@ import Jupyter from "base/js/namespace";
 import {Presenter} from "./presenter";
 import {Sorter} from "./sorter";
 
-class NBPresent {
+export class NBPresent {
   constructor() {
     this.tree = new Baobab({
       slides: this.metadata().slides,
@@ -23,7 +23,6 @@ class NBPresent {
     this.sorter = new Sorter(this.tree);
 
     this.initToolbar();
-    this.initStylesheet();
   }
 
   metadata(update){
@@ -49,19 +48,6 @@ class NBPresent {
     return slides;
   }
 
-  initStylesheet() {
-    d3.select("head")
-      .selectAll("link#nbpresent-css")
-      .data([1])
-    .enter()
-      .append("link")
-      .attr({
-        rel: "stylesheet",
-        // TODO: figure out how to make this portable
-        href: "/nbextensions/nbpresent/nbpresent.min.css"
-      });
-  }
-
   initToolbar() {
     Jupyter.toolbar.add_buttons_group([
       {
@@ -82,9 +68,3 @@ class NBPresent {
     ]);
   }
 }
-
-var nbpresent = () => {
-  let nbp = new NBPresent();
-}
-
-export {nbpresent};
