@@ -8,6 +8,17 @@
   left: 0;
   bottom: 0;
   right: 0;
+
+  .btn-toolbar {
+    z-index: @z-present-toolbar;
+    opacity: 0;
+    transition: all 0.2s;
+    float: right;
+    &:hover{
+      opacity: 1;
+      transition: all 0.2s;
+    }
+  }
 }
 
 .cell div.nbpresent_present{
@@ -15,7 +26,7 @@
   position: fixed;
   display: block;
 
-  .prompt {
+  .prompt, .ctb_hideshow {
     display: none;
   }
 }
