@@ -186,7 +186,6 @@ class Sorter {
     $region
       .classed({
         active: (d) => {
-          console.log(d.region.value);
           return sRegion &&
             d.slide.key == sRegion[0] &&
             d.region.key === sRegion[1];
