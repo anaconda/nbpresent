@@ -1,6 +1,8 @@
 import d3 from "d3";
 import uuid from "node-uuid";
 
+import {Toolbar} from "./toolbar";
+
 let directions = [
   "nw",
   "n",
@@ -53,36 +55,14 @@ class Editor{
   }
 
   initToolbar(){
+    let toolbar = new Toolbar();
+
     this.$toolbar = this.$ui.append("div")
-      .classed({
-        editor_toolbar: 1,
-        "btn-toolbar": 1
-      });
-
-    let $region_actions = this.$toolbar.append("div")
-      .classed({"btn-group": 1});
-
-    $region_actions.selectAll(".btn")
-      .data([{
+      .datum([[{
         icon: "plus-square-o",
         on: {click: () => this.addRegion() }
-      }])
-      .enter()
-      .append("a")
-      .classed({btn: 1, "btn-default": 1, "btn-xs": 1})
-      .call(function($btn){
-        let icon = $btn.append("i")
-          .classed({fa: 1, "fa-fw": 1})
-          .each(function(d){
-            d3.select(this).classed(`fa-${d.icon}`, 1);
-          });
-      })
-      .each(function(d){
-        let $btn = d3.select(this);
-        Object.keys(d.on).map((key)=>{
-          $btn.on(key, d.on[key]);
-        });
-      });
+      }]])
+      .call(toolbar.update);
   }
 
   initBehavior(){

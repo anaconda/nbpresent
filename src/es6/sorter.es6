@@ -4,6 +4,7 @@ import uuid from "node-uuid";
 import Jupyter from "base/js/namespace";
 
 import {Editor} from "./editor";
+import {Toolbar} from "./toolbar";
 
 let REMOVED = "<removed>";
 
@@ -185,11 +186,15 @@ class Sorter {
     $region
       .classed({
         active: (d) => {
+          console.log(d.region.value);
           return sRegion &&
             d.slide.key == sRegion[0] &&
             d.region.key === sRegion[1];
         },
-        "has-content": (d) => d.region.value.content
+        content_source: (d) => d.region.value.content &&
+          d.region.value.content.part === "source",
+        content_output: (d) => d.region.value.content &&
+          d.region.value.content.part === "output"
       })
       .attr({
         x: (d) => d.region.value.x * 160,
@@ -203,48 +208,31 @@ class Sorter {
 
 
   initToolbar(){
+    let toolbar = new Toolbar();
     this.$toolbar = this.$view.append("div")
-      .classed({
-        sorter_toolbar: 1,
-        "btn-toolbar": 1
-      });
-
-    let $slide_actions = this.$toolbar.append("div")
-      .classed({"btn-group": 1});
-
-    $slide_actions.selectAll(".btn")
-      .data([{
-        icon: "plus-square-o",
-        on: {click: () => this.addSlide() }
-      }, {
-        icon: "trash",
-        on: {click: () => this.removeSlide(this.selectedSlide.get()) }
-      }, {
-        icon: "edit",
-        on: {click: () => this.editSlide(this.selectedSlide.get()) }
-      }, {
-        icon: "external-link-square",
-        on: {click: () => this.linkContent("source")}
-      }, {
-        icon: "external-link",
-        on: {click: () => this.linkContent("output")}
-      }])
-      .enter()
-      .append("a")
-      .classed({btn: 1, "btn-default": 1, "btn-xs": 1})
-      .call(function($btn){
-        let icon = $btn.append("i")
-          .classed({fa: 1, "fa-fw": 1})
-          .each(function(d){
-            d3.select(this).classed(`fa-${d.icon}`, 1);
-          });
-      })
-      .each(function(d){
-        let $btn = d3.select(this);
-        Object.keys(d.on).map((key)=>{
-          $btn.on(key, d.on[key]);
-        });
-      });
+      .datum([
+        [{
+          icon: "plus-square-o",
+          on: {click: () => this.addSlide() }
+        }],
+        [{
+          icon: "edit",
+          on: {click: () => this.editSlide(this.selectedSlide.get()) }
+        }],
+        [{
+          icon: "external-link-square",
+          on: {click: () => this.linkContent("source")}
+        },
+        {
+          icon: "external-link",
+          on: {click: () => this.linkContent("output")}
+        }],
+        [{
+          icon: "trash",
+          on: {click: () => this.removeSlide(this.selectedSlide.get()) }
+        }]
+      ])
+      .call(toolbar.update);
   }
 
   linkContent(part){
