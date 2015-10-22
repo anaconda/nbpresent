@@ -11,8 +11,8 @@ let REMOVED = "<removed>";
 class Sorter {
   constructor(tree) {
     this.tree = tree;
-    // TODO: put this in the tree
-    this.visible = this.tree.select("visible");
+
+    this.visible = this.tree.select(["sorter", "visible"]);
     this.visible.set(false);
 
     this.$view = d3.select("#header")
@@ -33,8 +33,8 @@ class Sorter {
       .text("No slides yet.");
 
     this.slides = this.tree.select(["slides"]);
-    this.selectedSlide = this.tree.select("selectedSlide");
-    this.selectedRegion = this.tree.select("selectedRegion");
+    this.selectedSlide = this.tree.select(["sorter", "selectedSlide"]);
+    this.selectedRegion = this.tree.select(["sorter", "selectedRegion"]);
 
     this.selectedSlide.on("update", () => {
       let slide = this.selectedSlide.get();
@@ -85,7 +85,7 @@ class Sorter {
           .classed({dragging: 0});
 
         let top = parseFloat($slide.style("top")),
-          slides = that.sortedSlides(),
+          slides = that.tree.get("sortedSlides"),
           slideN = Math.floor(top / that.slideHeight()),
           after;
 
@@ -106,17 +106,6 @@ class Sorter {
       });
   }
 
-  // put in tree?
-  sortedSlides(){
-    let slides = d3.entries(this.slides.get());
-
-    slides.sort(
-      (a, b) => (a.value.prev === null) || (a.key === b.value.prev) ? -1 : 1
-    )
-
-    return slides;
-  }
-
   slideHeight() {
     return 100;
   }
@@ -124,7 +113,7 @@ class Sorter {
   draw(){
     let that = this;
 
-    let slides = this.sortedSlides();
+    let slides = this.tree.get("sortedSlides");
 
     //console.table(slides.map(({value}) => value));
 
@@ -256,7 +245,7 @@ class Sorter {
   }
 
   addSlide(){
-    let last = this.sortedSlides().slice(-1),
+    let last = this.tree.get("sortedSlides").slice(-1),
       selected = this.selectedSlide.get(),
       appended = this.appendSlide(
         selected ? selected : last.length ? last[0].key : null
@@ -301,7 +290,7 @@ class Sorter {
   }
 
   nextSlide(id){
-    let slides = this.sortedSlides(),
+    let slides = this.tree.get("sortedSlides"),
       next = slides.filter((d) => d.value.prev === id);
 
     return next.length ? next[0].key : null;

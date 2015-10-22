@@ -1,40 +1,73 @@
 import d3 from "d3";
+
 import Jupyter from "base/js/namespace";
 
-var {notebook} = Jupyter;
+import {Toolbar} from "./toolbar";
 
 class Presenter {
   constructor(tree) {
     this.tree = tree;
-    this.presenting = false;
-    this.drag = d3.behavior.drag()
-      .on("drag", this.dragging);
+
+    this.initUI();
+
+    this.presenting = this.tree.select(["presenter", "presenting"]);
+    this.current = this.tree.select(["presenter", "current"]);
+
+    this.presenting.on("update", () => this.present());
+    this.current.on("update", () => this.update());
   }
 
-  dragging(d) {
-    console.log(this);
+  initUI(){
+    this.$ui = d3.select("body")
+      .append("div")
+      .classed({nbpresent_presenter: 1});
+
+    this.initToolbar();
+  }
+
+
+  initToolbar(){
+    let toolbar = new Toolbar();
+
+    toolbar.btnClass("btn-invert");
+
+    this.$toolbar = this.$ui.append("div")
+      .datum([
+        [{
+          icon: "dedent",
+          on: {click: () => this.presenting.set(false) }
+        },
+        {
+          icon: "fast-backward",
+          on: {click: () => this.current.set(0) }
+        },
+        {
+          icon: "step-backward",
+          on: {click: () => this.current.set(this.current.get() - 1) }
+        },
+        {
+          icon: "step-forward",
+          on: {click: () => this.current.set(this.current.get() + 1) }
+        }]
+      ])
+      .call(toolbar.update);
   }
 
   present() {
-    let p = this.presenting = !this.presenting,
-      doc = document.documentElement;
-
-    // rebind with d3
-    let cell = d3.selectAll(notebook.get_cell_elements())
-      .data(notebook.get_cells());
-
-    cell.select(".input_area")
+    let presenting = this.presenting.get();
+    this.$ui
+      .transition()
       .style({
-        position: p ? "absolute" : null,
-        display: p ? "block" : "flex",
-        left: () => p ? Math.random() * doc.clientWidth + "px" : null,
-        top:  () => p ? Math.random() * doc.clientHeight + "px" : null,
-      })
-      //.call(this.drag);
+        opacity: +presenting,
+        display: presenting ? "block" : "none"
+      });
 
-    cell.select("")
+    this.current.set(0);
+  }
 
-    console.log(cell.data());
+  update() {
+    let slide = this.tree.get("sortedSlides")[this.current.get()];
+    console.log(slide);
   }
 }
 

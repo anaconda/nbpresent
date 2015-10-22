@@ -40,13 +40,13 @@ class Editor{
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({"nbpresent-editor": 1})
+      .classed({nbpresent_editor: 1})
       .style({opacity: 0});
 
     this.initToolbar();
 
     this.$bg = this.$ui.append("div")
-      .classed({"slide-bg": 1});
+      .classed({slide_bg: 1});
 
     this.$svg = this.$bg.append("svg");
 
@@ -124,7 +124,7 @@ class Editor{
           .attr({
             transform: (d) => `translate(${[x(dragX), y(dragY)]})`
           })
-          .select(".region-bg")
+          .select(".region_bg")
           .attr({
             width: x(dragWidth),
             height: y(dragHeight),
@@ -224,7 +224,7 @@ class Editor{
       .classed({"region": 1})
       .call(($region) => {
         $region.append("rect")
-          .classed({"region-bg": 1})
+          .classed({region_bg: 1})
           .call(this.regionDrag);
 
         let $handle = $region.selectAll(".handle")
@@ -242,7 +242,7 @@ class Editor{
     $region.attr({
         transform: (d) => `translate(${[x(d.value.x), y(d.value.y)]})`
       })
-      .select(".region-bg")
+      .select(".region_bg")
       .attr({
         width: (d) => x(d.value.width),
         height: (d) => y(d.value.height)
