@@ -2,10 +2,20 @@
   opacity: 0;
   display: none;
   z-index: @z-backdrop;
-  background-color: black;
+  background-color: white;
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
+}
+
+.nbpresent_present{
+  z-index: @z-present;
+  position: fixed;
+  display: block;
+
+  .prompt {
+    display: none;
+  }
 }

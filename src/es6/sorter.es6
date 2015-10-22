@@ -5,6 +5,7 @@ import Jupyter from "base/js/namespace";
 
 import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
+import {PART} from "./parts";
 
 let REMOVED = "<removed>";
 
@@ -180,9 +181,11 @@ class Sorter {
             d.region.key === sRegion[1];
         },
         content_source: (d) => d.region.value.content &&
-          d.region.value.content.part === "source",
-        content_output: (d) => d.region.value.content &&
-          d.region.value.content.part === "output"
+          d.region.value.content.part === PART.source,
+        content_outputs: (d) => d.region.value.content &&
+          d.region.value.content.part === PART.outputs,
+        content_widgets: (d) => d.region.value.content &&
+          d.region.value.content.part === PART.widgets
       })
       .attr({
         x: (d) => d.region.value.x * 160,
@@ -209,11 +212,15 @@ class Sorter {
         }],
         [{
           icon: "external-link-square",
-          on: {click: () => this.linkContent("source")}
+          on: {click: () => this.linkContent(PART.source)}
         },
         {
           icon: "external-link",
-          on: {click: () => this.linkContent("output")}
+          on: {click: () => this.linkContent(PART.outputs)}
+        },
+        {
+          icon: "sliders",
+          on: {click: () => this.linkContent(PART.widgets)}
         }],
         [{
           icon: "trash",
