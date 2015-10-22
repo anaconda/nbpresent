@@ -9,17 +9,34 @@ import {Sorter} from "./sorter";
 class NBPresent {
   constructor() {
     this.tree = new Baobab({
-      slides: {},
+      slides: this.metadata().slides,
       presenter: {},
       sorter: {},
       editor: {},
       sortedSlides: Baobab.monkey(["slides"], this.sortedSlides)
     });
+
+    this.slides = this.tree.select(["slides"]);
+    this.slides.on("update", () => this.metadata(true))
+
     this.presenter = new Presenter(this.tree);
     this.sorter = new Sorter(this.tree);
 
     this.initToolbar();
     this.initStylesheet();
+  }
+
+  metadata(update){
+    let md = Jupyter.notebook.metadata;
+    if(update){
+      md.nbpresent = {
+        slides: this.slides.serialize()
+      };
+    }else{
+      return md.nbpresent || {
+        slides: {}
+      }
+    }
   }
 
   sortedSlides(slidesMap){

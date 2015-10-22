@@ -51,7 +51,7 @@ class Sorter {
           [region[0], "regions", region[1], "content"]);
         if(content){
           let cell = Jupyter.notebook.get_cells().filter(function(cell, idx){
-            if(cell.metadata.slides && cell.metadata.slides.id == content.cell){
+            if(cell.metadata.nbpresent && cell.metadata.nbpresent.id == content.cell){
               Jupyter.notebook.select(idx);
             };
           });
@@ -239,11 +239,11 @@ class Sorter {
       return;
     }
 
-    if(!cell.metadata.slides){
-      cell.metadata.slides = {id: this.nextId()};
+    if(!cell.metadata.nbpresent){
+      cell.metadata.nbpresent = {id: this.nextId()};
     }
 
-    cellId = cell.metadata.slides.id;
+    cellId = cell.metadata.nbpresent.id;
 
     this.slides.set([region[0], "regions", region[1], "content"], {
       cell: cellId,

@@ -72,6 +72,9 @@ class Presenter {
   }
 
   update() {
+    if(!this.presenting.get()){
+      return this.clean(true);
+    }
     let {clientWidth, clientHeight} = document.documentElement;
     this.x.range([0, clientWidth]);
     this.y.range([0, clientHeight]);
@@ -82,8 +85,8 @@ class Presenter {
     }
 
     let cells = Jupyter.notebook.get_cells().reduce((memo, cell)=> {
-        if(cell.metadata.slides){
-          memo[cell.metadata.slides.id] = cell;
+        if(cell.metadata.nbpresent){
+          memo[cell.metadata.nbpresent.id] = cell;
         }
         return memo;
       },{});
