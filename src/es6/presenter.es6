@@ -89,7 +89,7 @@ class Presenter {
       },{});
 
     d3.selectAll(this.allPartSelect())
-      .classed({nbpresent_unpresent: 1});
+      .classed({nbpresent_unpresent: 1, nbpresent_present: 0});
 
     d3.entries(slide.value.regions)
       .filter((region) => region.value.content)
@@ -101,6 +101,7 @@ class Presenter {
 
         part
           .classed({nbpresent_unpresent: 0, nbpresent_present: 1})
+          .transition()
           .style({
             left: `${this.x(x)}px`,
             top: `${this.y(y)}px`,
