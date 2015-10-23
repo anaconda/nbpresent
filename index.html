@@ -2,13 +2,25 @@
 <html>
 <head>
   <title>nbpresent | next generation slides for Jupyter Notebooks</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
 <body>
-  <h1>nbpresent</h1>
-  <p>
-    Bookmark and run this <a href="javascript:(function()%7Brequire(%5B%22http%3A%2F%2Fcontinuumio.github.io%2Fnbpresent%2Fnbpresent%2Fnbpresent.min.js%22%5D%2C%20function(nbpresent)%7Bnbpresent.load_ipython_extension()%7D)%7D)()">
-      bookmarklet
-    </a> in a running notebook!
-  </p>
+  <div class="container">
+    <h1>nbpresent</h1>
+    <ul>
+      <li>
+        Drag the <a class="btn btn-primary btn-xs" href="javascript:(function()%7Brequire(%5B%22http%3A%2F%2Fcontinuumio.github.io%2Fnbpresent%2Fnbpresent%2Fnbpresent.min.js%22%5D%2C%20function(nbpresent)%7Bnbpresent.load_ipython_extension()%7D)%7D)()">
+        nbpresent bookmarklet
+      </a> to your browser's bookmark bar...</li>
+      <li>
+        Click it in a running notebook, such as <a href="http://tmpnb.org">tmpnb</a>
+      </li>
+      <li>
+        Start remixing your notebook markdown, code, output and widgets into slides.
+      </li>
+    </ul>
+    <img class="img-responsive" src="./nbpresent.gif"/>
+  </div>
 </body>
 </html>
