@@ -23,7 +23,8 @@ class Presenter {
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({nbpresent_presenter: 1});
+      .classed({nbpresent_presenter: 1})
+      .style({display: "none"});
 
     this.initToolbar();
   }
@@ -59,10 +60,12 @@ class Presenter {
   present() {
     let presenting = this.presenting.get();
     this.$ui
+      .style({
+        "display": presenting ? "block" : "none"
+      })
       .transition()
       .style({
         opacity: +presenting,
-        display: presenting ? "block" : "none"
       });
 
     this.current.set(0);

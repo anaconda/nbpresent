@@ -21,6 +21,9 @@ class Sorter {
       .classed({
         nbpresent_sorter: 1,
         offscreen: 1
+      })
+      .style({
+        display: "none"
       });
 
     this.initToolbar();
@@ -42,6 +45,27 @@ class Sorter {
     this.slides.on("update", () => this.draw());
 
     this.draw();
+  }
+
+  show(){
+    this.visible.set(!this.visible.get());
+    this.update();
+  }
+
+  update(){
+    let visible = this.visible.get();
+    this.$view
+      .classed({offscreen: !visible})
+      .style({
+        // necessary for FOUC
+        "display": visible ? "block" : "none"
+      });
+    d3.select("#notebook-container")
+      .style({
+        width: visible ? "auto" : null,
+        "margin-right": visible ? "240px" : null,
+        "margin-left": visible ? "20px" : null
+      });
   }
 
   initDrag(){
@@ -399,22 +423,6 @@ class Sorter {
     next && this.slides.set([next, "prev"], id);
 
     return id;
-  }
-
-  show(){
-    this.visible.set(!this.visible.get());
-    this.update();
-  }
-
-  update(){
-    let visible = this.visible.get();
-    this.$view.classed({offscreen: !visible});
-    d3.select("#notebook-container")
-      .style({
-        width: visible ? "auto" : null,
-        "margin-right": visible ? "240px" : null,
-        "margin-left": visible ? "20px" : null,
-      });
   }
 }
 
