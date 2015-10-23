@@ -1,6 +1,6 @@
 .nbpresent_sorter{
   position: fixed;
-  width: 200px;
+  width: @sorter-width;
   right: 0;
   bottom: 0;
   top: @HACK-header-height;
@@ -11,21 +11,33 @@
 
   &.offscreen {
     transition: right 0.2s;
-    right: -205px;
+    right: -1 * (@sorter-width + 5);
+  }
+
+  .slide_toolbar, .region_toolbar{
+    position: absolute;
+    opacity: 0;
+    left: 10px;
+    display: none;
+  }
+
+  .region_toolbar{
+    left: @sorter-width - 26px;
   }
 
   .slides_wrap {
     height: 100%;
     overflow-y: auto;
     position: relative;
+    margin-left: 30px;
+    width: @sorter-slide-width + 5;
 
     .slide {
       position: absolute;
-      width: 160px;
-      height: 90px;
+      width: @sorter-slide-width;
+      height: @sorter-slide-height;
       border: solid 1px #eee;
       border-radius: 2px;
-      margin: 10px 10px 10px 10px;
       background-color: #fff;
 
       &.active {
@@ -39,24 +51,29 @@
         opacity: 0.9;
       }
 
-      .region {
-        fill: rgba(255,255,255,0.5);
-        stroke: rgba(128,128,128,0.5);
+      svg {
+        width: @sorter-slide-width;
+        height: @sorter-slide-height;
 
-        &.active {
-          stroke: @jpy-brand;
-        }
+        .region {
+          fill: rgba(255,255,255,0.5);
+          stroke: rgba(128,128,128,0.5);
 
-        &.content_source{
-          fill: navy;
-        }
+          &.active {
+            stroke: @jpy-brand;
+          }
 
-        &.content_outputs{
-          fill: darkred;
-        }
+          &.content_source{
+            fill: navy;
+          }
 
-        &.content_widgets{
-          fill: @jpy-brand;
+          &.content_outputs{
+            fill: darkred;
+          }
+
+          &.content_widgets{
+            fill: @jpy-brand;
+          }
         }
       }
     }

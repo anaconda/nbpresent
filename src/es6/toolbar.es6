@@ -5,6 +5,7 @@ let fn = d3.functor;
 class Toolbar {
   constructor(){
     this._btnClass = fn("btn-default btn-xs");
+    this._btnGroupClass = fn("btn-group");
     this.update = this.update.bind(this);
   }
 
@@ -14,17 +15,22 @@ class Toolbar {
       this._btnClass;
   }
 
-  update($selection){
-    $selection.classed({
-      "btn-toolbar": 1
-    });
+  btnGroupClass(val){
+    return arguments.length ?
+      [this._btnGroupClass = fn(val), this][1] :
+      this._btnGroupClass;
+  }
 
-    let $group = $selection.selectAll(".btn-group")
+  update($selection){
+    $selection.classed({"btn-toolbar": 1});
+
+    let $group = $selection.selectAll(".btn-toolbar-group")
       .data((d) => d)
 
     $group.enter()
       .append("div")
-      .classed({"btn-group": 1});
+      .classed({"btn-toolbar-group": 1})
+      .classed(this._btnGroupClass(), 1);
 
     let $btn = $group.selectAll(".btn")
       .data((d) => d)
