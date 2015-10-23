@@ -1,32 +1,37 @@
 import {NBPresent} from "./nbpresent";
 
 export function load_ipython_extension(){
-  console.info("nbpresent extension loaded");
-  detectRoot();
-  return new NBPresent();
+  detectRoot(()=> new NBPresent());
 }
 
-function detectRoot(){
+function detectRoot(cb){
   let local = "/nbextensions/nbpresent",
     remote = "https://continuumio.github.io/nbpresent/nbpresent";
 
   requirejs(
     [`${local}/nbpresent.min.js`],
-    () => initStylesheet(local),
-    () => initStylesheet(remote)
+    () => initStylesheet(local, cb),
+    () => initStylesheet(remote, cb)
   );
 }
 
-function initStylesheet(root){
-  console.info(`using nbpresent assets from ${root}`)
-  d3.select("head")
+function initStylesheet(root, cb){
+  let css = d3.select("head")
     .selectAll("link#nbpresent-css")
-    .data([1])
-  .enter()
+    .data([1]);
+
+  if(css.node()){
+    console.warn("nbpresent extension already loaded!");
+    return;
+  }
+
+  css.enter()
     .append("link")
     .attr({id: "nbpresent-css"})
     .attr({
       rel: "stylesheet",
       href: `${root}/nbpresent.min.css`
     });
+
+    cb();
 }

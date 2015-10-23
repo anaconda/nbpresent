@@ -1,7 +1,5 @@
 #!/bin/bash
-DIST=nbpresent/static/nbpresent
-
-mkdir -p ${DIST}
+. bin/env.sh
 
 browserify \
   --extension es6 \
@@ -11,10 +9,4 @@ browserify \
   --transform [ babelify --sourceMapRelative . ] \
   --transform uglifyify \
   --debug \
-  src/es6/index.es6 &
-
-lessc \
-  --autoprefix \
-  --clean-css \
-  src/less/index.less \
-  ${DIST}/nbpresent.min.css &
+  src/es6/index.es6

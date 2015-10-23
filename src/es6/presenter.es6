@@ -118,7 +118,7 @@ class Presenter {
 
   allPartSelect(){
     return d3.entries(PART_SELECT)
-      .map(({value}) => `.cell > ${value}`)
+      .map(({value}) => `.cell ${value}`)
       .join(", ");
   }
 

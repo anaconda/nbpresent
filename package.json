@@ -20,7 +20,8 @@
     "less": "~2.5.3",
     "uglifyify": "~3.0.1",
     "watch": "~0.16.0",
-    "node-uuid": "~1.4.3"
+    "node-uuid": "~1.4.3",
+    "watchify": "~3.4.0"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
@@ -36,10 +37,12 @@
     "url": "git://github.com/bollwyvl/nbpresent.git"
   },
   "scripts": {
-    "build": "scripts/build.sh",
-    "clean": "rm -rf nbpresent/static/nbpresent/*",
-    "lint": "eslint src/es6 --ext es6",
-    "watch": "watch 'npm run build' src/"
+    "browserify": "bin/browserify.sh",
+    "watch:browserify": "watch 'npm run browserify' src/es6",
+    "less": "bin/less.sh",
+    "watch:less": "watch 'npm run less' src/less",
+    "build": "npm run browserify && npm run less",
+    "watch": "./bin/watch.sh watch:browserify watch:less"
   },
   "version": "0.0.0"
 }
