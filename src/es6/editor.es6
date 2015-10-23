@@ -60,7 +60,8 @@ class Editor{
     this.$toolbar = this.$ui.append("div")
       .datum([[{
         icon: "plus-square-o",
-        on: {click: () => this.addRegion() }
+        click: () => this.addRegion(),
+        tip: "Add Region"
       }]])
       .call(toolbar.update);
   }

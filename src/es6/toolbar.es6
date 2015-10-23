@@ -37,14 +37,14 @@ class Toolbar {
       .append("i");
 
     $btn
-      .each(function(d){
-        let $btn = d3.select(this);
-        Object.keys(d.on).map((key)=>{
-          $btn.on(key, d.on[key]);
-        });
+      .on("click", (d) => d.click() )
+      .attr({
+        title: (d) => d.tip
       })
       .select("i")
-      .attr("class", (d) => `fa fa-fw fa-${d.icon}`);
+      .attr({
+        "class": (d) => `fa fa-fw fa-${d.icon}`,
+      });
   }
 }
 

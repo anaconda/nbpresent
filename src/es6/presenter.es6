@@ -38,19 +38,19 @@ class Presenter {
       .datum([
         [{
           icon: "dedent",
-          on: {click: () => this.presenting.set(false) }
+          click: () => this.presenting.set(false)
         },
         {
           icon: "fast-backward",
-          on: {click: () => this.current.set(0) }
+          click: () => this.current.set(0)
         },
         {
           icon: "step-backward",
-          on: {click: () => this.current.set(this.current.get() - 1) }
+          click: () => this.current.set(this.current.get() - 1)
         },
         {
           icon: "step-forward",
-          on: {click: () => this.current.set(this.current.get() + 1) }
+          click: () => this.current.set(this.current.get() + 1)
         }]
       ])
       .call(toolbar.update);

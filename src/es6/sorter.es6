@@ -204,27 +204,33 @@ class Sorter {
       .datum([
         [{
           icon: "plus-square-o",
-          on: {click: () => this.addSlide() }
+          click: () => this.addSlide(),
+          tip: "Add Slide"
         }],
         [{
           icon: "edit",
-          on: {click: () => this.editSlide(this.selectedSlide.get()) }
+          click: () => this.editSlide(this.selectedSlide.get()),
+          tip: "Edit Slide"
         }],
         [{
           icon: "external-link-square",
-          on: {click: () => this.linkContent(PART.source)}
+          click: () => this.linkContent(PART.source),
+          tip: "Link Region to Cell Input"
         },
         {
           icon: "external-link",
-          on: {click: () => this.linkContent(PART.outputs)}
+          click: () => this.linkContent(PART.outputs),
+          tip: "Link Region to Cell Output"
         },
         {
           icon: "sliders",
-          on: {click: () => this.linkContent(PART.widgets)}
+          click: () => this.linkContent(PART.widgets),
+          tip: "Link Region to Cell Widgets"
         }],
         [{
           icon: "trash",
-          on: {click: () => this.removeSlide(this.selectedSlide.get()) }
+          click: () => this.removeSlide(this.selectedSlide.get()),
+          tip: "Delete Slide"
         }]
       ])
       .call(toolbar.update);
