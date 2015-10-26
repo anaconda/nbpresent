@@ -5,7 +5,8 @@
   },
   "dependencies": {
     "baobab": "~2.0.1",
-    "d3": "~3.5.6"
+    "d3": "~3.5.6",
+    "html2canvas": "~0.5.0-alpha2"
   },
   "description": "This will be the home of the next generation of slide authoring presentation for [Jupyter Notebooks](https://github.com/jupyter/notebook).",
   "devDependencies": {

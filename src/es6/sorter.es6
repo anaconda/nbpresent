@@ -6,12 +6,15 @@ import Jupyter from "base/js/namespace";
 import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
 import {PART} from "./parts";
+import {CellManager} from "./cells";
 
 let REMOVED = "<removed>";
 
 class Sorter {
   constructor(tree) {
     this.tree = tree;
+
+    this.cellManager = new CellManager();
 
     this.visible = this.tree.select(["sorter", "visible"]);
     this.visible.set(false);
@@ -135,8 +138,7 @@ class Sorter {
       })
       .style({
         left: "200px"
-      })
-      .append("svg");
+      });
 
     $slide.exit()
       .transition()
@@ -175,16 +177,30 @@ class Sorter {
         }
       });
 
-    let $region = $slide.select("svg")
+    let $region = $slide
       .selectAll(".region")
       .data((slide) => d3.entries(slide.value.regions).map((region) => {
         return {slide, region};
       }))
 
     $region.enter()
-      .append("rect")
+      .append("div")
       .classed({region: 1})
-      .on("click", (d)=> this.selectedRegion.set([d.slide.key, d.region.key]));
+      .on("click", (d) => {
+        this.selectedRegion.set([d.slide.key, d.region.key]);
+      })
+      .on("mousemove", function(d){
+        let [x, y] = d3.mouse(this);
+        d3.select(this).style({
+          "background-position": `${100 * (x / (d.region.value.width * 160))}% ${100 * (y / (d.region.value.height * 90))}%`
+        })
+      })
+      .on("mouseout", function(d){
+        d3.select(this).transition()
+          .style({
+            "background-position": "0% 0%"
+          });
+      });
 
     $region.exit()
       .remove();
@@ -217,11 +233,29 @@ class Sorter {
         content_widgets: (d) => d.region.value.content &&
           d.region.value.content.part === PART.widgets
       })
-      .attr({
-        x: (d) => d.region.value.x * 160,
-        y: (d) => d.region.value.y * 90,
-        width: (d) => d.region.value.width * 160,
-        height: (d) => d.region.value.height * 90,
+      .style({
+        width: (d) => `${d.region.value.width * 160}px`,
+        height: (d) => `${d.region.value.height * 90}px`,
+        left: (d) => `${d.region.value.x * 160}px`,
+        top: (d) => `${d.region.value.y * 90}px`
+      });
+
+    // TODO: this needs to be much better/faster
+    $region
+      .filter((d) => d.region.value.content)
+      .filter(function(d){
+        let el = d3.select(this);
+        return el.classed("active") || el.style("background-image") === "none";
+      })
+      .each(function(d){
+        var $region = d3.select(this);
+        that.cellManager.thumbnail(d.region.value.content)
+          .then(function({uri, width, height}){
+            $region
+              .style({
+                "background-image": `url("${uri}")`
+              });
+          });
       });
 
     this.$empty.style({opacity: 1 * !$slide[0].length });
@@ -230,6 +264,7 @@ class Sorter {
   updateSelectedRegion(){
     let region = this.selectedRegion.get();
     if(region){
+      this.selectedSlide.set(region[0]);
       let content = this.slides.get(
         [region[0], "regions", region[1], "content"]);
       if(content){
@@ -324,6 +359,11 @@ class Sorter {
           icon: "sliders",
           click: () => this.linkContent(PART.widgets),
           tip: "Link Region to Cell Widgets"
+        },
+        {
+          icon: "unlink",
+          click: () => this.linkContent(null),
+          tip: "Unlink Region"
         }]
       ])
       .call(this.regionToolbar.update);
@@ -338,16 +378,20 @@ class Sorter {
       return;
     }
 
-    if(!cell.metadata.nbpresent){
-      cell.metadata.nbpresent = {id: this.nextId()};
+    if(part){
+      if(!cell.metadata.nbpresent){
+        cell.metadata.nbpresent = {id: this.nextId()};
+      }
+
+      cellId = cell.metadata.nbpresent.id;
+
+      this.slides.set([region[0], "regions", region[1], "content"], {
+        cell: cellId,
+        part
+      });
+    }else{
+      this.slides.unset([region[0], "regions", region[1], "content"]);
     }
-
-    cellId = cell.metadata.nbpresent.id;
-
-    this.slides.set([region[0], "regions", region[1], "content"], {
-      cell: cellId,
-      part
-    });
   }
 
   addSlide(){

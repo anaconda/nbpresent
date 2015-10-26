@@ -29,7 +29,7 @@
     height: 100%;
     overflow-y: auto;
     position: relative;
-    margin-left: 30px;
+    margin: 10px 0 0 30px;
     width: @sorter-slide-width + 5;
 
     .slide {
@@ -51,29 +51,27 @@
         opacity: 0.9;
       }
 
-      svg {
-        width: @sorter-slide-width;
-        height: @sorter-slide-height;
+      .region {
+        position: absolute;
 
-        .region {
-          fill: rgba(255,255,255,0.5);
-          stroke: rgba(128,128,128,0.5);
+        background-color: rgba(255,255,255,0.5);
+        background-repeat: no-repeat;
+        border: solid 1px rgba(128,128,128,0.5);
 
-          &.active {
-            stroke: @jpy-brand;
-          }
+        &.active{
+          border-width: 3px;
+        }
 
-          &.content_source{
-            fill: navy;
-          }
+        &.content_source{
+          border-color: navy;
+        }
 
-          &.content_outputs{
-            fill: darkred;
-          }
+        &.content_outputs{
+          border-color: darkred;
+        }
 
-          &.content_widgets{
-            fill: @jpy-brand;
-          }
+        &.content_widgets{
+          border-color: @jpy-brand;
         }
       }
     }
