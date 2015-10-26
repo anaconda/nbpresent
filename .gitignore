@@ -4,3 +4,5 @@ nbpresent/static/nbpresent/
 *.egg-info
 *.pyc
 __pycache__
+dist/
+build/
