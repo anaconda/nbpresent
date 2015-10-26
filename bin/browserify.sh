@@ -8,5 +8,5 @@ browserify \
   --standalone nbpresent \
   --transform [ babelify --sourceMapRelative . ] \
   --transform uglifyify \
-  --debug \
+  ${EXTRA} \
   src/es6/index.es6

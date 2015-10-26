@@ -2,3 +2,5 @@
 node_modules
 nbpresent/static/nbpresent/
 *.egg-info
+*.pyc
+__pycache__

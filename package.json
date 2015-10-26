@@ -39,7 +39,7 @@
   },
   "scripts": {
     "browserify": "bin/browserify.sh",
-    "watch:browserify": "watch 'npm run browserify' src/es6",
+    "watch:browserify": "watch 'EXTRA=--debug npm run browserify' src/es6",
     "less": "bin/less.sh",
     "watch:less": "watch 'npm run less' src/less",
     "build": "npm run browserify && npm run less",

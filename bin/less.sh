@@ -3,7 +3,7 @@
 
 lessc \
   --autoprefix \
-  --clean-css \
+  --clean-css="--s1 --advanced --compatibility=ie8" \
   --verbose \
   src/less/index.less \
   ${DIST}/nbpresent.min.css

@@ -5,12 +5,12 @@ export function load_ipython_extension(){
 }
 
 function detectRoot(cb){
-  let local = "/nbextensions/nbpresent",
+  let local = "nbextensions/nbpresent",
     remote = "https://continuumio.github.io/nbpresent/nbpresent";
 
   requirejs(
-    [`${local}/nbpresent.min.js`],
-    () => initStylesheet(local, cb),
+    [`${local}/nbpresent.min`],
+    () => initStylesheet(`/${local}`, cb),
     () => initStylesheet(remote, cb)
   );
 }
