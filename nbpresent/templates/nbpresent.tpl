@@ -25,3 +25,23 @@
     </div>
   </div>
 {%- endblock markdowncell %}
+
+
+{% block html_head %}
+  {{ super() }}
+  {% for css in resources.nbpresent_inline.css -%}
+    <style>
+      {{ css }}
+    </style>
+  {% endfor %}
+{% endblock html_head %}
+
+
+{% block body %}
+  {{ super() }}
+  {% for js in resources.nbpresent_inline.js -%}
+    <script>
+      {{ js }}
+    </script>
+  {% endfor %}
+{% endblock body %}
