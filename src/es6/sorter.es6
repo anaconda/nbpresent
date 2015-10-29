@@ -29,8 +29,6 @@ class Sorter {
         display: "none"
       });
 
-    this.initToolbar();
-    this.initDrag();
 
     this.$slides = this.$view.append("div")
       .classed({slides_wrap: 1});
@@ -38,6 +36,9 @@ class Sorter {
     this.$empty = this.$slides.append("h3")
       .classed({empty: 1})
       .text("No slides yet.");
+
+    this.initToolbar();
+    this.initDrag();
 
     this.slides = this.tree.select(["slides"]);
     this.selectedSlide = this.tree.select(["sorter", "selectedSlide"]);
@@ -51,7 +52,7 @@ class Sorter {
   }
 
   show(){
-    this.visible.set(!this.visible.get());
+    let visible = this.visible.set(!this.visible.get());
     this.update();
   }
 
@@ -62,12 +63,6 @@ class Sorter {
       .style({
         // necessary for FOUC
         "display": visible ? "block" : "none"
-      });
-    d3.select("#notebook-container")
-      .style({
-        width: visible ? "auto" : null,
-        "margin-right": visible ? "240px" : null,
-        "margin-left": visible ? "20px" : null
       });
   }
 
@@ -80,24 +75,24 @@ class Sorter {
         let slide = d3.select(this)
           .classed({dragging: 1});
 
-        dragOrigin = parseFloat(slide.style("top"));
+        dragOrigin = parseFloat(slide.style("left"));
       })
       .on("drag", function(d){
         d3.select(this)
           .style({
-            top: `${dragOrigin += d3.event.dy}px`,
+            left: `${dragOrigin += d3.event.dx}px`,
           });
       })
       .on("dragend", function(d, i){
         let $slide = d3.select(this)
           .classed({dragging: 0});
 
-        let top = parseFloat($slide.style("top")),
+        let left = parseFloat($slide.style("left")),
           slides = that.tree.get("sortedSlides"),
-          slideN = Math.floor(top / that.slideHeight()),
+          slideN = Math.floor(left / that.slideWidth()),
           after;
 
-        if(top < that.slideHeight() || slideN < 0){
+        if(left < that.slideWidth() || slideN < 0){
           after = null;
         }else if(slideN > slides.length || !slides[slideN]){
           after = slides.slice(-1)[0].key;
@@ -118,6 +113,10 @@ class Sorter {
     return 100;
   }
 
+  slideWidth(){
+    return 200;
+  }
+
   draw(){
     let that = this;
 
@@ -135,20 +134,17 @@ class Sorter {
         that.selectedSlide.set(
           that.selectedSlide.get() === d.key ? null : d.key
         );
-      })
-      .style({
-        left: "200px"
       });
 
     $slide.exit()
       .transition()
       .style({
-        left: "200px"
+        top: "200px"
       })
       .remove();
 
     let selectedSlide = this.selectedSlide.get(),
-      selectedSlideTop;
+      selectedSlideLeft;
 
     $slide
       .style({
@@ -160,20 +156,19 @@ class Sorter {
       .transition()
       .delay((d, i) => i * 10)
       .style({
-        left: "0px",
-        top: (d, i) => {
-          let top = i * this.slideHeight();
+        left: (d, i) => {
+          let left = i * this.slideWidth();
           if(d.key === selectedSlide){
-            selectedSlideTop = top + 32;
+            selectedSlideLeft = left;
             this.$slideToolbar
               .transition()
               .style({
-                top: `${selectedSlideTop}px`,
+                left: `${selectedSlideLeft}px`,
                 opacity: 1,
                 display: "block"
               });
           }
-          return `${top}px`;
+          return `${left}px`;
         }
       });
 
@@ -220,7 +215,7 @@ class Sorter {
               .style({
                 opacity: 1,
                 display: "block",
-                top: `${selectedSlideTop}px`
+                left: `${selectedSlideLeft}px`
               });
           }
 
@@ -258,7 +253,11 @@ class Sorter {
           });
       });
 
-    this.$empty.style({opacity: 1 * !$slide[0].length });
+    this.$empty
+      .transition()
+      .style({opacity: 1 * !$slide[0].length })
+      .transition()
+      .style({display: $slide[0].length ? "none": "block"});
   }
 
   updateSelectedRegion(){
@@ -309,8 +308,10 @@ class Sorter {
 
 
   initToolbar(){
-    this.deckToolbar = new Toolbar();
+    this.deckToolbar = new Toolbar()
+      .btnGroupClass("btn-group-vertical");
     this.$deckToolbar = this.$view.append("div")
+      .classed({deck_toolbar: 1})
       .datum([
         [{
           icon: "plus-square-o",
@@ -321,8 +322,7 @@ class Sorter {
       .call(this.deckToolbar.update);
 
     this.slideToolbar = new Toolbar();
-    this.slideToolbar.btnGroupClass("btn-group-vertical");
-    this.$slideToolbar = this.$view.append("div")
+    this.$slideToolbar = this.$slides.append("div")
       .classed({slide_toolbar: 1})
       .datum([
         [{
@@ -341,8 +341,7 @@ class Sorter {
       .call(this.slideToolbar.update);
 
     this.regionToolbar = new Toolbar();
-    this.regionToolbar.btnGroupClass("btn-group-vertical");
-    this.$regionToolbar = this.$view.append("div")
+    this.$regionToolbar = this.$slides.append("div")
       .classed({region_toolbar: 1})
       .datum([
         [{

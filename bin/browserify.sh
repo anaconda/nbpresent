@@ -4,6 +4,7 @@
 browserify \
   --extension es6 \
   --external base/js/namespace \
+  --external jquery \
   --outfile ${DIST}/nbpresent.min.js \
   --standalone nbpresent \
   --transform [ babelify --sourceMapRelative . ] \

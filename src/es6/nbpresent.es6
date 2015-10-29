@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 import d3 from "d3";
 import Baobab from "baobab";
 
@@ -48,12 +50,25 @@ export class NBPresent {
     return slides;
   }
 
+  show(){
+    this.sorter.show();
+    $('#header-container').toggle();
+    $('.header-bar').toggle();
+    $('div#maintoolbar').toggle();
+  }
+
   initToolbar() {
+    $("#view_menu").append($("<li/>").append($("<a/>")
+      .text("Toggle Present")
+      .on("click", ()=>{
+        this.show();
+      })));
+
     Jupyter.toolbar.add_buttons_group([
       {
         label: "Slide Sorter",
         icon: "fa-th-large",
-        callback: () => this.sorter.show(),
+        callback: () => this.show(),
         id: "nbpresent_sorter_btn"
       },
       {
@@ -67,4 +82,6 @@ export class NBPresent {
       }
     ]);
   }
+
+
 }

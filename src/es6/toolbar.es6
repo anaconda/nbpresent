@@ -4,7 +4,7 @@ let fn = d3.functor;
 
 class Toolbar {
   constructor(){
-    this._btnClass = fn("btn-default btn-xs");
+    this._btnClass = fn("btn-default");
     this._btnGroupClass = fn("btn-group");
     this.update = this.update.bind(this);
   }

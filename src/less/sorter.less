@@ -1,36 +1,48 @@
 .nbpresent_sorter{
   position: fixed;
-  width: @sorter-width;
   right: 0;
+  left: 0;
   bottom: 0;
-  top: @HACK-header-height;
+  height: @sorter-height;
   color: @jpy-brand;
-  box-shadow: -5px 0 -5px rgba(0,0,0,0.25);
-  transition: right 0.2s;
-  background-color: #fff;
+  box-shadow: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
+  transition: top 0.2s;
+  .gradient(#777, #444);
 
   &.offscreen {
-    transition: right 0.2s;
-    right: -1 * (@sorter-width + 5);
+    bottom: -1 * (@sorter-height + 5);
   }
 
-  .slide_toolbar, .region_toolbar{
+  .slide_toolbar {
     position: absolute;
-    opacity: 0;
-    left: 10px;
-    display: none;
+    top: @sorter-slide-height + 30;
+  }
+  .deck_toolbar{
+    position: absolute;
+    top: 0;
+    width: @deck-toolbar-width;
   }
 
   .region_toolbar{
-    left: @sorter-width - 26px;
+    position: absolute;
+    opacity: 0;
+    display: none;
+    top: -2px;
   }
 
   .slides_wrap {
-    height: 100%;
-    overflow-y: auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    height: @sorter-height;
+    overflow-x: auto;
     position: relative;
-    margin: 10px 0 0 30px;
-    width: @sorter-slide-width + 5;
+    margin: 0;
+    left: @deck-toolbar-width;
+    right: 0;
+
+    .empty {
+      position: absolute;
+    }
 
     .slide {
       position: absolute;
@@ -41,8 +53,9 @@
       background-color: #fff;
 
       &.active {
-        transition: border-color 0.2s;
-        border-color: @active;
+        transition: border 0.2s;
+        border-color: @jpy-brand;
+        border-top-width: 5px;
       }
 
       &.dragging {
