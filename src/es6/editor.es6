@@ -15,8 +15,9 @@ let directions = [
 ];
 
 class Editor{
-  constructor(slide) {
+  constructor(slide, region) {
     this.slide = slide;
+    this.region = region;
     this.regions = this.slide.select("regions");
 
     this.x = d3.scale.linear();
@@ -43,10 +44,13 @@ class Editor{
       .classed({nbpresent_editor: 1})
       .style({opacity: 0});
 
-    this.initToolbar();
-
     this.$bg = this.$ui.append("div")
       .classed({slide_bg: 1});
+
+    this.$sidebar = this.$ui.append("div")
+      .classed({nbpresent_editor_sidebar: 1});
+
+    this.initToolbar();
 
     this.$svg = this.$bg.append("svg");
 
@@ -57,7 +61,7 @@ class Editor{
   initToolbar(){
     let toolbar = new Toolbar();
 
-    this.$toolbar = this.$ui.append("div")
+    this.$toolbar = this.$sidebar.append("div")
       .datum([[{
         icon: "plus-square-o",
         click: () => this.addRegion(),
@@ -182,9 +186,13 @@ class Editor{
     return 16 / 9;
   }
 
+  sidebarWidth() {
+    return 200;
+  }
+
   update(){
     let uibb = this.$ui.node().getBoundingClientRect(),
-      width = uibb.width - (2 * this.padding()),
+      width = uibb.width - (this.sidebarWidth() + (2 * this.padding())),
       height = width / this.aspectRatio();
 
     if(height > uibb.height + 2 * this.padding()){
@@ -192,12 +200,14 @@ class Editor{
       width = height * this.aspectRatio();
     }
 
+    console.log(width, height);
+
     this.x.range([0, width]);
     this.y.range([0, height]);
     let {x, y} = this;
 
     this.$bg.style({
-      left: `${(uibb.width - width) / 2}px`,
+      left: `${(((uibb.width + this.sidebarWidth()) - width) / 2)}px`,
       top: `${(uibb.height - height) / 2}px`,
       width: `${width}px`,
       height: `${height}px`
@@ -206,8 +216,6 @@ class Editor{
     this.$svg.attr({width, height});
 
     let regions = d3.entries(this.regions.get());
-
-    //console.table(regions.map(({value}) => value));
 
     let $region = this.$svg.selectAll(".region")
       .data(regions, (d) => d.key);
@@ -264,7 +272,22 @@ class Editor{
           /s/.test(d.dir) ? d.region.value.height :
           d.region.value.height / 2
         )
-      })
+      });
+
+    var $regionInfo = this.$sidebar.selectAll(".region_info")
+      .data(regions, (d) => d.key);
+
+    $regionInfo
+      .enter()
+      .append("div")
+      .classed({region_info: 1})
+      .on("click", (d)=> {
+        console.log(d);
+        this.region.set([this.slide.get("id"), d.key]);
+      });
+
+    $regionInfo
+      .text((d) => d.key);
   }
 }
 

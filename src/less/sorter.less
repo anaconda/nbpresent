@@ -6,10 +6,11 @@
   height: @sorter-height;
   color: @jpy-brand;
   box-shadow: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
-  transition: top 0.2s;
+  transition: bottom 0.2s;
   .gradient(#777, #444);
 
   &.offscreen {
+    transition: bottom 0.2s;
     bottom: -1 * (@sorter-height + 5);
   }
 

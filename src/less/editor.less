@@ -1,8 +1,8 @@
 .nbpresent_editor {
   position: fixed;
   top: @HACK-header-height;
-  left: 0;
   right: 0;
+  left: 0;
   bottom: @sorter-height;
   background-color: rgba(50, 50, 50, 0.5);
   z-index: 9999;
@@ -15,5 +15,14 @@
   .region_bg {
     fill: transparent;
     stroke: @jpy-brand;
+  }
+
+  .nbpresent_editor_sidebar {
+    position: absolute;
+    width: @editor-sidebar-width;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    .gradient(#444, #777);
   }
 }
