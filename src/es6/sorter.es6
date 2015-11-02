@@ -25,6 +25,10 @@ class Sorter {
     this.selectedRegion.on("update", () => this.updateSelectedRegion());
     this.slides.on("update", () => this.draw());
 
+    this.scale = {
+      x: d3.scale.linear()
+    };
+
     this.mini = new MiniSlide(this);
 
     this.drawn = false;
@@ -131,6 +135,8 @@ class Sorter {
 
     let slides = this.tree.get("sortedSlides");
 
+    this.scale.x.range([0, this.slideWidth()]);
+
     //console.table(slides.map(({value}) => value));
 
     let $slide = this.$slides.selectAll(".slide")
@@ -166,7 +172,7 @@ class Sorter {
       .delay((d, i) => i * 10)
       .style({
         left: (d, i) => {
-          let left = i * this.slideWidth();
+          let left = this.scale.x(i);
           if(d.key === selectedSlide){
             selectedSlideLeft = left;
             this.$slideToolbar
