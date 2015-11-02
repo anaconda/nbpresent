@@ -7,6 +7,7 @@ import Jupyter from "base/js/namespace";
 
 import {Presenter} from "./presenter";
 import {Sorter} from "./sorter";
+import {CellToolbar} from "notebook/js/celltoolbar";
 
 export class NBPresent {
   constructor() {
@@ -54,7 +55,6 @@ export class NBPresent {
     this.sorter.show();
     $('#header-container').toggle();
     $('.header-bar').toggle();
-    $('div#maintoolbar').toggle();
   }
 
   initToolbar() {
@@ -64,6 +64,7 @@ export class NBPresent {
         this.show();
       })));
 
+    // TODO: make this one button!
     Jupyter.toolbar.add_buttons_group([
       {
         label: "Slide Sorter",
@@ -81,6 +82,39 @@ export class NBPresent {
         id: "nbpresent_present_btn"
       }
     ]);
+    let that = this;
+
+    var nbpresent_preset = [];
+    var select_type = CellToolbar.utils.select_ui_generator([
+        ["-"            ,"-"            ],
+        ["Slide"        ,"slide"        ],
+        ["Sub-Slide"    ,"subslide"     ],
+        ["Fragment"     ,"fragment"     ],
+        ["Skip"         ,"skip"         ],
+        ["Notes"        ,"notes"        ]
+      ],
+      (cell, value) => {
+        console.log(this, cell, value);
+        // setter
+      },
+      (cell) => {
+        //getter
+        if(cell === Jupyter.notebook.get_selected_cell() &&
+          !this.tree.get(["sorter", "visible"])
+        ){
+          console.log(this, cell);
+          this.show();
+        }
+      },
+      "nbpresent"
+    );
+
+  CellToolbar.register_callback('nbpresent.select', select_type);
+  nbpresent_preset.push('nbpresent.select');
+
+  CellToolbar.register_preset('nbpresent',nbpresent_preset, notebook);
+  console.log('nbpresent extension for metadata editing loaded.');
+
   }
 
 

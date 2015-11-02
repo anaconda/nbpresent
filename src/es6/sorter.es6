@@ -117,6 +117,7 @@ class Sorter {
       });
   }
 
+  // TODO: make these d3 scales!
   slideHeight() {
     return 100;
   }

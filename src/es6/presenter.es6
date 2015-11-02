@@ -35,6 +35,7 @@ class Presenter {
 
     toolbar.btnClass("btn-invert");
 
+    // TODO: Make this overlay (Jupyter-branded Reveal Compass)
     this.$toolbar = this.$ui.append("div")
       .datum([
         [{
@@ -109,6 +110,9 @@ class Presenter {
           .classed({nbpresent_unpresent: 0, nbpresent_present: 1})
           .transition()
           .style({
+        // TODO: do this with CSS3 transforms
+        // TODO: add z
+        // TODO: think about projections
             left: `${this.x(x)}px`,
             top: `${this.y(y)}px`,
             width: `${this.x(width)}px`,

@@ -20,6 +20,8 @@ class Editor{
     this.region = region;
     this.regions = this.slide.select("regions");
 
+
+    // TODO: make these discrete to base unit
     this.x = d3.scale.linear();
     this.y = d3.scale.linear();
 
