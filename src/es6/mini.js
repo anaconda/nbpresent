@@ -57,12 +57,14 @@ class MiniSlide {
           .catch(function(err){
             $region
               .style({
-                "background": "#333"
+                "background": "#333",
+                "background-image": null
               });
           })
           .then(function({uri, width, height}){
             $region
               .style({
+                background: null,
                 "background-image": `url("${uri}")`
               });
           });
