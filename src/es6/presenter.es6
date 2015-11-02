@@ -5,6 +5,14 @@ import Jupyter from "base/js/namespace";
 import {Toolbar} from "./toolbar";
 import {PARTS, PART_SELECT} from "./parts";
 
+let PREFIX = [
+  "-webkit-",
+  "-moz-",
+  "-ms-",
+  "-o-",
+  ""
+];
+
 class Presenter {
   constructor(tree) {
     this.tree = tree;
@@ -93,7 +101,7 @@ class Presenter {
           memo[cell.metadata.nbpresent.id] = cell;
         }
         return memo;
-      },{});
+      }, {});
 
     d3.selectAll(this.allPartSelect())
       .classed({nbpresent_unpresent: 1, nbpresent_present: 0});
@@ -108,13 +116,10 @@ class Presenter {
 
         part
           .classed({nbpresent_unpresent: 0, nbpresent_present: 1})
-          .transition()
           .style({
-        // TODO: do this with CSS3 transforms
-        // TODO: add z
-        // TODO: think about projections
-            left: `${this.x(x)}px`,
-            top: `${this.y(y)}px`,
+            transform: `translate(${this.x(x)}px, ${this.y(y)}px) translateZ(0)`,
+            left: `0`,
+            top: `0`,
             width: `${this.x(width)}px`,
             height: `${this.y(height)}px`
           });
@@ -136,6 +141,7 @@ class Presenter {
     }
     d3.selectAll(".nbpresent_unpresent")
       .style({
+        transform: null,
         left: null,
         top: null,
         width: null,
