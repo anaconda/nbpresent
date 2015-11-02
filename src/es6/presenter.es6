@@ -59,7 +59,13 @@ class Presenter {
   }
 
   present() {
+    this.current.set(null);
+    this.current.set(0);
+  }
+
+  update() {
     let presenting = this.presenting.get();
+
     this.$ui
       .style({
         "display": presenting ? "block" : "none"
@@ -69,16 +75,10 @@ class Presenter {
         opacity: +presenting,
       });
 
-    this.current.set(0);
     if(!presenting){
-      this.clean(true);
-    }
-  }
-
-  update() {
-    if(!this.presenting.get()){
       return this.clean(true);
     }
+
     let {clientWidth, clientHeight} = document.documentElement;
     this.x.range([0, clientWidth]);
     this.y.range([0, clientHeight]);

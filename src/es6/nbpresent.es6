@@ -57,6 +57,10 @@ export class NBPresent {
     $('.header-bar').toggle();
   }
 
+  present(){
+    this.presenter.presenting.set(true);
+  }
+
   initToolbar() {
     $("#view_menu").append($("<li/>").append($("<a/>")
       .text("Toggle Present")
@@ -75,10 +79,7 @@ export class NBPresent {
       {
         label: "Present",
         icon: "fa-youtube-play",
-        callback: () => this.tree.set(
-          ["presenter", "presenting"],
-          !this.tree.get(["presenter", "presenting"])
-        ),
+        callback: () => this.present(),
         id: "nbpresent_present_btn"
       }
     ]);
@@ -114,6 +115,8 @@ export class NBPresent {
 
   CellToolbar.register_preset('nbpresent',nbpresent_preset, notebook);
   console.log('nbpresent extension for metadata editing loaded.');
+
+
 
   }
 
