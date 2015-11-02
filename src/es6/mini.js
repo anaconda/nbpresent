@@ -54,6 +54,12 @@ class MiniSlide {
       .each(function(d){
         var $region = d3.select(this);
         that.cellManager.thumbnail(d.region.value.content)
+          .catch(function(err){
+            $region
+              .style({
+                "background": "#333"
+              });
+          })
           .then(function({uri, width, height}){
             $region
               .style({

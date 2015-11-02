@@ -16,15 +16,24 @@ class CellManager {
         return memo;
       },{});
 
-    let cell = cells[content.cell],
-      $el = d3.select(cell.element[0]),
+    let cell = cells[content.cell];
+
+    if(!cell){
+      return null;
+    }
+
+    let $el = d3.select(cell.element[0]),
       part = $el.select(PART_SELECT[content.part]);
 
     return part;
   }
 
   thumbnail(content){
-    let el = this.getPart(content).node();
+    let el = this.getPart(content);
+    el = el ? el.node() : null;
+    if(!el){
+      return Promise.reject(content);
+    }
     return html2canvas(el)
       .then((canvas) => {
         return {

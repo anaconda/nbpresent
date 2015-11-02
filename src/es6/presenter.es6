@@ -110,8 +110,13 @@ class Presenter {
       .filter((region) => region.value.content)
       .map((region) => {
         let {content, x, y, width, height} = region.value,
-          cell = cells[content.cell],
-          $el = d3.select(cell.element[0]),
+          cell = cells[content.cell];
+
+        if(!cell){
+          return;
+        }
+
+        let $el = d3.select(cell.element[0]),
           part = $el.select(PART_SELECT[content.part]);
 
         part
