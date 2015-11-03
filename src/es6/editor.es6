@@ -1,7 +1,6 @@
 import d3 from "d3";
-import uuid from "node-uuid";
 
-import {Toolbar} from "./toolbar";
+import {RegionTree} from "./regiontree";
 
 let directions = [
   "nw",
@@ -24,6 +23,8 @@ class Editor{
     // TODO: make these discrete to base unit
     this.x = d3.scale.linear();
     this.y = d3.scale.linear();
+
+    this.sidebar = new RegionTree(this.slide, this.region);
 
     this.initUI();
     this.initBehavior();
@@ -49,27 +50,10 @@ class Editor{
     this.$bg = this.$ui.append("div")
       .classed({slide_bg: 1});
 
-    this.$sidebar = this.$ui.append("div")
-      .classed({nbpresent_editor_sidebar: 1});
-
-    this.initToolbar();
-
     this.$svg = this.$bg.append("svg");
 
     this.$ui.transition()
       .style({opacity: 1});
-  }
-
-  initToolbar(){
-    let toolbar = new Toolbar();
-
-    this.$toolbar = this.$sidebar.append("div")
-      .datum([[{
-        icon: "plus-square-o",
-        click: () => this.addRegion(),
-        tip: "Add Region"
-      }]])
-      .call(toolbar.update);
   }
 
   initBehavior(){
@@ -168,17 +152,6 @@ class Editor{
 
   }
 
-  addRegion(){
-    let id = uuid.v4();
-    this.regions.set(id, {
-      id,
-      x: 0.1,
-      y: 0.1,
-      width: 0.8,
-      height: 0.8
-    });
-  }
-
   padding(){
     return 20;
   }
@@ -188,13 +161,9 @@ class Editor{
     return 16 / 9;
   }
 
-  sidebarWidth() {
-    return 200;
-  }
-
   update(){
     let uibb = this.$ui.node().getBoundingClientRect(),
-      width = uibb.width - (this.sidebarWidth() + (2 * this.padding())),
+      width = uibb.width - (this.sidebar.width() + (2 * this.padding())),
       height = width / this.aspectRatio();
 
     if(height > uibb.height + 2 * this.padding()){
@@ -209,7 +178,7 @@ class Editor{
     let {x, y} = this;
 
     this.$bg.style({
-      left: `${(((uibb.width + this.sidebarWidth()) - width) / 2)}px`,
+      left: `${(((uibb.width + this.sidebar.width()) - width) / 2)}px`,
       top: `${(uibb.height - height) / 2}px`,
       width: `${width}px`,
       height: `${height}px`
@@ -275,21 +244,6 @@ class Editor{
           d.region.value.height / 2
         )
       });
-
-    var $regionInfo = this.$sidebar.selectAll(".region_info")
-      .data(regions, (d) => d.key);
-
-    $regionInfo
-      .enter()
-      .append("div")
-      .classed({region_info: 1})
-      .on("click", (d)=> {
-        console.log(d);
-        this.region.set([this.slide.get("id"), d.key]);
-      });
-
-    $regionInfo
-      .text((d) => d.key);
   }
 }
 

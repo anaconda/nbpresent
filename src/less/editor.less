@@ -16,13 +16,15 @@
     fill: transparent;
     stroke: @jpy-brand;
   }
+}
 
-  .nbpresent_editor_sidebar {
-    position: absolute;
-    width: @editor-sidebar-width;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    .gradient(#444, #777);
-  }
+// TODO: move this?
+.nbpresent_regiontree {
+  z-index: 10000;
+  position: absolute;
+  width: @editor-sidebar-width;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  .gradient(#444, #777);
 }
