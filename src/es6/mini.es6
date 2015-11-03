@@ -36,13 +36,18 @@ class MiniSlide {
       .append("div")
       .classed({region: 1})
       .on("click", (d) => {
-        this.selectedRegion.set({slide: d.slide.key, region: d.region.key});
+        this.selectedRegion && this.selectedRegion.set({
+          slide: d.slide.key,
+          region: d.region.key
+        });
       });
 
     $region.exit()
       .remove();
 
-    let {slide, region} = this.selectedRegion.get() || {};
+    let {slide, region} = (
+      this.selectedRegion && this.selectedRegion.get()
+    ) || {};
 
     $region
       .classed({

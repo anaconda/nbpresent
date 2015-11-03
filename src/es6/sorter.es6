@@ -7,12 +7,15 @@ import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
 import {PART} from "./parts";
 import {MiniSlide} from "./mini";
+import {LayoutLibrary} from "./layouts";
 
 let REMOVED = "<removed>";
 
 class Sorter {
   constructor(tree) {
     this.tree = tree;
+
+    this.layoutPicked = this.layoutPicked.bind(this);
 
     this.visible = this.tree.select(["sorter", "visible"]);
     this.visible.set(false);
@@ -340,12 +343,30 @@ class Sorter {
   }
 
   addSlide(){
+    if(!this.layouts){
+      this.layouts = new LayoutLibrary(this.layoutPicked);
+    }else{
+      this.layouts.destroy();
+      this.layouts = null;
+    }
+  }
+
+  layoutPicked(slide){
+
     let last = this.tree.get("sortedSlides").slice(-1),
-      selected = this.selectedSlide.get(),
-      appended = this.appendSlide(
-        selected ? selected : last.length ? last[0].key : null
+      selected = this.selectedSlide.get();
+
+    this.slides.set([slide.key], slide.value);
+
+    let appended = this.appendSlide(
+        selected ? selected : last.length ? last[0].key : null,
+        slide.key
       );
+
     this.selectedSlide.set(appended);
+
+    this.layouts.destroy();
+    this.layouts = null;
   }
 
   editSlide(id){
