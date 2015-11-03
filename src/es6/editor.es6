@@ -24,9 +24,10 @@ class Editor{
     this.x = d3.scale.linear();
     this.y = d3.scale.linear();
 
-    this.sidebar = new RegionTree(this.slide, this.selectedRegion);
 
     this.initUI();
+    this.sidebar = new RegionTree(this.slide, this.selectedRegion);
+
     this.initBehavior();
 
     this.update();

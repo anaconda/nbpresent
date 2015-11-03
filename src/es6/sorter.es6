@@ -43,6 +43,9 @@ class Sorter {
       this.drawn = true;
     }
 
+    this.selectedSlide.set(null);
+    this.selectedRegion.set(null);
+
     let visible = this.visible.set(!this.visible.get());
     this.update();
     return visible ? this.draw() : null;
@@ -140,8 +143,6 @@ class Sorter {
 
     this.scale.x.range([0, this.slideWidth()]);
 
-    //console.table(slides.map(({value}) => value));
-
     let $slide = this.$slides.selectAll(".slide")
       .data(slides, (d) => d.key);
 
@@ -162,6 +163,7 @@ class Sorter {
       .remove();
 
     let selectedSlide = this.selectedSlide.get(),
+      selectedRegion = this.selectedRegion.get(),
       selectedSlideLeft;
 
     $slide
@@ -195,8 +197,8 @@ class Sorter {
     this.$regionToolbar
       .transition()
       .style({
-        opacity: 1,
-        display: "block",
+        opacity: selectedRegion ? 1 : 0,
+        display: selectedRegion ? "block" : "none",
         left: `${selectedSlideLeft}px`
       });
 
@@ -245,6 +247,7 @@ class Sorter {
         .style({display: "none"});
     }
     if(selected.slide != slide){
+      console.log("reset", selected.slide, slide);
       this.selectedRegion.set(null);
     }
 

@@ -9,6 +9,7 @@ class MiniSlide {
     this._regions = (d, i) => d.value.regions;
 
     this.update = this.update.bind(this);
+    this.clicked = this.clicked.bind(this);
   }
 
   regions(_){
@@ -19,6 +20,23 @@ class MiniSlide {
 
   hasContent(part){
     return (d) => (d.region.value.content || {}).part === part;
+  }
+
+  clicked(d){
+    if(!this.selectedRegion){
+      return;
+    }
+
+    let {slide, region} = this.selectedRegion.get() || {};
+
+    if(slide === d.slide.key && region === d.region.key){
+      return this.selectedRegion.set(null);
+    }
+
+    this.selectedRegion.set({
+      slide: d.slide.key,
+      region: d.region.key
+    });
   }
 
   update($slide) {
@@ -35,12 +53,7 @@ class MiniSlide {
     $region.enter()
       .append("div")
       .classed({region: 1})
-      .on("click", (d) => {
-        this.selectedRegion && this.selectedRegion.set({
-          slide: d.slide.key,
-          region: d.region.key
-        });
-      });
+      .on("click", this.clicked);
 
     $region.exit()
       .remove();
