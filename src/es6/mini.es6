@@ -2,41 +2,59 @@ import {CellManager} from "./cells";
 import {PART} from "./parts";
 
 class MiniSlide {
-  constructor({selectedRegion}) {
+  constructor(selectedRegion) {
     this.selectedRegion = selectedRegion;
     this.cellManager = new CellManager();
+
+    this._regions = (d, i) => d.value.regions;
+
     this.update = this.update.bind(this);
   }
 
-  update($region) {
+  regions(_){
+    return arguments.length ?
+      [this._regions = d3.functor(_), this][1] :
+      this._regions;
+  }
+
+  hasContent(part){
+    return (d) => (d.region.value.content || {}).part === part;
+  }
+
+  update($slide) {
     let that = this;
+
+    $slide.classed({mini: 1});
+
+    let $region = $slide
+      .selectAll(".region")
+      .data((d) => d3.entries(this._regions(d)).map((region) => {
+        return {slide: d, region};
+      }));
 
     $region.enter()
       .append("div")
       .classed({region: 1})
       .on("click", (d) => {
-        this.selectedRegion.set([d.slide.key, d.region.key]);
+        console.log(d);
+        this.selectedRegion.set({slide: d.slide.key, region: d.region.key});
       })
 
     $region.exit()
       .remove();
 
-    let sRegion = this.selectedRegion.get();
+    let {slide, region} = this.selectedRegion.get() || {};
 
     $region
       .classed({
         active: (d) => {
-          return  sRegion &&
-            d.slide.key == sRegion[0] &&
-            d.region.key === sRegion[1];
+          return d.slide.key === slide && d.region.key === region
         },
-        content_source: (d) => d.region.value.content &&
-          d.region.value.content.part === PART.source,
-        content_outputs: (d) => d.region.value.content &&
-          d.region.value.content.part === PART.outputs,
-        content_widgets: (d) => d.region.value.content &&
-          d.region.value.content.part === PART.widgets
+        content_source: this.hasContent(PART.source),
+        content_outputs: this.hasContent(PART.outputs),
+        content_widgets: this.hasContent(PART.widgets)
       })
+      // TODO: scale
       .style({
         width: (d) => `${d.region.value.width * 160}px`,
         height: (d) => `${d.region.value.height * 90}px`,

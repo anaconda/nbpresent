@@ -14,9 +14,9 @@ let directions = [
 ];
 
 class Editor{
-  constructor(slide, region) {
+  constructor(slide, selectedRegion) {
     this.slide = slide;
-    this.region = region;
+    this.selectedRegion = selectedRegion;
     this.regions = this.slide.select("regions");
 
 
@@ -24,7 +24,7 @@ class Editor{
     this.x = d3.scale.linear();
     this.y = d3.scale.linear();
 
-    this.sidebar = new RegionTree(this.slide, this.region);
+    this.sidebar = new RegionTree(this.slide, this.selectedRegion);
 
     this.initUI();
     this.initBehavior();
@@ -35,6 +35,7 @@ class Editor{
   }
 
   destroy() {
+    this.sidebar.destroy();
     this.$ui.transition()
       .style({opacity: 0})
       .remove();
@@ -171,8 +172,6 @@ class Editor{
       width = height * this.aspectRatio();
     }
 
-    console.log(width, height);
-
     this.x.range([0, width]);
     this.y.range([0, height]);
     let {x, y} = this;
@@ -217,6 +216,9 @@ class Editor{
             r: 5
           })
           .call(this.handleDrag);
+      })
+      .on("click", (d) => {
+        this.selectedRegion.set({slide: this.slide.get("id"), region: d.key});
       });
 
     $region.attr({

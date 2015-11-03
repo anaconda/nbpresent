@@ -7,6 +7,8 @@ import Jupyter from "base/js/namespace";
 
 import {PARTS, PART_SELECT} from "./parts";
 
+let _thumbs = new Map();
+
 class CellManager {
   getPart(content){
     let cells = Jupyter.notebook.get_cells().reduce((memo, cell)=> {
@@ -29,22 +31,27 @@ class CellManager {
   }
 
   thumbnail(content){
-    let el = this.getPart(content);
-    el = el ? el.node() : null;
-    if(!el){
-      return Promise.reject(content);
+    if(!_thumbs.get(content)){
+      let el = this.getPart(content);
+      el = el ? el.node() : null;
+      if(!el){
+        return Promise.reject(content);
+      }
+      _thumbs.set(content,
+        html2canvas(el)
+          .then((canvas) => {
+            return {
+              canvas,
+              uri: canvas.toDataURL("image/png"),
+              width: canvas.width,
+              height: canvas.height
+            };
+          }, (err)=>{
+            console.log(err)
+          }));
     }
-    return html2canvas(el)
-      .then((canvas) => {
-        return {
-          canvas,
-          uri: canvas.toDataURL("image/png"),
-          width: canvas.width,
-          height: canvas.height
-        };
-      }, (err)=>{
-        console.log(err)
-      });
+
+    return _thumbs.get(content);
   }
 }
 

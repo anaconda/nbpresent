@@ -20,11 +20,12 @@
 
 // TODO: move this?
 .nbpresent_regiontree {
+
   z-index: 10000;
   position: absolute;
   width: @editor-sidebar-width;
-  top: 0;
+  top: @HACK-header-height;
   left: 0;
-  bottom: 0;
+  bottom: @sorter-height;
   .gradient(#444, #777);
 }

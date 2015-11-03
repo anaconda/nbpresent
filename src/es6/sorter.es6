@@ -29,7 +29,7 @@ class Sorter {
       x: d3.scale.linear()
     };
 
-    this.mini = new MiniSlide(this);
+    this.mini = new MiniSlide(this.selectedRegion);
 
     this.drawn = false;
   }
@@ -187,15 +187,7 @@ class Sorter {
         }
       });
 
-    let $region = $slide
-      .selectAll(".region")
-      .data((slide) => d3.entries(slide.value.regions).map((region) => {
-        return {slide, region};
-      }));
-
-    $region.call(this.mini.update);
-
-    $slide.select(".active");
+    $slide.call(this.mini.update);
 
     this.$regionToolbar
       .transition()
@@ -213,11 +205,11 @@ class Sorter {
   }
 
   updateSelectedRegion(){
-    let region = this.selectedRegion.get();
+    let {slide, region} = this.selectedRegion.get() || {};
     if(region){
-      this.selectedSlide.set(region[0]);
+      this.selectedSlide.set(slide);
       let content = this.slides.get(
-        [region[0], "regions", region[1], "content"]);
+        [slide, "regions", region, "content"]);
       if(content){
         this.selectCell(content.cell);
       }
@@ -241,7 +233,7 @@ class Sorter {
 
   updateSelectedSlide(){
     let slide = this.selectedSlide.get(),
-      region = this.selectedRegion.get();
+      selected = this.selectedRegion.get() || {};
 
     if(!slide){
       this.$slideToolbar.transition()
@@ -249,7 +241,7 @@ class Sorter {
         .transition()
         .style({display: "none"});
     }
-    if(!region || region[0] != slide){
+    if(selected.slide != slide){
       this.selectedRegion.set(null);
     }
 
@@ -322,7 +314,7 @@ class Sorter {
   }
 
   linkContent(part){
-    let region = this.selectedRegion.get(),
+    let {slide, region} = this.selectedRegion.get() || {},
       cell = Jupyter.notebook.get_selected_cell(),
       cellId;
 
@@ -337,12 +329,12 @@ class Sorter {
 
       cellId = cell.metadata.nbpresent.id;
 
-      this.slides.set([region[0], "regions", region[1], "content"], {
+      this.slides.set([slide, "regions", region, "content"], {
         cell: cellId,
         part
       });
     }else{
-      this.slides.unset([region[0], "regions", region[1], "content"]);
+      this.slides.unset([slide, "regions", region, "content"]);
     }
   }
 

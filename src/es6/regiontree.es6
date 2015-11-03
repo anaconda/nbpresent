@@ -2,17 +2,28 @@ import d3 from "d3";
 import uuid from "node-uuid";
 
 import {Toolbar} from "./toolbar";
+import {MiniSlide} from "./mini";
 
 class RegionTree {
   constructor(slide, region){
     this.slide = slide;
-    this.region = region;
-    this.regions = this.slide.select("regions");
+    this.selectedRegion = region;
+
+
+    this.mini = (new MiniSlide(this.selectedRegion))
+      .regions((d) => {
+        var obj = {};
+        obj[d.region.id] = d.region;
+        return obj;
+      });
 
     this.initUI();
     this.update();
 
-    this.slide.on("update", ()=> { this.killed || this.update(); });
+    this.update = this.update.bind(this);
+
+    this.slide.on("update", this.update);
+    this.selectedRegion.on("update", this.update);
   }
 
   destroy() {
@@ -44,7 +55,7 @@ class RegionTree {
 
   addRegion(){
     let id = uuid.v4();
-    this.regions.set(id, {
+    this.slide.set(["regions", id], {
       id,
       x: 0.1,
       y: 0.1,
@@ -54,22 +65,31 @@ class RegionTree {
   }
 
   update(){
-    let regions = d3.entries(this.regions.get());
+    if(this.killed){
+      return;
+    }
 
-    let $regionInfo = this.$ui.selectAll(".region_info")
-      .data(regions, (d) => d.key);
+    let regions = d3.entries(this.slide.get("regions")),
+      $region = this.$ui.selectAll(".region_info")
+        .data(regions, (d) => d.key),
+      slide = this.slide.get();
 
-    $regionInfo
+    $region
       .enter()
       .append("div")
-      .classed({region_info: 1})
-      .on("click", (d)=> {
-        console.log(d);
-        this.region.set([this.slide.get("id"), d.key]);
-      });
+      .classed({region_info: 1});
 
-    $regionInfo
-      .text((d) => d.key);
+    let $mini = $region
+      .selectAll(".slide")
+      .data((d) => [{value: slide, key: slide.id, region: d.value}]);
+
+    $mini.enter()
+      .append("div")
+      .classed({slide: 1});
+
+    $mini.exit().remove();
+
+    $mini.call(this.mini.update);
   }
 
 }

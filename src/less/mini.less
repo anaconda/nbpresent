@@ -1,0 +1,44 @@
+.slide.mini {
+  position: relative;
+  width: @sorter-slide-width;
+  height: @sorter-slide-height;
+  border: solid 1px #eee;
+  border-radius: 2px;
+  background-color: #fff;
+
+  &.active {
+    transition: border 0.2s;
+    border-color: @jpy-brand;
+    border-top-width: 5px;
+  }
+
+  &.dragging {
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.25);
+    z-index: 9999;
+    opacity: 0.9;
+  }
+
+  .region {
+    position: absolute;
+
+    background-color: rgba(255,255,255,0.5);
+    background-repeat: no-repeat;
+    border: solid 1px rgba(128,128,128,0.5);
+
+    &.active{
+      border-width: 3px;
+    }
+
+    &.content_source{
+      border-color: navy;
+    }
+
+    &.content_outputs{
+      border-color: darkred;
+    }
+
+    &.content_widgets{
+      border-color: @jpy-brand;
+    }
+  }
+}
