@@ -8,7 +8,7 @@
   color: @jpy-brand;
   box-shadow: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
   transition: bottom 0.2s;
-  .gradient(#777, #444);
+  background-color: @ui-bg;
 
   &.offscreen {
     transition: bottom 0.2s;
@@ -23,10 +23,9 @@
     position: absolute;
     left: 50%;
     top: -42px;
-    width: @deck-toolbar-width;
 
     .btn {
-      .gradient(#444, #777);
+      background-color: @ui-bg;
       color: @jpy-brand;
       border: none;
     }
@@ -46,7 +45,6 @@
     overflow-x: auto;
     position: relative;
     margin: 0;
-    left: @deck-toolbar-width;
     right: 0;
 
     .empty {

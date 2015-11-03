@@ -48,7 +48,9 @@ class Sorter {
 
     let visible = this.visible.set(!this.visible.get());
     this.update();
-    return visible ? this.draw() : null;
+    if(this.visible){
+      this.draw();
+    }
   }
 
   update(){
@@ -58,6 +60,11 @@ class Sorter {
       .style({
         // necessary for FOUC
         "display": visible ? "block" : "none"
+      });
+
+    d3.select("#notebook")
+      .style({
+        "margin-bottom": visible ? "100px" : null
       });
   }
 
@@ -346,7 +353,7 @@ class Sorter {
   }
 
   addSlide(){
-    if(!this.layouts){
+    if(!this.layouts || this.layouts.killed){
       this.layouts = new LayoutLibrary(this.layoutPicked);
     }else{
       this.layouts.destroy();

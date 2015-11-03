@@ -67,6 +67,12 @@ class LayoutLibrary {
     this.$ui = d3.select("body")
       .append("div")
       .classed({nbpresent_layout_library: 1});
+
+    this.$ui.append("button")
+      .classed({btn: 1, hide_library: 1, "btn-default": 1})
+      .on("click", () => this.destroy())
+      .append("i")
+      .classed({fa: 1, "fa-remove": 1})
   }
 
   update(){

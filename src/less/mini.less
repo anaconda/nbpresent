@@ -26,19 +26,20 @@
     border: solid 1px rgba(128,128,128,0.5);
 
     &.active{
-      border-width: 3px;
+      border-color: @jpy-brand;
+      box-shadow: 0px 2px 5px rgba(0,0,0,0.25);
     }
 
     &.content_source{
-      border-color: navy;
+      background-color: rgba(0, 0, 128, 0.25);
     }
 
     &.content_outputs{
-      border-color: darkred;
+      background-color: rgba(139, 0, 0, 0.25);
     }
 
     &.content_widgets{
-      border-color: @jpy-brand;
+      background-color: rgba(139, 0, 128, 0.25);
     }
   }
 }
