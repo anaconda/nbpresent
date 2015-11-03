@@ -69,7 +69,7 @@ class Sorter {
   }
 
   initUI(){
-    this.$view = d3.select("#header")
+    this.$view = d3.select("body")
       .append("div")
       .classed({
         nbpresent_sorter: 1,
@@ -79,9 +79,22 @@ class Sorter {
         display: "none"
       });
 
-
     this.$slides = this.$view.append("div")
       .classed({slides_wrap: 1});
+
+    let $brand = this.$view.append("h4")
+      .classed({nbpresent_brand: 1})
+      .append("a")
+      .attr({
+        href: "https://continuumio.github.io/nbpresent/",
+        target: "_blank"
+      })
+
+    $brand.append("i")
+      .attr("class", "fa fa-fw fa-gift");
+
+    $brand.append("span")
+      .text("nbpresent");
 
     this.$empty = this.$slides.append("h3")
       .classed({empty: 1})

@@ -10,6 +10,18 @@
   transition: bottom 0.2s;
   background-color: @ui-bg;
 
+  .nbpresent_brand {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 5px 10px;
+    padding: 0;
+
+    a {
+      color: @jpy-brand;
+    }
+  }
+
   &.offscreen {
     transition: bottom 0.2s;
     bottom: -1 * (@sorter-height + 5);
