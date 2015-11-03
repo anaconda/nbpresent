@@ -5,7 +5,7 @@
   left: 0;
   bottom: @sorter-height;
   background-color: rgba(50, 50, 50, 0.5);
-  z-index: 9999;
+  z-index: @z-editor;
 
   .slide_bg {
     background-color: #fff;
@@ -20,8 +20,7 @@
 
 // TODO: move this?
 .nbpresent_regiontree {
-
-  z-index: 10000;
+  z-index: @z-regiontree;
   position: absolute;
   width: @editor-sidebar-width;
   top: @HACK-header-height;

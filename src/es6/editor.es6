@@ -165,7 +165,9 @@ class Editor{
   update(){
     let uibb = this.$ui.node().getBoundingClientRect(),
       width = uibb.width - (this.sidebar.width() + (2 * this.padding())),
-      height = width / this.aspectRatio();
+      height = width / this.aspectRatio(),
+      regions = d3.entries(this.regions.get()),
+      {slide, region} = this.selectedRegion.get() || {};
 
     if(height > uibb.height + 2 * this.padding()){
       height = uibb.height - (2 * this.padding());
@@ -184,8 +186,6 @@ class Editor{
     });
 
     this.$svg.attr({width, height});
-
-    let regions = d3.entries(this.regions.get());
 
     let $region = this.$svg.selectAll(".region")
       .data(regions, (d) => d.key);

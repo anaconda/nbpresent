@@ -36,9 +36,8 @@ class MiniSlide {
       .append("div")
       .classed({region: 1})
       .on("click", (d) => {
-        console.log(d);
         this.selectedRegion.set({slide: d.slide.key, region: d.region.key});
-      })
+      });
 
     $region.exit()
       .remove();

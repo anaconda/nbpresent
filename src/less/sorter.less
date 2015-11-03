@@ -1,4 +1,5 @@
 .nbpresent_sorter{
+  z-index: @z-sorter;
   position: fixed;
   right: 0;
   left: 0;
@@ -20,8 +21,15 @@
   }
   .deck_toolbar{
     position: absolute;
-    top: 0;
+    left: 50%;
+    top: -42px;
     width: @deck-toolbar-width;
+
+    .btn {
+      .gradient(#444, #777);
+      color: @jpy-brand;
+      border: none;
+    }
   }
 
   .region_toolbar{

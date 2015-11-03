@@ -254,7 +254,8 @@ class Sorter {
 
   initToolbar(){
     this.deckToolbar = new Toolbar()
-      .btnGroupClass("btn-group-vertical");
+      .btnGroupClass("btn-group-vertical")
+      .btnClass("btn-default btn-lg");
     this.$deckToolbar = this.$view.append("div")
       .classed({deck_toolbar: 1})
       .datum([
