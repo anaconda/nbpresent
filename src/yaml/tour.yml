@@ -1,0 +1,11 @@
+steps:
+  - element: "#nbpresent_sorter_btn"
+    title: "Activate Sorter"
+    content: |
+      Let's build some nbpresent slides, a different way to organize your
+      Jupyter cells.
+
+  - element: "#nbpresent_present_btn"
+    title: "Activate Presenter"
+    content: |
+      Ok, now that we've got some slides, let's see how it looks all put together.
