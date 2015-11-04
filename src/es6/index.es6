@@ -1,3 +1,5 @@
+import {d3} from "./vendor";
+
 import {NBPresent} from "./nbpresent";
 
 export function load_ipython_extension(){
