@@ -1,7 +1,13 @@
 import Tour from "bootstraptour";
 
 class NbpresentTour {
-  constructor() {
+  constructor(nbpresent) {
+    this.nbpresent = nbpresent;
+
+    let fake_hover = (selector, value) => d3.selectAll(selector).classed({
+      fake_hover: value
+    });
+
     this.tour = new Tour({
       storage: false, // start tour from beginning every time
       reflex: true, // click on element to continue tour
@@ -23,6 +29,52 @@ class NbpresentTour {
           element: "#nbpresent_present_btn",
           title: "This is the nbpresent Presenter",
           content: "With the Presenter, you can view that presentation, tweak the content in-place, and publish it to the world. But first..."
+        },
+        {
+          element: "#deck_toolbar .fa-plus-square-o",
+          title: "This is the Deck Toolbar",
+          content: "Let's create a new slide"
+        },
+        // ...
+        {
+          element: "#nbpresent_present_btn",
+          title: "Great, let's have a look",
+          content: "Clicking this button brings up the Presenter",
+          onNext: () => this.nbpresent.present()
+        },
+        // ...
+        {
+          element: ".presenter_toolbar .fa-step-forward",
+          title: "Go forward",
+          content: "Click here to go to the next Slide",
+          placement: "bottom",
+          onShown: () => fake_hover(".presenter_toolbar", true),
+          onHidden: () => fake_hover(".presenter_toolbar", 0)
+        },
+        {
+          element: ".presenter_toolbar .fa-step-backward",
+          title: "Go back",
+          content: "Clicking here to go back to the previous slide",
+          placement: "bottom",
+          onShown: () => fake_hover(".presenter_toolbar", true),
+          onHidden: () => fake_hover(".presenter_toolbar", 0)
+        },
+        {
+          element: ".presenter_toolbar .fa-fast-backward",
+          title: "Go back to the beginning",
+          content: "Clicking here to go back to the first Slide",
+          placement: "bottom",
+          onShown: () => fake_hover(".presenter_toolbar", true),
+          onHidden: () => fake_hover(".presenter_toolbar", 0)
+        },
+        {
+          element: ".presenter_toolbar .fa-book",
+          title: "My work is done here",
+          content: "Click here to go back to the Notebook",
+          placement: "bottom",
+          onShown: () => fake_hover(".presenter_toolbar", true),
+          onHidden: () => fake_hover(".presenter_toolbar", 0) &&
+            this.nbpresent.unpresent()
         }
       ]
     });

@@ -25,7 +25,7 @@ export class NBPresent {
     this.slides = this.tree.select(["slides"]);
     this.slides.on("update", () => this.metadata(true))
 
-    this.tour = new Tour();
+    this.tour = new Tour(this);
     this.tour.init();
 
     this.presenter = new Presenter(this.tree, this.tour);
@@ -66,6 +66,10 @@ export class NBPresent {
 
   present(){
     this.presenter.presenting.set(true);
+  }
+
+  unpresent(){
+    this.presenter.presenting.set(false);
   }
 
   initToolbar() {
