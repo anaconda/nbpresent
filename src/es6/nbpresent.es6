@@ -8,6 +8,7 @@ import Jupyter from "base/js/namespace";
 import {Presenter} from "./presenter";
 import {Sorter} from "./sorter";
 import {CellToolbar} from "notebook/js/celltoolbar";
+import {PART} from "./parts";
 
 export class NBPresent {
   constructor() {
@@ -86,38 +87,27 @@ export class NBPresent {
     let that = this;
 
     var nbpresent_preset = [];
-    var select_type = CellToolbar.utils.select_ui_generator([
-        ["-"            ,"-"            ],
-        ["Slide"        ,"slide"        ],
-        ["Sub-Slide"    ,"subslide"     ],
-        ["Fragment"     ,"fragment"     ],
-        ["Skip"         ,"skip"         ],
-        ["Notes"        ,"notes"        ]
-      ],
-      (cell, value) => {
-        console.log(this, cell, value);
-        // setter
-      },
-      (cell) => {
-        //getter
-        if(cell === Jupyter.notebook.get_selected_cell() &&
-          !this.tree.get(["sorter", "visible"])
-        ){
-          console.log(this, cell);
-          this.show();
-        }
-      },
-      "nbpresent"
-    );
 
-  CellToolbar.register_callback('nbpresent.select', select_type);
-  nbpresent_preset.push('nbpresent.select');
+    let add_to_region = (div, cell) => {
+      let $div = d3.select(div[0]);
 
-  CellToolbar.register_preset('nbpresent',nbpresent_preset, notebook);
-  console.log('nbpresent extension for metadata editing loaded.');
+      $div.append("i").attr("class", "fa fa-link");
 
+      $div.append("span").text(" Region ");
 
+      let $btn = $div.selectAll(".btn")
+        .data([PART.source, PART.outputs, PART.widgets])
+        .enter()
+        .append("button")
+        .classed({btn: 1, "btn-default": 1, "btn-xs": 1})
+        .text((d) => d)
+        .on("click", (d) => that.sorter.linkContent(d));
+    };
 
+    CellToolbar.register_callback("nbpresent.add_to_region", add_to_region);
+    nbpresent_preset.push("nbpresent.add_to_region");
+
+    CellToolbar.register_preset("nbpresent", nbpresent_preset, Jupyter.notebook);
   }
 
 
