@@ -30,10 +30,17 @@ class NbpresentTour {
 
   init(){
     this.tour.init();
+    return this;
   }
 
   start(){
     this.tour.start();
+    return this;
+  }
+
+  restart(){
+    this.tour.restart();
+    return this;
   }
 }
 

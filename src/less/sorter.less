@@ -10,7 +10,7 @@
   transition: bottom 0.2s;
   background-color: @ui-bg;
 
-  .nbpresent_brand {
+  .nbpresent_brand, .nbpresent_help {
     position: absolute;
     right: 0;
     bottom: 0;
@@ -20,6 +20,11 @@
     a {
       color: @jpy-brand;
     }
+  }
+
+  .nbpresent_help {
+    bottom: inherit;
+    top: 0;
   }
 
   &.offscreen {

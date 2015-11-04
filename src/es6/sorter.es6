@@ -8,14 +8,13 @@ import {Toolbar} from "./toolbar";
 import {PART} from "./parts";
 import {MiniSlide} from "./mini";
 import {LayoutLibrary} from "./layouts";
-import {Tour} from "./tour";
-
 
 let REMOVED = "<removed>";
 
 class Sorter {
-  constructor(tree) {
+  constructor(tree, tour) {
     this.tree = tree;
+    this.tour = tour;
 
     this.layoutPicked = this.layoutPicked.bind(this);
 
@@ -43,9 +42,6 @@ class Sorter {
     if(!this.drawn){
       this.initUI();
       this.drawn = true;
-      this.tour = new Tour();
-      this.tour.init();
-      this.tour.start();
     }
 
     this.selectedSlide.set(null);
@@ -104,6 +100,14 @@ class Sorter {
     this.$empty = this.$slides.append("h3")
       .classed({empty: 1})
       .text("No slides yet.");
+
+    let $help = this.$view.append("div")
+      .classed({nbpresent_help: 1})
+      .append("a")
+      .attr({href: "#"})
+    .on("click", () => this.tour.restart())
+      .append("i")
+      .attr("class", "fa fa-question-circle");
 
     this.initToolbar();
     this.initDrag();
