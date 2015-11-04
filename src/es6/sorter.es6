@@ -8,6 +8,8 @@ import {Toolbar} from "./toolbar";
 import {PART} from "./parts";
 import {MiniSlide} from "./mini";
 import {LayoutLibrary} from "./layouts";
+import {Tour} from "./tour";
+
 
 let REMOVED = "<removed>";
 
@@ -41,6 +43,9 @@ class Sorter {
     if(!this.drawn){
       this.initUI();
       this.drawn = true;
+      this.tour = new Tour();
+      this.tour.init();
+      this.tour.start();
     }
 
     this.selectedSlide.set(null);
