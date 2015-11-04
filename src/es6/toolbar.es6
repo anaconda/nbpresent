@@ -6,6 +6,8 @@ class Toolbar {
   constructor(){
     this._btnClass = fn("btn-default");
     this._btnGroupClass = fn("btn-group");
+    this._tipOptions = fn({container: "body"});
+
     this.update = this.update.bind(this);
   }
 
@@ -15,6 +17,12 @@ class Toolbar {
       this._btnClass;
   }
 
+  tipOptions(val){
+    return arguments.length ?
+      [this._tipOptions = fn(val), this][1] :
+      this._tipOptions;
+  }
+
   btnGroupClass(val){
     return arguments.length ?
       [this._btnGroupClass = fn(val), this][1] :
@@ -22,6 +30,7 @@ class Toolbar {
   }
 
   update($selection){
+    let that = this;
     $selection.classed({"btn-toolbar": 1});
 
     let $group = $selection.selectAll(".btn-toolbar-group")
@@ -33,24 +42,40 @@ class Toolbar {
       .classed(this._btnGroupClass(), 1);
 
     let $btn = $group.selectAll(".btn")
-      .data((d) => d)
+      .data((d) => d, (d) => d.tip);
 
     $btn.enter()
       .append("a")
       .attr("class", (d) => {
         return `btn ${this._btnClass(d)}`
       })
+      .attr({
+        title: (d) => d.tip
+      })
+      .each(function(d){
+        $(this).tooltip(that._tipOptions(d));
+      })
       .append("i");
 
     $btn
       .on("click", (d) => d.click() )
-      .attr({
-        title: (d) => d.tip
-      })
       .select("i")
       .attr({
         "class": (d) => `fa fa-fw fa-${d.icon}`,
       });
+
+    let clean = function(){
+      $(this).tooltip("destroy");
+    }
+
+    $btn.filter((d) => d.visible && !d.visible())
+      .each(clean)
+      .remove();
+
+    $btn.exit()
+      .each(clean)
+      .remove();
+    $group.exit().remove();
   }
 }
 

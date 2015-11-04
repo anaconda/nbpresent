@@ -24,6 +24,14 @@ let layouts = [
       {x: 0.4, y: 0.1, width: 0.2, height: 0.8},
       {x: 0.7, y: 0.1, width: 0.2, height: 0.8}
     ]
+  },
+  {
+    regions: [
+      {x: 0.1, y: 0.1, width: 0.4, height: 0.4},
+      {x: 0.5, y: 0.1, width: 0.4, height: 0.4},
+      {x: 0.1, y: 0.5, width: 0.4, height: 0.4},
+      {x: 0.5, y: 0.5, width: 0.4, height: 0.4},
+    ]
   }
 ];
 
@@ -72,7 +80,15 @@ class LayoutLibrary {
       .classed({btn: 1, hide_library: 1, "btn-default": 1})
       .on("click", () => this.destroy())
       .append("i")
-      .classed({fa: 1, "fa-remove": 1})
+      .classed({fa: 1, "fa-remove": 1});
+
+    this.$ui.append("h3")
+      .classed({from_template: 1})
+      .text("Pick template");
+
+    this.$ui.append("h3")
+      .classed({from_slide: 1})
+      .text("Reuse slide as template");
   }
 
   update(){

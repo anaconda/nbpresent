@@ -10,13 +10,28 @@
 
   .hide_library {
     position: absolute;
-    right: 0;
-    top: 0;
+    left: 50%;
+    bottom: 0;
+    background-color: @ui-bg;
+    color: @jpy-brand;
   }
 
   .slide {
     float: left;
-    margin: 20px;
+    margin: 40px 20px 20px 20px;
     opacity: 80%;
+  }
+
+  h3 {
+    color: @jpy-brand;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    &.from_template{
+      top: 5px;
+    }
+    &.from_slide{
+      bottom: 0;
+    }
   }
 }

@@ -156,6 +156,30 @@ class Sorter {
     return 200;
   }
 
+  copySlide(slide){
+    let newSlide = JSON.parse(JSON.stringify(slide));
+    newSlide.id = this.nextId();
+    newSlide.regions = d3.entries(newSlide.regions).reduce((memo, d)=>{
+      let id = this.nextId();
+      // TODO: keep part?
+      memo[id] = $.extend(true, {}, d.value, {id, content: null});
+      return memo;
+    }, {});
+
+    return newSlide;
+  }
+
+  slideClicked(d){
+    if(this.layouts){
+      let newSlide = this.copySlide(d.value);
+      this.layoutPicked({key: newSlide.id, value: newSlide});
+      this.layouts && this.layouts.destroy();
+      this.layouts = null;
+      return;
+    }
+    this.selectedSlide.set(d.key);
+  }
+
   draw(){
     let that = this;
 
@@ -169,10 +193,8 @@ class Sorter {
     $slide.enter().append("div")
       .classed({slide: 1})
       .call(this.drag)
-      .on("mousedown", function(d){
-        that.selectedSlide.set(
-          that.selectedSlide.get() === d.key ? null : d.key
-        );
+      .on("click", (d) =>{
+        this.slideClicked(d)
       });
 
     $slide.exit()
@@ -200,13 +222,6 @@ class Sorter {
           let left = this.scale.x(i);
           if(d.key === selectedSlide){
             selectedSlideLeft = left;
-            this.$slideToolbar
-              .transition()
-              .style({
-                left: `${selectedSlideLeft}px`,
-                opacity: 1,
-                display: "block"
-              });
           }
           return `${left}px`;
         }
@@ -227,6 +242,8 @@ class Sorter {
       .style({opacity: 1 * !$slide[0].length })
       .transition()
       .style({display: $slide[0].length ? "none": "block"});
+
+    this.$deckToolbar.call(this.deckToolbar.update);
   }
 
   updateSelectedRegion(){
@@ -260,14 +277,7 @@ class Sorter {
     let slide = this.selectedSlide.get(),
       selected = this.selectedRegion.get() || {};
 
-    if(!slide){
-      this.$slideToolbar.transition()
-        .style({opacity: 0})
-        .transition()
-        .style({display: "none"});
-    }
     if(selected.slide != slide){
-      console.log("reset", selected.slide, slide);
       this.selectedRegion.set(null);
     }
 
@@ -280,7 +290,6 @@ class Sorter {
 
   initToolbar(){
     this.deckToolbar = new Toolbar()
-      .btnGroupClass("btn-group-vertical")
       .btnClass("btn-default btn-lg");
     this.$deckToolbar = this.$view.append("div")
       .classed({deck_toolbar: 1})
@@ -289,28 +298,28 @@ class Sorter {
           icon: "plus-square-o",
           click: () => this.addSlide(),
           tip: "Add Slide"
-        }]
-      ])
-      .call(this.deckToolbar.update);
-
-    this.slideToolbar = new Toolbar();
-    this.$slideToolbar = this.$slides.append("div")
-      .classed({slide_toolbar: 1})
-      .datum([
-        [{
+        }], [{
           icon: "edit",
           click: () => this.editSlide(this.selectedSlide.get()),
-          tip: "Edit Slide"
+          tip: "Edit Slide",
+          visible: () => this.selectedSlide.get() && !this.editor
         }, {
+          icon: "chevron-circle-down",
+          click: () => this.editSlide(this.selectedSlide.get()),
+          tip: "Back to Sorter",
+          visible: () => this.editor
+        }],
+        [{
           icon: "trash",
           click: () => {
             this.removeSlide(this.selectedSlide.get());
             this.selectedSlide.set(null);
           },
-          tip: "Delete Slide"
+          tip: "Delete Slide",
+          visible: () => this.selectedSlide.get()
         }]
       ])
-      .call(this.slideToolbar.update);
+      .call(this.deckToolbar.update);
 
     this.regionToolbar = new Toolbar();
     this.$regionToolbar = this.$slides.append("div")
@@ -375,7 +384,6 @@ class Sorter {
   }
 
   layoutPicked(slide){
-
     let last = this.tree.get("sortedSlides").slice(-1),
       selected = this.selectedSlide.get();
 
@@ -401,11 +409,11 @@ class Sorter {
       this.editor = null;
     }
 
-    if(!id){
-      return;
+    if(id){
+      // TODO: do this with an id and big tree ref?
+      this.editor = new Editor(this.slides.select(id), this.selectedRegion);
     }
-    // TODO: do this with an id and big tree ref?
-    this.editor = new Editor(this.slides.select(id), this.selectedRegion);
+    this.draw();
   }
 
   nextId(){

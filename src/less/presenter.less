@@ -9,14 +9,19 @@
   bottom: 0;
   right: 0;
 
-  .btn-toolbar {
+  .presenter_toolbar {
     z-index: @z-present-toolbar;
     opacity: 0;
     transition: all 0.2s;
     float: right;
+
     &:hover{
       opacity: 1;
       transition: all 0.2s;
+    }
+
+    a {
+      color: @jpy-brand;
     }
   }
 }

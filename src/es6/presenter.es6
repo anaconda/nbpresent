@@ -41,26 +41,35 @@ class Presenter {
   initToolbar(){
     let toolbar = new Toolbar();
 
-    toolbar.btnClass("btn-invert");
+    toolbar
+      .btnGroupClass("btn-group-vertical")
+      .btnClass("btn-invert btn-lg")
+      .tipOptions({container: "body", placement: "bottom"});
 
     // TODO: Make this overlay (Jupyter-branded Reveal Compass)
     this.$toolbar = this.$ui.append("div")
+      .classed({presenter_toolbar: 1})
       .datum([
         [{
-          icon: "dedent",
-          click: () => this.presenting.set(false)
-        },
-        {
-          icon: "fast-backward",
-          click: () => this.current.set(0)
-        },
-        {
+            icon: "fast-backward",
+            click: () => this.current.set(0),
+            tip: "Back to Start"
+          },
+        ],
+        [{
           icon: "step-backward",
-          click: () => this.current.set(this.current.get() - 1)
-        },
-        {
+          click: () => this.current.set(this.current.get() - 1),
+          tip: "Previous Slide"
+        }],
+        [{
           icon: "step-forward",
-          click: () => this.current.set(this.current.get() + 1)
+          click: () => this.current.set(this.current.get() + 1),
+          tip: "Next Slide"
+        }],
+        [{
+          icon: "book",
+          click: () => this.presenting.set(false),
+          tip: "Back to Notebook"
         }]
       ])
       .call(toolbar.update);
