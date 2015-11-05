@@ -39,9 +39,10 @@
 
 {% block body %}
   {{ super() }}
-  {% for js in resources.nbpresent_inline.js -%}
-    <script>
-      {{ js }}
-    </script>
-  {% endfor %}
+  <script src="./nbpresent/static/nbpresent/nbpresent.min.js" />
+  <script>
+    require(["nbpresent"], function(nbpresent){
+      console.log(nbpresent);
+    })
+  </script>
 {% endblock body %}
