@@ -31,9 +31,38 @@ class NbpresentTour {
           content: "With the Presenter, you can view that presentation, tweak the content in-place, and publish it to the world. But first..."
         },
         {
-          element: "#deck_toolbar .fa-plus-square-o",
+          element: ".deck_toolbar .fa-plus-square-o",
           title: "This is the Deck Toolbar",
-          content: "Let's create a new slide"
+          content: "Let's create a new slide",
+          onNext: () => this.nbpresent.sorter.addSlide()
+        },
+        {
+          element: ".from_template",
+          title: "Template Library",
+          position: "top",
+          content: "You can pick from some existing templates..."
+        },
+        {
+          element: ".from_slide",
+          title: "Reuse Slide as Template",
+          position: "top",
+          content: "Or copy an existing slide"
+        },
+        {
+          element: ".nbpresent_layout_library .slide:nth-of-type(2)",
+          title: "Simple Template",
+          position: "top",
+          content: "Let's use this one",
+          onNext: () => this.nbpresent.sorter.layoutPicked(
+            d3.select(".nbpresent_layout_library .slide:nth-of-type(2)")
+              .datum()
+          )
+        },
+        {
+          element: ".slides_wrap .slide:last-child",
+          placement: "top",
+          title: "Look at the slide, just look at it",
+          content: "Here's our new slide"
         },
         // ...
         {
