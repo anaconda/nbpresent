@@ -348,8 +348,8 @@ class Sorter {
           icon: "sliders",
           click: () => this.linkContent(PART.widgets),
           tip: "Link Region to Cell Widgets"
-        },
-        {
+        }],
+        [{
           icon: "unlink",
           click: () => this.linkContent(null),
           tip: "Unlink Region"
