@@ -7,5 +7,6 @@ export {
   d3,
   Baobab,
   html2canvas,
-  uuid
+  uuid,
+  load_ipython_extension
 };

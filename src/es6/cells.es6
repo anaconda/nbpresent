@@ -1,6 +1,5 @@
-import d3 from "d3";
+import {d3, html2canvas} from "nbpresent-deps";
 
-import html2canvas from "html2canvas";
 window.html2canvas = html2canvas;
 
 import Jupyter from "base/js/namespace";

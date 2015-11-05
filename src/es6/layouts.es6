@@ -1,6 +1,6 @@
-import d3 from "d3";
-import uuid from "node-uuid";
 import $ from "jquery";
+
+import {d3, uuid} from "nbpresent-deps";
 
 import {MiniSlide} from "./mini";
 

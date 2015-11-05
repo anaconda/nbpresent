@@ -1,9 +1,8 @@
 import $ from "jquery";
 
-import d3 from "d3";
-import Baobab from "baobab";
-
 import Jupyter from "base/js/namespace";
+
+import {d3, Baobab} from "nbpresent-deps";
 
 import {Presenter} from "./presenter";
 import {Sorter} from "./sorter";

@@ -8,6 +8,7 @@ browserify \
   --external base/js/namespace \
   --external notebook/js/celltoolbar \
   --external jquery \
+  --external ./index \
   --transform [ babelify --sourceMapRelative . ] \
   --outfile ${DIST}/nbpresent.deps.min.js \
   src/es6/vendor.es6
