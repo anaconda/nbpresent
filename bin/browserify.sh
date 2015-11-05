@@ -5,6 +5,7 @@
 # --transform uglifyify \
 
 browserify \
+  --standalone nbpresent \
   --extension es6 \
   --external ./nbpresent-deps.min \
   --external ./nbpresent-loader.min \

@@ -39,9 +39,8 @@
 
 {% block body %}
   {{ super() }}
-  <script src="./nbpresent/static/nbpresent/nbpresent.min.js" />
   <script>
-    require(["nbpresent"], function(nbpresent){
+    require(["./nbpresent/static/nbpresent/nbpresent.min"], function(nbpresent){
       console.log(nbpresent);
     })
   </script>
