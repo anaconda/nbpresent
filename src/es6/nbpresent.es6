@@ -9,6 +9,8 @@ import {Presenter} from "./presenter";
 import {Sorter} from "./sorter";
 import {CellToolbar} from "notebook/js/celltoolbar";
 import {PART} from "./parts";
+import {Tour} from "./tour";
+
 
 export class NBPresent {
   constructor() {
@@ -23,8 +25,11 @@ export class NBPresent {
     this.slides = this.tree.select(["slides"]);
     this.slides.on("update", () => this.metadata(true))
 
-    this.presenter = new Presenter(this.tree);
-    this.sorter = new Sorter(this.tree);
+    this.tour = new Tour(this);
+    this.tour.init();
+
+    this.presenter = new Presenter(this.tree, this.tour);
+    this.sorter = new Sorter(this.tree, this.tour);
 
     this.initToolbar();
   }
@@ -54,12 +59,17 @@ export class NBPresent {
 
   show(){
     this.sorter.show();
+    this.tour.start();
     $('#header-container').toggle();
     $('.header-bar').toggle();
   }
 
   present(){
     this.presenter.presenting.set(true);
+  }
+
+  unpresent(){
+    this.presenter.presenting.set(false);
   }
 
   initToolbar() {

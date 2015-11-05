@@ -12,8 +12,9 @@ import {LayoutLibrary} from "./layouts";
 let REMOVED = "<removed>";
 
 class Sorter {
-  constructor(tree) {
+  constructor(tree, tour) {
     this.tree = tree;
+    this.tour = tour;
 
     this.layoutPicked = this.layoutPicked.bind(this);
 
@@ -99,6 +100,14 @@ class Sorter {
     this.$empty = this.$slides.append("h3")
       .classed({empty: 1})
       .text("No slides yet.");
+
+    let $help = this.$view.append("div")
+      .classed({nbpresent_help: 1})
+      .append("a")
+      .attr({href: "#"})
+    .on("click", () => this.tour.restart())
+      .append("i")
+      .attr("class", "fa fa-question-circle");
 
     this.initToolbar();
     this.initDrag();
@@ -339,8 +348,8 @@ class Sorter {
           icon: "sliders",
           click: () => this.linkContent(PART.widgets),
           tip: "Link Region to Cell Widgets"
-        },
-        {
+        }],
+        [{
           icon: "unlink",
           click: () => this.linkContent(null),
           tip: "Unlink Region"

@@ -3,6 +3,7 @@
 
 browserify \
   --extension es6 \
+  --external bootstraptour \
   --external base/js/namespace \
   --external notebook/js/celltoolbar \
   --external jquery \
