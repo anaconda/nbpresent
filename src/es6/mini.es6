@@ -1,4 +1,4 @@
-import {CellManager} from "./cells";
+import {CellManager} from "./cells/notebook";
 import {PART} from "./parts";
 
 class MiniSlide {

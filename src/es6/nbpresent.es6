@@ -4,7 +4,7 @@ import Jupyter from "base/js/namespace";
 
 import {d3, Baobab} from "nbpresent-deps";
 
-import {Presenter} from "./presenter";
+import {Presenter} from "./presenter/notebook";
 import {Sorter} from "./sorter";
 import {CellToolbar} from "notebook/js/celltoolbar";
 import {PART} from "./parts";

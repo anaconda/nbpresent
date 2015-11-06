@@ -1,9 +1,8 @@
 import {d3} from "nbpresent-deps";
 
-import Jupyter from "base/js/namespace";
-
-import {Toolbar} from "./toolbar";
-import {PARTS, PART_SELECT} from "./parts";
+import {CellManager} from "../cells/runtime";
+import {Toolbar} from "../toolbar";
+import {PARTS, PART_SELECT} from "../parts";
 
 let PREFIX = [
   "-webkit-",
@@ -13,9 +12,11 @@ let PREFIX = [
   ""
 ];
 
-class Presenter {
+export class Presenter {
   constructor(tree) {
     this.tree = tree;
+
+    this.cellManager = this.makeCellManager();
 
     this.initUI();
     this.x = d3.scale.linear();
@@ -26,6 +27,10 @@ class Presenter {
 
     this.presenting.on("update", () => this.present());
     this.current.on("update", () => this.update());
+  }
+
+  makeCellManager() {
+    return new CellManager();
   }
 
   initUI(){
@@ -80,6 +85,10 @@ class Presenter {
     this.current.set(0);
   }
 
+  getCells() {
+    return this.cellManager.getCells();
+  }
+
   update() {
     let presenting = this.presenting.get();
 
@@ -105,12 +114,7 @@ class Presenter {
       return this.current.set(0);
     }
 
-    let cells = Jupyter.notebook.get_cells().reduce((memo, cell)=> {
-        if(cell.metadata.nbpresent){
-          memo[cell.metadata.nbpresent.id] = cell;
-        }
-        return memo;
-      }, {});
+    let cells = this.getCells();
 
     d3.selectAll(this.allPartSelect())
       .classed({nbpresent_unpresent: 1, nbpresent_present: 0});
@@ -164,5 +168,3 @@ class Presenter {
       .classed({nbpresent_unpresent: 0, nbpresent_present: 0});
   }
 }
-
-export {Presenter};

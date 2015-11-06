@@ -53,6 +53,9 @@ class Toolbar {
         title: (d) => d.tip
       })
       .each(function(d){
+        if(!$.fn.tooltip){
+          return;
+        }
         $(this).tooltip(that._tipOptions(d));
       })
       .append("i");

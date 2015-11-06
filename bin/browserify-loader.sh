@@ -1,8 +1,6 @@
 #!/bin/bash
 . bin/env.sh
-
 # ${EXTRA} \
-# --transform uglifyify \
 
 browserify \
   --standalone nbpresent \
@@ -17,6 +15,7 @@ browserify \
   --external node-uuid \
   --external nbpresent-deps \
   --transform [ babelify --sourceMapRelative . ] \
+  ${EXTRA} \
   --outfile ${DIST}/nbpresent.loader.min.js \
   src/es6/loader.es6
 

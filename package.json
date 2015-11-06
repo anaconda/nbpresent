@@ -6,7 +6,8 @@
   "dependencies": {
     "baobab": "~2.0.1",
     "d3": "~3.5.6",
-    "html2canvas": "~0.5.0-alpha2"
+    "html2canvas": "~0.5.0-alpha2",
+    "node-uuid": "~1.4.3"
   },
   "description": "This will be the home of the next generation of slide authoring presentation for [Jupyter Notebooks](https://github.com/jupyter/notebook).",
   "devDependencies": {
@@ -21,7 +22,6 @@
     "less": "~2.5.3",
     "uglifyify": "~3.0.1",
     "watch": "~0.16.0",
-    "node-uuid": "~1.4.3",
     "watchify": "~3.4.0"
   },
   "eslintConfig": {
@@ -43,11 +43,13 @@
     "browserify-deps": "bin/browserify.sh",
     "watch:browserify-deps": "watch 'EXTRA=--debug npm run browserify-deps' src/es6",
     "browserify-loader": "bin/browserify-loader.sh",
-    "watch:browserify": "watch 'EXTRA=--debug npm run browserify-loader' src/es6",
+    "watch:browserify-loader": "watch 'EXTRA=--debug npm run browserify-loader' src/es6",
+    "browserify-runtime": "bin/browserify-runtime.sh",
+    "watch:browserify-runtime": "watch 'EXTRA=--debug npm run browserify-runtime' src/es6",
     "less": "bin/less.sh",
     "watch:less": "watch 'npm run less' src/less",
-    "build": "npm run browserify && npm run less",
-    "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-loader watch:less"
+    "build": "npm run browserify && npm run less && npm run browserify-deps && npm run browserify-runtime && npm run browserify-loader",
+    "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-loader watch:browserify-runtime watch:less"
   },
   "version": "0.0.0"
 }
