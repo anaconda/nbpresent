@@ -15,22 +15,15 @@ function(require){
   });
 
   function init(env){
-    requirejs(["nbpresent-deps"], function(){
-      requirejs([ns + env], function(Mode){
+    requirejs(["require", "./nbpresent-deps"], function(require){
+      requirejs(["require", "./" + ns + env], function(require, Mode){
         new Mode(_here[0]);
       });
     });
   }
 
-  var api = {},
-    notebook = api.load_ipython_extension = function(){ init("notebook"); },
-    standalone = api.load_presentation_standalone = function(){
-      init("standalone");
-    };
-
-  if(!window.Jupyter){
-    standalone();
-  }
-
-  return api;
+  return {
+    load_ipython_extension: function(){ init("notebook"); },
+    load_presentation_standalone: function(){ init("standalone"); }
+  };
 });

@@ -44,8 +44,15 @@
     {{ resources.nbpresent.metadata }}
   </script>
   <script>
-    require(["./nbpresent/static/nbpresent/nbpresent.min"], function(nbpresent){
-      console.log(nbpresent);
-    })
+    ;(function(){
+      var local = "./nbpresent/static/nbpresent/nbpresent.min",
+        cdn = "https://continuumio.github.io/nbpresent/nbpresent/nbpresent.min",
+        init = function(loader){
+          loader.load_presentation_standalone();
+        }
+
+      requirejs([local], init, function(){ requirejs([cdn], init); })
+
+    }).call(this);
   </script>
 {% endblock body %}
