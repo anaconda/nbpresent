@@ -1,4 +1,4 @@
-import d3 from "d3";
+import {d3} from "nbpresent-deps";
 
 let fn = d3.functor;
 
@@ -53,6 +53,9 @@ class Toolbar {
         title: (d) => d.tip
       })
       .each(function(d){
+        if(!$.fn.tooltip){
+          return;
+        }
         $(this).tooltip(that._tipOptions(d));
       })
       .append("i");

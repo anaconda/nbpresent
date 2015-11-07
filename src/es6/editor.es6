@@ -1,4 +1,4 @@
-import d3 from "d3";
+import {d3} from "nbpresent-deps";
 
 import {RegionTree} from "./regiontree";
 

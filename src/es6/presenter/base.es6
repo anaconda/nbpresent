@@ -1,9 +1,7 @@
-import d3 from "d3";
+import {d3} from "nbpresent-deps";
 
-import Jupyter from "base/js/namespace";
-
-import {Toolbar} from "./toolbar";
-import {PARTS, PART_SELECT} from "./parts";
+import {Toolbar} from "../toolbar";
+import {PARTS, PART_SELECT} from "../parts";
 
 let PREFIX = [
   "-webkit-",
@@ -13,9 +11,11 @@ let PREFIX = [
   ""
 ];
 
-class Presenter {
+export class Presenter {
   constructor(tree) {
     this.tree = tree;
+
+    this.cellManager = this.makeCellManager();
 
     this.initUI();
     this.x = d3.scale.linear();
@@ -28,6 +28,10 @@ class Presenter {
     this.current.on("update", () => this.update());
   }
 
+  makeCellManager() {
+    throw new Error("Not implemented");
+  }
+
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
@@ -37,6 +41,26 @@ class Presenter {
     this.initToolbar();
   }
 
+  toolbarIcons(){
+    return [
+      [{
+          icon: "fast-backward",
+          click: () => this.current.set(0),
+          tip: "Back to Start"
+        },
+      ],
+      [{
+        icon: "step-backward",
+        click: () => this.current.set(this.current.get() - 1),
+        tip: "Previous Slide"
+      }],
+      [{
+        icon: "step-forward",
+        click: () => this.current.set(this.current.get() + 1),
+        tip: "Next Slide"
+      }]
+    ];
+  }
 
   initToolbar(){
     let toolbar = new Toolbar();
@@ -49,35 +73,17 @@ class Presenter {
     // TODO: Make this overlay (Jupyter-branded Reveal Compass)
     this.$toolbar = this.$ui.append("div")
       .classed({presenter_toolbar: 1})
-      .datum([
-        [{
-            icon: "fast-backward",
-            click: () => this.current.set(0),
-            tip: "Back to Start"
-          },
-        ],
-        [{
-          icon: "step-backward",
-          click: () => this.current.set(this.current.get() - 1),
-          tip: "Previous Slide"
-        }],
-        [{
-          icon: "step-forward",
-          click: () => this.current.set(this.current.get() + 1),
-          tip: "Next Slide"
-        }],
-        [{
-          icon: "book",
-          click: () => this.presenting.set(false),
-          tip: "Back to Notebook"
-        }]
-      ])
+      .datum(this.toolbarIcons())
       .call(toolbar.update);
   }
 
   present() {
     this.current.set(null);
     this.current.set(0);
+  }
+
+  getCells() {
+    return this.cellManager.getCells();
   }
 
   update() {
@@ -105,18 +111,13 @@ class Presenter {
       return this.current.set(0);
     }
 
-    let cells = Jupyter.notebook.get_cells().reduce((memo, cell)=> {
-        if(cell.metadata.nbpresent){
-          memo[cell.metadata.nbpresent.id] = cell;
-        }
-        return memo;
-      }, {});
+    let cells = this.getCells();
 
     d3.selectAll(this.allPartSelect())
       .classed({nbpresent_unpresent: 1, nbpresent_present: 0});
 
     d3.entries(slide.value.regions)
-      .filter((region) => region.value.content)
+      .filter(({value}) => value.content)
       .map((region) => {
         let {content, x, y, width, height} = region.value,
           cell = cells[content.cell];
@@ -164,5 +165,3 @@ class Presenter {
       .classed({nbpresent_unpresent: 0, nbpresent_present: 0});
   }
 }
-
-export {Presenter};

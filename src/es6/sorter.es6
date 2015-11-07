@@ -1,5 +1,4 @@
-import d3 from "d3";
-import uuid from "node-uuid";
+import {d3, uuid} from "nbpresent-deps";
 
 import Jupyter from "base/js/namespace";
 

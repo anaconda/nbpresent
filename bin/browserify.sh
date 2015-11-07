@@ -1,15 +1,11 @@
 #!/bin/bash
 . bin/env.sh
+#  ${EXTRA} \
 
-browserify \
-  --extension es6 \
-  --external bootstraptour \
-  --external base/js/namespace \
-  --external notebook/js/celltoolbar \
-  --external jquery \
-  --outfile ${DIST}/nbpresent.min.js \
-  --standalone nbpresent \
-  --transform [ babelify --sourceMapRelative . ] \
-  --transform uglifyify \
-  ${EXTRA} \
-  src/es6/index.es6
+UGLIFY=./node_modules/uglifyify/node_modules/uglify-js/bin/uglifyjs
+#| $UGLIFY -c \
+
+cat src/js/index.js \
+  > ${DIST}/nbpresent.min.js \
+
+ls -lathr ${DIST}

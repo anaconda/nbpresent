@@ -1,24 +1,31 @@
-import d3 from "d3";
+import {d3, html2canvas} from "nbpresent-deps";
 
-import html2canvas from "html2canvas";
+// boo nasty hack
 window.html2canvas = html2canvas;
 
-import Jupyter from "base/js/namespace";
-
-import {PARTS, PART_SELECT} from "./parts";
+import {PARTS, PART_SELECT} from "../parts";
 
 let _thumbs = new Map();
 
-class CellManager {
-  getPart(content){
-    let cells = Jupyter.notebook.get_cells().reduce((memo, cell)=> {
-        if(cell.metadata.nbpresent){
-          memo[cell.metadata.nbpresent.id] = cell;
-        }
-        return memo;
-      },{});
+export class CellManager {
+  getCells(){
+    let cells = {};
 
-    let cell = cells[content.cell];
+    d3.selectAll(".cell").each(function(){
+      let el = d3.select(this),
+        id = el.attr("data-nbpresent-id");
+
+      if(id){
+        cells[id] = {
+          element: [el.node()]
+        }
+      }
+    });
+    return cells;
+  }
+
+  getPart(content){
+    let cell = this.getCells()[content.cell];
 
     if(!cell){
       return null;
@@ -54,5 +61,3 @@ class CellManager {
     return _thumbs.get(content);
   }
 }
-
-export {CellManager};
