@@ -4,11 +4,6 @@ nbpresent
 
     remix your Jupyter Notebooks as interactive slideshows
 
-.. figure:: http://continuumio.github.io/nbpresent/nbpresent.gif
-   :alt: example movie
-
-   example movie
-
 Installation
 ------------
 
@@ -17,7 +12,14 @@ Installation
     pip install nbpresent
     python -m nbpresent.install
 
-To also *enable* the extension for every notebook launch:
+Then either run
+
+.. code:: python
+
+    %reload_ext nbpresent
+
+\_every time you start the notebook or *enable* the extension for every
+notebook launch:
 
 .. code:: shell
 
@@ -27,6 +29,19 @@ Coming soon
 ~~~~~~~~~~~
 
 -  `conda package <https://github.com/ContinuumIO/nbpresent/issues/1>`__
+
+Export
+------
+
+Stock ``nbconvert`` doesn't store quite enough information, so you'll
+need to do something like this:
+
+.. code:: shell
+
+    python -m nbpresent.present notebooks/README.ipynb > README.html
+
+The resulting file can be hosted and viewed (but not edited!) on any
+site with fallback to Github.
 
 Development
 -----------
