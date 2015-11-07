@@ -1,25 +1,26 @@
 import $ from "jquery";
 
 import Jupyter from "base/js/namespace";
-
-import {d3, Baobab} from "nbpresent-deps";
-
-import {Presenter} from "./presenter/notebook";
-import {Sorter} from "./sorter";
 import {CellToolbar} from "notebook/js/celltoolbar";
-import {PART} from "./parts";
-import {Tour} from "./tour";
 
+import {d3} from "nbpresent-deps";
 
-export class NBPresent {
-  constructor() {
-    this.tree = new Baobab({
+import {Presenter} from "../presenter/notebook";
+import {Sorter} from "../sorter";
+import {PART} from "../parts";
+import {Tour} from "../tour";
+import {Tree} from "../tree";
+
+import {Mode} from "./base";
+
+export default class NotebookMode extends Mode {
+  init() {
+    let tree = new Tree({
       slides: this.metadata().slides,
-      presenter: {},
-      sorter: {},
-      editor: {},
-      sortedSlides: Baobab.monkey(["slides"], this.sortedSlides)
+      root: this.root
     });
+
+    this.tree = tree.tree;
 
     this.slides = this.tree.select(["slides"]);
     this.slides.on("update", () => this.metadata(true))
@@ -44,16 +45,6 @@ export class NBPresent {
         slides: {}
       }
     }
-  }
-
-  sortedSlides(slidesMap){
-    let slides = d3.entries(slidesMap);
-
-    slides.sort(
-      (a, b) => (a.value.prev === null) || (a.key === b.value.prev) ? -1 : 1
-    )
-
-    return slides;
   }
 
   show(){

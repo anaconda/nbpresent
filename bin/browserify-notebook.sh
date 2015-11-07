@@ -3,7 +3,7 @@
 # ${EXTRA} \
 
 browserify \
-  --standalone nbpresent \
+  --standalone nbpresent-notebook \
   --extension es6 \
   --external bootstraptour \
   --external base/js/namespace \
@@ -16,7 +16,7 @@ browserify \
   --external nbpresent-deps \
   --transform [ babelify --sourceMapRelative . ] \
   ${EXTRA} \
-  --outfile ${DIST}/nbpresent.loader.min.js \
-  src/es6/loader.es6
+  --outfile ${DIST}/nbpresent.notebook.min.js \
+  src/es6/mode/notebook.es6
 
 ls -lathr ${DIST}

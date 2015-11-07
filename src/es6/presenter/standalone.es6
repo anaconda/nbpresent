@@ -1,6 +1,6 @@
 import {d3} from "nbpresent-deps";
 
-import {CellManager} from "../cells/runtime";
+import {CellManager} from "../cells/standalone";
 import {Toolbar} from "../toolbar";
 import {PARTS, PART_SELECT} from "../parts";
 
@@ -120,7 +120,7 @@ export class Presenter {
       .classed({nbpresent_unpresent: 1, nbpresent_present: 0});
 
     d3.entries(slide.value.regions)
-      .filter((region) => region.value.content)
+      .filter(({value}) => value.content)
       .map((region) => {
         let {content, x, y, width, height} = region.value,
           cell = cells[content.cell];

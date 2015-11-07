@@ -1,7 +1,7 @@
 import {CellManager} from "../cells/notebook";
-import {Presenter as RuntimePresenter} from "./runtime";
+import {Presenter as StandalonePresenter} from "./standalone";
 
-export class Presenter extends RuntimePresenter {
+export class Presenter extends StandalonePresenter {
   makeCellManager() {
     return new CellManager();
   }

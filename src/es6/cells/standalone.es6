@@ -21,7 +21,6 @@ export class CellManager {
         }
       }
     });
-
     return cells;
   }
 

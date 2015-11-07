@@ -3,13 +3,13 @@
 #  ${EXTRA} \
 
 browserify \
-  --standalone nbpresent-runtime \
+  --standalone nbpresent-standalone \
   --extension es6 \
   --external jquery \
   --external nbpresent-deps \
   --transform [ babelify --sourceMapRelative . ] \
   ${EXTRA} \
-  --outfile ${DIST}/nbpresent.runtime.min.js \
-  src/es6/runtime.es6
+  --outfile ${DIST}/nbpresent.standalone.min.js \
+  src/es6/mode/standalone.es6
 
 ls -lathr ${DIST}

@@ -39,17 +39,17 @@
   },
   "scripts": {
     "browserify": "bin/browserify.sh",
-    "watch:browserify": "watch 'EXTRA=--debug npm run browserify' src/es6",
-    "browserify-deps": "bin/browserify.sh",
+    "watch:browserify": "watch 'EXTRA=--debug npm run browserify' src/js",
+    "browserify-deps": "bin/browserify-deps.sh",
     "watch:browserify-deps": "watch 'EXTRA=--debug npm run browserify-deps' src/es6",
-    "browserify-loader": "bin/browserify-loader.sh",
-    "watch:browserify-loader": "watch 'EXTRA=--debug npm run browserify-loader' src/es6",
-    "browserify-runtime": "bin/browserify-runtime.sh",
-    "watch:browserify-runtime": "watch 'EXTRA=--debug npm run browserify-runtime' src/es6",
+    "browserify-notebook": "bin/browserify-notebook.sh",
+    "watch:browserify-notebook": "watch 'EXTRA=--debug npm run browserify-notebook' src/es6",
+    "browserify-standalone": "bin/browserify-standalone.sh",
+    "watch:browserify-standalone": "watch 'EXTRA=--debug npm run browserify-standalone' src/es6",
     "less": "bin/less.sh",
     "watch:less": "watch 'npm run less' src/less",
-    "build": "npm run browserify && npm run less && npm run browserify-deps && npm run browserify-runtime && npm run browserify-loader",
-    "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-loader watch:browserify-runtime watch:less"
+    "build": "npm run browserify && npm run less && npm run browserify-deps && npm run browserify-standalone && npm run browserify-notebook",
+    "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-notebook watch:browserify-standalone watch:less"
   },
   "version": "0.0.0"
 }

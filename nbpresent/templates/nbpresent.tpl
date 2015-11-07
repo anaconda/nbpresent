@@ -9,7 +9,7 @@
 
 
 {% block codecell %}
-  <div class="cell border-box-sizing code_cell rendered {{ nbpresent_id(cell) }}>
+  <div class="cell border-box-sizing code_cell rendered" {{ nbpresent_id(cell) }}>
     {{ super() }}
   </div>
 {%- endblock codecell %}
@@ -39,6 +39,10 @@
 
 {% block body %}
   {{ super() }}
+
+  <script type="application/json" id="nbpresent_tree">
+    {{ resources.nbpresent.metadata }}
+  </script>
   <script>
     require(["./nbpresent/static/nbpresent/nbpresent.min"], function(nbpresent){
       console.log(nbpresent);

@@ -2,14 +2,10 @@
 . bin/env.sh
 #  ${EXTRA} \
 
-browserify \
-  --standalone nbpresent \
-  --extension es6 \
-  --external ./nbpresent-deps.min \
-  --external ./nbpresent-loader.min \
-  --transform [ babelify --sourceMapRelative . ] \
-  ${EXTRA} \
-  --outfile ${DIST}/nbpresent.min.js \
-  src/es6/index.es6
+UGLIFY=./node_modules/uglifyify/node_modules/uglify-js/bin/uglifyjs
+#| $UGLIFY -c \
+
+cat src/js/index.js \
+  > ${DIST}/nbpresent.min.js \
 
 ls -lathr ${DIST}
