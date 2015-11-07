@@ -38,6 +38,7 @@
     "url": "git://github.com/bollwyvl/nbpresent.git"
   },
   "scripts": {
+    "dist": "EXTRA='-g uglifyify' npm run build",
     "browserify": "bin/browserify.sh",
     "watch:browserify": "watch 'EXTRA=--debug npm run browserify' src/js",
     "browserify-deps": "bin/browserify-deps.sh",

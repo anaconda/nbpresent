@@ -7,10 +7,10 @@ export class NotebookPresenter extends Presenter {
   }
 
   toolbarIcons(){
-    return super.toolbarIcons().concat([{
+    return super.toolbarIcons().concat([[{
       icon: "book",
       click: () => this.presenting.set(false),
       tip: "Back to Notebook"
-    }]);
+    }]]);
   }
 }

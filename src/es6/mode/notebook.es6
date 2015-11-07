@@ -28,7 +28,7 @@ export default class NotebookMode extends Mode {
     this.tour = new Tour(this);
     this.tour.init();
 
-    this.presenter = new Presenter(this.tree, this.tour);
+    this.presenter = new NotebookPresenter(this.tree, this.tour);
     this.sorter = new Sorter(this.tree, this.tour);
 
     this.initToolbar();

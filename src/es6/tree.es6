@@ -14,7 +14,6 @@ export class Tree {
   }
 
   sortedSlides(slidesMap){
-    console.log(slidesMap);
     let slides = d3.entries(slidesMap);
 
     slides.sort(
