@@ -5,14 +5,15 @@ package:
 extra:
   channels:
     - bokeh
+    - cpcloud
 
-build:
-  number: 1
-  script:
-    - ls
-    - npm install .
-    - npm run build
-    - python setup.py install
+#build:
+#  number: 1
+#  script:
+#    - ls
+#    - npm install .
+#    - npm run build
+#    - python setup.py install
 
 source:
   path: ../
@@ -20,7 +21,9 @@ source:
 requirements:
   build:
     - nodejs
+    - npm
     - python
+    - notebook
   run:
     - notebook
 
