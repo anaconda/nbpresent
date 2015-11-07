@@ -5,7 +5,7 @@ import {CellToolbar} from "notebook/js/celltoolbar";
 
 import {d3} from "nbpresent-deps";
 
-import {Presenter} from "../presenter/notebook";
+import {NotebookPresenter} from "../presenter/notebook";
 import {Sorter} from "../sorter";
 import {PART} from "../parts";
 import {Tour} from "../tour";

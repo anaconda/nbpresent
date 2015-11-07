@@ -1,7 +1,7 @@
 import {d3} from "nbpresent-deps";
 
 import {Tree} from "../tree";
-import {Presenter} from "../presenter/standalone";
+import {StandalonePresenter} from "../presenter/standalone";
 
 import {Mode} from "./base";
 
@@ -13,7 +13,7 @@ export default class StandaloneMode extends Mode {
         slides: slides.slides,
         root: this.root
       }),
-      presenter = new Presenter(tree.tree);
+      presenter = new StandalonePresenter(tree.tree);
 
     presenter.presenting.set(true);
   }

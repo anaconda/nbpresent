@@ -1,8 +1,16 @@
 import {CellManager} from "../cells/notebook";
-import {Presenter as StandalonePresenter} from "./standalone";
+import {Presenter} from "./base";
 
-export class Presenter extends StandalonePresenter {
+export class NotebookPresenter extends Presenter {
   makeCellManager() {
     return new CellManager();
+  }
+
+  toolbarIcons(){
+    return super.toolbarIcons().concat([{
+      icon: "book",
+      click: () => this.presenting.set(false),
+      tip: "Back to Notebook"
+    }]);
   }
 }
