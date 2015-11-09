@@ -108,7 +108,17 @@ export default class NotebookMode extends Mode {
     nbpresent_preset.push("nbpresent.add_to_region");
 
     CellToolbar.register_preset("nbpresent", nbpresent_preset, Jupyter.notebook);
+
+    // update the download chrome
+    let dlMenu = d3.select(d3.select("#download_html").node().parentNode);
+
+    dlMenu.insert("li", ":nth-child(4)")
+      .append("a")
+      .text("Presentation (.nbpresent.html)")
+      .on("click", this.nbconvert);
   }
 
-
+  nbconvert(){
+    Jupyter.menubar._nbconvert("nbpresent", true);
+  }
 }
