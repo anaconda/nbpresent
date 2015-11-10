@@ -44,20 +44,34 @@ export class Presenter {
   }
 
   toolbarIcons(){
+    let that = this;
+
     return [
       [{
         icon: "fast-backward",
-        click: () => this.current.set(this.tree.get(["sortedSlides", 0]).key),
+        click: () => that.current.set(this.tree.get(["sortedSlides", 0, "key"])),
         tip: "Back to Start"
       }],
       [{
         icon: "step-backward",
-        click: () => this.current.set(this.current.get() - 1),
+        click: () => {
+          let current = that.tree.get(["slides", this.current.get()]);
+          this.current.set(current.prev);
+        },
         tip: "Previous Slide"
       }],
       [{
         icon: "step-forward",
-        click: () => this.current.set(this.current.get() + 1),
+        click: () => {
+          let slides = that.tree.get(["slides"]),
+            current = slides[that.current.get()];
+
+          d3.entries(slides).map((d)=> {
+            if(d.value.prev === current.id){
+              that.current.set(d.key);
+            }
+          });
+        },
         tip: "Next Slide"
       }]
     ];
@@ -107,8 +121,7 @@ export class Presenter {
   }
 
   present() {
-    this.current.set(null);
-    this.current.set(0);
+    this.update();
   }
 
   getCells() {
@@ -127,13 +140,14 @@ export class Presenter {
         opacity: +presenting,
       });
 
-    let slide = this.tree.get("sortedSlides")[this.current.get()];
+    let current = this.current.get(),
+      slide = this.tree.get(["sortedSlides", (d) => d.key == current]);
 
     // TODO: handle cleanup
     // transition = this.layout && this.layout.destroy()
 
     if(!slide){
-      return this.current.set(0);
+      return this.current.set(this.tree.get(["sortedSlides", 0, "key"]));
     }
 
     this.updateLayout(slide);
