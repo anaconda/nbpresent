@@ -4,15 +4,7 @@ package:
 
 extra:
   channels:
-    - bokeh
-
-build:
-  number: 1
-  script:
-    - ls
-    - npm install .
-    - npm run build
-    - python setup.py install
+    - javascript
 
 source:
   path: ../
@@ -21,6 +13,7 @@ requirements:
   build:
     - nodejs
     - python
+    - notebook
   run:
     - notebook
 
