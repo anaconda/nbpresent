@@ -23,7 +23,7 @@ export class Presenter {
     this.initUI();
 
     this.presenting = this.tree.select(["presenter", "presenting"]);
-    this.current = this.tree.select(["presenter", "current"]);
+    this.current = this.tree.select(["selectedSlide"]);
 
     this.tree.on("update", () => this.update());
     this.presenting.on("update", () => this.present());
@@ -46,11 +46,10 @@ export class Presenter {
   toolbarIcons(){
     return [
       [{
-          icon: "fast-backward",
-          click: () => this.current.set(0),
-          tip: "Back to Start"
-        },
-      ],
+        icon: "fast-backward",
+        click: () => this.current.set(this.tree.get(["sortedSlides", 0]).key),
+        tip: "Back to Start"
+      }],
       [{
         icon: "step-backward",
         click: () => this.current.set(this.current.get() - 1),
@@ -80,10 +79,31 @@ export class Presenter {
   }
 
   layoutClass(slide){
+    console.log("layoutClass", slide.value.layout);
     return {
       manual: ManualLayout,
       treemap: TreemapLayout
     }[slide.value.layout || "manual"];
+  }
+
+  updateLayout(slide){
+    let LayoutClass = this.layoutClass(slide);
+
+    console.log(this.layout && this.layout.slide.key);
+
+    if(this.layout &&
+      this.layout.key() == LayoutClass.clsKey() &&
+      this.layout.slide.key === slide.key
+    ){
+      this.layout.slide = slide;
+    }else{
+      this.layout = new LayoutClass(
+        this.tree,
+        slide,
+        document.documentElement
+      );
+    }
+    this.layout.init();
   }
 
   present() {
@@ -116,13 +136,7 @@ export class Presenter {
       return this.current.set(0);
     }
 
-    let LayoutClass = this.layoutClass(slide);
-
-    this.layout = new LayoutClass(
-      this.tree,
-      slide,
-      document.documentElement
-    );
+    this.updateLayout(slide);
 
     if(!presenting){
       return this.clean(true);

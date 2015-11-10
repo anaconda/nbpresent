@@ -6,7 +6,7 @@ import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
 import {PART} from "./parts";
 import {MiniSlide} from "./mini";
-import {LayoutLibrary} from "./layouts";
+import {TemplateLibrary} from "./templates";
 
 let REMOVED = "<removed>";
 
@@ -15,13 +15,13 @@ class Sorter {
     this.tree = tree;
     this.tour = tour;
 
-    this.layoutPicked = this.layoutPicked.bind(this);
+    this.templatePicked = this.templatePicked.bind(this);
 
     this.visible = this.tree.select(["sorter", "visible"]);
     this.visible.set(false);
 
     this.slides = this.tree.select(["slides"]);
-    this.selectedSlide = this.tree.select(["sorter", "selectedSlide"]);
+    this.selectedSlide = this.tree.select(["selectedSlide"]);
     this.selectedRegion = this.tree.select(["sorter", "selectedRegion"]);
 
     this.selectedSlide.on("update", () => this.updateSelectedSlide());
@@ -178,11 +178,11 @@ class Sorter {
   }
 
   slideClicked(d){
-    if(this.layouts){
+    if(this.templates){
       let newSlide = this.copySlide(d.value);
-      this.layoutPicked({key: newSlide.id, value: newSlide});
-      this.layouts && this.layouts.destroy();
-      this.layouts = null;
+      this.templatePicked({key: newSlide.id, value: newSlide});
+      this.templates && this.templates.destroy();
+      this.templates = null;
       return;
     }
     this.selectedSlide.set(d.key);
@@ -266,7 +266,7 @@ class Sorter {
       if(content){
         this.selectCell(content.cell);
       }
-    }else{
+    }else if(this.$regionToolbar){
       this.$regionToolbar.transition()
         .style({opacity: 0})
         .transition()
@@ -386,15 +386,15 @@ class Sorter {
   }
 
   addSlide(){
-    if(!this.layouts || this.layouts.killed){
-      this.layouts = new LayoutLibrary(this.layoutPicked);
+    if(!this.templates || this.templates.killed){
+      this.templates = new TemplateLibrary(this.templatePicked);
     }else{
-      this.layouts.destroy();
-      this.layouts = null;
+      this.templates.destroy();
+      this.templates = null;
     }
   }
 
-  layoutPicked(slide){
+  templatePicked(slide){
     let last = this.tree.get("sortedSlides").slice(-1),
       selected = this.selectedSlide.get();
 
@@ -407,8 +407,8 @@ class Sorter {
 
     this.selectedSlide.set(appended);
 
-    this.layouts.destroy();
-    this.layouts = null;
+    this.templates.destroy();
+    this.templates = null;
   }
 
   editSlide(id){

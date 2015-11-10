@@ -32,10 +32,11 @@ class RegionTree {
   }
 
   width() {
-    return 200;
+    return 300;
   }
 
   layout(layout){
+    console.log(this.slide.get("layout"), layout);
     this.slide.set("layout", layout);
   }
 
@@ -117,35 +118,89 @@ class RegionTree {
     $attr.exit().remove();
 
     $attr.enter()
-      .append("button")
-      .classed({btn: 1, "btn-default": 1, "btn-xs": 1, region_attr: 1})
+      .append("div")
+      .classed({
+        region_attr: 1,
+        "input-group": 1,
+        "input-group-sm": 1
+      })
       .call(function($attr){
-        $attr.append("span").classed({name: 1});
-        $attr.append("span").classed({badge: 1});
+        $attr.append("span").classed({"input-group-btn": 1})
+          .append("button").classed({
+            btn: 1,
+            "btn-default": 1,
+            "btn-xs": 1,
+            attr_name: 1
+          });
+
+        $attr.append("span").classed({"input-group-addon": 1, attr_ns: 1})
+          .append("i")
+          .classed({fa: 1, "fa-fw": 1});
+
+        $attr.append("input").classed({"form-control": 1})
+          .attr({type: "text"})
+          .each(function(){
+            Jupyter.keyboard_manager.register_events(this);
+          })
+          .on("change", function(d){
+            let el = d3.select(this),
+              val = parseFloat(el.property("value"));
+            that.slide.set(["regions", d.region.key, d.attr.key], val);
+          });
       })
       .on("mousedown", function(d){
         that.makeSlider(this, d);
       });
 
-    $attr.select(".name").text((d) => `${d.attr.key} `);
-    $attr.select(".badge").text((d) => d.attr.value);
+    $attr.select(".attr_name").text((d) => {
+      return d.attr.key.indexOf(":") === -1 ?
+        d.attr.key :
+        d.attr.key.split(":")[1];
+    });
+    $attr.select(".attr_ns").each(function(d){
+      let hasIcon = d.attr.key.indexOf(":") !== -1;
+      let el = d3.select(this)
+        .style({
+          display: hasIcon ? null : "none"
+        });
+
+      if(!hasIcon){
+        return;
+      }
+
+      // TODO: put this in layout
+      let icon = {
+        treemap: "tree"
+      }[d.attr.key.split(":")[0]];
+
+      el.select(".fa")
+        .classed(`fa-${icon}`, 1);
+
+    })
+    $attr.select(".form-control").attr({
+      value: (d) => {
+        return d.attr.value.toFixed(3);
+      }
+    });
   }
 
   makeSlider(element, d) {
     let that = this;
-    let [x0, y0] = d3.mouse(element);
+    let [x, y] = d3.mouse(element);
     let el = d3.select(element);
     el.on("mousemove", function(d){
-        let [x1, y1] = d3.mouse(this);
-        let path = ["regions", d.region.key, d.attr.key];
-        that.slide.set(path, that.slide.get(path) + ((x1 - x0) / 100))
-      })
-      .on("mouseup", function(){
-          el.on("mousemove", null);
-      })
-      .on("mouseexit", function(){
-        el.on("mousemove", null);
-      });
+      let [x1, y1] = d3.mouse(this);
+      let dx = (x1 - x) / 10;
+      x = x1;
+      let path = ["regions", d.region.key, d.attr.key];
+      that.slide.set(path, that.slide.get(path) + dx)
+    })
+    .on("mouseup", function(){
+      el.on("mousemove", null);
+    })
+    .on("mouseexit", function(){
+      el.on("mousemove", null);
+    });
   }
 
 }

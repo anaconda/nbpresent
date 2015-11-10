@@ -1,11 +1,21 @@
 import {d3} from "nbpresent-deps";
 
+let KEY = "manual";
+
 export class ManualLayout {
+
   constructor(tree, slide, container){
     this.tree = tree;
     this.slide = slide;
     this.container = container;
-    this.init();
+  }
+
+  static clsKey(){
+    return KEY;
+  }
+
+  key(){
+    return KEY;
   }
 
   init(){

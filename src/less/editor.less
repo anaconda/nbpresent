@@ -43,4 +43,54 @@
   left: 0;
   bottom: @sorter-height;
   background-color: @ui-bg;
+
+  .region_info {
+    clear: both;
+    float: left;
+    margin-bottom: 10px;
+
+    .slide {
+      float: left;
+    }
+
+    .region_attr {
+      float: right;
+      clear: right;
+      width: 140px;
+      text-align: right;
+      background-color: transparent;
+      border: none;
+      color: @jpy-brand;
+      height: 24px;
+      padding: 2px;
+
+      &.input-group-sm > .input-group-addon.attr_ns {
+        background-color: transparent;
+        border: none;
+        color: @jpy-brand;
+        padding: 0;
+        height: 20px;
+      }
+
+      .attr_name{
+        padding: 0 5px;
+        height: 20px;
+        background-color: @jpy-brand;
+        color: black;
+        border-radius: 2px;
+        user-select: none;
+        cursor: ew-resize;
+        border: none;
+      }
+
+      input {
+        height: 20px;
+        text-align: right;
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-weight: bold;
+      }
+    }
+  }
 }
