@@ -1,5 +1,7 @@
 import {d3} from "nbpresent-deps";
 
+import {ManualLayout} from "../layout/manual";
+
 import {Toolbar} from "../toolbar";
 import {PARTS, PART_SELECT} from "../parts";
 
@@ -18,8 +20,6 @@ export class Presenter {
     this.cellManager = this.makeCellManager();
 
     this.initUI();
-    this.x = d3.scale.linear();
-    this.y = d3.scale.linear();
 
     this.presenting = this.tree.select(["presenter", "presenting"]);
     this.current = this.tree.select(["presenter", "current"]);
@@ -77,6 +77,10 @@ export class Presenter {
       .call(toolbar.update);
   }
 
+  layoutClass(){
+    return ManualLayout;
+  }
+
   present() {
     this.current.set(null);
     this.current.set(0);
@@ -87,6 +91,7 @@ export class Presenter {
   }
 
   update() {
+    let that = this;
     let presenting = this.presenting.get();
 
     this.$ui
@@ -102,14 +107,20 @@ export class Presenter {
       return this.clean(true);
     }
 
-    let {clientWidth, clientHeight} = document.documentElement;
-    this.x.range([0, clientWidth]);
-    this.y.range([0, clientHeight]);
     let slide = this.tree.get("sortedSlides")[this.current.get()];
+
+    // TODO: handle cleanup
+    // transition = this.layout && this.layout.destroy()
 
     if(!slide){
       return this.current.set(0);
     }
+
+    let LayoutClass = this.layoutClass();
+
+    this.layout = new LayoutClass(slide);
+
+    this.layout.resetScales(document.documentElement);
 
     let cells = this.getCells();
 
@@ -119,7 +130,7 @@ export class Presenter {
     d3.entries(slide.value.regions)
       .filter(({value}) => value.content)
       .map((region) => {
-        let {content, x, y, width, height} = region.value,
+        let {content} = region.value,
           cell = cells[content.cell];
 
         if(!cell){
@@ -130,14 +141,11 @@ export class Presenter {
           part = $el.select(PART_SELECT[content.part]);
 
         part
-          .classed({nbpresent_unpresent: 0, nbpresent_present: 1})
-          .style({
-            transform: `translate(${this.x(x)}px, ${this.y(y)}px) translateZ(0)`,
-            left: `0`,
-            top: `0`,
-            width: `${this.x(width)}px`,
-            height: `${this.y(height)}px`
-          });
+          .classed({
+            nbpresent_unpresent: 0,
+            nbpresent_present: 1
+          })
+          .each(() => that.layout.update(region, part));
       });
 
     this.clean();
@@ -150,18 +158,15 @@ export class Presenter {
   }
 
   clean(force){
+    let that = this;
+
     if(force){
       d3.selectAll(this.allPartSelect())
         .classed({nbpresent_unpresent: 1, nbpresent_present: 0});
     }
+
     d3.selectAll(".nbpresent_unpresent")
-      .style({
-        transform: null,
-        left: null,
-        top: null,
-        width: null,
-        height: null
-      })
+      .call(that.layout.clean)
       .classed({nbpresent_unpresent: 0, nbpresent_present: 0});
   }
 }

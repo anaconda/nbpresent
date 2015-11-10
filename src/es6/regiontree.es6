@@ -8,7 +8,6 @@ class RegionTree {
     this.slide = slide;
     this.selectedRegion = region;
 
-
     this.mini = (new MiniSlide(this.selectedRegion))
       .regions((d) => {
         var obj = {};
@@ -36,6 +35,10 @@ class RegionTree {
     return 200;
   }
 
+  layout(layout){
+    this.slide.set("layout", layout);
+  }
+
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
@@ -44,11 +47,23 @@ class RegionTree {
     let toolbar = new Toolbar();
 
     this.$toolbar = this.$ui.append("div")
-      .datum([[{
-        icon: "plus-square-o",
-        click: () => this.addRegion(),
-        tip: "Add Region"
-      }]])
+      .datum([
+        [{
+          icon: "plus-square-o",
+          click: () => this.addRegion(),
+          tip: "Add Region"
+        }],
+        // TODO: make this extensible
+        [{
+          icon: "resize",
+          click: () => this.layout("manual"),
+          tip: "Manual Layout"
+        },{
+          icon: "td-large",
+          click: () => this.layout("treemap"),
+          tip: "Treemap Layout"
+        }],
+      ])
       .call(toolbar.update);
   }
 
@@ -89,6 +104,24 @@ class RegionTree {
     $mini.exit().remove();
 
     $mini.call(this.mini.update);
+
+    // TODO: weight for treemap?
+    let attrs = ["x", "y", "width", "height"];
+
+    let $attr = $region.selectAll(".region_attr")
+      .data((region) => attrs.map((attr) => {
+        return {region, attr};
+      }));
+
+    $attr.enter()
+      .append("label")
+      .call(function($attr){
+        $attr.append("span")
+        $attr.append("input")
+      })
+
+    $attr.select("span").text((d) => d.attr);
+    $attr.select("input").text((d) => d.region.value[d.attr]);
   }
 
 }
