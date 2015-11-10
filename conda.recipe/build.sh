@@ -3,4 +3,3 @@ cd $SRC_DIR
 npm install .
 npm run build
 python setup.py install
-python -m nbpresent.install --force --enable
