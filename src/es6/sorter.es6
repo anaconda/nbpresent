@@ -189,6 +189,9 @@ class Sorter {
   }
 
   draw(){
+    if(!this.$slides){
+      return;
+    }
     let that = this;
 
     let slides = this.tree.get("sortedSlides");

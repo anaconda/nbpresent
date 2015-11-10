@@ -12,10 +12,26 @@
     position: absolute;
   }
 
-  .region_bg {
-    fill: transparent;
-    stroke: @jpy-brand;
+  .region {
+    .region_bg {
+      fill: transparent;
+      opacity: 0.75;
+      stroke: grey;
+    }
+    .handle {
+      visibility: hidden;
+    }
+    &.active {
+      .region_bg{
+        stroke: @jpy-brand;
+        opacity: 1;
+      }
+      .handle {
+        visibility: visible;
+      }
+    }
   }
+
 }
 
 // TODO: move this?
