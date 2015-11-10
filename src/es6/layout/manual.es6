@@ -1,19 +1,20 @@
 import {d3} from "nbpresent-deps";
 
 export class ManualLayout {
-  constructor(slide){
+  constructor(tree, slide, container){
+    this.tree = tree;
     this.slide = slide;
-    this.x = d3.scale.linear();
-    this.y = d3.scale.linear();
+    this.container = container;
+    this.init();
   }
 
-  resetScales(element){
-    let {
-      clientWidth, clientHeight
-    } = document.documentElement;
+  init(){
+    let {clientWidth, clientHeight} = this.container;
 
-    this.x.range([0, clientWidth]);
-    this.y.range([0, clientHeight]);
+    this.x = d3.scale.linear()
+      .range([0, clientWidth]);
+    this.y = d3.scale.linear()
+      .range([0, clientHeight]);
   }
 
   update(region, part){

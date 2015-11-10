@@ -55,11 +55,11 @@ class RegionTree {
         }],
         // TODO: make this extensible
         [{
-          icon: "resize",
+          icon: "arrows",
           click: () => this.layout("manual"),
           tip: "Manual Layout"
         },{
-          icon: "td-large",
+          icon: "tree",
           click: () => this.layout("treemap"),
           tip: "Treemap Layout"
         }],
@@ -83,6 +83,8 @@ class RegionTree {
       return;
     }
 
+    let that = this;
+
     let regions = d3.entries(this.slide.get("regions")),
       $region = this.$ui.selectAll(".region_info")
         .data(regions, (d) => d.key),
@@ -105,23 +107,45 @@ class RegionTree {
 
     $mini.call(this.mini.update);
 
-    // TODO: weight for treemap?
-    let attrs = ["x", "y", "width", "height"];
-
     let $attr = $region.selectAll(".region_attr")
-      .data((region) => attrs.map((attr) => {
-        return {region, attr};
-      }));
+      .data((region) => d3.entries(region.value)
+        .filter((d) => ["id", "content"].indexOf(d.key) === -1)
+        .map((attr) => {
+          return {region, attr};
+        }))
+
+    $attr.exit().remove();
 
     $attr.enter()
-      .append("label")
+      .append("button")
+      .classed({btn: 1, "btn-default": 1, "btn-xs": 1, region_attr: 1})
       .call(function($attr){
-        $attr.append("span")
-        $attr.append("input")
+        $attr.append("span").classed({name: 1});
+        $attr.append("span").classed({badge: 1});
       })
+      .on("mousedown", function(d){
+        that.makeSlider(this, d);
+      });
 
-    $attr.select("span").text((d) => d.attr);
-    $attr.select("input").text((d) => d.region.value[d.attr]);
+    $attr.select(".name").text((d) => `${d.attr.key} `);
+    $attr.select(".badge").text((d) => d.attr.value);
+  }
+
+  makeSlider(element, d) {
+    let that = this;
+    let [x0, y0] = d3.mouse(element);
+    let el = d3.select(element);
+    el.on("mousemove", function(d){
+        let [x1, y1] = d3.mouse(this);
+        let path = ["regions", d.region.key, d.attr.key];
+        that.slide.set(path, that.slide.get(path) + ((x1 - x0) / 100))
+      })
+      .on("mouseup", function(){
+          el.on("mousemove", null);
+      })
+      .on("mouseexit", function(){
+        el.on("mousemove", null);
+      });
   }
 
 }

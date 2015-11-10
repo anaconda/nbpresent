@@ -1,6 +1,7 @@
 import {d3} from "nbpresent-deps";
 
 import {ManualLayout} from "../layout/manual";
+import {TreemapLayout} from "../layout/treemap";
 
 import {Toolbar} from "../toolbar";
 import {PARTS, PART_SELECT} from "../parts";
@@ -24,6 +25,7 @@ export class Presenter {
     this.presenting = this.tree.select(["presenter", "presenting"]);
     this.current = this.tree.select(["presenter", "current"]);
 
+    this.tree.on("update", () => this.update());
     this.presenting.on("update", () => this.present());
     this.current.on("update", () => this.update());
   }
@@ -77,8 +79,11 @@ export class Presenter {
       .call(toolbar.update);
   }
 
-  layoutClass(){
-    return ManualLayout;
+  layoutClass(slide){
+    return {
+      manual: ManualLayout,
+      treemap: TreemapLayout
+    }[slide.value.layout || "manual"];
   }
 
   present() {
@@ -98,14 +103,9 @@ export class Presenter {
       .style({
         "display": presenting ? "block" : "none"
       })
-      .transition()
       .style({
         opacity: +presenting,
       });
-
-    if(!presenting){
-      return this.clean(true);
-    }
 
     let slide = this.tree.get("sortedSlides")[this.current.get()];
 
@@ -116,11 +116,17 @@ export class Presenter {
       return this.current.set(0);
     }
 
-    let LayoutClass = this.layoutClass();
+    let LayoutClass = this.layoutClass(slide);
 
-    this.layout = new LayoutClass(slide);
+    this.layout = new LayoutClass(
+      this.tree,
+      slide,
+      document.documentElement
+    );
 
-    this.layout.resetScales(document.documentElement);
+    if(!presenting){
+      return this.clean(true);
+    }
 
     let cells = this.getCells();
 
@@ -166,7 +172,7 @@ export class Presenter {
     }
 
     d3.selectAll(".nbpresent_unpresent")
-      .call(that.layout.clean)
+      .call(that.layout && this.layout.clean || () => 0)
       .classed({nbpresent_unpresent: 0, nbpresent_present: 0});
   }
 }

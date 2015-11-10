@@ -222,8 +222,13 @@ class Editor{
         this.selectedRegion.set({slide: this.slide.get("id"), region: d.key});
       });
 
+    let selected = this.selectedRegion.get();
+
     $region.attr({
         transform: (d) => `translate(${[x(d.value.x), y(d.value.y)]})`
+      })
+      .classed({
+        active: (d) => selected && (d.key == selected.region)
       })
       .select(".region_bg")
       .attr({
