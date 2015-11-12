@@ -117,15 +117,27 @@ class RegionTree {
       .append("div")
       .classed({slide: 1});
 
-    $mini.exit().remove();
+    $mini.exit().transition()
+      .style({opacity: 0})
+      .remove();
 
     $mini.call(this.mini.update);
 
+    let layout = this.slide.get(["layout"]);
+
     let $attr = $region.selectAll(".region_attr")
-      .data((region) => d3.entries(region.value.attrs)
-        .map((attr) => {
-          return {region, attr};
-        }))
+      .data((region) =>
+        d3.entries(region.value.attrs)
+          .map((attr) => { return {region, attr}; })
+          .filter((d)=>{
+            if(layout == "treemap"){
+              return d.attr.key.indexOf(layout) === 0;
+            }else{
+              return d.attr.key.indexOf("treemap") === -1;
+            }
+          })
+        )
+
 
     $attr.exit().remove();
 
@@ -164,21 +176,6 @@ class RegionTree {
         that.makeSlider(this, d);
       });
 
-    let layout = this.slide.get(["layout"]);
-
-    $attr.each(function(d){
-      d3.select(this)
-        .style({
-          display: (d) => {
-            // TODO: make this extensible
-            if(layout == "treemap"){
-              return d.attr.key.indexOf(layout) === 0 ? null : "none";
-            }else{
-              return d.attr.key.indexOf("treemap") === 0 ? "none" : null;
-            }
-          }
-        })
-    });
 
     $attr.select(".attr_name").text((d) => {
       return d.attr.key.indexOf(":") === -1 ?
@@ -222,7 +219,7 @@ class RegionTree {
     let el = d3.select(element);
     el.on("mousemove", function(d){
       let [x1, y1] = d3.mouse(this);
-      let dx = (x1 - x) / 10;
+      let dx = (x1 - x) / 20;
       x = x1;
       let path = ["regions", d.region.key, "attrs", d.attr.key];
       that.slide.set(path, that.slide.get(path) + dx)
