@@ -164,6 +164,17 @@ class RegionTree {
         that.makeSlider(this, d);
       });
 
+    let layout = this.slide.get(["layout"]);
+
+    $attr.each(function(d){
+      console.log(layout, d);
+      d3.select(this)
+        .style({
+          display: (d) =>
+            layout !== "treemap" || !d.attr.key.indexOf(layout) ? null : "none"
+        })
+    });
+
     $attr.select(".attr_name").text((d) => {
       return d.attr.key.indexOf(":") === -1 ?
         d.attr.key :
