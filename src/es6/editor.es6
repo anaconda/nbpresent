@@ -257,8 +257,6 @@ class Editor{
             let id = `${d.value.content.part}-${d.value.content.cell}`,
               bg = that.$defs.selectAll(`#${id}`).data([id]);
 
-            console.log(id);
-
             bg.enter().append("pattern")
               .attr({
                 patternUnits: "userSpaceOnUse",

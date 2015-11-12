@@ -53,7 +53,7 @@ class NbpresentTour {
           title: "Simple Template",
           position: "top",
           content: "Let's use this one",
-          onNext: () => this.nbpresent.sorter.layoutPicked(
+          onNext: () => this.nbpresent.sorter.templatePicked(
             d3.select(".nbpresent_template_library .slide:nth-of-type(2)")
               .datum()
           )
@@ -66,7 +66,7 @@ class NbpresentTour {
         },
         {
           element: ".slides_wrap .slide:last-child .region",
-          placement: "left",
+          placement: "right",
           title: "Region",
           onShow: () => {
             let el = d3.select(".slides_wrap .slide:last-child .region");
@@ -106,7 +106,7 @@ class NbpresentTour {
         },
         {
           element: ".slides_wrap .slide:last-child .region",
-          placement: "left",
+          placement: "top",
           title: "Part Thumbnail",
           content: "A part thumbnail might look a little funny, but you should usually be able to get an idea of what you're seeing.",
           onShow: () => this.nbpresent.sorter.linkContent(PART.source)
@@ -142,7 +142,7 @@ class NbpresentTour {
           element: ".presenter_toolbar .fa-step-forward",
           title: "Go forward",
           content: "Click here to go to the next Slide",
-          placement: "bottom",
+          placement: "top",
           onShown: () => fake_hover(".presenter_toolbar", true),
           onHidden: () => fake_hover(".presenter_toolbar", 0)
         },
@@ -150,7 +150,7 @@ class NbpresentTour {
           element: ".presenter_toolbar .fa-step-backward",
           title: "Go back",
           content: "Clicking here to go back to the previous slide",
-          placement: "bottom",
+          placement: "top",
           onShown: () => fake_hover(".presenter_toolbar", true),
           onHidden: () => fake_hover(".presenter_toolbar", 0)
         },
@@ -158,7 +158,7 @@ class NbpresentTour {
           element: ".presenter_toolbar .fa-fast-backward",
           title: "Go back to the beginning",
           content: "Clicking here to go back to the first Slide",
-          placement: "bottom",
+          placement: "top",
           onShown: () => fake_hover(".presenter_toolbar", true),
           onHidden: () => fake_hover(".presenter_toolbar", 0)
         },
@@ -166,7 +166,7 @@ class NbpresentTour {
           element: ".presenter_toolbar .fa-book",
           title: "My work is done here",
           content: "Click here to go back to the Notebook",
-          placement: "bottom",
+          placement: "top",
           onShown: () => fake_hover(".presenter_toolbar", true),
           onHidden: () => fake_hover(".presenter_toolbar", 0) &&
             this.nbpresent.unpresent()
@@ -191,7 +191,28 @@ class NbpresentTour {
           placement: "right",
           title: "Region Tree",
           content: "This is the Region tree. It lets you reorder Regions and see the details of how your Regions will show their linked Parts."
-        }
+        },
+        {
+          element: ".region_attr .attr_name",
+          placement: "right",
+          title: "Attribute Editor",
+          content: "All of the properties of a region can be edited here"
+        },
+        {
+          element: ".nbpresent_regiontree .btn-toolbar .fa-tree",
+          placement: "right",
+          title: "Magic Layouts",
+          content: "In addition to manually moving regions around, you can use other Layouts, like this Treemap, which will fill the slide",
+          onHidden: () => {
+            this.nbpresent.sorter.editor.sidebar.layout("treemap");
+          }
+        },
+        {
+          element: ".region_attr .fa-tree",
+          placement: "right",
+          title: "Treemagic",
+          content: "This new value lets you make a Region bigger or smaller based on relative Weight"
+        },
       ]
     });
   }
