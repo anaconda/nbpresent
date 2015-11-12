@@ -17,7 +17,7 @@ class Sorter {
 
     this.templatePicked = this.templatePicked.bind(this);
 
-    this.visible = this.tree.select(["sorter", "visible"]);
+    this.visible = this.tree.select(["sorting"]);
     this.visible.set(false);
 
     this.slides = this.tree.select(["slides"]);
@@ -27,6 +27,7 @@ class Sorter {
     this.selectedSlide.on("update", () => this.updateSelectedSlide());
     this.selectedRegion.on("update", () => this.updateSelectedRegion());
     this.slides.on("update", () => this.draw());
+    this.visible.on("update", () => this.visibleUpdated());
 
     this.scale = {
       x: d3.scale.linear()
@@ -37,20 +38,23 @@ class Sorter {
     this.drawn = false;
   }
 
-  show(){
+  visibleUpdated(){
+    console.log(this.visible.get());
+
     if(!this.drawn){
       this.initUI();
       this.drawn = true;
     }
 
-    this.selectedSlide.set(null);
-    this.selectedRegion.set(null);
-
-    let visible = this.visible.set(!this.visible.get());
-    this.update();
-    if(this.visible){
+    if(this.visible.get()) {
       this.draw();
     }
+
+    this.update();
+  }
+
+  show(){
+    this.visible.set(!this.visible.get());
   }
 
   update(){

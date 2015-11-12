@@ -3,6 +3,7 @@ import Tour from "bootstraptour";
 import {PART} from "./parts";
 
 class NbpresentTour {
+
   constructor(nbpresent) {
     this.nbpresent = nbpresent;
 
@@ -13,7 +14,7 @@ class NbpresentTour {
     this.tour = new Tour({
       name: "nbpresent",
       reflex: true, // click on element to continue tour
-      onStart: function() { console.log('nbpresent tour started'); },
+      storage: false,
       orphan: true,
       steps: [
         {
@@ -245,4 +246,4 @@ class NbpresentTour {
   }
 }
 
-export {NbpresentTour as Tour};
+export {NbpresentTour};
