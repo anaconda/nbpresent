@@ -28,13 +28,15 @@ export class ManualLayout {
   }
 
   update(region, part){
-    let {x, y, width, height} = region.value.attrs;
+    let {x, y, width, height, z} = region.value.attrs;
+
+    z = z || 0;
 
     part.style({
       height: `${this.y(height)}px`,
       left: `0`,
       top: `0`,
-      transform: `translate(${this.x(x)}px, ${this.y(y)}px) translateZ(0)`,
+      transform: `perspective(250px) translate3d(${this.x(x)}px, ${this.y(y)}px, ${z}px)`,
       width: `${this.x(width)}px`
     });
   }
