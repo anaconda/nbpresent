@@ -70,8 +70,8 @@ class Editor{
       .on("dragstart", function(d){
         let $region = d3.select(this.parentNode)
           .classed({dragging: 1});
-        dragX = d.value.x;
-        dragY = d.value.y;
+        dragX = d.value.attrs.x;
+        dragY = d.value.attrs.y;
       })
       .on("drag", function(d){
         dragX += x.invert(d3.event.dx);
@@ -85,7 +85,7 @@ class Editor{
         let $region = d3.select(this.parentNode)
           .classed({dragging: 0});
 
-        that.regions.merge(d.key, {
+        that.regions.merge([d.key, "attrs"], {
           x: dragX,
           y: dragY,
         });
@@ -96,10 +96,10 @@ class Editor{
       .on("dragstart", function(d){
         let $handle = d3.select(this)
           .classed({dragging: 1});
-        dragX = d.region.value.x;
-        dragY = d.region.value.y;
-        dragWidth = d.region.value.width;
-        dragHeight = d.region.value.height;
+        dragX = d.region.value.attrs.x;
+        dragY = d.region.value.attrs.y;
+        dragWidth = d.region.value.attrs.width;
+        dragHeight = d.region.value.attrs.height;
       })
       .on("drag", function(d){
         let $handle = d3.select(this),
@@ -144,7 +144,7 @@ class Editor{
         let $handle = d3.select(this)
           .classed({dragging: 0});
 
-        that.regions.merge(d.region.key, {
+        that.regions.merge([d.region.key, "attrs"], {
           x: dragX,
           y: dragY,
           width: dragWidth,
@@ -225,15 +225,15 @@ class Editor{
     let selected = this.selectedRegion.get();
 
     $region.attr({
-        transform: (d) => `translate(${[x(d.value.x), y(d.value.y)]})`
+        transform: (d) => `translate(${[x(d.value.attrs.x), y(d.value.attrs.y)]})`
       })
       .classed({
         active: (d) => selected && (d.key == selected.region)
       })
       .select(".region_bg")
       .attr({
-        width: (d) => x(d.value.width),
-        height: (d) => y(d.value.height)
+        width: (d) => x(d.value.attrs.width),
+        height: (d) => y(d.value.attrs.height)
       });
 
     $region.selectAll(".handle")
@@ -242,14 +242,14 @@ class Editor{
         cx: (d) => {
           return x(
             /w/.test(d.dir) ? 0 :
-            /e/.test(d.dir) ? d.region.value.width :
-            d.region.value.width / 2
+            /e/.test(d.dir) ? d.region.value.attrs.width :
+            d.region.value.attrs.width / 2
           )
         },
         cy: (d) => y(
           /n/.test(d.dir) ? 0 :
-          /s/.test(d.dir) ? d.region.value.height :
-          d.region.value.height / 2
+          /s/.test(d.dir) ? d.region.value.attrs.height :
+          d.region.value.attrs.height / 2
         )
       });
   }

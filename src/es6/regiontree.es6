@@ -36,7 +36,6 @@ class RegionTree {
   }
 
   layout(layout){
-    console.log(this.slide.get("layout"), layout);
     this.slide.set("layout", layout);
   }
 
@@ -64,18 +63,33 @@ class RegionTree {
           click: () => this.layout("treemap"),
           tip: "Treemap Layout"
         }],
+        // TODO: fix this
+        // [{
+        //   icon: "header",
+        //   click: () => this.toggleStyle("slab"),
+        //   tip: "Toggle Slab Effect"
+        // }],
       ])
       .call(toolbar.update);
+  }
+
+  toggleStyle(style){
+    let {slide, region} = this.selectedRegion.get() || {},
+      path = ["regions", region, "style", style];
+    console.log(path)
+    this.slide.set(path, !this.slide.get(path));
   }
 
   addRegion(){
     let id = uuid.v4();
     this.slide.set(["regions", id], {
       id,
-      x: 0.1,
-      y: 0.1,
-      width: 0.8,
-      height: 0.8
+      attr: {
+        x: 0.1,
+        y: 0.1,
+        width: 0.8,
+        height: 0.8
+      }
     });
   }
 
@@ -109,8 +123,7 @@ class RegionTree {
     $mini.call(this.mini.update);
 
     let $attr = $region.selectAll(".region_attr")
-      .data((region) => d3.entries(region.value)
-        .filter((d) => ["id", "content"].indexOf(d.key) === -1)
+      .data((region) => d3.entries(region.value.attrs)
         .map((attr) => {
           return {region, attr};
         }))
@@ -179,7 +192,11 @@ class RegionTree {
     })
     $attr.select(".form-control").attr({
       value: (d) => {
-        return d.attr.value.toFixed(3);
+        if(typeof d.attr.value === "boolean"){
+          return d.attr.value;
+        }else if(typeof d.attr.value === "number"){
+          return d.attr.value.toFixed(3);
+        }
       }
     });
   }
@@ -192,7 +209,7 @@ class RegionTree {
       let [x1, y1] = d3.mouse(this);
       let dx = (x1 - x) / 10;
       x = x1;
-      let path = ["regions", d.region.key, d.attr.key];
+      let path = ["regions", d.region.key, "attrs", d.attr.key];
       that.slide.set(path, that.slide.get(path) + dx)
     })
     .on("mouseup", function(){

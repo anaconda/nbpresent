@@ -64,7 +64,7 @@ class TemplateLibrary {
         id,
         regions: template.regions.reduce((memo, template) => {
           let id = uuid.v4();
-          memo[id] = $.extend({}, {id}, template);
+          memo[id] = $.extend({}, {id}, {attrs: template});
           return memo;
         }, {})
       }

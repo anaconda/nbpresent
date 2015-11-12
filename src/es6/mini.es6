@@ -73,10 +73,10 @@ class MiniSlide {
       })
       // TODO: scale
       .style({
-        width: (d) => `${d.region.value.width * 160}px`,
-        height: (d) => `${d.region.value.height * 90}px`,
-        left: (d) => `${d.region.value.x * 160}px`,
-        top: (d) => `${d.region.value.y * 90}px`
+        width: (d) => `${d.region.value.attrs.width * 160}px`,
+        height: (d) => `${d.region.value.attrs.height * 90}px`,
+        left: (d) => `${d.region.value.attrs.x * 160}px`,
+        top: (d) => `${d.region.value.attrs.y * 90}px`
       });
 
     // TODO: this needs to be much better/faster

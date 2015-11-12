@@ -28,7 +28,7 @@ export class ManualLayout {
   }
 
   update(region, part){
-    let {x, y, width, height} = region.value;
+    let {x, y, width, height} = region.value.attrs;
 
     part.style({
       height: `${this.y(height)}px`,

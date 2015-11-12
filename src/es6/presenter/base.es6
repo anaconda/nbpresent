@@ -1,10 +1,12 @@
 import {d3} from "nbpresent-deps";
 
+import {SpeakerBase} from "../speaker/base";
+
 import {ManualLayout} from "../layout/manual";
 import {TreemapLayout} from "../layout/treemap";
 
-import {Toolbar} from "../toolbar";
 import {PARTS, PART_SELECT} from "../parts";
+import {SlabStyle} from "../style/slab";
 
 let PREFIX = [
   "-webkit-",
@@ -19,10 +21,11 @@ export class Presenter {
     this.tree = tree;
 
     this.cellManager = this.makeCellManager();
+    this.speaker = this.makeSpeaker(this.tree);
 
     this.initUI();
 
-    this.presenting = this.tree.select(["presenter", "presenting"]);
+    this.presenting = this.tree.select(["presenting"]);
     this.current = this.tree.select(["selectedSlide"]);
 
     this.tree.on("update", () => this.update());
@@ -34,66 +37,20 @@ export class Presenter {
     throw new Error("Not implemented");
   }
 
+  makeSpeaker(tree){
+    return new SpeakerBase(tree);
+  }
+
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
       .classed({nbpresent_presenter: 1})
       .style({display: "none"});
-
-    this.initToolbar();
   }
 
-  toolbarIcons(){
-    let that = this;
 
-    return [
-      [{
-        icon: "fast-backward",
-        click: () => that.current.set(this.tree.get(["sortedSlides", 0, "key"])),
-        tip: "Back to Start"
-      }],
-      [{
-        icon: "step-backward",
-        click: () => {
-          let current = that.tree.get(["slides", this.current.get()]);
-          this.current.set(current.prev);
-        },
-        tip: "Previous Slide"
-      }],
-      [{
-        icon: "step-forward",
-        click: () => {
-          let slides = that.tree.get(["slides"]),
-            current = slides[that.current.get()];
-
-          d3.entries(slides).map((d)=> {
-            if(d.value.prev === current.id){
-              that.current.set(d.key);
-            }
-          });
-        },
-        tip: "Next Slide"
-      }]
-    ];
-  }
-
-  initToolbar(){
-    let toolbar = new Toolbar();
-
-    toolbar
-      .btnGroupClass("btn-group-vertical")
-      .btnClass("btn-invert btn-lg")
-      .tipOptions({container: "body", placement: "bottom"});
-
-    // TODO: Make this overlay (Jupyter-branded Reveal Compass)
-    this.$toolbar = this.$ui.append("div")
-      .classed({presenter_toolbar: 1})
-      .datum(this.toolbarIcons())
-      .call(toolbar.update);
-  }
 
   layoutClass(slide){
-    console.log("layoutClass", slide.value.layout);
     return {
       manual: ManualLayout,
       treemap: TreemapLayout
@@ -102,8 +59,6 @@ export class Presenter {
 
   updateLayout(slide){
     let LayoutClass = this.layoutClass(slide);
-
-    console.log(this.layout && this.layout.slide.key);
 
     if(this.layout &&
       this.layout.key() == LayoutClass.clsKey() &&
@@ -180,7 +135,18 @@ export class Presenter {
             nbpresent_present: 1
           })
           .each(() => that.layout.update(region, part));
+        // TODO: now do styles
+        d3.entries(region.value.style).map((style) => {
+          // TODO: make this extensible
+
+          if(style.value && style.key === "slab"){
+            let styler = new SlabStyle();
+            styler.update(part);
+          }
+        })
       });
+
+
 
     this.clean();
   }

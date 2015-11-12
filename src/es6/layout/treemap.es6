@@ -22,7 +22,7 @@ export class TreemapLayout extends ManualLayout {
       .size([100, 100])
       .sticky(true)
       .value((d) => {
-        return d._value["treemap:weight"] || 1;
+        return d._value.attrs["treemap:weight"] || 1;
       });
 
     let regions = d3.entries(this.slide.value.regions)
@@ -33,9 +33,9 @@ export class TreemapLayout extends ManualLayout {
 
     // initialize missing values
     regions
-      .filter((d) => d.value["treemap:weight"] == null)
+      .filter((d) => d.value.attrs["treemap:weight"] == null)
       .map((d) => {
-        that.tree.merge(["slides", that.slide.key, "regions", d.key], {
+        that.tree.merge(["slides", that.slide.key, "regions", d.key, "attrs"], {
           "treemap:weight": d.value["treemap:weight"] || 1
         });
       });
@@ -45,7 +45,7 @@ export class TreemapLayout extends ManualLayout {
     });
 
     regions.map((d) => {
-      let path = ["slides", that.slide.key, "regions", d.key];
+      let path = ["slides", that.slide.key, "regions", d.key, "attrs"];
       let old = that.tree.get(path),
         newValues = {
           x: d.x / 100,
