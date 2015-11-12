@@ -1,0 +1,35 @@
+@tour-padding: 24px;
+
+.tour-nbpresent {
+  font-size: 18px;
+  padding: 0px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.25);
+  max-width: 200px;
+  min-width: 400px;
+  width: 25vw;
+
+  .popover-title {
+    font-size: @tour-padding;
+    padding: @tour-padding;
+  }
+
+  .popover-content {
+    padding: @tour-padding;
+  }
+
+  .popover-navigation{
+    background-color: @ui-bg;
+  }
+
+  .popover-navigation .btn {
+    color: @jpy-brand;
+    font-size: 14px;
+    background-color: @ui-bg;
+    border: none;
+
+    &:hover{
+      color: @ui-bg;
+      background-color: @jpy-brand;
+    }
+  }
+}

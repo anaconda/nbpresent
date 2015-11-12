@@ -1,0 +1,22 @@
+.nbpresent_speaker{
+  z-index: @z-speaker;
+  display: block;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+
+  .presenter_toolbar {
+    opacity: 0;
+    transition: all 0.2s;
+    float: right;
+
+    &:hover, &.fake_hover{
+      opacity: 1;
+      transition: all 0.2s;
+    }
+
+    a {
+      color: @jpy-brand;
+    }
+  }
+}

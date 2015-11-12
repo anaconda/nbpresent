@@ -3,6 +3,7 @@ import Tour from "bootstraptour";
 import {PART} from "./parts";
 
 class NbpresentTour {
+
   constructor(nbpresent) {
     this.nbpresent = nbpresent;
 
@@ -11,29 +12,35 @@ class NbpresentTour {
     });
 
     this.tour = new Tour({
+      name: "nbpresent",
       reflex: true, // click on element to continue tour
-      onStart: function() { console.log('tour started'); },
+      storage: false,
+      duration: 3000,
       orphan: true,
       steps: [
         {
           element: "#nbpresent_sorter_btn",
           title: "Thanks for using nbpresent",
+          placement: "bottom",
           content: "You just activated the nbpresent Sorter! Click Next to take the tour"
         },
         {
           element: "#nbpresent_sorter_btn",
-          title: "This is the nbpresent Sorter",
+          title: "Sorter",
+          placement: "bottom",
           content: "You can add, reorder and remix your slides into a great presentation"
         },
         {
           element: "#nbpresent_present_btn",
-          title: "This is the nbpresent Presenter",
+          placement: "bottom",
+          title: "Presenter",
           content: "With the Presenter, you can view that presentation, tweak the content in-place, and publish it to the world. But first..."
         },
         {
           element: ".deck_toolbar .fa-plus-square-o",
-          title: "This is the Deck Toolbar",
+          title: "Deck Toolbar",
           content: "Let's create a new slide",
+          placement: "top",
           onNext: () => this.nbpresent.sorter.addSlide()
         },
         {
@@ -49,12 +56,12 @@ class NbpresentTour {
           content: "Or copy an existing slide"
         },
         {
-          element: ".nbpresent_layout_library .slide:nth-of-type(2)",
+          element: ".nbpresent_template_library .slide:nth-of-type(2)",
           title: "Simple Template",
           position: "top",
           content: "Let's use this one",
-          onNext: () => this.nbpresent.sorter.layoutPicked(
-            d3.select(".nbpresent_layout_library .slide:nth-of-type(2)")
+          onNext: () => this.nbpresent.sorter.templatePicked(
+            d3.select(".nbpresent_template_library .slide:nth-of-type(2)")
               .datum()
           )
         },
@@ -66,7 +73,7 @@ class NbpresentTour {
         },
         {
           element: ".slides_wrap .slide:last-child .region",
-          placement: "left",
+          placement: "right",
           title: "Region",
           onShow: () => {
             let el = d3.select(".slides_wrap .slide:last-child .region");
@@ -106,7 +113,7 @@ class NbpresentTour {
         },
         {
           element: ".slides_wrap .slide:last-child .region",
-          placement: "left",
+          placement: "top",
           title: "Part Thumbnail",
           content: "A part thumbnail might look a little funny, but you should usually be able to get an idea of what you're seeing.",
           onShow: () => this.nbpresent.sorter.linkContent(PART.source)
@@ -118,6 +125,7 @@ class NbpresentTour {
         {
           element: "#nbpresent_present_btn",
           title: "Great, let's have a look",
+          placement: "bottom",
           content: "Clicking this button brings up the Presenter",
           onNext: () => this.nbpresent.present()
         },
@@ -128,21 +136,21 @@ class NbpresentTour {
         {
           element: ".nbpresent_present",
           placement: "top",
-          title: "Same Notebook, Different Day",
-          content: "This is an editable input area"
+          title: "Most Notebook Editing Functionality",
+          content: "This is still an editable input area"
         },
         {
           element: ".nbpresent_present",
-          placement: "top",
+          placement: "bottom",
           title: "Part Execution",
-          content: "Inputs can even be executed with keyboard shortcuts like Ctrl+Enter"
+          content: "Inputs can even be executed with keyboard shortcuts like ctrl+enter"
         },
         // ...
         {
           element: ".presenter_toolbar .fa-step-forward",
           title: "Go forward",
           content: "Click here to go to the next Slide",
-          placement: "bottom",
+          placement: "top",
           onShown: () => fake_hover(".presenter_toolbar", true),
           onHidden: () => fake_hover(".presenter_toolbar", 0)
         },
@@ -150,7 +158,7 @@ class NbpresentTour {
           element: ".presenter_toolbar .fa-step-backward",
           title: "Go back",
           content: "Clicking here to go back to the previous slide",
-          placement: "bottom",
+          placement: "top",
           onShown: () => fake_hover(".presenter_toolbar", true),
           onHidden: () => fake_hover(".presenter_toolbar", 0)
         },
@@ -158,7 +166,7 @@ class NbpresentTour {
           element: ".presenter_toolbar .fa-fast-backward",
           title: "Go back to the beginning",
           content: "Clicking here to go back to the first Slide",
-          placement: "bottom",
+          placement: "top",
           onShown: () => fake_hover(".presenter_toolbar", true),
           onHidden: () => fake_hover(".presenter_toolbar", 0)
         },
@@ -166,7 +174,7 @@ class NbpresentTour {
           element: ".presenter_toolbar .fa-book",
           title: "My work is done here",
           content: "Click here to go back to the Notebook",
-          placement: "bottom",
+          placement: "top",
           onShown: () => fake_hover(".presenter_toolbar", true),
           onHidden: () => fake_hover(".presenter_toolbar", 0) &&
             this.nbpresent.unpresent()
@@ -191,7 +199,34 @@ class NbpresentTour {
           placement: "right",
           title: "Region Tree",
           content: "This is the Region tree. It lets you reorder Regions and see the details of how your Regions will show their linked Parts."
-        }
+        },
+        {
+          element: ".region_attr .attr_name",
+          placement: "right",
+          title: "Attribute Editor",
+          content: "All of the properties of a region can be edited here"
+        },
+        {
+          element: ".nbpresent_regiontree .btn-toolbar .fa-tree",
+          placement: "right",
+          title: "Magic Layouts",
+          content: "In addition to manually moving regions around, you can use other Layouts, like this Treemap, which will fill the slide",
+          onHidden: () => {
+            this.nbpresent.sorter.editor.sidebar.layout("treemap");
+          }
+        },
+        {
+          element: ".region_attr .fa-tree",
+          placement: "right",
+          title: "Treemagic",
+          content: "This new value lets you make a Region bigger or smaller based on relative Weight"
+        },
+
+        // keep this last!
+        {
+          title: "FIN",
+          content: "Thank you for using nbpresent!"
+        },
       ]
     });
   }
@@ -212,4 +247,4 @@ class NbpresentTour {
   }
 }
 
-export {NbpresentTour as Tour};
+export {NbpresentTour};

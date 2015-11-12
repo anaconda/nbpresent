@@ -8,7 +8,7 @@ import {d3} from "nbpresent-deps";
 import {NotebookPresenter} from "../presenter/notebook";
 import {Sorter} from "../sorter";
 import {PART} from "../parts";
-import {Tour} from "../tour";
+import {NbpresentTour} from "../tour";
 import {Tree} from "../tree";
 
 import {Mode} from "./base";
@@ -25,7 +25,7 @@ export default class NotebookMode extends Mode {
     this.slides = this.tree.select(["slides"]);
     this.slides.on("update", () => this.metadata(true))
 
-    this.tour = new Tour(this);
+    this.tour = new NbpresentTour(this);
     this.tour.init();
 
     this.presenter = new NotebookPresenter(this.tree, this.tour);
@@ -108,7 +108,17 @@ export default class NotebookMode extends Mode {
     nbpresent_preset.push("nbpresent.add_to_region");
 
     CellToolbar.register_preset("nbpresent", nbpresent_preset, Jupyter.notebook);
+
+    // update the download chrome
+    let dlMenu = d3.select(d3.select("#download_html").node().parentNode);
+
+    dlMenu.insert("li", ":nth-child(4)")
+      .append("a")
+      .text("Presentation (.nbpresent.html)")
+      .on("click", this.nbconvert);
   }
 
-
+  nbconvert(){
+    Jupyter.menubar._nbconvert("nbpresent", true);
+  }
 }

@@ -1,7 +1,12 @@
 import {d3} from "nbpresent-deps";
 
-import {Toolbar} from "../toolbar";
+import {SpeakerBase} from "../speaker/base";
+
+import {ManualLayout} from "../layout/manual";
+import {TreemapLayout} from "../layout/treemap";
+
 import {PARTS, PART_SELECT} from "../parts";
+import {SlabStyle} from "../style/slab";
 
 let PREFIX = [
   "-webkit-",
@@ -16,14 +21,14 @@ export class Presenter {
     this.tree = tree;
 
     this.cellManager = this.makeCellManager();
+    this.speaker = this.makeSpeaker(this.tree);
 
     this.initUI();
-    this.x = d3.scale.linear();
-    this.y = d3.scale.linear();
 
-    this.presenting = this.tree.select(["presenter", "presenting"]);
-    this.current = this.tree.select(["presenter", "current"]);
+    this.presenting = this.tree.select(["presenting"]);
+    this.current = this.tree.select(["selectedSlide"]);
 
+    this.tree.on("update", () => this.update());
     this.presenting.on("update", () => this.present());
     this.current.on("update", () => this.update());
   }
@@ -32,54 +37,46 @@ export class Presenter {
     throw new Error("Not implemented");
   }
 
+  makeSpeaker(tree){
+    return new SpeakerBase(tree);
+  }
+
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
       .classed({nbpresent_presenter: 1})
       .style({display: "none"});
-
-    this.initToolbar();
   }
 
-  toolbarIcons(){
-    return [
-      [{
-          icon: "fast-backward",
-          click: () => this.current.set(0),
-          tip: "Back to Start"
-        },
-      ],
-      [{
-        icon: "step-backward",
-        click: () => this.current.set(this.current.get() - 1),
-        tip: "Previous Slide"
-      }],
-      [{
-        icon: "step-forward",
-        click: () => this.current.set(this.current.get() + 1),
-        tip: "Next Slide"
-      }]
-    ];
+
+
+  layoutClass(slide){
+    return {
+      manual: ManualLayout,
+      treemap: TreemapLayout
+    }[slide.value.layout || "manual"];
   }
 
-  initToolbar(){
-    let toolbar = new Toolbar();
+  updateLayout(slide){
+    let LayoutClass = this.layoutClass(slide);
 
-    toolbar
-      .btnGroupClass("btn-group-vertical")
-      .btnClass("btn-invert btn-lg")
-      .tipOptions({container: "body", placement: "bottom"});
-
-    // TODO: Make this overlay (Jupyter-branded Reveal Compass)
-    this.$toolbar = this.$ui.append("div")
-      .classed({presenter_toolbar: 1})
-      .datum(this.toolbarIcons())
-      .call(toolbar.update);
+    if(this.layout &&
+      this.layout.key() == LayoutClass.clsKey() &&
+      this.layout.slide.key === slide.key
+    ){
+      this.layout.slide = slide;
+    }else{
+      this.layout = new LayoutClass(
+        this.tree,
+        slide,
+        document.documentElement
+      );
+    }
+    this.layout.init();
   }
 
   present() {
-    this.current.set(null);
-    this.current.set(0);
+    this.update();
   }
 
   getCells() {
@@ -87,28 +84,31 @@ export class Presenter {
   }
 
   update() {
+    let that = this;
     let presenting = this.presenting.get();
 
     this.$ui
       .style({
         "display": presenting ? "block" : "none"
       })
-      .transition()
       .style({
         opacity: +presenting,
       });
 
-    if(!presenting){
-      return this.clean(true);
-    }
+    let current = this.current.get(),
+      slide = this.tree.get(["sortedSlides", (d) => d.key == current]);
 
-    let {clientWidth, clientHeight} = document.documentElement;
-    this.x.range([0, clientWidth]);
-    this.y.range([0, clientHeight]);
-    let slide = this.tree.get("sortedSlides")[this.current.get()];
+    // TODO: handle cleanup
+    // transition = this.layout && this.layout.destroy()
 
     if(!slide){
-      return this.current.set(0);
+      return this.current.set(this.tree.get(["sortedSlides", 0, "key"]));
+    }
+
+    this.updateLayout(slide);
+
+    if(!presenting){
+      return this.clean(true);
     }
 
     let cells = this.getCells();
@@ -119,7 +119,7 @@ export class Presenter {
     d3.entries(slide.value.regions)
       .filter(({value}) => value.content)
       .map((region) => {
-        let {content, x, y, width, height} = region.value,
+        let {content} = region.value,
           cell = cells[content.cell];
 
         if(!cell){
@@ -130,15 +130,23 @@ export class Presenter {
           part = $el.select(PART_SELECT[content.part]);
 
         part
-          .classed({nbpresent_unpresent: 0, nbpresent_present: 1})
-          .style({
-            transform: `translate(${this.x(x)}px, ${this.y(y)}px) translateZ(0)`,
-            left: `0`,
-            top: `0`,
-            width: `${this.x(width)}px`,
-            height: `${this.y(height)}px`
-          });
+          .classed({
+            nbpresent_unpresent: 0,
+            nbpresent_present: 1
+          })
+          .each(() => that.layout.update(region, part));
+        // TODO: now do styles
+        d3.entries(region.value.style).map((style) => {
+          // TODO: make this extensible
+
+          if(style.value && style.key === "slab"){
+            let styler = new SlabStyle();
+            styler.update(part);
+          }
+        })
       });
+
+
 
     this.clean();
   }
@@ -150,18 +158,15 @@ export class Presenter {
   }
 
   clean(force){
+    let that = this;
+
     if(force){
       d3.selectAll(this.allPartSelect())
         .classed({nbpresent_unpresent: 1, nbpresent_present: 0});
     }
+
     d3.selectAll(".nbpresent_unpresent")
-      .style({
-        transform: null,
-        left: null,
-        top: null,
-        width: null,
-        height: null
-      })
+      .call(that.layout && this.layout.clean || () => 0)
       .classed({nbpresent_unpresent: 0, nbpresent_present: 0});
   }
 }

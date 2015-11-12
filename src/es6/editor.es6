@@ -1,24 +1,16 @@
 import {d3} from "nbpresent-deps";
 
 import {RegionTree} from "./regiontree";
+import {CellManager} from "./cells/notebook";
 
-let directions = [
-  "nw",
-  "n",
-  "ne",
-  "e",
-  "se",
-  "s",
-  "sw",
-  "w"
-];
+import {bbox} from "./d3.bbox";
 
 class Editor{
   constructor(slide, selectedRegion) {
     this.slide = slide;
     this.selectedRegion = selectedRegion;
     this.regions = this.slide.select("regions");
-
+    this.cellManager = new CellManager();
 
     // TODO: make these discrete to base unit
     this.x = d3.scale.linear();
@@ -43,6 +35,10 @@ class Editor{
     this.killed = true;
   }
 
+  initBehavior(){
+    this.bbox = bbox();
+  }
+
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
@@ -54,104 +50,10 @@ class Editor{
 
     this.$svg = this.$bg.append("svg");
 
+    this.$defs = this.$svg.append("defs");
+
     this.$ui.transition()
       .style({opacity: 1});
-  }
-
-  initBehavior(){
-    let that = this,
-      {x, y} = this;
-
-    let dragX, dragY, dragWidth, dragHeight;
-
-    let mouse = () => d3.mouse(this.$ui);
-
-    this.regionDrag = d3.behavior.drag()
-      .on("dragstart", function(d){
-        let $region = d3.select(this.parentNode)
-          .classed({dragging: 1});
-        dragX = d.value.x;
-        dragY = d.value.y;
-      })
-      .on("drag", function(d){
-        dragX += x.invert(d3.event.dx);
-        dragY += y.invert(d3.event.dy);
-        let $region = d3.select(this.parentNode)
-          .attr({
-            transform: (d) => `translate(${[x(dragX), y(dragY)]})`
-          });
-      })
-      .on("dragend", function(d){
-        let $region = d3.select(this.parentNode)
-          .classed({dragging: 0});
-
-        that.regions.merge(d.key, {
-          x: dragX,
-          y: dragY,
-        });
-      });
-
-    this.handleDrag = d3.behavior.drag()
-      .origin((d) => { return {x:0, y:0}; })
-      .on("dragstart", function(d){
-        let $handle = d3.select(this)
-          .classed({dragging: 1});
-        dragX = d.region.value.x;
-        dragY = d.region.value.y;
-        dragWidth = d.region.value.width;
-        dragHeight = d.region.value.height;
-      })
-      .on("drag", function(d){
-        let $handle = d3.select(this),
-          $region = d3.select(this.parentNode);
-
-        let dx = x.invert(d3.event.dx),
-          dy = y.invert(d3.event.dy);
-
-        if(/n/.test(d.dir)){ dragY += dy; dragHeight -= dy; }
-        if(/e/.test(d.dir)){ dragWidth += dx; }
-        if(/s/.test(d.dir)){ dragHeight += dy; }
-        if(/w/.test(d.dir)){ dragX += dx; dragWidth -= dx; }
-
-        $region
-          .attr({
-            transform: (d) => `translate(${[x(dragX), y(dragY)]})`
-          })
-          .select(".region_bg")
-          .attr({
-            width: x(dragWidth),
-            height: y(dragHeight),
-          });
-
-        $region
-          .selectAll(".handle")
-          .attr({
-            cx: (d) => {
-              return x(
-                /w/.test(d.dir) ? 0 :
-                /e/.test(d.dir) ? dragWidth :
-                dragWidth / 2
-              )
-            },
-            cy: (d) => y(
-              /n/.test(d.dir) ? 0 :
-              /s/.test(d.dir) ? dragHeight :
-              dragHeight / 2
-            )
-          });
-      })
-      .on("dragend", function(d){
-        let $handle = d3.select(this)
-          .classed({dragging: 0});
-
-        that.regions.merge(d.region.key, {
-          x: dragX,
-          y: dragY,
-          width: dragWidth,
-          height: dragHeight
-        });
-      });
-
   }
 
   padding(){
@@ -163,8 +65,32 @@ class Editor{
     return 16 / 9;
   }
 
+  bbEnd(el, d){
+    let $el = d3.select(el),
+      scales = {
+        x: this.x,
+        y: this.y,
+        width: this.x,
+        height: this.y
+      };
+
+    let selected = this.selectedRegion.get();
+
+    if(!selected){
+      return;
+    }
+
+    this.slide.merge(["regions", selected.region, "attrs"],
+      d3.entries(scales)
+        .reduce((memo, attr) => {
+          memo[attr.key] = attr.value.invert($el.attr(attr.key));
+          return memo;
+        }, {}));
+  }
+
   update(){
-    let uibb = this.$ui.node().getBoundingClientRect(),
+    let that = this,
+      uibb = this.$ui.node().getBoundingClientRect(),
       width = uibb.width - (this.sidebar.width() + (2 * this.padding())),
       height = width / this.aspectRatio(),
       regions = d3.entries(this.regions.get()),
@@ -205,47 +131,71 @@ class Editor{
       .call(($region) => {
         $region.append("rect")
           .classed({region_bg: 1})
-          .call(this.regionDrag);
-
-        let $handle = $region.selectAll(".handle")
-          .data(regionData);
-
-        $handle.enter()
-          .append("circle")
-          .classed({handle: 1})
-          .attr({
-            r: 5
-          })
-          .call(this.handleDrag);
+          .each(function(d){
+            that.bbox.infect(d3.select(this))
+              .on("dragend", function(d){ that.bbEnd(this, d) })
+              .on("resizeend", function(d){ that.bbEnd(this, d) });
+          });
       })
-      .on("click", (d) => {
+      .on("mousedown", (d) => {
         this.selectedRegion.set({slide: this.slide.get("id"), region: d.key});
       });
 
-    $region.attr({
-        transform: (d) => `translate(${[x(d.value.x), y(d.value.y)]})`
+    let selected = this.selectedRegion.get();
+
+    $region
+      .classed({
+        active: (d) => selected && (d.key == selected.region)
       })
-      .select(".region_bg")
+    .select(".region_bg")
+      .transition()
       .attr({
-        width: (d) => x(d.value.width),
-        height: (d) => y(d.value.height)
+        width: (d) => x(d.value.attrs.width),
+        height: (d) => y(d.value.attrs.height),
+        x: (d) => x(d.value.attrs.x),
+        y: (d) => y(d.value.attrs.y)
       });
 
-    $region.selectAll(".handle")
-      .data(regionData)
-      .attr({
-        cx: (d) => {
-          return x(
-            /w/.test(d.dir) ? 0 :
-            /e/.test(d.dir) ? d.region.value.width :
-            d.region.value.width / 2
-          )
-        },
-        cy: (d) => y(
-          /n/.test(d.dir) ? 0 :
-          /s/.test(d.dir) ? d.region.value.height :
-          d.region.value.height / 2
-        )
+    $region.filter(({value}) => !value.content)
+      .select(".region_bg")
+      .style({fill: null});
+
+
+    $region.filter(({value}) => value.content)
+      .each(function(d){
+        let $region = d3.select(this);
+        that.cellManager.thumbnail(d.value.content)
+          .catch(function(err){
+            console.warn("thumbnail error", err);
+          })
+          .then(function({uri, width, height}){
+            let id = `${d.value.content.part}-${d.value.content.cell}`,
+              bg = that.$defs.selectAll(`#${id}`).data([id]);
+
+            bg.enter().append("pattern")
+              .attr({
+                patternUnits: "userSpaceOnUse",
+                id
+              })
+            .append("image")
+              .attr({
+                x: 0,
+                y: 0
+              });
+
+            bg.attr({width, height})
+              .select("image")
+              .attr({
+                "xlink:href": uri,
+                width,
+                height
+              });
+
+            $region.select(".region_bg")
+              .style({
+                fill: `url(#${id})`
+              });
+          });
       });
   }
 }

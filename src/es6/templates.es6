@@ -5,7 +5,7 @@ import {d3, uuid} from "nbpresent-deps";
 import {MiniSlide} from "./mini";
 
 // TODO: this needs to be an extensible, registerable thing
-let layouts = [
+let _templates = [
   {
     regions: [
       {x: 0.1, y: 0.1, width: 0.8, height: 0.6},
@@ -35,7 +35,7 @@ let layouts = [
   }
 ];
 
-class LayoutLibrary {
+class TemplateLibrary {
   constructor(picked) {
     this.picked = picked;
 
@@ -56,15 +56,15 @@ class LayoutLibrary {
     this.killed = true;
   }
 
-  fakeSlide(layout) {
+  fakeSlide(template) {
     let id = uuid.v4();
     return {
       key: id,
       value: {
         id,
-        regions: layout.regions.reduce((memo, layout) => {
+        regions: template.regions.reduce((memo, template) => {
           let id = uuid.v4();
-          memo[id] = $.extend({}, {id}, layout);
+          memo[id] = $.extend({}, {id}, {attrs: template});
           return memo;
         }, {})
       }
@@ -74,7 +74,7 @@ class LayoutLibrary {
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({nbpresent_layout_library: 1});
+      .classed({nbpresent_template_library: 1});
 
     this.$ui.append("button")
       .classed({btn: 1, hide_library: 1, "btn-default": 1})
@@ -93,7 +93,7 @@ class LayoutLibrary {
 
   update(){
     let $slide = this.$ui.selectAll(".slide")
-      .data(layouts.map(this.fakeSlide));
+      .data(_templates.map(this.fakeSlide));
 
     $slide.enter()
       .append("div")
@@ -104,4 +104,4 @@ class LayoutLibrary {
   }
 }
 
-export {LayoutLibrary};
+export {TemplateLibrary};

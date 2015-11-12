@@ -9,7 +9,8 @@ from notebook.services.config import ConfigManager
 
 def install(user=False, symlink=False, overwrite=False, enable=False,
             **kwargs):
-    """Install the nbpresent nbextension.
+    """Install the nbpresent nbextension assets and optionally enables the
+       nbextension and server extension for every run.
 
     Parameters
     ----------
@@ -24,17 +25,26 @@ def install(user=False, symlink=False, overwrite=False, enable=False,
     **kwargs: keyword arguments
         Other keyword arguments passed to the install_nbextension command
     """
-    print("Installing nbpresent nbextension...")
     directory = join(dirname(abspath(__file__)), 'static', 'nbpresent')
+    print("Installing nbpresent frontend assets...")
     install_nbextension(directory, destination='nbpresent',
                         symlink=symlink, user=user, overwrite=overwrite,
                         **kwargs)
 
     if enable:
-        print("Enabling nbpresent at every notebook launch...")
+        print("Enabling nbpresent frontend at every notebook launch...")
         cm = ConfigManager()
-        cm.update('notebook',
-                  {"load_extensions": {"nbpresent/nbpresent.min": True}})
+        cm.update(
+            'notebook', dict(
+                load_extensions={"nbpresent/nbpresent.min": True},
+            )
+        )
+        print("Enabling nbpresent server component...")
+        cm.update(
+            'NotebookApp', dict(
+                server_extensions=["nbpresent"]
+            )
+        )
 
 
 if __name__ == '__main__':

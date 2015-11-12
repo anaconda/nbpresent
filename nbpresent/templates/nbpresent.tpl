@@ -45,13 +45,22 @@
   </script>
   <script>
     ;(function(){
-      var local = "./nbpresent/static/nbpresent/nbpresent.min",
-        cdn = "https://continuumio.github.io/nbpresent/nbpresent/nbpresent.min",
-        init = function(loader){
-          loader.load_presentation_standalone();
+      requirejs.config({
+        paths: {
+          "nbpresent-loader": [
+            "./nbpresent.min",
+            "/nbextensions/nbpresent/nbpresent.min",
+            "https://continuumio.github.io/nbpresent/nbpresent/nbpresent.min"
+          ],
+          jquery: [
+            "http://localhost:8888/components/jquery/jquery.min"
+          ]
         }
+      });
 
-      requirejs([local], init, function(){ requirejs([cdn], init); })
+      requirejs(["jquery", "nbpresent-loader"], function($, loader){
+        loader.load_presentation_standalone();
+      });
 
     }).call(this);
   </script>
