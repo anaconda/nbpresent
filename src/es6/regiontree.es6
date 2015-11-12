@@ -167,11 +167,16 @@ class RegionTree {
     let layout = this.slide.get(["layout"]);
 
     $attr.each(function(d){
-      console.log(layout, d);
       d3.select(this)
         .style({
-          display: (d) =>
-            layout !== "treemap" || !d.attr.key.indexOf(layout) ? null : "none"
+          display: (d) => {
+            // TODO: make this extensible
+            if(layout == "treemap"){
+              return d.attr.key.indexOf(layout) === 0 ? null : "none";
+            }else{
+              return d.attr.key.indexOf("treemap") === 0 ? "none" : null;
+            }
+          }
         })
     });
 

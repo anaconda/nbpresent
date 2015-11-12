@@ -39,15 +39,17 @@ class Sorter {
   }
 
   visibleUpdated(){
-    console.log(this.visible.get());
+    let visible = this.visible.get();
 
     if(!this.drawn){
       this.initUI();
       this.drawn = true;
     }
 
-    if(this.visible.get()) {
+    if(visible) {
       this.draw();
+    }else if(this.editor){
+      this.editor.destroy();
     }
 
     this.update();
