@@ -15,6 +15,7 @@ class NbpresentTour {
       name: "nbpresent",
       reflex: true, // click on element to continue tour
       storage: false,
+      duration: 3000,
       orphan: true,
       steps: [
         {
@@ -25,19 +26,19 @@ class NbpresentTour {
         },
         {
           element: "#nbpresent_sorter_btn",
-          title: "This is the nbpresent Sorter",
+          title: "Sorter",
           placement: "bottom",
           content: "You can add, reorder and remix your slides into a great presentation"
         },
         {
           element: "#nbpresent_present_btn",
           placement: "bottom",
-          title: "This is the nbpresent Presenter",
+          title: "Presenter",
           content: "With the Presenter, you can view that presentation, tweak the content in-place, and publish it to the world. But first..."
         },
         {
           element: ".deck_toolbar .fa-plus-square-o",
-          title: "This is the Deck Toolbar",
+          title: "Deck Toolbar",
           content: "Let's create a new slide",
           placement: "top",
           onNext: () => this.nbpresent.sorter.addSlide()
@@ -135,14 +136,14 @@ class NbpresentTour {
         {
           element: ".nbpresent_present",
           placement: "top",
-          title: "Same Notebook, Different Day",
-          content: "This is an editable input area"
+          title: "Most Notebook Editing Functionality",
+          content: "This is still an editable input area"
         },
         {
           element: ".nbpresent_present",
-          placement: "top",
+          placement: "bottom",
           title: "Part Execution",
-          content: "Inputs can even be executed with keyboard shortcuts like Ctrl+Enter"
+          content: "Inputs can even be executed with keyboard shortcuts like ctrl+enter"
         },
         // ...
         {

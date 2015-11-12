@@ -3,6 +3,8 @@ import {d3} from "nbpresent-deps";
 import {RegionTree} from "./regiontree";
 import {CellManager} from "./cells/notebook";
 
+import {bbox} from "./d3.bbox";
+
 let directions = [
   "nw",
   "n",
