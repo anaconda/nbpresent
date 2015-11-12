@@ -1,6 +1,7 @@
 import {d3} from "nbpresent-deps";
 
 import {RegionTree} from "./regiontree";
+import {CellManager} from "./cells/notebook";
 
 let directions = [
   "nw",
@@ -18,7 +19,7 @@ class Editor{
     this.slide = slide;
     this.selectedRegion = selectedRegion;
     this.regions = this.slide.select("regions");
-
+    this.cellManager = new CellManager();
 
     // TODO: make these discrete to base unit
     this.x = d3.scale.linear();
@@ -53,6 +54,8 @@ class Editor{
       .classed({slide_bg: 1});
 
     this.$svg = this.$bg.append("svg");
+
+    this.$defs = this.$svg.append("defs");
 
     this.$ui.transition()
       .style({opacity: 1});
@@ -164,7 +167,8 @@ class Editor{
   }
 
   update(){
-    let uibb = this.$ui.node().getBoundingClientRect(),
+    let that = this,
+      uibb = this.$ui.node().getBoundingClientRect(),
       width = uibb.width - (this.sidebar.width() + (2 * this.padding())),
       height = width / this.aspectRatio(),
       regions = d3.entries(this.regions.get()),
@@ -224,16 +228,61 @@ class Editor{
 
     let selected = this.selectedRegion.get();
 
-    $region.attr({
-        transform: (d) => `translate(${[x(d.value.attrs.x), y(d.value.attrs.y)]})`
-      })
+    $region
       .classed({
         active: (d) => selected && (d.key == selected.region)
       })
-      .select(".region_bg")
+      .attr({
+        transform: (d) => `translate(${[x(d.value.attrs.x), y(d.value.attrs.y)]})`
+      })
+    .select(".region_bg")
       .attr({
         width: (d) => x(d.value.attrs.width),
         height: (d) => y(d.value.attrs.height)
+      });
+
+    $region.filter(({value}) => !value.content)
+      .select(".region_bg")
+      .style({fill: null});
+
+
+    $region.filter(({value}) => value.content)
+      .each(function(d){
+        let $region = d3.select(this);
+        that.cellManager.thumbnail(d.value.content)
+          .catch(function(err){
+            console.warn("thumbnail error", err);
+          })
+          .then(function({uri, width, height}){
+            let id = `${d.value.content.part}-${d.value.content.cell}`,
+              bg = that.$defs.selectAll(`#${id}`).data([id]);
+
+            console.log(id);
+
+            bg.enter().append("pattern")
+              .attr({
+                patternUnits: "userSpaceOnUse",
+                id
+              })
+            .append("image")
+              .attr({
+                x: 0,
+                y: 0
+              });
+
+            bg.attr({width, height})
+              .select("image")
+              .attr({
+                "xlink:href": uri,
+                width,
+                height
+              });
+
+            $region.select(".region_bg")
+              .style({
+                fill: `url(#${id})`
+              });
+          });
       });
 
     $region.selectAll(".handle")
