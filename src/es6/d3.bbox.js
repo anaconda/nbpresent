@@ -1,6 +1,9 @@
 // Copyright (c) 2015 Lucas Beyer
 // Licensed under the MIT License (MIT)
 // Version 1.0
+// https://github.com/lucasb-eyer/d3-boundingbox
+
+// ES6 "translation" by (c) 2015 Nick Bollweg
 
 import {d3} from "nbpresent-deps";
 
