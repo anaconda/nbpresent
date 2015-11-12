@@ -11,22 +11,26 @@ class NbpresentTour {
     });
 
     this.tour = new Tour({
+      name: "nbpresent",
       reflex: true, // click on element to continue tour
-      onStart: function() { console.log('tour started'); },
+      onStart: function() { console.log('nbpresent tour started'); },
       orphan: true,
       steps: [
         {
           element: "#nbpresent_sorter_btn",
           title: "Thanks for using nbpresent",
+          placement: "bottom",
           content: "You just activated the nbpresent Sorter! Click Next to take the tour"
         },
         {
           element: "#nbpresent_sorter_btn",
           title: "This is the nbpresent Sorter",
+          placement: "bottom",
           content: "You can add, reorder and remix your slides into a great presentation"
         },
         {
           element: "#nbpresent_present_btn",
+          placement: "bottom",
           title: "This is the nbpresent Presenter",
           content: "With the Presenter, you can view that presentation, tweak the content in-place, and publish it to the world. But first..."
         },
@@ -34,6 +38,7 @@ class NbpresentTour {
           element: ".deck_toolbar .fa-plus-square-o",
           title: "This is the Deck Toolbar",
           content: "Let's create a new slide",
+          placement: "top",
           onNext: () => this.nbpresent.sorter.addSlide()
         },
         {
@@ -118,6 +123,7 @@ class NbpresentTour {
         {
           element: "#nbpresent_present_btn",
           title: "Great, let's have a look",
+          placement: "bottom",
           content: "Clicking this button brings up the Presenter",
           onNext: () => this.nbpresent.present()
         },
@@ -212,6 +218,12 @@ class NbpresentTour {
           placement: "right",
           title: "Treemagic",
           content: "This new value lets you make a Region bigger or smaller based on relative Weight"
+        },
+
+        // keep this last!
+        {
+          title: "FIN",
+          content: "Thank you for using nbpresent!"
         },
       ]
     });
