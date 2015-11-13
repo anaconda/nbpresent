@@ -41,6 +41,18 @@
   left: 0;
   bottom: @sorter-height;
   background-color: @ui-bg;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 30px;
+
+  .nbpresent_toolbar {
+    position: fixed;
+    top: @HACK-header-height;
+    z-index: @z-regiontree + 1;
+    width: @editor-sidebar-width - 10;
+    background-color: @ui-bg;
+    box-shadow: @nbpresent-z-shadow;
+  }
 
   .region_info {
     clear: both;

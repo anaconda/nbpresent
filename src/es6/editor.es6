@@ -94,7 +94,8 @@ class Editor{
       width = uibb.width - (this.sidebar.width() + (2 * this.padding())),
       height = width / this.aspectRatio(),
       regions = d3.entries(this.regions.get()),
-      {slide, region} = this.selectedRegion.get() || {};
+      {slide, region} = this.selectedRegion.get() || {},
+      selected = this.selectedRegion.get();
 
     if(height > uibb.height + 2 * this.padding()){
       height = uibb.height - (2 * this.padding());
@@ -114,8 +115,14 @@ class Editor{
 
     this.$svg.attr({width, height});
 
+    regions.sort((a, b) => {
+      return selected.region == a.key ? -1 : selected.region == b.key ? 1 :
+        (a.value.attrs.z || 0) - (b.value.attrs.z || 0)
+    });
+
     let $region = this.$svg.selectAll(".region")
-      .data(regions, (d) => d.key);
+      .data(regions, (d) => d.key)
+      .order();
 
     $region.exit().remove();
 
@@ -140,8 +147,6 @@ class Editor{
       .on("mousedown", (d) => {
         this.selectedRegion.set({slide: this.slide.get("id"), region: d.key});
       });
-
-    let selected = this.selectedRegion.get();
 
     $region
       .classed({
