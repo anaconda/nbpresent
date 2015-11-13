@@ -24,8 +24,9 @@ def install(conda_env=False, enable=False, **kwargs):
     directory = join(dirname(abspath(__file__)), 'static', 'nbpresent')
     print("Installing nbpresent frontend assets...")
 
+    env_path = os.environ.get("CONDA_ENV_PATH", None)
+
     if conda_env:
-        env_path = os.environ.get("CONDA_ENV_PATH", None)
         # for the build
         if env_path is None:
             env_path = os.environ.get("PREFIX", None)
@@ -38,8 +39,21 @@ def install(conda_env=False, enable=False, **kwargs):
     install_nbextension(directory, destination='nbpresent', **kwargs)
 
     if enable:
+        cm_config = {}
+
+        if env_path:
+            cm_config["config_dir"] = os.path.join(
+                env_path,
+                "etc",
+                "jupyter",
+                "nbconfig"
+            )
+            if not os.path.exists(cm_config["config_dir"]):
+                os.makedirs(cm_config["config_dir"])
+
+        cm = ConfigManager(**cm_config)
+        print("Enabling for", cm.config_dir)
         print("Enabling nbpresent frontend at every notebook launch...")
-        cm = ConfigManager()
         cm.update(
             'notebook', dict(
                 load_extensions={"nbpresent/nbpresent.min": True},
