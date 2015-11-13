@@ -1,25 +1,21 @@
 #!/usr/bin/env python
 
 import argparse
+import os
 from os.path import dirname, abspath, join
 
 from notebook.nbextensions import install_nbextension
 from notebook.services.config import ConfigManager
 
 
-def install(user=False, symlink=False, overwrite=False, enable=False,
-            **kwargs):
+def install(conda_env=False, enable=False, **kwargs):
     """Install the nbpresent nbextension assets and optionally enables the
        nbextension and server extension for every run.
 
     Parameters
     ----------
-    user: bool
-        Install for current user instead of system-wide.
-    symlink: bool
-        Symlink instead of copy (for development).
-    overwrite: bool
-        Overwrite previously-installed files for this extension
+    conda_env: bool
+        Install for all users of current conda environment
     enable: bool
         Enable the extension on every notebook launch
     **kwargs: keyword arguments
@@ -27,9 +23,19 @@ def install(user=False, symlink=False, overwrite=False, enable=False,
     """
     directory = join(dirname(abspath(__file__)), 'static', 'nbpresent')
     print("Installing nbpresent frontend assets...")
-    install_nbextension(directory, destination='nbpresent',
-                        symlink=symlink, user=user, overwrite=overwrite,
-                        **kwargs)
+
+    if conda_env:
+        env_path = os.environ.get("CONDA_ENV_PATH", None)
+        # for the build
+        if env_path is None:
+            env_path = os.environ.get("PREFIX", None)
+
+        if env_path is not None:
+            kwargs["prefix"] = env_path
+        else:
+            raise ValueError("Couldn't detect conda environment")
+
+    install_nbextension(directory, destination='nbpresent', **kwargs)
 
     if enable:
         print("Enabling nbpresent frontend at every notebook launch...")
@@ -66,6 +72,14 @@ if __name__ == '__main__':
         "-e", "--enable",
         help="Automatically load extension on notebook launch",
         action="store_true")
+    parser.add_argument(
+        "-c", "--conda_env",
+        help="Install for all users of the current conda environment",
+        action="store_true")
     args = parser.parse_args()
-    install(user=args.user, symlink=args.symlink, overwrite=args.force,
-            enable=args.enable)
+    kwargs = dict(
+        user=args.user,
+        symlink=args.symlink,
+        overwrite=args.force
+    )
+    install(enable=args.enable, conda_env=args.conda_env)

@@ -1,6 +1,6 @@
 package:
   name: nbpresent
-  version: 0.1.0
+  version: {{ environ.get('GIT_DESCRIBE_TAG', ' ')[1:] }}
 
 extra:
   channels:
@@ -14,7 +14,9 @@ requirements:
     - nodejs
     - python
     - notebook
+    - ipython-notebook
   run:
+    - python
     - notebook
 
 test:
@@ -23,5 +25,6 @@ test:
 
 about:
   summary: Next generation slides for Jupyter Notebooks
+  home: https://github.com/continuumio/nbpresent
   license_file: LICENSE
   license: BSD License

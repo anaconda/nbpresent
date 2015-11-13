@@ -1,1 +1,1 @@
-"%PYTHON%" -m nbpresent.install --force --enable --user
+"%PYTHON%" -m nbpresent.install --force --enable --conda_env
