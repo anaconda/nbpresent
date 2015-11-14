@@ -10,8 +10,6 @@ from notebook.services.config import ConfigManager
 
 install_kwargs = list(inspect.signature(install_nbextension).parameters)
 
-print(install_kwargs)
-
 
 def install(enable=False, **kwargs):
     """Install the nbpresent nbextension assets and optionally enables the
