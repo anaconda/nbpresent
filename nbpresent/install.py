@@ -41,6 +41,9 @@ def install(enable=False, **kwargs):
         print("Enabling nbpresent server component...")
         cm.update(
             "jupyter_notebook_config", {
+                "notebook": {
+                    "load_extensions": {"nbpresent/nbpresent.min": True}
+                },
                 "NotebookApp": {
                     "server_extensions": ["nbpresent"]
                 }
