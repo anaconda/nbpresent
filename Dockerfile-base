@@ -11,11 +11,15 @@ RUN apt-get update && \
     bzip2 && \
   apt-get clean -y
 
-RUN groupadd -r nbpresent && \
-  useradd -r -g nbpresent nbpresent && \
-  mkdir -p /src/nbpresent /home/nbpresent && \
-  chown -R nbpresent:nbpresent /src/nbpresent && \
-  chown -R nbpresent:nbpresent /home/nbpresent
+# Install Tini
+RUN curl -L https://github.com/krallin/tini/releases/download/v0.6.0/tini > tini && \
+    echo "d5ed732199c36a1189320e6c4859f0169e950692f451c03e7854243b95f4234b *tini" | sha256sum -c - && \
+    mv tini /usr/local/bin/tini && \
+    chmod +x /usr/local/bin/tini
+
+RUN groupadd -r -m -s /bin/bash nbpresent && \
+  mkdir -p /src/nbpresent && \
+  chown -R nbpresent:nbpresent /src/nbpresent
 
 # Don't run as root, mostly
 USER nbpresent

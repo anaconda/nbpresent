@@ -5,13 +5,9 @@ conda_base:
 conda_build:
   build: .
   dockerfile: Dockerfile-build
-  links:
-    - conda_base
 
 conda:
   build: .
   command: jupyter notebook --no-browser --ip=* --debug
   ports:
     - 8666:8888
-  links:
-    - conda_build
