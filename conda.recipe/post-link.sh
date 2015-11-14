@@ -1,1 +1,1 @@
-python -m nbpresent.install --force --enable --conda_env
+python -m nbpresent.install --overwrite --enable --prefix="${PREFIX}"

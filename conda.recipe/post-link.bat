@@ -1,1 +1,1 @@
-"%PYTHON%" -m nbpresent.install --force --enable --conda_env
+"%PYTHON%" -m nbpresent.install --overwrite --enable --prefix="%PREFIX%"
