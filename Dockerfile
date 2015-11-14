@@ -6,8 +6,11 @@ WORKDIR /home/nbpresent
 
 RUN conda create -n npbresent-test-env -y "python<4"
 
+COPY ./bin/docker_conda_install.sh /src/nbpresent/bin/
 # test install
 RUN bash /src/nbpresent/bin/docker_conda_install.sh
+
+COPY ./bin/docker_conda_run.sh /src/nbpresent/bin/
 
 # maybe try it
 ENTRYPOINT ["tini", "--"]

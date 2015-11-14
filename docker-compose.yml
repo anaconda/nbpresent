@@ -8,6 +8,5 @@ conda_build:
 
 conda:
   build: .
-  command: jupyter notebook --no-browser --ip=* --debug
   ports:
     - 8666:8888

@@ -1,4 +1,5 @@
 #!/bin/bash
+# foo
 conda env list
 . activate npbresent-test-env
 conda env list
