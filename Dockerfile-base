@@ -17,7 +17,7 @@ RUN curl -L https://github.com/krallin/tini/releases/download/v0.6.0/tini > tini
     mv tini /usr/local/bin/tini && \
     chmod +x /usr/local/bin/tini
 
-RUN groupadd -r -m -s /bin/bash nbpresent && \
+RUN useradd -r -m -s /bin/bash nbpresent && \
   mkdir -p /src/nbpresent && \
   chown -R nbpresent:nbpresent /src/nbpresent
 

@@ -3,13 +3,7 @@ FROM nbpresent_conda_base
 # prime the cache
 RUN conda update -y conda && \
   conda install -y \
-    -c javascript \
     conda-build \
-    nodejs \
-    notebook \
-    bokeh \
-    ipywidgets \
-    terminado \
     "python<4"
 
 # Brief root interlude

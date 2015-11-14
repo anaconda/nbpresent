@@ -5,11 +5,6 @@ import os
 from os.path import dirname, abspath, join, exists
 import inspect
 
-from notebook.nbextensions import install_nbextension
-from notebook.services.config import ConfigManager
-
-install_kwargs = list(inspect.signature(install_nbextension).parameters)
-
 
 def install(enable=False, **kwargs):
     """Install the nbpresent nbextension assets and optionally enables the
@@ -22,6 +17,9 @@ def install(enable=False, **kwargs):
     **kwargs: keyword arguments
         Other keyword arguments passed to the install_nbextension command
     """
+    from notebook.nbextensions import install_nbextension
+    from notebook.services.config import ConfigManager
+
     directory = join(dirname(abspath(__file__)), 'static', 'nbpresent')
 
     kwargs = {k: v for k, v in kwargs.items() if not (v is None)}
@@ -52,6 +50,10 @@ def install(enable=False, **kwargs):
 
 
 if __name__ == '__main__':
+    from notebook.nbextensions import install_nbextension
+
+    install_kwargs = list(inspect.signature(install_nbextension).parameters)
+
     parser = argparse.ArgumentParser(
         description="Installs nbpresent nbextension")
     parser.add_argument(

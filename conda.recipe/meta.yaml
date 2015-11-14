@@ -2,10 +2,6 @@ package:
   name: nbpresent
   version: {{ environ.get('GIT_DESCRIBE_TAG', ' ')[1:] }}
 
-extra:
-  channels:
-    - cpcloud
-
 source:
   path: ../
 
@@ -14,12 +10,15 @@ requirements:
     - nodejs
     - python
     - notebook
+    - jupyter
   run:
     - python
     - notebook
+    - jupyter
 
 test:
   imports:
+    - notebook
     - nbpresent
 
 about:
