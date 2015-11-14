@@ -4,7 +4,7 @@ package:
 
 extra:
   channels:
-    - javascript
+    - cpcloud
 
 source:
   path: ../

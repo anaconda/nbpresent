@@ -1,0 +1,32 @@
+FROM debian:jessie
+
+ENV GIT_DESCRIBE_TAG=v0.3.0.dev0
+ENV CND_URL=http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh
+
+# System packages
+RUN apt-get update && \
+  apt-get install -y \
+    curl \
+    git \
+    bzip2 && \
+  apt-get clean -y
+
+RUN groupadd -r nbpresent && \
+  useradd -r -g nbpresent nbpresent && \
+  mkdir -p /src/nbpresent /home/nbpresent && \
+  chown -R nbpresent:nbpresent /src/nbpresent && \
+  chown -R nbpresent:nbpresent /home/nbpresent
+
+# Don't run as root, mostly
+USER nbpresent
+WORKDIR /home/nbpresent
+
+# Install miniconda to /miniconda
+RUN curl -LO ${CND_URL} && \
+  bash Miniconda-latest-Linux-x86_64.sh -p /home/nbpresent/miniconda -b && \
+  rm Miniconda-latest-Linux-x86_64.sh
+
+# Maybe not neccessary?
+ENV PATH=/home/nbpresent/miniconda/bin:${PATH}
+
+CMD ["bash"]

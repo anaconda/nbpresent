@@ -32,23 +32,19 @@ def install(enable=False, **kwargs):
 
     if enable:
         if "prefix" in kwargs:
-            path = join(kwargs["prefix"], "etc", "jupyter", "nbconfig")
+            path = join(kwargs["prefix"], "etc", "jupyter")
             if not exists(path):
                 os.makedirs(path)
 
         cm = ConfigManager(config_dir=path)
         print("Enabling for", cm.config_dir)
-        print("Enabling nbpresent frontend at every notebook launch...")
-        cm.update(
-            'notebook', dict(
-                load_extensions={"nbpresent/nbpresent.min": True},
-            )
-        )
         print("Enabling nbpresent server component...")
         cm.update(
-            'NotebookApp', dict(
-                server_extensions=["nbpresent"]
-            )
+            "jupyter_notebook_config", {
+                "NotebookApp": {
+                    "server_extensions": ["nbpresent"]
+                }
+            }
         )
 
 

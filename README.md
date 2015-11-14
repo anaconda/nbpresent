@@ -8,7 +8,7 @@ pip install nbpresent
 python -m nbpresent.install
 ```
 
-Then either run 
+Then either run
 ```python
 %reload_ext nbpresent
 ```
@@ -52,5 +52,26 @@ npm run watch
 
 To ensure that you always get the right assets, install the nbextension with the `symlink`, `force` and `enable` options:
 ```shell
-python -m nbpresent.install --force --symlink --enable
+python -m nbpresent.install --override --symlink --enable
+```
+
+### Developing with conda
+
+### Developing with docker compose
+A number of intermediate Dockerfiles are available for different development
+workflows. These are most easily managed with docker-compose.
+
+For building a pristine conda environment, use `conda_base`.
+For a build of nbpresent, with all tests, use `conda_build`.
+For a live, running notebook with nbpresent installed, use `conda`.
+
+>> META: TODO: make templates?
+
+Here is the build chain:
+
+```shell
+docker-compose build conda_base
+docker-compose build conda_build
+docker-compose build conda
+docker-compose up conda
 ```
