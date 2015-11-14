@@ -8,7 +8,7 @@ pip install nbpresent
 python -m nbpresent.install
 ```
 
-Then either run
+Then either run 
 ```python
 %reload_ext nbpresent
 ```
@@ -30,7 +30,10 @@ python -m nbpresent.present notebooks/README.ipynb > README.html
 The resulting file can be hosted and viewed (but not edited!) on any site with fallback to Github.
 
 ## Development
-The `nbpresent` nbextension is built from `src` with:
+There are several development scenarios
+
+### The Hard Way
+The `nbpresent` nbextension is built from `src` in a checked out repo with:
 - less for style
 - babel for es2015
 - browserify for packaging
@@ -40,7 +43,7 @@ These are installed via `npm`:
 npm install
 ```
 
-To build everything:
+To build everything with sourcemaps:
 ```shell
 npm run build
 ```
@@ -50,12 +53,27 @@ To rebuild on every save:
 npm run watch
 ```
 
+To build everything, and optimize it:
+```shell
+npm run build
+```
+
 To ensure that you always get the right assets, install the nbextension with the `symlink`, `force` and `enable` options:
 ```shell
-python -m nbpresent.install --override --symlink --enable
+python -m nbpresent.install --overwrite --symlink --enable --user
 ```
 
 ### Developing with conda
+A conda package, which pre-builds the static assets and installs itself into the local conda environment, is built from `conda.recipe`
+
+```
+conda build conda.recipe
+```
+
+When developing with conda, you may want to use your conda environment to store assets and configuration:
+```shell
+python -m nbpresent.install --overwrite --symlink --enable --prefix="${CONDA_ENV_PATH}"
+```
 
 ### Developing with docker compose
 A number of intermediate Dockerfiles are available for different development
@@ -70,8 +88,8 @@ For a live, running notebook with nbpresent installed, use `conda`.
 Here is the build chain:
 
 ```shell
-docker-compose build conda_base
-docker-compose build conda_build
-docker-compose build conda
+docker-compose build conda_base && \
+docker-compose build conda_build && \
+docker-compose build conda && \
 docker-compose up conda
 ```
