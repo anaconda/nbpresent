@@ -1,71 +1,67 @@
 #!/usr/bin/env python
 
 import argparse
-from os.path import dirname, abspath, join
+import os
+from os.path import dirname, abspath, join, exists
+import inspect
 
-from notebook.nbextensions import install_nbextension
-from notebook.services.config import ConfigManager
 
-
-def install(user=False, symlink=False, overwrite=False, enable=False,
-            **kwargs):
+def install(enable=False, **kwargs):
     """Install the nbpresent nbextension assets and optionally enables the
        nbextension and server extension for every run.
 
     Parameters
     ----------
-    user: bool
-        Install for current user instead of system-wide.
-    symlink: bool
-        Symlink instead of copy (for development).
-    overwrite: bool
-        Overwrite previously-installed files for this extension
     enable: bool
         Enable the extension on every notebook launch
     **kwargs: keyword arguments
         Other keyword arguments passed to the install_nbextension command
     """
+    from notebook.nbextensions import install_nbextension
+    from notebook.services.config import ConfigManager
+
     directory = join(dirname(abspath(__file__)), 'static', 'nbpresent')
-    print("Installing nbpresent frontend assets...")
-    install_nbextension(directory, destination='nbpresent',
-                        symlink=symlink, user=user, overwrite=overwrite,
-                        **kwargs)
+
+    kwargs = {k: v for k, v in kwargs.items() if not (v is None)}
+
+    kwargs["destination"] = "nbpresent"
+
+    install_nbextension(directory, **kwargs)
 
     if enable:
-        print("Enabling nbpresent frontend at every notebook launch...")
-        cm = ConfigManager()
-        cm.update(
-            'notebook', dict(
-                load_extensions={"nbpresent/nbpresent.min": True},
-            )
-        )
+        if "prefix" in kwargs:
+            path = join(kwargs["prefix"], "etc", "jupyter")
+            if not exists(path):
+                os.makedirs(path)
+
+        cm = ConfigManager(config_dir=path)
+        print("Enabling for", cm.config_dir)
         print("Enabling nbpresent server component...")
         cm.update(
-            'NotebookApp', dict(
-                server_extensions=["nbpresent"]
-            )
+            "jupyter_notebook_config", {
+                "notebook": {
+                    "load_extensions": {"nbpresent/nbpresent.min": True}
+                },
+                "NotebookApp": {
+                    "server_extensions": ["nbpresent"]
+                }
+            }
         )
 
 
 if __name__ == '__main__':
+    from notebook.nbextensions import install_nbextension
+
+    install_kwargs = list(inspect.signature(install_nbextension).parameters)
+
     parser = argparse.ArgumentParser(
         description="Installs nbpresent nbextension")
-    parser.add_argument(
-        "-u", "--user",
-        help="Install as current user instead of system-wide",
-        action="store_true")
-    parser.add_argument(
-        "-s", "--symlink",
-        help="Symlink instead of copying files",
-        action="store_true")
-    parser.add_argument(
-        "-f", "--force",
-        help="Overwrite any previously-installed files for this extension",
-        action="store_true")
     parser.add_argument(
         "-e", "--enable",
         help="Automatically load extension on notebook launch",
         action="store_true")
-    args = parser.parse_args()
-    install(user=args.user, symlink=args.symlink, overwrite=args.force,
-            enable=args.enable)
+
+    [parser.add_argument("--{}".format(arg), action="store", nargs='?')
+        for arg in install_kwargs]
+
+    install(**parser.parse_args().__dict__)

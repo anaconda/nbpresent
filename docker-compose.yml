@@ -1,0 +1,12 @@
+conda_base:
+  build: .
+  dockerfile: Dockerfile-base
+
+conda_build:
+  build: .
+  dockerfile: Dockerfile-build
+
+conda:
+  build: .
+  ports:
+    - 8666:8888

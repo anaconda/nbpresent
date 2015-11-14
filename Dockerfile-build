@@ -1,0 +1,21 @@
+FROM nbpresent_conda_base
+
+# prime the cache
+RUN conda update -y conda && \
+  conda install -y \
+    conda-build \
+    "python<4"
+
+# Brief root interlude
+USER root
+COPY . /src/nbpresent
+RUN chown -R nbpresent:nbpresent /src/nbpresent
+
+USER nbpresent
+WORKDIR /home/nbpresent
+
+# actually build!
+WORKDIR /src/nbpresent
+RUN ls -lathr .
+RUN conda build conda.recipe/ -c javascript
+CMD ["bash"]
