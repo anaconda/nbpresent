@@ -3,7 +3,10 @@
 import argparse
 import os
 from os.path import dirname, abspath, join, exists
-import inspect
+try:
+    from inspect import signature
+except ImportError:
+    from funcsigs import signature
 
 
 def install(enable=False, **kwargs):
@@ -52,7 +55,7 @@ def install(enable=False, **kwargs):
 if __name__ == '__main__':
     from notebook.nbextensions import install_nbextension
 
-    install_kwargs = list(inspect.signature(install_nbextension).parameters)
+    install_kwargs = list(signature(install_nbextension).parameters)
 
     parser = argparse.ArgumentParser(
         description="Installs nbpresent nbextension")

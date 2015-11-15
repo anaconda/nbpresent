@@ -1,4 +1,0 @@
-package: nbpresent
-script:
-  - conda build . -c javascript
-build_targets: conda
