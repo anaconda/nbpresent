@@ -16,10 +16,12 @@ requirements:
     - python
     - notebook
     - jupyter
+    - funcsigs
   run:
     - python
     - notebook
     - jupyter
+    - funcsigs
 
 test:
   imports:
