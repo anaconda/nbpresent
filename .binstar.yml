@@ -1,0 +1,16 @@
+package: nbpresent
+
+platform:
+  - linux-64
+  - osx-64
+  - win-64
+
+engine:
+  - python=2.7
+  - python=3.4
+  - python=3.5
+
+script:
+  - conda build -c javascript conda.recipe
+
+build_targets: conda

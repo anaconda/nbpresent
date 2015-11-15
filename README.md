@@ -8,7 +8,7 @@ pip install nbpresent
 python -m nbpresent.install
 ```
 
-Then either run 
+Then either run
 ```python
 %reload_ext nbpresent
 ```
@@ -93,3 +93,5 @@ docker-compose build conda_build && \
 docker-compose build conda && \
 docker-compose up conda
 ```
+
+> META: force build 1
