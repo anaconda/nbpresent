@@ -114,11 +114,17 @@ export default class NotebookMode extends Mode {
 
     dlMenu.insert("li", ":nth-child(4)")
       .append("a")
-      .text("Presentation (.nbpresent.html)")
-      .on("click", this.nbconvert);
+      .text("Presentation (.zip)")
+      .on("click", () => this.nbconvert("nbpresent"));
+
+    dlMenu.insert("li", ":nth-child(5)")
+      .append("a")
+      .text("Presentation (.pdf)")
+      .on("click", () => this.nbconvert("nbpresent_pdf"));
+
   }
 
-  nbconvert(){
-    Jupyter.menubar._nbconvert("nbpresent", true);
+  nbconvert(key){
+    Jupyter.menubar._nbconvert(key, true);
   }
 }

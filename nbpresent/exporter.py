@@ -36,3 +36,15 @@ class PresentExporter(HTMLExporter):
             resources=resources,
             **kw
         )
+
+
+class PDFPresentExporter(PresentExporter):
+    def from_notebook_node(self, *args, **kwargs):
+        super(PDFPresentExporter, self).__init__(*args, **kwargs)
+
+    def from_notebook_node(self, nb, resources=None, **kw):
+        return super(PDFPresentExporter, self).from_notebook_node(
+            nb,
+            resources=resources,
+            **kw
+        )
