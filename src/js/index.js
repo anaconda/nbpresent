@@ -6,8 +6,13 @@ function(require){
   var ns = "nbpresent-",
     _here = [require.toUrl(".").split("?")[0]],
     here = function(frag){
-      return _here.concat(frag).join("/")
-        .replace("//", "/");
+      var path = _here.concat(frag).join("/")
+        .replace("//", "/")
+        .replace("/./.", "/")
+        .replace("./", "/");
+      console.error("\n>>>PATH\n" + path + "\n");
+
+      return path;
     };
 
   requirejs.config({
@@ -19,9 +24,10 @@ function(require){
   });
 
   function init(env){
-    var nbpresent = window.nbpresent = {};
+    var nbpresent = window.nbpresent = {loading: true};
 
-    console.error(">>>nbpresent init started\n\n" + [requirejs] + "<<<require\n\n");
+    console.error(">>>nbpresent init started\n\n");
+
     requirejs(["require", ns + "deps"], function(require, deps){
       console.error(">>>nbpresent DEPS loaded", [deps]);
       nbpresent.deps = deps;

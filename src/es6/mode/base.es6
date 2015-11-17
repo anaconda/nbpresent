@@ -15,7 +15,7 @@ export class Mode {
       return;
     }
 
-    console.info(`${this.root}/nbpresent.min.css`);
+    console.info(`CSS LOADED ${this.root}/nbpresent.min.css`);
 
     css.enter()
       .append("link")

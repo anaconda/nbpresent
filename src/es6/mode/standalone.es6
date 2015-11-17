@@ -5,6 +5,7 @@ import {StandalonePresenter} from "../presenter/standalone";
 
 import {Mode} from "./base";
 
+console.error("\n\n>>>nbpresent STANDALONE LOADED\n\n")
 
 export default class StandaloneMode extends Mode {
   init() {

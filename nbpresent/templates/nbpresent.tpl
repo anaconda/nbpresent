@@ -87,7 +87,7 @@
       console.error(">>>nbpresent TRYING TO LOAD\n\n")
       requirejs({
         paths: {
-          "nbpresent": [
+          "nbpresent-loader": [
             "./nbpresent.min",
             "/nbextensions/nbpresent/nbpresent.min",
             "https://continuumio.github.io/nbpresent/nbpresent/nbpresent.min"
@@ -99,9 +99,10 @@
         }
       }, [
         "jquery",
-        "nbpresent"
+        "nbpresent-loader"
       ], function($, loader){
-        console.error("\n>>>nbpresent TRYING TO LOAD\n\n")
+        console.error("\n>>>nbpresent LOADED\n\n")
+        console.error(loader.load_presentation_standalone)
         loader.load_presentation_standalone();
       }, function(){
         console.error("\n>>>NBPRESENT ERROR" + arguments + "\n\n")

@@ -40,17 +40,21 @@ class CaptureServer(HTTPServer):
 
     @run_on_executor
     def capture(self):
+        print(self.static_path)
         # DO SOME MAGIC
         ghost = Ghost(
-            log_level=logging.INFO,
+            log_level=logging.DEBUG,
             defaults=dict(
                 viewport_size=(1920, 1080),
             )
         )
         session = ghost.start()
         merger = PdfFileMerger()
+        join = lambda *bits: os.path.join(self.static_path, *bits)
 
         session.open("http://localhost:9999/index.html")
+        session.wait_for_page_loaded()
+
         time.sleep(3)
 
         # try:
@@ -62,35 +66,35 @@ class CaptureServer(HTTPServer):
             print("\n\n\nprinting slide", i, slide)
             result, resources = session.evaluate(
                 """
-                console.error(">>>>" + window.nbpresent)
+                console.log(window.nbpresent);
                 """)
-            filename = "notebook-{0:04d}.pdf".format(i)
+            filename = join("notebook-{0:04d}.pdf".format(i))
             screenshot(self.notebook, session, filename)
-            # session.print_to_pdf(filename,
-            #                      paper_size=(11.0, 8.5))
             merger.append(PdfFileReader(filename, "rb"))
             time.sleep(1)
 
-        merger.write("notebook-unmeta.pdf")
+        merger.write(join("notebook-unmeta.pdf"))
 
-        unmeta = PdfFileReader("notebook-unmeta.pdf", "rb")
+        unmeta = PdfFileReader(join("notebook-unmeta.pdf"), "rb")
 
         meta = PdfFileWriter()
         meta.appendPagesFromReader(unmeta)
 
-        with open("notebook.ipynb", "w") as fp:
+        ipynb = "notebook.ipynb"
+
+        with open(join(ipynb), "w") as fp:
             nbformat.write(self.notebook, fp)
 
-        with open("notebook.ipynb", "rb") as fp:
-            meta.addAttachment("notebook.ipynb", fp.read())
+        with open(join(ipynb), "rb") as fp:
+            meta.addAttachment(ipynb, fp.read())
 
-        with open("notebook.pdf", "wb") as fp:
+        with open(join("notebook.pdf"), "wb") as fp:
             meta.write(fp)
 
-        IOLoop.instance().stop()
+        # IOLoop.instance().stop()
 
 
-def screenshot(nb, session, dest="notebook.pdf", as_print=False):
+def screenshot(nb, session, dest, as_print=False):
     """
     big thanks to https://gist.github.com/jmaupetit/4217925
     """
@@ -129,6 +133,7 @@ def pdf_capture(nb, static_path):
 
     server = CaptureServer(app)
     server.notebook = nb
+    server.static_path = static_path
 
     ioloop = IOLoop.instance()
     ioloop.add_callback(server.capture)
