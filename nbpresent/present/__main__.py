@@ -1,10 +1,10 @@
 import os
 import sys
 
-from .exporter import PresentExporter
-
-
-APP_ROOT = os.path.abspath(os.path.dirname(__file__))
+from ..exporters import (
+    PresentExporter,
+    APP_ROOT
+)
 
 
 def main(nb):

@@ -4,8 +4,10 @@ from glob import glob
 
 from nbconvert.exporters.html import HTMLExporter
 
-APP_ROOT = os.path.abspath(os.path.dirname(__file__))
-ASSETS = os.path.join(APP_ROOT, "static", "nbpresent")
+from .base import (
+    APP_ROOT,
+    ASSETS
+)
 
 
 class PresentExporter(HTMLExporter):
@@ -32,18 +34,6 @@ class PresentExporter(HTMLExporter):
         )
 
         return super(PresentExporter, self).from_notebook_node(
-            nb,
-            resources=resources,
-            **kw
-        )
-
-
-class PDFPresentExporter(PresentExporter):
-    def from_notebook_node(self, *args, **kwargs):
-        super(PDFPresentExporter, self).__init__(*args, **kwargs)
-
-    def from_notebook_node(self, nb, resources=None, **kw):
-        return super(PDFPresentExporter, self).from_notebook_node(
             nb,
             resources=resources,
             **kw

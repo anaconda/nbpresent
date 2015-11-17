@@ -3,7 +3,8 @@ function(require){
   var ns = "nbpresent-",
     _here = [require.toUrl(".").split("?")[0]],
     here = function(frag){
-      return _here.concat(frag).join("/");
+      return _here.concat(frag).join("/")
+        .replace("//", "/");
     };
 
   requirejs.config({
@@ -15,8 +16,9 @@ function(require){
   });
 
   function init(env){
-    requirejs(["require", "./nbpresent-deps"], function(require){
-      requirejs(["require", "./" + ns + env], function(require, Mode){
+    requirejs(["require", ns + "deps"], function(require, deps){
+      console.log(deps);
+      requirejs(["require", ns + env], function(require, Mode){
         new Mode(_here[0]);
       });
     });

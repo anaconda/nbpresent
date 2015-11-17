@@ -20,7 +20,8 @@ export class Mode {
       .attr({id: "nbpresent-css"})
       .attr({
         rel: "stylesheet",
-        href: `${this.root}/nbpresent.min.css`
+        href: `${this.root}nbpresent.min.css`
+          .replace("//nbpresent", "/nbpresent")
       });
   }
 }
