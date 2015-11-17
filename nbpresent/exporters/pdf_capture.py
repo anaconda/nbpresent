@@ -45,7 +45,6 @@ class CaptureServer(HTTPServer):
 
         for i, slide in enumerate(self.notebook.metadata.nbpresent.slides):
             filename = "notebook-{0:04d}.pdf".format(i)
-            print(filename)
             screenshot(self.notebook, session, filename)
             merger.append(PdfFileReader(filename, "rb"))
 

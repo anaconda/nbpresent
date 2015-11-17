@@ -6,7 +6,8 @@ from nbconvert.exporters.html import HTMLExporter
 
 from .base import (
     APP_ROOT,
-    ASSETS
+    ASSETS,
+    NB_ASSETS
 )
 
 
@@ -29,7 +30,8 @@ class PresentExporter(HTMLExporter):
             },
             outputs={
                 filename: open(filename).read()
-                for filename in glob(os.path.join(ASSETS, "*.*"))
+                for filename
+                in list(glob(os.path.join(ASSETS, "*.*"))) + NB_ASSETS
             }
         )
 
