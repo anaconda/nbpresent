@@ -2,8 +2,6 @@ package: nbpresent
 
 platform:
   - linux-64
-  - osx-64
-  - win-64
 
 engine:
   - python=2.7
