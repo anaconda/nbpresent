@@ -16,10 +16,18 @@ function(require){
   });
 
   function init(env){
+    console.error(">>>nbpresent init started\n\n" + [requirejs] + "<<<require\n\n");
     requirejs(["require", ns + "deps"], function(require, deps){
-      console.log(deps);
+      console.error(">>>nbpresent DEPS loaded", [deps]);
       requirejs(["require", ns + env], function(require, Mode){
-        new Mode(_here[0]);
+        console.error(">>>nbpresent LOADER loaded", [Mode]);
+        try {
+          window.nbpresent = new Mode(_here[0].replace("./", "."));
+          console.error(">>>nbpresent LOADER initialized", deps);
+        } catch(err) {
+          console.error(">>>nbpresent FAILED\n\n", err);
+          window.nbpresent = err;
+        }
       });
     });
   }

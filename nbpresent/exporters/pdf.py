@@ -39,13 +39,16 @@ class PDFPresentExporter(PresentExporter):
             with open(index_html, "w+") as f:
                 f.write(output)
 
+            self.log.info("Building PDF...")
             pdf_capture(nb, td)
-            self.log.info("Building PDF")
 
-            pdf_file = 'notebook.pdf'
+            pdf_file = "notebook.pdf"
+
             if not os.path.isfile(pdf_file):
                 raise IOError("PDF creating failed")
-            self.log.info('PDF successfully created')
+
+            self.log.info("PDF successfully created")
+
             with open(pdf_file, 'rb') as f:
                 pdf_data = f.read()
 

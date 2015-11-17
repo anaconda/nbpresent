@@ -21,6 +21,8 @@ class PresentExporter(HTMLExporter):
         super(PresentExporter, self).__init__(*args, **kwargs)
 
     def from_notebook_node(self, nb, resources=None, **kw):
+        bin_ext = ["woff", "ttf"]
+
         resources = self._init_resources(resources)
         resources.update(
             nbpresent={
@@ -29,7 +31,10 @@ class PresentExporter(HTMLExporter):
                                        sort_keys=True)
             },
             outputs={
-                filename: open(filename).read()
+                filename: open(
+                    filename,
+                    "rb" if filename.split(".")[-1] in bin_ext else "r"
+                ).read()
                 for filename
                 in list(glob(os.path.join(ASSETS, "*.*"))) + NB_ASSETS
             }

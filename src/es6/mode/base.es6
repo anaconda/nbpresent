@@ -15,13 +15,14 @@ export class Mode {
       return;
     }
 
+    console.info(`${this.root}/nbpresent.min.css`);
+
     css.enter()
       .append("link")
       .attr({id: "nbpresent-css"})
       .attr({
         rel: "stylesheet",
-        href: `${this.root}nbpresent.min.css`
-          .replace("//nbpresent", "/nbpresent")
+        href: `${this.root}/nbpresent.min.css`
       });
   }
 }

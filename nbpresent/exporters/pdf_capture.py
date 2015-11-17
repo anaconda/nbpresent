@@ -1,13 +1,18 @@
 from concurrent import futures
 from glob import glob
 import os
-
-try:
-    from PySide.QtGui import QApplication, QImage, QPainter, QPrinter
-except ImportError as err:
-    from PyQt4.QtGui import QApplication, QImage, QPainter, QPrinter
+import logging
+import time
 
 from ghost import Ghost
+from ghost.bindings import (
+    # QApplication,
+    # QImage,
+    QPainter,
+    QPrinter,
+    QtWebKit,
+    QtCore,
+)
 
 
 import tornado.web
@@ -21,6 +26,8 @@ from PyPDF2 import (
     PdfFileMerger,
 )
 
+from .base import DEFAULT_STATIC_FILES_PATH
+
 
 class CaptureServer(HTTPServer):
     executor = futures.ThreadPoolExecutor(max_workers=1)
@@ -31,44 +38,63 @@ class CaptureServer(HTTPServer):
     @run_on_executor
     def capture(self):
         # DO SOME MAGIC
-        ghost = Ghost()
+        ghost = Ghost(
+            log_level=logging.INFO,
+            defaults=dict(
+                viewport_size=(1920, 1080),
+            )
+        )
         session = ghost.start()
-        session.open("http://localhost:9999/index.html")
-
         merger = PdfFileMerger()
 
+        session.open("http://localhost:9999/index.html")
+        session.wait_for_page_loaded()
+
+
         # try:
-        #     session.wait_for_selector("#nbpresent_present_btn")
+        #     session.wait_for_selector("#nbpresent-css")
         # except Exception as err:
         #     print(err)
 
-
         for i, slide in enumerate(self.notebook.metadata.nbpresent.slides):
+            result, resources = session.evaluate(
+                """
+                console.log(nbpresent);
+                """)
+            print("printing slide", i, result)
             filename = "notebook-{0:04d}.pdf".format(i)
             screenshot(self.notebook, session, filename)
+            # session.print_to_pdf(filename,
+            #                      paper_size=(11.0, 8.5))
             merger.append(PdfFileReader(filename, "rb"))
+            time.sleep(1)
 
         out = merger.write("notebook.pdf")
 
-        # while nbpresent.mayAdvance()
-        #     screenshot(self.notebook, session)
         IOLoop.instance().stop()
 
 
-def screenshot(nb, session, dest="notebook.pdf"):
-    printer = QPrinter(QPrinter.HighResolution)
-    printer.setResolution(600)
-    printer.setOutputFileName(dest)
-    printer.setPaperSize(QPrinter.A3)
-    printer.setOrientation(QPrinter.Landscape)
+def screenshot(nb, session, dest="notebook.pdf", as_print=False):
+    """
+    big thanks to https://gist.github.com/jmaupetit/4217925
+    """
+    session.set_viewport_size(1920, 1080)
+
+    printer = QPrinter(mode=QPrinter.ScreenResolution)
     printer.setOutputFormat(QPrinter.PdfFormat)
+    printer.setPaperSize(QtCore.QSizeF(8.5, 11), QPrinter.Inch)
+    printer.setOrientation(QPrinter.Landscape)
+    printer.setOutputFileName(dest)
+    printer.setPageMargins(0, 0, 0, 0, QPrinter.Inch)
 
-    painter = QPainter(printer)
-    painter.scale(10, 10)
-
-    session.main_frame.render(painter)
-
-    painter.end()
+    if as_print:
+        webview = QtWebKit.QWebView()
+        webview.setPage(session.page)
+        webview.print_(printer)
+    else:
+        painter = QPainter(printer)
+        session.main_frame.render(painter)
+        painter.end()
 
 
 def pdf_capture(nb, static_path):
@@ -77,6 +103,9 @@ def pdf_capture(nb, static_path):
     }
 
     app = tornado.web.Application([
+        (r"/components/(.*)", tornado.web.StaticFileHandler, {
+            "path": os.path.join(DEFAULT_STATIC_FILES_PATH, "components")
+        }),
         (r"/(.*)", tornado.web.StaticFileHandler, {
             "path": settings['static_path']
         }),

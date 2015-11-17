@@ -84,9 +84,9 @@
   </script>
   <script>
     ;(function(){
-      requirejs.config({
+      requirejs({
         paths: {
-          "nbpresent-loader": [
+          "nbpresent": [
             "./nbpresent.min",
             "/nbextensions/nbpresent/nbpresent.min",
             "https://continuumio.github.io/nbpresent/nbpresent/nbpresent.min"
@@ -95,9 +95,10 @@
             "http://localhost:8888/components/jquery/jquery.min"
           ]
         }
-      });
-
-      requirejs(["jquery", "nbpresent-loader"], function($, loader){
+      }, [
+        "jquery",
+        "nbpresent"
+      ], function($, loader){
         loader.load_presentation_standalone();
       });
 
