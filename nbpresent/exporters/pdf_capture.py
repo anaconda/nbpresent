@@ -21,8 +21,11 @@ from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.concurrent import run_on_executor
 
+import nbformat
+
 from PyPDF2 import (
     PdfFileReader,
+    PdfFileWriter,
     PdfFileMerger,
 )
 
@@ -48,8 +51,7 @@ class CaptureServer(HTTPServer):
         merger = PdfFileMerger()
 
         session.open("http://localhost:9999/index.html")
-        session.wait_for_page_loaded()
-
+        time.sleep(3)
 
         # try:
         #     session.wait_for_selector("#nbpresent-css")
@@ -57,11 +59,11 @@ class CaptureServer(HTTPServer):
         #     print(err)
 
         for i, slide in enumerate(self.notebook.metadata.nbpresent.slides):
+            print("\n\n\nprinting slide", i, slide)
             result, resources = session.evaluate(
                 """
-                console.log(nbpresent);
+                console.error(">>>>" + window.nbpresent)
                 """)
-            print("printing slide", i, result)
             filename = "notebook-{0:04d}.pdf".format(i)
             screenshot(self.notebook, session, filename)
             # session.print_to_pdf(filename,
@@ -69,7 +71,21 @@ class CaptureServer(HTTPServer):
             merger.append(PdfFileReader(filename, "rb"))
             time.sleep(1)
 
-        out = merger.write("notebook.pdf")
+        merger.write("notebook-unmeta.pdf")
+
+        unmeta = PdfFileReader("notebook-unmeta.pdf", "rb")
+
+        meta = PdfFileWriter()
+        meta.appendPagesFromReader(unmeta)
+
+        with open("notebook.ipynb", "w") as fp:
+            nbformat.write(self.notebook, fp)
+
+        with open("notebook.ipynb", "rb") as fp:
+            meta.addAttachment("notebook.ipynb", fp.read())
+
+        with open("notebook.pdf", "wb") as fp:
+            meta.write(fp)
 
         IOLoop.instance().stop()
 

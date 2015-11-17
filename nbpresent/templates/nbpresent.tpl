@@ -84,6 +84,7 @@
   </script>
   <script>
     ;(function(){
+      console.error(">>>nbpresent TRYING TO LOAD\n\n")
       requirejs({
         paths: {
           "nbpresent": [
@@ -92,14 +93,18 @@
             "https://continuumio.github.io/nbpresent/nbpresent/nbpresent.min"
           ],
           jquery: [
-            "http://localhost:8888/components/jquery/jquery.min"
+            "./jquery.min",
+            "components/jquery/jquery.min"
           ]
         }
       }, [
         "jquery",
         "nbpresent"
       ], function($, loader){
+        console.error("\n>>>nbpresent TRYING TO LOAD\n\n")
         loader.load_presentation_standalone();
+      }, function(){
+        console.error("\n>>>NBPRESENT ERROR" + arguments + "\n\n")
       });
 
     }).call(this);
