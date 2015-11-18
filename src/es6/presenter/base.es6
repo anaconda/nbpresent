@@ -166,7 +166,7 @@ export class Presenter {
     }
 
     d3.selectAll(".nbpresent_unpresent")
-      .call(that.layout && this.layout.clean || () => 0)
+      .call(that.layout && this.layout.clean || (() => 0))
       .classed({nbpresent_unpresent: 0, nbpresent_present: 0});
   }
 }

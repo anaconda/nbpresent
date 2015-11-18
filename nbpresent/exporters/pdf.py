@@ -33,7 +33,6 @@ class PDFPresentExporter(PresentExporter):
         with TemporaryWorkingDirectory() as td:
             for path, res in resources.get("outputs", {}).items():
                 dest = os.path.join(td, os.path.basename(path))
-                print("copying", path, dest)
                 shutil.copyfile(path, dest)
 
             index_html = os.path.join(td, "index.html")

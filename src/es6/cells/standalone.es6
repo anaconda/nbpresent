@@ -5,7 +5,7 @@ window.html2canvas = html2canvas;
 
 import {PARTS, PART_SELECT} from "../parts";
 
-let _thumbs = new Map();
+let _thumbs = {};
 
 export class CellManager {
   getCells(){
@@ -38,26 +38,25 @@ export class CellManager {
   }
 
   thumbnail(content){
-    if(!_thumbs.get(content)){
+    if(!_thumbs[content]){
       let el = this.getPart(content);
       el = el ? el.node() : null;
       if(!el){
         return Promise.reject(content);
       }
-      _thumbs.set(content,
-        html2canvas(el)
-          .then((canvas) => {
-            return {
-              canvas,
-              uri: canvas.toDataURL("image/png"),
-              width: canvas.width,
-              height: canvas.height
-            };
-          }, (err)=>{
-            console.log(err)
-          }));
+      _thumbs[content] = html2canvas(el)
+        .then((canvas) => {
+          return {
+            canvas,
+            uri: canvas.toDataURL("image/png"),
+            width: canvas.width,
+            height: canvas.height
+          };
+        }, (err)=>{
+          console.log(err)
+        });
     }
 
-    return _thumbs.get(content);
+    return _thumbs[content];
   }
 }

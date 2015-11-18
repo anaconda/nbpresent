@@ -11,9 +11,9 @@ import {PART} from "../parts";
 import {NbpresentTour} from "../tour";
 import {Tree} from "../tree";
 
-import {Mode} from "./base";
+import {Mode as BaseMode} from "./base";
 
-export default class NotebookMode extends Mode {
+export class Mode extends BaseMode {
   init() {
     let tree = new Tree({
       slides: this.metadata().slides,

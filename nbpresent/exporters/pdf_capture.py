@@ -43,12 +43,11 @@ class CaptureServer(HTTPServer):
         print(self.static_path)
         # DO SOME MAGIC
         ghost = Ghost(
-            log_level=logging.DEBUG,
-            defaults=dict(
-                viewport_size=(1920, 1080),
-            )
+            log_level=logging.DEBUG
         )
-        session = ghost.start()
+        session = ghost.start(
+            display=True
+        )
         merger = PdfFileMerger()
         join = lambda *bits: os.path.join(self.static_path, *bits)
 
