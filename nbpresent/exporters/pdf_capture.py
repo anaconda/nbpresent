@@ -3,6 +3,7 @@ from glob import glob
 import os
 import logging
 import time
+import sys
 
 from ghost import Ghost
 from ghost.bindings import (
@@ -40,7 +41,6 @@ class CaptureServer(HTTPServer):
 
     @run_on_executor
     def capture(self):
-        print(self.static_path)
         # DO SOME MAGIC
         ghost = Ghost(
             log_level=logging.DEBUG
@@ -81,16 +81,13 @@ class CaptureServer(HTTPServer):
 
         ipynb = "notebook.ipynb"
 
-        with open(join(ipynb), "w") as fp:
-            nbformat.write(self.notebook, fp)
-
         with open(join(ipynb), "rb") as fp:
             meta.addAttachment(ipynb, fp.read())
 
         with open(join("notebook.pdf"), "wb") as fp:
             meta.write(fp)
 
-        IOLoop.instance().stop()
+        raise SystemExit()
 
 
 def screenshot(nb, session, dest, as_print=False):
@@ -116,7 +113,7 @@ def screenshot(nb, session, dest, as_print=False):
         painter.end()
 
 
-def pdf_capture(nb, static_path):
+def pdf_capture(static_path):
     settings = {
         "static_path": static_path
     }
@@ -131,10 +128,15 @@ def pdf_capture(nb, static_path):
     ], **settings)
 
     server = CaptureServer(app)
-    server.notebook = nb
     server.static_path = static_path
 
-    ioloop = IOLoop.instance()
+    with open(os.path.join(static_path, "notebook.ipynb")) as fp:
+        server.notebook = nbformat.read(fp, 4)
+
+    ioloop = IOLoop()
     ioloop.add_callback(server.capture)
     server.listen(9999)
     ioloop.start()
+
+if __name__ == "__main__":
+    pdf_capture(sys.argv[1])

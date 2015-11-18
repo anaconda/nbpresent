@@ -1,6 +1,8 @@
 import os
 from glob import glob
 import shutil
+import sys
+from subprocess import check_call
 
 
 try:
@@ -15,6 +17,7 @@ import tornado.web
 
 
 from ipython_genutils.tempdir import TemporaryWorkingDirectory
+import nbformat
 
 from .html import PresentExporter
 from .pdf_capture import pdf_capture
@@ -23,7 +26,6 @@ from .pdf_capture import pdf_capture
 class PDFPresentExporter(PresentExporter):
     def __init__(self, *args, **kwargs):
         super(PDFPresentExporter, self).__init__(*args, **kwargs)
-
 
     def from_notebook_node(self, nb, resources=None, **kw):
         output, resources = super(PDFPresentExporter, self).from_notebook_node(
@@ -37,12 +39,21 @@ class PDFPresentExporter(PresentExporter):
 
             index_html = os.path.join(td, "index.html")
 
-            with open(index_html, "w+") as f:
-                f.write(output)
+            with open(index_html, "w+") as fp:
+                fp.write(output)
+
+            ipynb = "notebook.ipynb"
+
+            with open(os.path.join(td, ipynb), "w") as fp:
+                nbformat.write(nb, fp)
 
             self.log.info("Building PDF...")
-            pdf_capture(nb, td)
-
+            check_call([
+                sys.executable,
+                "-m", "nbpresent.exporters.pdf_capture",
+                td
+            ])
+            
             pdf_file = "notebook.pdf"
 
             if not os.path.isfile(pdf_file):
