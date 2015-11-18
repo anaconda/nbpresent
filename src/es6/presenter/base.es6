@@ -100,7 +100,7 @@ export class Presenter {
 
     // TODO: handle cleanup
     // transition = this.layout && this.layout.destroy()
-
+    
     if(!slide){
       return this.current.set(this.tree.get(["sortedSlides", 0, "key"]));
     }

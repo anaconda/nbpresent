@@ -46,30 +46,30 @@ class CaptureServer(HTTPServer):
             log_level=logging.DEBUG
         )
         session = ghost.start(
-            display=True
+            # display=True
         )
         merger = PdfFileMerger()
         join = lambda *bits: os.path.join(self.static_path, *bits)
 
         session.open("http://localhost:9999/index.html")
-        session.wait_for_page_loaded()
 
-        time.sleep(3)
-
-        # try:
-        #     session.wait_for_selector("#nbpresent-css")
-        # except Exception as err:
-        #     print(err)
+        try:
+            session.wait_for_selector("#nbpresent-css")
+            time.sleep(1)
+        except Exception as err:
+            print(err)
 
         for i, slide in enumerate(self.notebook.metadata.nbpresent.slides):
             print("\n\n\nprinting slide", i, slide)
+            filename = join("notebook-{0:04d}.pdf".format(i))
+            session.show()
+            screenshot(self.notebook, session, filename)
+            merger.append(PdfFileReader(filename, "rb"))
             result, resources = session.evaluate(
                 """
                 console.log(window.nbpresent);
+                console.log(window.nbpresent.mode.presenter.speaker.advance());
                 """)
-            filename = join("notebook-{0:04d}.pdf".format(i))
-            screenshot(self.notebook, session, filename)
-            merger.append(PdfFileReader(filename, "rb"))
             time.sleep(1)
 
         merger.write(join("notebook-unmeta.pdf"))
@@ -90,7 +90,7 @@ class CaptureServer(HTTPServer):
         with open(join("notebook.pdf"), "wb") as fp:
             meta.write(fp)
 
-        # IOLoop.instance().stop()
+        IOLoop.instance().stop()
 
 
 def screenshot(nb, session, dest, as_print=False):

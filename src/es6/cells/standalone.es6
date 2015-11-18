@@ -38,13 +38,14 @@ export class CellManager {
   }
 
   thumbnail(content){
-    if(!_thumbs[content]){
+    let key = `${content.cell}-${content.part}`
+    if(!_thumbs[key]){
       let el = this.getPart(content);
       el = el ? el.node() : null;
       if(!el){
         return Promise.reject(content);
       }
-      _thumbs[content] = html2canvas(el)
+      _thumbs[key] = html2canvas(el)
         .then((canvas) => {
           return {
             canvas,
@@ -57,6 +58,6 @@ export class CellManager {
         });
     }
 
-    return _thumbs[content];
+    return _thumbs[key];
   }
 }

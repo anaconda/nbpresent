@@ -46,19 +46,23 @@ export class SpeakerBase {
       }],
       [{
         icon: "step-forward",
-        click: () => {
-          let slides = that.tree.get(["slides"]),
-            current = slides[that.current.get()];
-
-          d3.entries(slides).map((d)=> {
-            if(d.value.prev === current.id){
-              that.current.set(d.key);
-            }
-          });
-        },
+        click: () => this.advance(),
         tip: "Next Slide"
       }]
     ];
+  }
+
+  advance(){
+    let slides = this.tree.get(["slides"]),
+      current = slides[this.current.get()];
+
+    d3.entries(slides).map((d)=> {
+      if(d.value.prev === current.id){
+        this.current.set(d.key);
+      }
+    });
+
+    return this.current.get();
   }
 
   initToolbar(){
