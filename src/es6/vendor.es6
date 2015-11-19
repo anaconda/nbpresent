@@ -1,6 +1,6 @@
 import d3 from "d3";
 import html2canvas from "html2canvas";
-import uuid from "node-uuid";
+import uuid from "uuid";
 import VanillaSlab from "vanilla-slab";
 import Baobab from "baobab";
 

@@ -12,7 +12,7 @@ browserify \
   --external d3 \
   --external html2canvas \
   --external baobab \
-  --external node-uuid \
+  --external uuid \
   --external nbpresent-deps \
   --transform [ babelify --sourceMapRelative . ] \
   ${EXTRA} \
