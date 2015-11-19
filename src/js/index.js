@@ -6,7 +6,7 @@ function(require){
       var path = _here.concat(frag).join("/")
         .replace("//", "/")
         .replace("/./.", "/")
-        .replace("./", "/");
+        // .replace("./", "/");
       return path;
     };
 

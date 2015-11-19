@@ -116,8 +116,9 @@ class Editor{
     this.$svg.attr({width, height});
 
     regions.sort((a, b) => {
-      return selected.region == a.key ? -1 : selected.region == b.key ? 1 :
-        (a.value.attrs.z || 0) - (b.value.attrs.z || 0)
+      return (selected && selected.region == a.key) ? -1 :
+        (selected && selected.region == b.key) ? 1 :
+          (a.value.attrs.z || 0) - (b.value.attrs.z || 0)
     });
 
     let $region = this.$svg.selectAll(".region")

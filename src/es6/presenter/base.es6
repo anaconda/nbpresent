@@ -87,6 +87,8 @@ export class Presenter {
     let that = this;
     let presenting = this.presenting.get();
 
+    d3.select("body").classed({nbpresent_presenting: presenting});
+
     this.$ui
       .style({
         "display": presenting ? "block" : "none"
@@ -100,7 +102,7 @@ export class Presenter {
 
     // TODO: handle cleanup
     // transition = this.layout && this.layout.destroy()
-    
+
     if(!slide){
       return this.current.set(this.tree.get(["sortedSlides", 0, "key"]));
     }

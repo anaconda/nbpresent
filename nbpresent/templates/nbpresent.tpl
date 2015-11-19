@@ -123,7 +123,7 @@
         }
       }, [
         "jquery",
-        "/nbpresent.min.js"
+        "./nbpresent.min.js"
       ], function($, loader){
         loader.load_presentation_standalone();
       }, function(err){

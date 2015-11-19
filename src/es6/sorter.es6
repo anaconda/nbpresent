@@ -50,6 +50,7 @@ class Sorter {
       this.draw();
     }else if(this.editor){
       this.editor.destroy();
+      this.editor = null;
     }
 
     this.update();
@@ -212,7 +213,8 @@ class Sorter {
       .call(this.drag)
       .on("click", (d) =>{
         this.slideClicked(d)
-      });
+      })
+      .on("dblclick", (d) => this.editSlide(d.key));
 
     $slide.exit()
       .transition()

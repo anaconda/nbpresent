@@ -1,5 +1,4 @@
 from concurrent import futures
-from glob import glob
 import os
 import logging
 import time
@@ -46,7 +45,8 @@ class CaptureServer(HTTPServer):
             log_level=logging.DEBUG
         )
         session = ghost.start(
-            # display=True
+            # display=True,
+            viewport_size=(1920, 1080),
         )
         merger = PdfFileMerger()
         join = lambda *bits: os.path.join(self.static_path, *bits)
@@ -94,14 +94,13 @@ def screenshot(nb, session, dest, as_print=False):
     """
     big thanks to https://gist.github.com/jmaupetit/4217925
     """
-    session.set_viewport_size(1920, 1080)
 
     printer = QPrinter(mode=QPrinter.ScreenResolution)
     printer.setOutputFormat(QPrinter.PdfFormat)
-    printer.setPaperSize(QtCore.QSizeF(8.5, 11), QPrinter.Inch)
+    printer.setPaperSize(QtCore.QSizeF(1080, 1920), QPrinter.DevicePixel)
     printer.setOrientation(QPrinter.Landscape)
     printer.setOutputFileName(dest)
-    printer.setPageMargins(0, 0, 0, 0, QPrinter.Inch)
+    printer.setPageMargins(0, 0, 0, 0, QPrinter.DevicePixel)
 
     if as_print:
         webview = QtWebKit.QWebView()
@@ -109,6 +108,7 @@ def screenshot(nb, session, dest, as_print=False):
         webview.print_(printer)
     else:
         painter = QPainter(printer)
+        painter.scale(1.45, 1.45)
         session.main_frame.render(painter)
         painter.end()
 
