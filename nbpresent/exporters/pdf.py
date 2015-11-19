@@ -1,26 +1,12 @@
 import os
-from glob import glob
 import shutil
 import sys
 from subprocess import check_call
-
-
-try:
-    from PySide.QtGui import QApplication, QImage, QPainter, QPrinter
-except ImportError as err:
-    from PyQt4.QtGui import QApplication, QImage, QPainter, QPrinter
-from ghost import Ghost
-
-
-import tornado.ioloop
-import tornado.web
-
 
 from ipython_genutils.tempdir import TemporaryWorkingDirectory
 import nbformat
 
 from .html import PresentExporter
-from .pdf_capture import pdf_capture
 
 
 class PDFPresentExporter(PresentExporter):
@@ -53,7 +39,7 @@ class PDFPresentExporter(PresentExporter):
                 "-m", "nbpresent.exporters.pdf_capture",
                 td
             ])
-            
+
             pdf_file = "notebook.pdf"
 
             if not os.path.isfile(pdf_file):
