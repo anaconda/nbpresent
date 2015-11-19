@@ -3,21 +3,28 @@ function(require){
   var ns = "nbpresent-",
     _here = [require.toUrl(".").split("?")[0]],
     here = function(frag){
-      return _here.concat(frag).join("/");
+      var path = _here.concat(frag).join("/")
+        .replace("//", "/")
+        .replace("/./.", "/")
+        // .replace("./", "/");
+      return path;
     };
 
   requirejs.config({
     paths: {
       "nbpresent-deps": here(["nbpresent.deps.min"]),
       "nbpresent-notebook": here(["nbpresent.notebook.min"]),
-      "nbpresent-standalone": here(["nbpresent.standalone.min"]),
+      "nbpresent-standalone": here(["nbpresent.standalone.min"])
     }
   });
 
   function init(env){
-    requirejs(["require", "./nbpresent-deps"], function(require){
-      requirejs(["require", "./" + ns + env], function(require, Mode){
-        new Mode(_here[0]);
+    var nbpresent = window.nbpresent = {loading: true};
+    requirejs(["require", ns + "deps"], function(require, deps){
+      nbpresent.deps = deps;
+      requirejs(["require", ns + env], function(require, mode){
+        nbpresent.Mode = mode.Mode;
+        window.nbpresent.mode = new mode.Mode(_here[0].replace("./", "."));
       });
     });
   }
