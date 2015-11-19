@@ -87,8 +87,7 @@ class CaptureServer(HTTPServer):
         with open(join("notebook.pdf"), "wb") as fp:
             meta.write(fp)
 
-        raise SystemExit()
-
+        raise KeyboardInterrupt()
 
 def screenshot(nb, session, dest, as_print=False):
     """
@@ -136,7 +135,11 @@ def pdf_capture(static_path):
     ioloop = IOLoop()
     ioloop.add_callback(server.capture)
     server.listen(9999)
-    ioloop.start()
+
+    try:
+        ioloop.start()
+    except KeyboardInterrupt:
+        print("stopped")
 
 if __name__ == "__main__":
     pdf_capture(sys.argv[1])
