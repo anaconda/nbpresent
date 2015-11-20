@@ -78,7 +78,7 @@ class TemplateLibrary {
 
     this.$ui.append("button")
       .classed({btn: 1, hide_library: 1, "btn-default": 1})
-      .on("click", () => this.destroy())
+      .on("click", () => this.picked(null))
       .append("i")
       .classed({fa: 1, "fa-remove": 1});
 

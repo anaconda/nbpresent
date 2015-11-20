@@ -48,9 +48,15 @@ class Sorter {
 
     if(visible) {
       this.draw();
-    }else if(this.editor){
-      this.editor.destroy();
-      this.editor = null;
+    }else {
+      if(this.editor){
+        this.editor.destroy();
+        this.editor = null;
+      }
+      if(this.templates){
+        this.templates.destroy();
+        this.templates = null;
+      }
     }
 
     this.update();
@@ -203,7 +209,7 @@ class Sorter {
 
     let slides = this.tree.get("sortedSlides");
 
-    this.scale.x.range([0, this.slideWidth()]);
+    this.scale.x.range([20, this.slideWidth() + 20]);
 
     let $slide = this.$slides.selectAll(".slide")
       .data(slides, (d) => d.key);
@@ -253,7 +259,7 @@ class Sorter {
       .style({
         opacity: selectedRegion ? 1 : 0,
         display: selectedRegion ? "block" : "none",
-        left: `${selectedSlideLeft}px`
+        left: `${selectedSlideLeft - 30}px`
       });
 
     this.$empty
@@ -314,22 +320,22 @@ class Sorter {
       .classed({deck_toolbar: 1})
       .datum([
         [{
-          icon: "plus-square-o",
+          icon: "plus-square-o fa-2x",
           click: () => this.addSlide(),
           tip: "Add Slide"
         }], [{
-          icon: "edit",
+          icon: "edit fa-2x",
           click: () => this.editSlide(this.selectedSlide.get()),
           tip: "Edit Slide",
           visible: () => this.selectedSlide.get() && !this.editor
         }, {
-          icon: "chevron-circle-down",
+          icon: "chevron-circle-down fa-2x",
           click: () => this.editSlide(this.selectedSlide.get()),
           tip: "Back to Sorter",
           visible: () => this.editor
         }],
         [{
-          icon: "trash",
+          icon: "trash fa-2x",
           click: () => {
             this.removeSlide(this.selectedSlide.get());
             this.selectedSlide.set(null);
@@ -345,12 +351,12 @@ class Sorter {
       .classed({region_toolbar: 1})
       .datum([
         [{
-          icon: "external-link-square",
+          icon: "terminal",
           click: () => this.linkContent(PART.source),
           tip: "Link Region to Cell Input"
         },
         {
-          icon: "external-link",
+          icon: "image",
           click: () => this.linkContent(PART.outputs),
           tip: "Link Region to Cell Output"
         },
@@ -358,8 +364,8 @@ class Sorter {
           icon: "sliders",
           click: () => this.linkContent(PART.widgets),
           tip: "Link Region to Cell Widgets"
-        }],
-        [{
+        },
+        {
           icon: "unlink",
           click: () => this.linkContent(null),
           tip: "Unlink Region"
@@ -403,20 +409,23 @@ class Sorter {
   }
 
   templatePicked(slide){
-    let last = this.tree.get("sortedSlides").slice(-1),
-      selected = this.selectedSlide.get();
+    if(slide && this.templates && !this.templates.killed){
+      let last = this.tree.get("sortedSlides").slice(-1),
+        selected = this.selectedSlide.get();
 
-    this.slides.set([slide.key], slide.value);
+      this.slides.set([slide.key], slide.value);
 
-    let appended = this.appendSlide(
-        selected ? selected : last.length ? last[0].key : null,
-        slide.key
-      );
+      let appended = this.appendSlide(
+          selected ? selected : last.length ? last[0].key : null,
+          slide.key
+        );
 
-    this.selectedSlide.set(appended);
-
-    this.templates.destroy();
-    this.templates = null;
+      this.selectedSlide.set(appended);
+    }
+    if(this.templates){
+      this.templates.destroy();
+      this.templates = null;
+    }
   }
 
   editSlide(id){

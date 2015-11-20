@@ -1,5 +1,7 @@
 import {d3} from "nbpresent-deps";
 
+import {PART} from "./parts";
+
 import {RegionTree} from "./regiontree";
 import {CellManager} from "./cells/notebook";
 
@@ -88,6 +90,10 @@ class Editor{
         }, {}));
   }
 
+  hasContent(part){
+    return (d) => (d.value.content || {}).part === part;
+  }
+
   update(){
     let that = this,
       uibb = this.$ui.node().getBoundingClientRect(),
@@ -151,7 +157,10 @@ class Editor{
 
     $region
       .classed({
-        active: (d) => selected && (d.key == selected.region)
+        active: (d) => selected && (d.key == selected.region),
+        content_source: this.hasContent(PART.source),
+        content_outputs: this.hasContent(PART.outputs),
+        content_widgets: this.hasContent(PART.widgets)
       })
     .select(".region_bg")
       .transition()
