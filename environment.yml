@@ -1,28 +1,79 @@
-name: nbindex
+name: nbpresent
 dependencies:
-- anaconda-client=1.0.2=py35_0
-- clyent=0.4.0=py35_0
-- freetype=2.5.2=2
+- anaconda-client=1.1.2=py35_0
+- bokeh=0.10.0=py35_0
+- clyent=1.0.0=py35_0
+- cycler=0.9.0=py35_0
+- decorator=4.0.4=py35_0
+- flask=0.10.1=py35_1
+- fontconfig=2.11.1=5
+- freetype=2.5.5=0
+- ipykernel=4.1.1=py35_0
+- ipython=4.0.0=py35_0
+- ipython_genutils=0.1.0=py35_0
+- ipywidgets=4.1.0=py35_0
+- itsdangerous=0.24=py35_0
+- jbig=2.1=0
+- jinja2=2.8=py35_0
 - jpeg=8d=0
+- jsonschema=2.4.0=py35_0
+- jupyter_client=4.1.1=py35_0
+- jupyter_core=4.0.6=py35_0
+- libgfortran=1.0=0
 - libpng=1.6.17=0
-- libtiff=4.0.2=1
-- openssl=1.0.1k=1
-- pillow=2.9.0=py35_0
+- libsodium=1.0.3=0
+- libtiff=4.0.6=1
+- libxml2=2.9.2=0
+- markupsafe=0.23=py35_0
+- matplotlib=1.5.0=np110py35_0
+- mistune=0.7.1=py35_0
+- nbconvert=4.0.0=py35_0
+- nbformat=4.0.1=py35_0
+- nodejs=4.2.0=1
+- notebook=4.0.6=py35_0
+- numpy=1.10.1=py35_0
+- openblas=0.2.14=3
+- openssl=1.0.2d=0
+- pandas=0.17.0=np110py35_0
+- path.py=8.1.2=py35_0
+- pexpect=3.3=py35_0
+- pickleshare=0.5=py35_0
+- pillow=3.0.0=py35_1
 - pip=7.1.2=py35_0
-- python=3.5.0=0
+- ptyprocess=0.5=py35_0
+- pygments=2.0.2=py35_0
+- pyparsing=2.0.3=py35_0
+- pyqt=4.11.4=py35_0
+- python=3.5.0=1
 - python-dateutil=2.4.2=py35_0
-- pytz=2015.6=py35_0
+- pytz=2015.7=py35_0
 - pyyaml=3.11=py35_1
+- pyzmq=14.7.0=py35_1
+- qt=4.8.7=1
 - readline=6.2=2
-- requests=2.7.0=py35_0
-- setuptools=18.1=py35_0
-- six=1.9.0=py35_0
+- requests=2.8.1=py35_0
+- setuptools=18.4=py35_0
+- simplegeneric=0.8.1=py35_0
+- sip=4.16.9=py35_0
+- six=1.10.0=py35_0
 - sqlite=3.8.4.1=1
+- terminado=0.5=py35_1
 - tk=8.5.18=0
-- wheel=0.26.0=py35_0
+- tornado=4.2.1=py35_1
+- traitlets=4.0.0=py35_0
+- werkzeug=0.11.2=py35_0
+- wheel=0.26.0=py35_1
 - xz=5.0.5=0
 - yaml=0.1.6=0
+- zeromq=4.1.3=0
 - zlib=1.2.8=0
 - pip:
-  - elasticsearch==1.7.0
-  - urllib3==1.12
+  - bqplot==0.4.2
+  - ghost.py==0.2.3
+  - ipython-genutils==0.1.0
+  - jupyter-client==4.1.1
+  - jupyter-core==4.0.6
+  - nbpresent (/home/weg/Documents/projects/nbpresent)==0.3.0.dev0
+  - pypdf2==1.25.1
+  - qgrid==0.2.0
+
