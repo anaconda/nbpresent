@@ -24,7 +24,6 @@ requirements:
 test:
   imports:
     - nbpresent
-    - nbpresent.exporters.pdf_capture
 
 about:
   summary: Next generation slides for Jupyter Notebooks
