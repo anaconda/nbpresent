@@ -14,19 +14,17 @@ requirements:
   build:
     - nodejs
     - python
-    - notebook
-    - jupyter
-    - funcsigs
   run:
     - python
     - notebook
-    - jupyter
     - funcsigs
+    - pypdf2
+    - ghost.py
 
 test:
   imports:
-    - notebook
     - nbpresent
+    - nbpresent.exporters.pdf_capture
 
 about:
   summary: Next generation slides for Jupyter Notebooks
