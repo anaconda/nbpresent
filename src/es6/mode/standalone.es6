@@ -3,18 +3,21 @@ import {d3} from "nbpresent-deps";
 import {Tree} from "../tree";
 import {StandalonePresenter} from "../presenter/standalone";
 
-import {Mode} from "./base";
+import {Mode as BaseMode} from "./base";
 
-
-export default class StandaloneMode extends Mode {
+export class Mode extends BaseMode {
   init() {
-    let slides = JSON.parse(d3.select("#nbpresent_tree").text()),
-      tree = new Tree({
-        slides: slides.slides,
-        root: this.root
-      }),
-      presenter = new StandalonePresenter(tree.tree);
+    let slides = JSON.parse(d3.select("#nbpresent_tree").text());
 
-    presenter.presenting.set(true);
+    let tree = new Tree({
+      slides: slides.slides,
+      root: this.root
+    });
+
+    this.tree = tree.tree;
+
+    this.presenter = new StandalonePresenter(this.tree);
+
+    this.presenter.presenting.set(true);
   }
 }

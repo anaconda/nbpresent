@@ -1,3 +1,5 @@
+import {d3} from "nbpresent-deps";
+
 import {CellManager} from "./cells/notebook";
 import {PART} from "./parts";
 

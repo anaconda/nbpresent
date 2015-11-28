@@ -64,7 +64,7 @@ class Toolbar {
       .on("click", (d) => d.click() )
       .select("i")
       .attr({
-        "class": (d) => `fa fa-fw fa-${d.icon}`,
+        "class": (d) => `fa fa-fw fa-2x fa-${d.icon}`,
       });
 
     let clean = function(){

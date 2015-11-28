@@ -34,16 +34,14 @@ export class ManualLayout {
 
     part.style({
       height: `${this.y(height)}px`,
-      left: `0`,
-      top: `0`,
-      transform: `perspective(250px) translate3d(${this.x(x)}px, ${this.y(y)}px, ${z}px)`,
+      left: `${this.x(x)}px`,
+      top: `${this.y(y)}px`,
       width: `${this.x(width)}px`
     });
   }
 
   clean(unpresent){
     unpresent.style({
-      transform: null,
       left: null,
       top: null,
       width: null,

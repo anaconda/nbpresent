@@ -14,18 +14,13 @@ requirements:
   build:
     - nodejs
     - python
-    - notebook
-    - jupyter
-    - funcsigs
   run:
     - python
     - notebook
-    - jupyter
     - funcsigs
 
 test:
   imports:
-    - notebook
     - nbpresent
 
 about:

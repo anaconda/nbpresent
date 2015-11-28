@@ -14,8 +14,7 @@ class NbpresentTour {
     this.tour = new Tour({
       name: "nbpresent",
       reflex: true, // click on element to continue tour
-      storage: false,
-      duration: 3000,
+      duration: 5000,
       orphan: true,
       steps: [
         {

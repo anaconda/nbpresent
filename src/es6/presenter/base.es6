@@ -87,6 +87,8 @@ export class Presenter {
     let that = this;
     let presenting = this.presenting.get();
 
+    d3.select("body").classed({nbpresent_presenting: presenting});
+
     this.$ui
       .style({
         "display": presenting ? "block" : "none"
@@ -166,7 +168,7 @@ export class Presenter {
     }
 
     d3.selectAll(".nbpresent_unpresent")
-      .call(that.layout && this.layout.clean || () => 0)
+      .call(that.layout && this.layout.clean || (() => 0))
       .classed({nbpresent_unpresent: 0, nbpresent_present: 0});
   }
 }
