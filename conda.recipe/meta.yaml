@@ -18,8 +18,6 @@ requirements:
     - python
     - notebook
     - funcsigs
-    - pypdf2
-    - ghost.py
 
 test:
   imports:

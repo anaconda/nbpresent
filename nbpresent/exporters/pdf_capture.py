@@ -1,145 +1,83 @@
-from concurrent import futures
-import os
-import logging
 import time
-import sys
 
-from ghost import Ghost
 from ghost.bindings import (
-    # QApplication,
-    # QImage,
     QPainter,
     QPrinter,
-    QtWebKit,
     QtCore,
 )
 
-
-import tornado.web
-from tornado.httpserver import HTTPServer
-
-from tornado.ioloop import IOLoop
-from tornado.concurrent import run_on_executor
-
-import nbformat
-
 from PyPDF2 import (
     PdfFileReader,
-    PdfFileWriter,
     PdfFileMerger,
 )
 
-from .base import DEFAULT_STATIC_FILES_PATH
+from nbbrowserpdf.exporters.pdf_capture import CaptureServer
+
+VIEWPORT = (1920, 1080)
 
 
-class CaptureServer(HTTPServer):
-    executor = futures.ThreadPoolExecutor(max_workers=1)
-
-    def __init__(self, *args, **kwargs):
-        super(CaptureServer, self).__init__(*args, **kwargs)
-
-    @run_on_executor
-    def capture(self):
-        # DO SOME MAGIC
-        ghost = Ghost(
-            log_level=logging.DEBUG
-        )
-        session = ghost.start(
+class SlideCaptureServer(CaptureServer):
+    """ CaptureServer to generate multi-page PDF based on nbpresent metadata
+    """
+    def init_session(self):
+        """ create a session with a some tweaked settings
+        """
+        return self.ghost.start(
             # display=True,
-            viewport_size=(1920, 1080),
+            # TODO: read this off config
+            viewport_size=VIEWPORT,
+            show_scrollbars=False,
         )
+
+    def page_ready(self):
+        """ Wait until nbpresent-css gets created
+        """
+        self.session.wait_for_page_loaded()
+        self.session.wait_for_selector("#nbpresent-css")
+        time.sleep(1)
+
+    def print_to_pdf(self, path):
+        """ Custom print based on metadata: generate one per slide
+        """
         merger = PdfFileMerger()
-        join = lambda *bits: os.path.join(self.static_path, *bits)
-
-        session.open("http://localhost:9999/index.html")
-
-        try:
-            session.wait_for_selector("#nbpresent-css")
-            time.sleep(1)
-        except Exception as err:
-            print(err)
 
         for i, slide in enumerate(self.notebook.metadata.nbpresent.slides):
             print("\n\n\nprinting slide", i, slide)
-            filename = join("notebook-{0:04d}.pdf".format(i))
-            session.show()
-            screenshot(self.notebook, session, filename)
+            # science help you if you have 9999 slides
+            filename = self.in_static("notebook-{0:04d}.pdf".format(i))
+            # this is weird, but it seems to always need it
+            self.session.show()
+            self.screenshot(filename)
             merger.append(PdfFileReader(filename, "rb"))
-            result, resources = session.evaluate(
+
+            # advance the slides
+            result, resources = self.session.evaluate(
                 """
                 console.log(window.nbpresent);
                 console.log(window.nbpresent.mode.presenter.speaker.advance());
                 """)
+
+            # always seem to get some weirdness... perhaps could inttegrate
+            # ioloop...
             time.sleep(1)
 
-        merger.write(join("notebook-unmeta.pdf"))
+        # all done!
+        merger.write(path)
 
-        unmeta = PdfFileReader(join("notebook-unmeta.pdf"), "rb")
+    def screenshot(self, filename):
+        """ do an individual slide screenshot
+            big thanks to https://gist.github.com/jmaupetit/4217925
+        """
 
-        meta = PdfFileWriter()
-        meta.appendPagesFromReader(unmeta)
+        printer = QPrinter(mode=QPrinter.ScreenResolution)
+        printer.setOutputFormat(QPrinter.PdfFormat)
+        printer.setPaperSize(QtCore.QSizeF(*reversed(VIEWPORT)),
+                             QPrinter.DevicePixel)
+        printer.setOrientation(QPrinter.Landscape)
+        printer.setOutputFileName(filename)
+        printer.setPageMargins(0, 0, 0, 0, QPrinter.DevicePixel)
 
-        ipynb = "notebook.ipynb"
-
-        with open(join(ipynb), "rb") as fp:
-            meta.addAttachment(ipynb, fp.read())
-
-        with open(join("notebook.pdf"), "wb") as fp:
-            meta.write(fp)
-
-        raise KeyboardInterrupt()
-
-def screenshot(nb, session, dest, as_print=False):
-    """
-    big thanks to https://gist.github.com/jmaupetit/4217925
-    """
-
-    printer = QPrinter(mode=QPrinter.ScreenResolution)
-    printer.setOutputFormat(QPrinter.PdfFormat)
-    printer.setPaperSize(QtCore.QSizeF(1080, 1920), QPrinter.DevicePixel)
-    printer.setOrientation(QPrinter.Landscape)
-    printer.setOutputFileName(dest)
-    printer.setPageMargins(0, 0, 0, 0, QPrinter.DevicePixel)
-
-    if as_print:
-        webview = QtWebKit.QWebView()
-        webview.setPage(session.page)
-        webview.print_(printer)
-    else:
         painter = QPainter(printer)
         painter.scale(1.45, 1.45)
-        session.main_frame.render(painter)
+        self.session.main_frame.render(painter)
         painter.end()
-
-
-def pdf_capture(static_path):
-    settings = {
-        "static_path": static_path
-    }
-
-    app = tornado.web.Application([
-        (r"/components/(.*)", tornado.web.StaticFileHandler, {
-            "path": os.path.join(DEFAULT_STATIC_FILES_PATH, "components")
-        }),
-        (r"/(.*)", tornado.web.StaticFileHandler, {
-            "path": settings['static_path']
-        }),
-    ], **settings)
-
-    server = CaptureServer(app)
-    server.static_path = static_path
-
-    with open(os.path.join(static_path, "notebook.ipynb")) as fp:
-        server.notebook = nbformat.read(fp, 4)
-
-    ioloop = IOLoop()
-    ioloop.add_callback(server.capture)
-    server.listen(9999)
-
-    try:
-        ioloop.start()
-    except KeyboardInterrupt:
-        print("stopped")
-
-if __name__ == "__main__":
-    pdf_capture(sys.argv[1])

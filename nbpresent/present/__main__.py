@@ -2,9 +2,9 @@ import os
 import sys
 
 from ..exporters import (
-    PresentExporter,
     APP_ROOT
 )
+from ..exporters.html import PresentExporter
 
 
 def main(nb):

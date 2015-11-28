@@ -2,11 +2,19 @@
 
 import argparse
 import os
-from os.path import dirname, abspath, join, exists
+from os.path import (
+    abspath,
+    dirname,
+    exists,
+    join,
+)
+from pprint import pprint
 try:
     from inspect import signature
 except ImportError:
     from funcsigs import signature
+
+from jupyter_core.paths import jupyter_config_dir
 
 
 def install(enable=False, **kwargs):
@@ -34,19 +42,41 @@ def install(enable=False, **kwargs):
         if "prefix" in kwargs:
             path = join(kwargs["prefix"], "etc", "jupyter")
             if not exists(path):
+                print("Making directory", path)
                 os.makedirs(path)
 
         cm = ConfigManager(config_dir=path)
-        print("Enabling for", cm.config_dir)
-        print("Enabling nbpresent server component...")
+        print("Enabling nbpresent server component in", cm.config_dir)
+        cfg = cm.get("jupyter_notebook_config")
+        print("Existing config...")
+        pprint(cfg)
+        server_extensions = (
+            cfg.setdefault("NotebookApp", {})
+            .setdefault("server_extensions", [])
+        )
+        if "nbpresent" not in server_extensions:
+            cfg["NotebookApp"]["server_extensions"] += ["nbpresent"]
+
+        cm.update("jupyter_notebook_config", cfg)
+        print("New config...")
+        pprint(cm.get("jupyter_notebook_config"))
+
+        cm = ConfigManager(config_dir=join(jupyter_config_dir(), "nbconfig"))
+        print(
+            "Enabling nbpresent nbextension at notebook launch in",
+            cm.config_dir
+        )
+
+        if not exists(cm.config_dir):
+            print("Making directory", cm.config_dir)
+            os.makedirs(cm.config_dir)
+
+
         cm.update(
-            "jupyter_notebook_config", {
-                "notebook": {
-                    "load_extensions": {"nbpresent/nbpresent.min": True}
+            "notebook", {
+                "load_extensions": {
+                    "nbpresent/nbpresent.min": True
                 },
-                "NotebookApp": {
-                    "server_extensions": ["nbpresent"]
-                }
             }
         )
 
@@ -60,7 +90,7 @@ if __name__ == '__main__':
         description="Installs nbpresent nbextension")
     parser.add_argument(
         "-e", "--enable",
-        help="Automatically load extension on notebook launch",
+        help="Automatically load server and nbextension on notebook launch",
         action="store_true")
 
     default_kwargs = dict(

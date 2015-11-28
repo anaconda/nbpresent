@@ -2,9 +2,9 @@ import os
 import sys
 
 from ..exporters import (
-    PDFPresentExporter,
     APP_ROOT
 )
+from ..exporters.pdf import PDFPresentExporter
 
 
 def main(nb):
