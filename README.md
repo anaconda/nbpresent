@@ -25,19 +25,40 @@ python -m nbpresent.install --enable
 ## Export
 Stock `nbconvert` doesn't store quite enough information, so you'll need to do something like this:
 ```shell
-python -m nbpresent.export -i notebooks/README.ipynb -o README.html
+nbpresent -i notebooks/README.ipynb -o README.html
 ```
 The resulting file can be hosted and viewed (but not edited!) on any site with fallback to Github.
 
 If you have installed [nbbrowserpdf](https://github.com/Anaconda-Server/nbbrowserpdf), you can also export to pdf:
 ```shell
-python -m nbpresent.export -i notebooks/README.ipynb -f pdf -o README.pdf
+nbpresent -i notebooks/README.ipynb -f pdf -o README.pdf
 ```
 
 You can also pass in and get back streams:
 ```shell
-cmd_that_generates_ipynb | python -m nbpresent.export -f pdf > README.pdf
+cmd_that_generates_ipynb | nbpresent -f pdf > README.pdf
 ```
+
+Here's the whole doc:
+
+
+```python
+!nbpresent --help
+```
+
+    usage: nbpresent [-h] [-i IPYNB] [-o OUTFILE] [-f {html,zip,pdf}]
+    
+    Generate a static nbpresent presentation from a Jupyter Notebook
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      -i IPYNB, --ipynb IPYNB
+                            Input file (otherwise read from stdin)
+      -o OUTFILE, --outfile OUTFILE
+                            Output file (otherwise write to stdout)
+      -f {html,zip,pdf}, --out-format {html,zip,pdf}
+                            Output format
+
 
 ## Development
 There are several development scenarios...

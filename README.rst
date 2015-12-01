@@ -38,7 +38,7 @@ need to do something like this:
 
 .. code:: shell
 
-    python -m nbpresent.export -i notebooks/README.ipynb -o README.html
+    nbpresent -i notebooks/README.ipynb -o README.html
 
 The resulting file can be hosted and viewed (but not edited!) on any
 site with fallback to Github.
@@ -49,13 +49,36 @@ can also export to pdf:
 
 .. code:: shell
 
-    python -m nbpresent.export -i notebooks/README.ipynb -f pdf -o README.pdf
+    nbpresent -i notebooks/README.ipynb -f pdf -o README.pdf
 
 You can also pass in and get back streams:
 
 .. code:: shell
 
-    cmd_that_generates_ipynb | python -m nbpresent.export -f pdf > README.pdf
+    cmd_that_generates_ipynb | nbpresent -f pdf > README.pdf
+
+Here's the whole doc:
+
+.. code:: python
+
+    !nbpresent --help
+
+
+.. parsed-literal::
+
+    usage: nbpresent [-h] [-i IPYNB] [-o OUTFILE] [-f {html,zip,pdf}]
+    
+    Generate a static nbpresent presentation from a Jupyter Notebook
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      -i IPYNB, --ipynb IPYNB
+                            Input file (otherwise read from stdin)
+      -o OUTFILE, --outfile OUTFILE
+                            Output file (otherwise write to stdout)
+      -f {html,zip,pdf}, --out-format {html,zip,pdf}
+                            Output format
+
 
 Development
 -----------

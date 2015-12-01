@@ -7,7 +7,7 @@ from .exporters import (
 )
 
 
-def main(ipynb=None, outfile=None, out_format=None, verbose=None):
+def export(ipynb=None, outfile=None, out_format=None, verbose=None):
     if out_format in ["pdf"]:
         from .exporters.pdf import PDFPresentExporter as Exporter
     elif out_format in ["html"]:
@@ -34,9 +34,10 @@ def main(ipynb=None, outfile=None, out_format=None, verbose=None):
         stream.write(output)
 
 
-if __name__ == "__main__":
+def main():
     parser = ArgumentParser(
-        description="Generate a presentation PDF from ipynb")
+        description="Generate a static nbpresent presentation from a Jupyter"
+                    " Notebook")
     parser.add_argument(
         "-i", "--ipynb",
         help="Input file (otherwise read from stdin)")
@@ -50,4 +51,8 @@ if __name__ == "__main__":
         help="Output format"
     )
 
-    main(**parser.parse_args().__dict__)
+    export(**parser.parse_args().__dict__)
+
+
+if __name__ == "__main__":
+    main()
