@@ -38,15 +38,29 @@ need to do something like this:
 
 .. code:: shell
 
-    python -m nbpresent.present notebooks/README.ipynb > README.html
+    python -m nbpresent.export -i notebooks/README.ipynb -o README.html
 
 The resulting file can be hosted and viewed (but not edited!) on any
 site with fallback to Github.
 
+If you have installed
+`nbbrowserpdf <https://github.com/Anaconda-Server/nbbrowserpdf>`__, you
+can also export to pdf:
+
+.. code:: shell
+
+    python -m nbpresent.export -i notebooks/README.ipynb -f pdf -o README.pdf
+
+You can also pass in and get back streams:
+
+.. code:: shell
+
+    cmd_that_generates_ipynb | python -m nbpresent.export -f pdf > README.pdf
+
 Development
 -----------
 
-There are several development scenarios
+There are several development scenarios...
 
 The Hard Way
 ~~~~~~~~~~~~
@@ -124,3 +138,4 @@ Here is the build chain:
     docker-compose build conda_build && \
     docker-compose build conda && \
     docker-compose up conda
+
