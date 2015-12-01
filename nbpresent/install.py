@@ -2,7 +2,7 @@
 
 import argparse
 import os
-import sys
+import subprocess
 from os.path import (
     abspath,
     dirname,
@@ -62,9 +62,12 @@ def install(enable=False, **kwargs):
         print("New config...")
         pprint(cm.get("jupyter_notebook_config"))
 
-        if "conda" in sys.modules:
+        try:
+            subprocess.call(["conda", "info", "--root"])
+            print("conda detected")
             _jupyter_config_dir = ENV_CONFIG_PATH[0]
-        else:
+        except OSError as e:
+            print("conda not detected")
             _jupyter_config_dir = jupyter_config_dir()
 
         cm = ConfigManager(config_dir=join(_jupyter_config_dir, "nbconfig"))
