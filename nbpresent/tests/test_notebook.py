@@ -17,10 +17,12 @@ from nbpresent.install import install
 
 here = os.path.dirname(__file__)
 
+ROOT = os.path.join(here, "..", "..")
+
 # global npm installs are bad, add the local node_modules to the path
 os.environ["PATH"] = os.pathsep.join([
     os.environ["PATH"],
-    os.path.abspath(os.path.join(here, "..", "..", "node_modules", ".bin"))
+    os.path.abspath(os.path.join(ROOT, "node_modules", ".bin"))
 ])
 
 
@@ -114,11 +116,21 @@ def prepare_controllers(options):
             for g in groups], []
 
 
-def test_deps():
-    subprocess.check_output(["casperjs", "--version"])
+def ensure_deps():
+    try:
+        subprocess.check_output(["casperjs", "--version"])
+        okay = True
+    except:
+        okay = False
+
+    if okay:
+        return
+
+    subprocess.check_output(["npm", "install"], cwd=ROOT)
 
 
 def test_notebook():
+    ensure_deps()
     with patch.object(jstest, 'prepare_controllers', prepare_controllers):
         jstest.main()
 
