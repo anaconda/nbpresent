@@ -40,6 +40,7 @@ def install(enable=False, **kwargs):
     install_nbextension(directory, **kwargs)
 
     if enable:
+        path = jupyter_config_dir()
         if "prefix" in kwargs:
             path = join(kwargs["prefix"], "etc", "jupyter")
             if not exists(path):
