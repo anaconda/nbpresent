@@ -8,14 +8,18 @@ WORKDIR nbpresent
 
 # conda packages (preferred)
 RUN conda install \
-  -c javascript \
-  -c nbcio \
-  npm \
-  bokeh \
-  bqplot \
-  nbbrowserpdf
+    -y \
+    -c javascript \
+    -c nbcio \
+    bokeh \
+    bqplot \
+    nbbrowserpdf \
+    nodejs \
+  && conda env export
 
-RUN pip install qgrid
+RUN pip install \
+  --no-cache-dir \
+  qgrid
 
 RUN npm install && npm run dist
 RUN python setup.py develop
