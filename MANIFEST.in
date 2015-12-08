@@ -1,6 +1,7 @@
 include LICENSE
 include *.rst
 include *.md
+include package.json
 
 recursive-include nbpresent *
 
