@@ -114,11 +114,13 @@ export class Mode extends BaseMode {
 
     dlMenu.insert("li", ":nth-child(4)")
       .append("a")
+      .classed({download_nbpresent_html: 1})
       .text("Presentation (.zip)")
       .on("click", () => this.nbconvert("nbpresent"));
 
     dlMenu.insert("li", ":nth-child(5)")
       .append("a")
+      .classed({download_nbpresent_pdf: 1})
       .text("Presentation (.pdf)")
       .on("click", () => this.nbconvert("nbpresent_pdf"));
 
