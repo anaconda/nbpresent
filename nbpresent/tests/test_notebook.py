@@ -16,6 +16,11 @@ from nbpresent.install import install
 
 here = os.path.dirname(__file__)
 
+os.environ["PATH"] += (
+    os.pathsep +
+    os.path.abspath(os.path.join(here, "..", "..", "node_modules", ".bin"))
+)
+
 
 class NBPresentTestController(jstest.JSController):
     """ Javascript test subclass that installs widget nbextension in test
@@ -29,7 +34,7 @@ class NBPresentTestController(jstest.JSController):
         js_test_dir = jstest.get_js_test_dir()
         includes = '--includes=' + os.path.join(js_test_dir, 'util.js')
 
-        self.cmd = ['./node_modules/.bin/casperjs', 'test',
+        self.cmd = ['casperjs', 'test',
                     test_cases, includes,
                     '--engine={}'.format(self.engine)]
 
