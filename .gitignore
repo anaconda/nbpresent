@@ -6,3 +6,5 @@ nbpresent/static/nbpresent/
 __pycache__
 dist/
 build/
+*.xunit.xml
+.coverage

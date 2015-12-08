@@ -50,10 +50,10 @@ def prepare_controllers(options):
             for g in groups], []
 
 
-def main():
+def test_notebook():
     with patch.object(jstest, 'prepare_controllers', prepare_controllers):
         jstest.main()
 
 
 if __name__ == '__main__':
-    main()
+    test_notebook()

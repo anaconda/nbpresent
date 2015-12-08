@@ -20,8 +20,13 @@ requirements:
     - funcsigs
 
 test:
-  imports:
-    - nbpresent
+  requires:
+    - coverage
+    - nodejs
+    - nose
+    - notebook
+    - python
+    - requests
 
 about:
   summary: Next generation slides for Jupyter Notebooks
