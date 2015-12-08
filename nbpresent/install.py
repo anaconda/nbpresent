@@ -66,7 +66,7 @@ def install(enable=False, **kwargs):
             subprocess.call(["conda", "info", "--root"])
             print("conda detected")
             _jupyter_config_dir = ENV_CONFIG_PATH[0]
-        except OSError as e:
+        except OSError:
             print("conda not detected")
             _jupyter_config_dir = jupyter_config_dir()
 
@@ -79,7 +79,6 @@ def install(enable=False, **kwargs):
         if not exists(cm.config_dir):
             print("Making directory", cm.config_dir)
             os.makedirs(cm.config_dir)
-
 
         cm.update(
             "notebook", {

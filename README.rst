@@ -38,15 +38,52 @@ need to do something like this:
 
 .. code:: shell
 
-    python -m nbpresent.present notebooks/README.ipynb > README.html
+    nbpresent -i notebooks/README.ipynb -o README.html
 
 The resulting file can be hosted and viewed (but not edited!) on any
 site with fallback to Github.
 
+If you have installed
+`nbbrowserpdf <https://github.com/Anaconda-Server/nbbrowserpdf>`__, you
+can also export to pdf:
+
+.. code:: shell
+
+    nbpresent -i notebooks/README.ipynb -f pdf -o README.pdf
+
+You can also pass in and get back streams:
+
+.. code:: shell
+
+    cmd_that_generates_ipynb | nbpresent -f pdf > README.pdf
+
+Here's the whole doc:
+
+.. code:: python
+
+    !nbpresent --help
+
+
+.. parsed-literal::
+
+    usage: nbpresent [-h] [-i IPYNB] [-o OUTFILE] [-f {html,zip,pdf}]
+    
+    Generate a static nbpresent presentation from a Jupyter Notebook
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      -i IPYNB, --ipynb IPYNB
+                            Input file (otherwise read from stdin)
+      -o OUTFILE, --outfile OUTFILE
+                            Output file (otherwise write to stdout)
+      -f {html,zip,pdf}, --out-format {html,zip,pdf}
+                            Output format
+
+
 Development
 -----------
 
-There are several development scenarios
+There are several development scenarios...
 
 The Hard Way
 ~~~~~~~~~~~~
@@ -124,3 +161,4 @@ Here is the build chain:
     docker-compose build conda_build && \
     docker-compose build conda && \
     docker-compose up conda
+

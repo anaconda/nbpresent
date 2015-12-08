@@ -24,4 +24,7 @@ setup(
                  "License :: OSI Approved :: BSD License"],
     packages=["nbpresent"],
     include_package_data=True,
+    entry_points={
+        'console_scripts': ['nbpresent=nbpresent.export:main'],
+    }
 )
