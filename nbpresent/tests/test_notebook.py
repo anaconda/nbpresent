@@ -1,6 +1,5 @@
 import os
 import sys
-from tempfile import TemporaryDirectory
 
 try:
     from unittest.mock import patch
@@ -11,6 +10,8 @@ except ImportError:
 import requests
 
 from notebook import jstest
+from ipython_genutils.tempdir import TemporaryDirectory
+
 from nbpresent.install import install
 
 here = os.path.dirname(__file__)
@@ -28,7 +29,8 @@ class NBPresentTestController(jstest.JSController):
         js_test_dir = jstest.get_js_test_dir()
         includes = '--includes=' + os.path.join(js_test_dir, 'util.js')
 
-        self.cmd = ['casperjs', 'test', test_cases, includes,
+        self.cmd = ['./node_modules/.bin/casperjs', 'test',
+                    test_cases, includes,
                     '--engine={}'.format(self.engine)]
 
         if extra_args is not None:
