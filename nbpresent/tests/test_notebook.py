@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 
 try:
     from unittest.mock import patch
@@ -16,10 +17,11 @@ from nbpresent.install import install
 
 here = os.path.dirname(__file__)
 
-os.environ["PATH"] += (
-    os.pathsep +
+# global npm installs are bad, add the local node_modules to the path
+os.environ["PATH"] = os.pathsep.join([
+    os.environ["PATH"],
     os.path.abspath(os.path.join(here, "..", "..", "node_modules", ".bin"))
-)
+])
 
 
 class NBPresentTestController(jstest.JSController):
@@ -99,7 +101,6 @@ class NBPresentTestController(jstest.JSController):
                 self.cmd = [sys.executable, '-c', 'raise SystemExit(1)']
 
 
-
 def prepare_controllers(options):
     """Monkeypatched prepare_controllers for running widget js tests
 
@@ -111,6 +112,10 @@ def prepare_controllers(options):
         groups = ['']
     return [NBPresentTestController(g, extra_args=options.extra_args)
             for g in groups], []
+
+
+def test_deps():
+    subprocess.check_output(["casperjs", "--version"])
 
 
 def test_notebook():

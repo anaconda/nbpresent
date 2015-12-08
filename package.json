@@ -1,12 +1,13 @@
 {
   "author": "nicholas bollweg",
   "bugs": {
-    "url": "https://github.com/bollwyvl/nbpresent/issues"
+    "url": "https://github.com/Anaconda-Server/nbpresent/issues"
   },
   "dependencies": {
     "baobab": "^2.1.1",
     "d3": "~3.5.6",
     "html2canvas": "~0.5.0-alpha2",
+    "phantomjs-polyfill": "0.0.1",
     "uuid": "^2.0.1",
     "vanilla-slab": "~0.2.3"
   },
@@ -23,7 +24,6 @@
     "less": "~2.5.3",
     "less-plugin-autoprefix": "~1.5.1",
     "less-plugin-clean-css": "~1.5.1",
-    "phantomjs-polyfill": "0.0.1",
     "uglifyify": "~3.0.1",
     "watch": "~0.16.0"
   },

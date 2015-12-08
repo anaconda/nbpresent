@@ -31,6 +31,6 @@ test:
 
 about:
   summary: Next generation slides for Jupyter Notebooks
-  home: https://github.com/continuumio/nbpresent
+  home: https://github.com/Anaconda-Server/nbpresent
   license_file: LICENSE
   license: BSD License
