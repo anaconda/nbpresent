@@ -63,13 +63,13 @@ def install(enable=False, **kwargs):
         print("New config...")
         pprint(cm.get("jupyter_notebook_config"))
 
-        try:
-            subprocess.call(["conda", "info", "--root"])
-            print("conda detected")
-            _jupyter_config_dir = ENV_CONFIG_PATH[0]
-        except OSError:
-            print("conda not detected")
-            _jupyter_config_dir = jupyter_config_dir()
+        _jupyter_config_dir = jupyter_config_dir()
+        # try:
+        #     subprocess.call(["conda", "info", "--root"])
+        #     print("conda detected")
+        #     _jupyter_config_dir = ENV_CONFIG_PATH[0]
+        # except OSError:
+        #     print("conda not detected")
 
         cm = ConfigManager(config_dir=join(_jupyter_config_dir, "nbconfig"))
         print(

@@ -22,6 +22,7 @@ requirements:
 test:
   requires:
     - coverage
+    - mock
     - nodejs
     - nose
     - notebook

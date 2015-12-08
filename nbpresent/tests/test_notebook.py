@@ -21,7 +21,10 @@ class NBPresentTestController(jstest.JSController):
         super(NBPresentTestController, self).__init__(section, *args, **kwargs)
 
         test_cases = os.path.join(here, 'js')
-        self.cmd = ['casperjs', 'test', test_cases,
+        js_test_dir = jstest.get_js_test_dir()
+        includes = '--includes=' + os.path.join(js_test_dir, 'util.js')
+
+        self.cmd = ['casperjs', 'test', test_cases, includes,
                     '--engine={}'.format(self.engine)]
 
         if extra_args is not None:
