@@ -11,4 +11,5 @@ exclude nbpresent/static/*.gif
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 recursive-exclude node_modules *.*
+recursive-exclude * node_modules
 recursive-exclude * .git

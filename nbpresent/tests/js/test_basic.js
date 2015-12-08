@@ -8,8 +8,6 @@ var loaded = function(pattern){
 };
 
 casper.notebook_test(function(){
-  this.wait_for_idle();
-
   ["#nbpresent_sorter_btn",
     "#nbpresent_present_btn",
     ".download_nbpresent_html",

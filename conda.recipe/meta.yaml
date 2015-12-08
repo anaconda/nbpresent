@@ -20,6 +20,8 @@ requirements:
     - funcsigs
 
 test:
+  files:
+    - package.json
   requires:
     - coverage
     - mock

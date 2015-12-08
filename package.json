@@ -53,7 +53,8 @@
     "less": "bin/less.sh",
     "watch:less": "watch 'npm run less' src/less",
     "build": "npm run browserify && npm run less && npm run browserify-deps && npm run browserify-standalone && npm run browserify-notebook",
-    "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-notebook watch:browserify-standalone watch:less"
+    "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-notebook watch:browserify-standalone watch:less",
+    "test": "python -m nose nbpresent"
   },
   "version": "0.4.0"
 }
