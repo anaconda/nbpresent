@@ -12,14 +12,15 @@ RUN conda install \
     -c javascript \
     -c nbcio \
     bokeh \
-    bqplot \
     nbbrowserpdf \
     nodejs \
   && conda env export
 
 RUN pip install \
-  --no-cache-dir \
-  qgrid
+    --no-cache-dir \
+    bqplot \
+    qgrid \
+  && pip freeze
 
 RUN npm install && npm run dist
 RUN python setup.py develop
