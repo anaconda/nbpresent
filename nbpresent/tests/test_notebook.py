@@ -1,12 +1,14 @@
-from __future__ import unicode_literals
-
 import os
+import sys
+from tempfile import TemporaryDirectory
 
 try:
     from unittest.mock import patch
 except ImportError:
     # py2
     from mock import patch
+
+import requests
 
 from notebook import jstest
 from nbpresent.install import install
@@ -33,13 +35,62 @@ class NBPresentTestController(jstest.JSController):
             self.cmd = self.cmd + extra_args
 
     def setup(self):
-        super(NBPresentTestController, self).setup()
+        # call the hacked setup
+        self._setup()
+
+        # patch
         with patch.dict(os.environ, self.env):
             install_kwargs = dict(enable=True, user=True)
             if "CONDA_ENV_PATH" in os.environ:
                 install_kwargs.pop("user")
                 install_kwargs.update(prefix=os.environ["CONDA_ENV_PATH"])
             install(**install_kwargs)
+
+    def _setup(self):
+        """ copy pasta from
+            https://github.com/jupyter/notebook/blob/4.0.6/notebook/jstest.py
+            master has some changes that will ship with 4.1...
+        """
+        self.ipydir = TemporaryDirectory()
+        self.config_dir = TemporaryDirectory()
+        self.nbdir = TemporaryDirectory()
+        self.home = TemporaryDirectory()
+        self.env = {
+            'HOME': self.home.name,
+            'JUPYTER_CONFIG_DIR': self.config_dir.name,
+            'IPYTHONDIR': self.ipydir.name,
+        }
+        self.dirs.append(self.ipydir)
+        self.dirs.append(self.home)
+        self.dirs.append(self.config_dir)
+        self.dirs.append(self.nbdir)
+        os.makedirs(os.path.join(self.nbdir.name, 'sub dir1', 'sub dir 1a'))
+        os.makedirs(os.path.join(self.nbdir.name, 'sub dir2', 'sub dir 1b'))
+
+        if self.xunit:
+            self.add_xunit()
+
+        # If a url was specified, use that for the testing.
+        if self.url:
+            try:
+                alive = requests.get(self.url).status_code == 200
+            except:
+                alive = False
+
+            if alive:
+                self.cmd.append("--url=%s" % self.url)
+            else:
+                raise Exception('Could not reach "%s".' % self.url)
+        else:
+            # start the ipython notebook, so we get the port number
+            self.server_port = 0
+            self._init_server()
+            if self.server_port:
+                self.cmd.append("--port=%i" % self.server_port)
+            else:
+                # don't launch tests if the server didn't start
+                self.cmd = [sys.executable, '-c', 'raise SystemExit(1)']
+
 
 
 def prepare_controllers(options):
