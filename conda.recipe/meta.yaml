@@ -24,14 +24,14 @@ test:
     - package.json
   requires:
     - coverage
+    - fontconfig
+    - freetype
     - mock
     - nodejs
     - nose
     - notebook
     - python
     - requests
-    - phantomjs
-    - freetype
 
 about:
   summary: Next generation slides for Jupyter Notebooks
