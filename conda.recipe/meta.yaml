@@ -31,6 +31,7 @@ test:
     - python
     - requests
     - phantomjs
+    - freetype
 
 about:
   summary: Next generation slides for Jupyter Notebooks
