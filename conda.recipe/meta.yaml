@@ -18,6 +18,8 @@ requirements:
     - python
     - notebook
     - funcsigs
+    - nbsetuptools
+    - nbwrapper
 
 test:
   imports:
