@@ -30,6 +30,7 @@ test:
     - nodejs
     - nose
     - notebook
+    - phantomjs
     - python
     - requests
 
