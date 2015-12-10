@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "casperjs": "^1.1.0-beta3",
-    "phantomjs": "^1.9.19"
+    "casperjs": "^1.1.0-beta3"
   }
 }

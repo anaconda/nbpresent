@@ -30,6 +30,7 @@ test:
     - notebook
     - python
     - requests
+    - phantomjs
 
 about:
   summary: Next generation slides for Jupyter Notebooks
