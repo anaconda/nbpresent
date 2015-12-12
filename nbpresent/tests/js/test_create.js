@@ -3,10 +3,8 @@ var t = casper.test;
 function create_test(){
   var img = 0;
 
-  var screenshot = (function(){
-    this.captureSelector("screenshots/capture_" + (img++) + ".png", "body");
-  }).bind(this);
-
+  var screenshot = nbpresent.screenshot.bind(this);
+  
   // the actual test
   this
     .waitUntilVisible("#nbpresent_sorter_btn")

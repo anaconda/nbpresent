@@ -1,6 +1,6 @@
 import os
 import sys
-import subprocess
+import glob
 
 try:
     from unittest.mock import patch
@@ -32,13 +32,18 @@ class NBPresentTestController(jstest.JSController):
         extra_args = kwargs.pop('extra_args', None)
         super(NBPresentTestController, self).__init__(section, *args, **kwargs)
 
-        test_cases = os.path.join(here, 'js')
+        test_cases = glob.glob(os.path.join(here, 'js', 'test_*.js'))
         js_test_dir = jstest.get_js_test_dir()
-        includes = '--includes=' + os.path.join(js_test_dir, 'util.js')
 
-        self.cmd = ['casperjs', 'test',
-                    test_cases, includes,
-                    '--engine={}'.format(self.engine)]
+        includes = [
+            os.path.join(js_test_dir, 'util.js')
+        ] + glob.glob(os.path.join(here, 'js', '_*.js'))
+
+        self.cmd = [
+            'casperjs', 'test',
+            '--includes={}'.format(",".join(includes)),
+            '--engine={}'.format(self.engine)
+        ] + test_cases
 
         if extra_args is not None:
             self.cmd = self.cmd + extra_args
