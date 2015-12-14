@@ -34,6 +34,8 @@ function create_test(){
     .dragRelease("the weight attribute", ".attr_name", {right: 50})
     .canSeeAndClick("the manual layout button",
       ".nbpresent_regiontree .fa-arrows")
+    .dragRelease("a draggable region",
+      ".nbpresent_editor .region.active .region_bg", {right: 50})
     .canSeeAndClick("the exit edit mode button", ".fa-chevron-circle-down")
     .canSeeAndClick("the sorter button", "#nbpresent_sorter_btn")
     .waitWhileVisible(".nbpresent_sorter")
