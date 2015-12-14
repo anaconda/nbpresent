@@ -31,13 +31,13 @@ function create_test(){
     .canSeeAndClick("the treemap layout button",
       ".nbpresent_regiontree .fa-tree")
     .then(function(){
-      this.mouse.down(".nbpresent_regiontree .attr_name");
+      this.mouse.down(166, 115);
     })
     .then(function(){
-      this.mouse.move(200, 200);
+      this.mouse.move(266, 115);
     })
     .then(function(){
-      this.mouse.up(".nbpresent_regiontree .attr_name");
+      this.mouse.up(266, 115);
     })
     .canSeeAndClick("the manual layout button",
       ".nbpresent_regiontree .fa-arrows")
