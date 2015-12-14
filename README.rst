@@ -123,6 +123,18 @@ with the ``symlink``, ``force`` and ``enable`` options:
 
     python -m nbpresent.install --overwrite --symlink --enable --user
 
+Run the tests
+
+.. code:: shell
+
+    npm run test
+
+Build the conda package
+
+.. code:: shell
+
+    npm run conda-build
+
 Developing with conda
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -139,26 +151,3 @@ to store assets and configuration:
 .. code:: shell
 
     python -m nbpresent.install --overwrite --symlink --enable --prefix="${CONDA_ENV_PATH}"
-
-Developing with docker compose
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-A number of intermediate Dockerfiles are available for different
-development workflows. These are most easily managed with
-docker-compose.
-
-For building a pristine conda environment, use ``conda_base``. For a
-build of nbpresent, with all tests, use ``conda_build``. For a live,
-running notebook with nbpresent installed, use ``conda``.
-
-        META: TODO: make templates?
-
-Here is the build chain:
-
-.. code:: shell
-
-    docker-compose build conda_base && \
-    docker-compose build conda_build && \
-    docker-compose build conda && \
-    docker-compose up conda
-

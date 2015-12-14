@@ -60,7 +60,6 @@
       });
     })
     .then(function(){
-      console.log(JSON.stringify(meta, null, 2));
       _.map(tests, function(test, message){
         this.test.assert(test(_.get(meta, path)),
           "I remember " + message + " in " + path);
@@ -76,7 +75,6 @@
       y = it.top + it.height / 2;
       x1 = x + (opts.right || -opts.left || 0);
       y1 = y + (opts.down || -opts.up || 0);
-      console.log(JSON.stringify(it), x, y, x1, y1);
     })
     .then(function(){
       this.mouse.down(x, y);

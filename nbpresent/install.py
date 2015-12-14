@@ -2,7 +2,7 @@
 
 import argparse
 import os
-import subprocess
+# import subprocess
 from os.path import (
     abspath,
     dirname,
@@ -15,7 +15,7 @@ try:
 except ImportError:
     from funcsigs import signature
 
-from jupyter_core.paths import jupyter_config_dir, ENV_CONFIG_PATH
+from jupyter_core.paths import jupyter_config_dir  # , ENV_CONFIG_PATH
 
 
 def install(enable=False, **kwargs):
