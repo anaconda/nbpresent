@@ -30,15 +30,8 @@ function create_test(){
       ".nbpresent_regiontree .region")
     .canSeeAndClick("the treemap layout button",
       ".nbpresent_regiontree .fa-tree")
-    .then(function(){
-      this.mouse.down(166, 115);
-    })
-    .then(function(){
-      this.mouse.move(266, 115);
-    })
-    .then(function(){
-      this.mouse.up(266, 115);
-    })
+    .canSeeAndClick("the weight attribute", ".attr_name")
+    .dragRelease("the weight attribute", ".attr_name", {right: 50})
     .canSeeAndClick("the manual layout button",
       ".nbpresent_regiontree .fa-arrows")
     .canSeeAndClick("the exit edit mode button", ".fa-chevron-circle-down")

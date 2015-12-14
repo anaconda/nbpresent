@@ -29,6 +29,35 @@
       });
   }
 
+  root.dragRelease = function(message, selector, opts){
+    var it, x, y, x1, y1;
+    return this.then(function(){
+      it = this.getElementBounds(selector);
+      x = it.left + it.width / 2;
+      y = it.top + it.height / 2;
+      x1 = x + (opts.right || -opts.left || 0);
+      y1 = y + (opts.down || -opts.up || 0);
+      console.log(JSON.stringify(it), x, y, x1, y1);
+    })
+    .then(function(){
+      this.mouse.down(x, y);
+      console.log("down", x, y)
+    })
+    .then(function(){
+      this.screenshot("click " + message);
+      this.mouse.move(x1, y1);
+      console.log("move", x1, y1)
+    })
+    .then(function(){
+      this.screenshot("drag " + message);
+      this.mouse.up(x1, y1);
+      console.log("up", x1, y1)
+    })
+    .then(function(){
+      this.screenshot("release " + message);
+    });
+  };
+
   root.baseline_notebook = function(){
     // the actual test
     this.set_cell_text(0, [
