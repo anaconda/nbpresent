@@ -1,5 +1,6 @@
 function create_test(){
   this.baseline_notebook();
+  var _ = require("../../../node_modules/lodash");
 
   this
     .canSeeAndClick("the sorter button", "#nbpresent_sorter_btn")
@@ -10,6 +11,19 @@ function create_test(){
     .canSeeAndClick("a slide template in the library",
       ".nbpresent_template_library .slide")
     .waitWhileVisible(".nbpresent_template_library")
+    .hasMeta("nbpresent.slides", {
+      "one slide": function(slides){
+        return _(slides).toArray().value().length === 1;
+      },
+      "three regions": function(slides){
+        var regions = _(_(slides).toArray()
+          .first()
+          .regions)
+          .toArray()
+          .value();
+        return regions.length === 3;
+      },
+    })
     .canSeeAndClick("a region in the sorter", ".slides_wrap .slide .region")
     .canSeeAndClick("input link button",
       ".region_toolbar .fa-terminal")

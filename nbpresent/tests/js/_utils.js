@@ -1,6 +1,7 @@
 ;(function(){
   "use strict";
   var root = casper;
+  var _ = require("../../../node_modules/lodash");
 
   var _img = 0;
 
@@ -29,6 +30,44 @@
       });
   }
 
+  root.hasMeta = function(path, tests){
+    var meta;
+
+    this.thenEvaluate(function () {
+      require(['base/js/events'], function (events) {
+        IPython._save_success = IPython._save_failed = false;
+        events.on('notebook_saved.Notebook', function () {
+          IPython._save_success = true;
+        });
+        events.on('notebook_save_failed.Notebook',
+          function (event, error) {
+            IPython._save_failed = "save failed with " + error;
+        });
+        IPython.notebook.save_notebook();
+      });
+  });
+
+  this.waitFor(function () {
+    return this.evaluate(function(){
+      return IPython._save_failed || IPython._save_success;
+    });
+  });
+
+  return this
+    .then(function(){
+      meta = this.evaluate(function(){
+        return Jupyter.notebook.metadata;
+      });
+    })
+    .then(function(){
+      console.log(JSON.stringify(meta, null, 2));
+      _.map(tests, function(test, message){
+        this.test.assert(test(_.get(meta, path)),
+          "I remember " + message + " in " + path);
+      }, this)
+    });
+  }
+
   root.dragRelease = function(message, selector, opts){
     var it, x, y, x1, y1;
     return this.then(function(){
@@ -41,17 +80,14 @@
     })
     .then(function(){
       this.mouse.down(x, y);
-      console.log("down", x, y)
     })
     .then(function(){
       this.screenshot("click " + message);
       this.mouse.move(x1, y1);
-      console.log("move", x1, y1)
     })
     .then(function(){
       this.screenshot("drag " + message);
       this.mouse.up(x1, y1);
-      console.log("up", x1, y1)
     })
     .then(function(){
       this.screenshot("release " + message);

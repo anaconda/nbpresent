@@ -24,6 +24,7 @@
     "less": "~2.5.3",
     "less-plugin-autoprefix": "~1.5.1",
     "less-plugin-clean-css": "~1.5.1",
+    "lodash": "^3.10.1",
     "uglifyify": "~3.0.1",
     "watch": "~0.16.0"
   },
@@ -55,7 +56,7 @@
     "build": "npm run browserify && npm run less && npm run browserify-deps && npm run browserify-standalone && npm run browserify-notebook",
     "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-notebook watch:browserify-standalone watch:less",
     "test": "python -m nose nbpresent",
-    "conda": "conda build conda.recipe -c javascript -c mutirri"
+    "conda-build": "conda build conda.recipe -c javascript -c mutirri"
   },
   "version": "0.4.0"
 }
