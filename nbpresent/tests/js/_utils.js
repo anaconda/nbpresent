@@ -1,21 +1,49 @@
 ;(function(){
   "use strict";
-  var root = this.nbpresent_utils ? this.nbpresent_utils :
-    this.nbpresent_utils = {};
+  var root = casper;
 
-  var img = 0;
+  var _img = 0;
 
-  root.screenshot = function(){
-    this.captureSelector("screenshots/capture_" + (img++) + ".png", "body");
+  function nextId(){
+    return ("000" + (_img++)).slice(-4);
+  }
+
+  function slug(text){
+    return text.replace(/[^a-z0-9]/g, "_");
+  }
+
+  root.screenshot = function(message){
+    this.captureSelector(
+      "screenshots/" + nextId() + "_" + slug(message) + ".png",
+      "body"
+    );
   }
 
   root.canSeeAndClick = function(message, visible, click){
     return this
       .waitUntilVisible(visible)
       .then(function(){
-        t.assertExists(click || visible, "I can see and click " + message);
+        this.test.assertExists(click || visible, "I can see and click " + message);
+        this.screenshot(message);
         this.click(click || visible);
       });
+  }
+
+  root.baseline_notebook = function(){
+    // the actual test
+    this.set_cell_text(0, [
+      'from IPython.display import Markdown',
+      'Markdown("# Hello World!")'
+    ].join("\n"));
+    this.execute_cell_then(0);
+
+    this.append_cell();
+    this.set_cell_text(1, [
+      'from ipywidgets import FloatSlider',
+      'x = FloatSlider()',
+      'x'
+    ].join("\n"));
+    this.execute_cell_then(1);
   }
 
 }).call(this);

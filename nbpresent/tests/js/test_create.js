@@ -1,25 +1,52 @@
-var t = casper.test;
-
 function create_test(){
-  var img = 0;
+  this.baseline_notebook();
 
-  var screenshot = nbpresent_utils.screenshot.bind(this);
-
-  this.canSeeAndClick = nbpresent_utils.canSeeAndClick.bind(this);
-
-  // the actual test
   this
     .canSeeAndClick("the sorter button", "#nbpresent_sorter_btn")
     .canSeeAndClick("the tour",
       ".tour-nbpresent", ".tour-nbpresent .popover-navigation > .btn")
     .waitWhileVisible(".tour-nbpresent")
     .canSeeAndClick("the add slide button", ".deck_toolbar .fa-plus-square-o")
-    .canSeeAndClick("a slide in the library",
+    .canSeeAndClick("a slide template in the library",
       ".nbpresent_template_library .slide")
     .waitWhileVisible(".nbpresent_template_library")
+    .canSeeAndClick("a region in the sorter", ".slides_wrap .slide .region")
+    .canSeeAndClick("input link button",
+      ".region_toolbar .fa-terminal")
+    .canSeeAndClick("a free region in the sorter",
+      ".slides_wrap .slide .region:not(.content_source)")
+    .canSeeAndClick("output link button",
+      ".region_toolbar .fa-image")
+    .canSeeAndClick("the presenter button", "#nbpresent_present_btn")
+    .canSeeAndClick("the presenter", ".nbpresent_presenter")
+    .then(function(){
+      return this.mouse.move(1430, 890);
+    })
+    .wait(1)
+    .canSeeAndClick("the return to notebook button",
+      ".fa-book")
     .canSeeAndClick("the edit button", ".deck_toolbar .fa-edit")
     .canSeeAndClick("a region in the region tree",
       ".nbpresent_regiontree .region")
+    .canSeeAndClick("the treemap layout button",
+      ".nbpresent_regiontree .fa-tree")
+    .then(function(){
+      this.mouse.down(".nbpresent_regiontree .attr_name");
+    })
+    .then(function(){
+      this.mouse.move(200, 200);
+    })
+    .then(function(){
+      this.mouse.up(".nbpresent_regiontree .attr_name");
+    })
+    .canSeeAndClick("the manual layout button",
+      ".nbpresent_regiontree .fa-arrows")
+    .canSeeAndClick("the exit edit mode button", ".fa-chevron-circle-down")
+    .canSeeAndClick("the sorter button", "#nbpresent_sorter_btn")
+    .waitWhileVisible(".nbpresent_sorter")
+    .waitWhileVisible(".nbpresent_regiontree")
+    .canSeeAndClick("the presenter button", "#nbpresent_present_btn")
+    .canSeeAndClick("the presenter", ".nbpresent_presenter")
 }
 
 
