@@ -1,6 +1,7 @@
 function create_test(){
+  _ = this.vendor._;
+
   this.baseline_notebook();
-  var _ = require("../../../node_modules/lodash");
 
   this
     .canSeeAndClick("the sorter button", "#nbpresent_sorter_btn")

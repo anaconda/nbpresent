@@ -1,2 +1,4 @@
+env
 "${PREFIX}/bin/npm" install
-"${PREFIX}/bin/npm" run test
+NBPRESENT_TEST_MODULES="${PWD}/node_modules" \
+  "${PREFIX}/bin/npm" run test

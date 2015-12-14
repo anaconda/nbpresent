@@ -1,9 +1,13 @@
 ;(function(){
   "use strict";
-  var root = casper;
-  var _ = require("../../../node_modules/lodash");
 
-  var _img = 0;
+  var system = require('system');
+
+  var root = casper,
+    _img = 0,
+    node_modules = system.env.NBPRESENT_TEST_MODULES || "../../../node_modules",
+    vendor = root.vendor = root.vendor ? root.vendor : (root.vendor = {}),
+    _ = root.vendor._ = require(node_modules + "/lodash");
 
   function nextId(){
     return ("000" + (_img++)).slice(-4);
