@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+from nbpresent._version import __version__
+
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
@@ -11,10 +14,10 @@ templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'nbpresent'
-copyright = '2015, Nicholas Bollweg'
+copyright = '2015, Continuum Analytics'
 author = 'Nicholas Bollweg'
-version = '0.4.1'
-release = '0.4.1'
+version = __version__
+release = __version__
 language = None
 exclude_patterns = []
 pygments_style = 'sphinx'
