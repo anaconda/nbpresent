@@ -52,6 +52,7 @@
     "dist": "EXTRA='-g uglifyify' npm run build",
     "esdoc": "esdoc -c .esdoc",
     "less": "bin/less.sh",
+    "sphinx": "cd sphinx && make html",
     "test": "python -m nose nbpresent",
     "watch:browserify-deps": "watch 'EXTRA=--debug npm run browserify-deps' src/es6",
     "watch:browserify-notebook": "watch 'EXTRA=--debug npm run browserify-notebook' src/es6",
