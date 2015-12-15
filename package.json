@@ -20,6 +20,7 @@
     "browserify": "~11.2.0",
     "casperjs": "^1.1.0-beta3",
     "disc": "^1.3.2",
+    "esdoc": "^0.4.3",
     "eslint": "~1.7.1",
     "less": "~2.5.3",
     "less-plugin-autoprefix": "~1.5.1",
@@ -39,24 +40,25 @@
   "name": "nbpresent",
   "repository": {
     "type": "git",
-    "url": "git://github.com/bollwyvl/nbpresent.git"
+    "url": "git://github.com/Anaconda-Server/nbpresent.git"
   },
   "scripts": {
-    "dist": "EXTRA='-g uglifyify' npm run build",
-    "browserify": "bin/browserify.sh",
-    "watch:browserify": "watch 'npm run browserify' src/js",
     "browserify-deps": "bin/browserify-deps.sh",
-    "watch:browserify-deps": "watch 'EXTRA=--debug npm run browserify-deps' src/es6",
     "browserify-notebook": "bin/browserify-notebook.sh",
-    "watch:browserify-notebook": "watch 'EXTRA=--debug npm run browserify-notebook' src/es6",
     "browserify-standalone": "bin/browserify-standalone.sh",
-    "watch:browserify-standalone": "watch 'EXTRA=--debug npm run browserify-standalone' src/es6",
-    "less": "bin/less.sh",
-    "watch:less": "watch 'npm run less' src/less",
+    "browserify": "bin/browserify.sh",
     "build": "npm run browserify && npm run less && npm run browserify-deps && npm run browserify-standalone && npm run browserify-notebook",
-    "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-notebook watch:browserify-standalone watch:less",
+    "conda-build": "conda build conda.recipe -c javascript -c mutirri",
+    "dist": "EXTRA='-g uglifyify' npm run build",
+    "esdoc": "esdoc -c .esdoc",
+    "less": "bin/less.sh",
     "test": "python -m nose nbpresent",
-    "conda-build": "conda build conda.recipe -c javascript -c mutirri"
+    "watch:browserify-deps": "watch 'EXTRA=--debug npm run browserify-deps' src/es6",
+    "watch:browserify-notebook": "watch 'EXTRA=--debug npm run browserify-notebook' src/es6",
+    "watch:browserify-standalone": "watch 'EXTRA=--debug npm run browserify-standalone' src/es6",
+    "watch:browserify": "watch 'npm run browserify' src/js",
+    "watch:less": "watch 'npm run less' src/less",
+    "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-notebook watch:browserify-standalone watch:less"
   },
   "version": "0.4.0"
 }
