@@ -15,6 +15,9 @@ requirements:
     - nodejs
     - python
     - sphinx
+    - flake8
+    - nose
+    - setuptools
   run:
     - python
     - notebook
@@ -35,6 +38,8 @@ test:
     - phantomjs
     - python
     - requests
+    - flake8
+    - nose
 
 about:
   summary: Next generation slides for Jupyter Notebooks

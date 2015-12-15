@@ -24,8 +24,6 @@ setup(
                  "License :: OSI Approved :: BSD License"],
     packages=["nbpresent"],
     include_package_data=True,
-    install_requires=["notebook"],
-    tests_require=["flake8", "nose"],
     entry_points={
         'console_scripts': ['nbpresent=nbpresent.export:main'],
     }
