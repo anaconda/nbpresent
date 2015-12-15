@@ -20,6 +20,7 @@ requirements:
     - python
     - setuptools
     - sphinx
+    - funcsigs
   run:
     - funcsigs
     - notebook
@@ -33,15 +34,16 @@ test:
     - flake8
     - fontconfig
     - freetype
+    - funcsigs
     - ipywidgets
     - mock
     - nodejs
-    - nose
     - nose
     - notebook
     - phantomjs
     - python
     - requests
+
 
 about:
   summary: Next generation slides for Jupyter Notebooks
