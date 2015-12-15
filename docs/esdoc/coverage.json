@@ -1,0 +1,359 @@
+{
+  "coverage": "0%",
+  "expectCount": 208,
+  "actualCount": 0,
+  "files": {
+    "src/es6/editor.es6": {
+      "expectCount": 23,
+      "actualCount": 0,
+      "undocumentLines": [
+        50,
+        55,
+        53,
+        45,
+        10,
+        65,
+        70,
+        41,
+        15,
+        11,
+        32,
+        93,
+        40,
+        44,
+        29,
+        61,
+        14,
+        13,
+        23,
+        12,
+        97,
+        18,
+        19
+      ]
+    },
+    "src/es6/sorter.es6": {
+      "expectCount": 45,
+      "actualCount": 0,
+      "undocumentLines": [
+        319,
+        112,
+        350,
+        95,
+        85,
+        13,
+        402,
+        482,
+        14,
+        180,
+        317,
+        132,
+        204,
+        38,
+        431,
+        54,
+        128,
+        316,
+        84,
+        377,
+        36,
+        474,
+        447,
+        467,
+        349,
+        459,
+        32,
+        293,
+        25,
+        24,
+        65,
+        193,
+        172,
+        176,
+        23,
+        411,
+        58,
+        16,
+        15,
+        451,
+        69,
+        274,
+        301,
+        20,
+        41
+      ]
+    },
+    "src/es6/regiontree.es6": {
+      "expectCount": 16,
+      "actualCount": 0,
+      "undocumentLines": [
+        49,
+        43,
+        6,
+        82,
+        7,
+        27,
+        42,
+        31,
+        38,
+        216,
+        11,
+        9,
+        8,
+        76,
+        95,
+        34
+      ]
+    },
+    "src/es6/speaker/base.es6": {
+      "expectCount": 12,
+      "actualCount": 0,
+      "undocumentLines": [
+        77,
+        19,
+        5,
+        55,
+        6,
+        8,
+        68,
+        18,
+        9,
+        30,
+        7,
+        26
+      ]
+    },
+    "src/es6/templates.es6": {
+      "expectCount": 10,
+      "actualCount": 0,
+      "undocumentLines": [
+        75,
+        38,
+        39,
+        52,
+        59,
+        74,
+        56,
+        44,
+        40,
+        94
+      ]
+    },
+    "src/es6/presenter/base.es6": {
+      "expectCount": 19,
+      "actualCount": 0,
+      "undocumentLines": [
+        45,
+        19,
+        156,
+        23,
+        162,
+        20,
+        29,
+        82,
+        44,
+        69,
+        53,
+        36,
+        40,
+        78,
+        28,
+        24,
+        21,
+        86,
+        60
+      ]
+    },
+    "src/es6/style/base.es6": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/es6/cells/notebook.es6": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        5,
+        6
+      ]
+    },
+    "src/es6/cells/standalone.es6": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        10,
+        11,
+        27,
+        40
+      ]
+    },
+    "src/es6/layout/manual.es6": {
+      "expectCount": 12,
+      "actualCount": 0,
+      "undocumentLines": [
+        5,
+        43,
+        13,
+        7,
+        10,
+        21,
+        17,
+        9,
+        8,
+        30,
+        24,
+        26
+      ]
+    },
+    "src/es6/mini.es6": {
+      "expectCount": 8,
+      "actualCount": 0,
+      "undocumentLines": [
+        6,
+        9,
+        27,
+        7,
+        23,
+        17,
+        8,
+        47
+      ]
+    },
+    "src/es6/mode/notebook.es6": {
+      "expectCount": 13,
+      "actualCount": 0,
+      "undocumentLines": [
+        16,
+        17,
+        65,
+        37,
+        129,
+        57,
+        31,
+        50,
+        25,
+        32,
+        28,
+        23,
+        61
+      ]
+    },
+    "src/es6/mode/standalone.es6": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        8,
+        9,
+        19,
+        17
+      ]
+    },
+    "src/es6/mode/base.es6": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        3,
+        4,
+        10,
+        5
+      ]
+    },
+    "src/es6/tour.es6": {
+      "expectCount": 7,
+      "actualCount": 0,
+      "undocumentLines": [
+        5,
+        7,
+        233,
+        8,
+        243,
+        238,
+        14
+      ]
+    },
+    "src/es6/presenter/notebook.es6": {
+      "expectCount": 3,
+      "actualCount": 0,
+      "undocumentLines": [
+        7,
+        8,
+        11
+      ]
+    },
+    "src/es6/speaker/notebook.es6": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        3,
+        4
+      ]
+    },
+    "src/es6/parts.es6": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        1,
+        7
+      ]
+    },
+    "src/es6/style/slab.es6": {
+      "expectCount": 3,
+      "actualCount": 0,
+      "undocumentLines": [
+        5,
+        7,
+        6
+      ]
+    },
+    "src/es6/presenter/standalone.es6": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        4,
+        5
+      ]
+    },
+    "src/es6/toolbar.es6": {
+      "expectCount": 6,
+      "actualCount": 0,
+      "undocumentLines": [
+        5,
+        14,
+        26,
+        6,
+        20,
+        32
+      ]
+    },
+    "src/es6/tree.es6": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        5,
+        6,
+        16,
+        7
+      ]
+    },
+    "src/es6/layout/treemap.es6": {
+      "expectCount": 5,
+      "actualCount": 0,
+      "undocumentLines": [
+        7,
+        8,
+        16,
+        12,
+        21
+      ]
+    },
+    "src/es6/d3.bbox.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        10
+      ]
+    }
+  }
+}

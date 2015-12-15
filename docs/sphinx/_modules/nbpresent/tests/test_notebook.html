@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nbpresent.tests.test_notebook &mdash; nbpresent 0.4.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.4.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="nbpresent 0.4.2 documentation" href="../../../index.html" />
+    <link rel="up" title="nbpresent" href="../../nbpresent.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for nbpresent.tests.test_notebook</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c"># py2</span>
+    <span class="kn">from</span> <span class="nn">mock</span> <span class="kn">import</span> <span class="n">patch</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">from</span> <span class="nn">notebook</span> <span class="kn">import</span> <span class="n">jstest</span>
+<span class="kn">from</span> <span class="nn">ipython_genutils.tempdir</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
+
+<span class="kn">from</span> <span class="nn">nbpresent.install</span> <span class="kn">import</span> <span class="n">install</span>
+
+<span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+
+<span class="c"># global npm installs are bad, add the local node_modules to the path</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;PATH&quot;</span><span class="p">],</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s">&quot;node_modules&quot;</span><span class="p">,</span> <span class="s">&quot;.bin&quot;</span><span class="p">))</span>
+<span class="p">])</span>
+
+
+<div class="viewcode-block" id="NBPresentTestController"><a class="viewcode-back" href="../../../auto/nbpresent.tests.html#nbpresent.tests.test_notebook.NBPresentTestController">[docs]</a><span class="k">class</span> <span class="nc">NBPresentTestController</span><span class="p">(</span><span class="n">jstest</span><span class="o">.</span><span class="n">JSController</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Javascript test subclass that installs widget nbextension in test</span>
+<span class="sd">        environment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">extra_args</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;extra_args&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NBPresentTestController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">test_cases</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s">&#39;js&#39;</span><span class="p">,</span> <span class="s">&#39;test_*.js&#39;</span><span class="p">))</span>
+        <span class="n">js_test_dir</span> <span class="o">=</span> <span class="n">jstest</span><span class="o">.</span><span class="n">get_js_test_dir</span><span class="p">()</span>
+
+        <span class="n">includes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">js_test_dir</span><span class="p">,</span> <span class="s">&#39;util.js&#39;</span><span class="p">)</span>
+        <span class="p">]</span> <span class="o">+</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s">&#39;js&#39;</span><span class="p">,</span> <span class="s">&#39;_*.js&#39;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&#39;casperjs&#39;</span><span class="p">,</span> <span class="s">&#39;test&#39;</span><span class="p">,</span>
+            <span class="s">&#39;--includes={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">includes</span><span class="p">)),</span>
+            <span class="s">&#39;--engine={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
+        <span class="p">]</span> <span class="o">+</span> <span class="n">test_cases</span>
+
+        <span class="k">if</span> <span class="n">extra_args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">+</span> <span class="n">extra_args</span>
+
+<div class="viewcode-block" id="NBPresentTestController.setup"><a class="viewcode-back" href="../../../auto/nbpresent.tests.html#nbpresent.tests.test_notebook.NBPresentTestController.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># call the hacked setup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup</span><span class="p">()</span>
+
+        <span class="c"># patch</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">):</span>
+            <span class="n">install_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">enable</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s">&quot;CONDA_ENV_PATH&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+                <span class="n">install_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">)</span>
+                <span class="n">install_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;CONDA_ENV_PATH&quot;</span><span class="p">])</span>
+            <span class="n">install</span><span class="p">(</span><span class="o">**</span><span class="n">install_kwargs</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; copy pasta from</span>
+<span class="sd">            https://github.com/jupyter/notebook/blob/4.0.6/notebook/jstest.py</span>
+<span class="sd">            master has some changes that will ship with 4.1...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ipydir</span> <span class="o">=</span> <span class="n">TemporaryDirectory</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_dir</span> <span class="o">=</span> <span class="n">TemporaryDirectory</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbdir</span> <span class="o">=</span> <span class="n">TemporaryDirectory</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">home</span> <span class="o">=</span> <span class="n">TemporaryDirectory</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;HOME&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">home</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s">&#39;JUPYTER_CONFIG_DIR&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_dir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s">&#39;IPYTHONDIR&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipydir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ipydir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">home</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbdir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbdir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;sub dir1&#39;</span><span class="p">,</span> <span class="s">&#39;sub dir 1a&#39;</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbdir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;sub dir2&#39;</span><span class="p">,</span> <span class="s">&#39;sub dir 1b&#39;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xunit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_xunit</span><span class="p">()</span>
+
+        <span class="c"># If a url was specified, use that for the testing.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">alive</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">alive</span> <span class="o">=</span> <span class="bp">False</span>
+
+            <span class="k">if</span> <span class="n">alive</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;--url=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;Could not reach &quot;</span><span class="si">%s</span><span class="s">&quot;.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># start the ipython notebook, so we get the port number</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">server_port</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_server</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">server_port</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;--port=</span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">server_port</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># don&#39;t launch tests if the server didn&#39;t start</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s">&#39;-c&#39;</span><span class="p">,</span> <span class="s">&#39;raise SystemExit(1)&#39;</span><span class="p">]</span>
+
+</div>
+<div class="viewcode-block" id="prepare_controllers"><a class="viewcode-back" href="../../../auto/nbpresent.tests.html#nbpresent.tests.test_notebook.prepare_controllers">[docs]</a><span class="k">def</span> <span class="nf">prepare_controllers</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Monkeypatched prepare_controllers for running widget js tests</span>
+
+<span class="sd">    instead of notebook js tests</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">testgroups</span><span class="p">:</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">testgroups</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">NBPresentTestController</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">extra_args</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">extra_args</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">],</span> <span class="p">[]</span>
+
+</div>
+<div class="viewcode-block" id="test_notebook"><a class="viewcode-back" href="../../../auto/nbpresent.tests.html#nbpresent.tests.test_notebook.test_notebook">[docs]</a><span class="k">def</span> <span class="nf">test_notebook</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">jstest</span><span class="p">,</span> <span class="s">&#39;prepare_controllers&#39;</span><span class="p">,</span> <span class="n">prepare_controllers</span><span class="p">):</span>
+        <span class="n">jstest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">test_notebook</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../../nbpresent.html">nbpresent</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Continuum Analytics.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

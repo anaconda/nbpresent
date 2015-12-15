@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/es6/regiontree.es6 | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="git://github.com/Anaconda-Server/nbpresent.git">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/editor.es6~Editor.html">Editor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mini.es6~MiniSlide.html">MiniSlide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/regiontree.es6~RegionTree.html">RegionTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/sorter.es6~Sorter.html">Sorter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/templates.es6~TemplateLibrary.html">TemplateLibrary</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/toolbar.es6~Toolbar.html">Toolbar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/tour.es6~NbpresentTour.html">NbpresentTour</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/tree.es6~Tree.html">Tree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bbox">bbox</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PART">PART</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PART_SELECT">PART_SELECT</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/cells</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/cells/notebook.es6~CellManager.html">CellManager</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/cells/standalone.es6~CellManager.html">CellManager</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/layout</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/layout/manual.es6~ManualLayout.html">ManualLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/layout/treemap.es6~TreemapLayout.html">TreemapLayout</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/mode</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/base.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/notebook.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/standalone.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/presenter</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/base.es6~Presenter.html">Presenter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/notebook.es6~NotebookPresenter.html">NotebookPresenter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/standalone.es6~StandalonePresenter.html">StandalonePresenter</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/speaker</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/speaker/base.es6~SpeakerBase.html">SpeakerBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/speaker/notebook.es6~NotebookSpeaker.html">NotebookSpeaker</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/style</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/style/base.es6~BaseStyle.html">BaseStyle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/style/slab.es6~SlabStyle.html">SlabStyle</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/es6/regiontree.es6</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {d3, uuid} from &quot;nbpresent-deps&quot;;
+
+import {Toolbar} from &quot;./toolbar&quot;;
+import {MiniSlide} from &quot;./mini&quot;;
+
+class RegionTree {
+  constructor(slide, region){
+    this.slide = slide;
+    this.selectedRegion = region;
+
+    this.mini = (new MiniSlide(this.selectedRegion))
+      .regions((d) =&gt; {
+        var obj = {};
+        obj[d.region.id] = d.region;
+        return obj;
+      });
+
+    this.initUI();
+    this.update();
+
+    this.update = this.update.bind(this);
+
+    this.slide.on(&quot;update&quot;, this.update);
+    this.selectedRegion.on(&quot;update&quot;, this.update);
+  }
+
+  destroy() {
+    this.$ui.transition()
+      .style({opacity: 0})
+      .remove();
+    this.killed = true;
+  }
+
+  width() {
+    return 300;
+  }
+
+  layout(layout){
+    this.slide.set(&quot;layout&quot;, layout);
+  }
+
+  initUI(){
+    this.$ui = d3.select(&quot;body&quot;)
+      .append(&quot;div&quot;)
+      .classed({nbpresent_regiontree: 1});
+
+    let toolbar = new Toolbar();
+
+    this.$toolbar = this.$ui.append(&quot;div&quot;)
+      .datum([
+        [{
+          icon: &quot;plus-square-o&quot;,
+          click: () =&gt; this.addRegion(),
+          tip: &quot;Add Region&quot;
+        }],
+        // TODO: make this extensible
+        [{
+          icon: &quot;arrows&quot;,
+          click: () =&gt; this.layout(&quot;manual&quot;),
+          tip: &quot;Manual Layout&quot;
+        },{
+          icon: &quot;tree&quot;,
+          click: () =&gt; this.layout(&quot;treemap&quot;),
+          tip: &quot;Treemap Layout&quot;
+        }],
+        // TODO: fix this
+        // [{
+        //   icon: &quot;header&quot;,
+        //   click: () =&gt; this.toggleStyle(&quot;slab&quot;),
+        //   tip: &quot;Toggle Slab Effect&quot;
+        // }],
+      ])
+      .call(toolbar.update);
+  }
+
+  toggleStyle(style){
+    let {slide, region} = this.selectedRegion.get() || {},
+      path = [&quot;regions&quot;, region, &quot;style&quot;, style];
+    this.slide.set(path, !this.slide.get(path));
+  }
+
+  addRegion(){
+    let id = uuid.v4();
+    this.slide.set([&quot;regions&quot;, id], {
+      id,
+      attrs: {
+        x: 0.1,
+        y: 0.1,
+        width: 0.8,
+        height: 0.8
+      }
+    });
+  }
+
+  update(){
+    if(this.killed){
+      return;
+    }
+
+    let that = this;
+
+    let regions = d3.entries(this.slide.get(&quot;regions&quot;)),
+      $region = this.$ui.selectAll(&quot;.region_info&quot;)
+        .data(regions, (d) =&gt; d.key),
+      slide = this.slide.get();
+
+    $region
+      .enter()
+      .append(&quot;div&quot;)
+      .classed({region_info: 1});
+
+    let $mini = $region
+      .selectAll(&quot;.slide&quot;)
+      .data((d) =&gt; [{value: slide, key: slide.id, region: d.value}]);
+
+    $mini.enter()
+      .append(&quot;div&quot;)
+      .classed({slide: 1});
+
+    $mini.exit().transition()
+      .style({opacity: 0})
+      .remove();
+
+    $mini.call(this.mini.update);
+
+    let layout = this.slide.get([&quot;layout&quot;]);
+
+    let $attr = $region.selectAll(&quot;.region_attr&quot;)
+      .data((region) =&gt;
+        d3.entries(region.value.attrs)
+          .map((attr) =&gt; { return {region, attr}; })
+          .filter((d)=&gt;{
+            if(layout == &quot;treemap&quot;){
+              return d.attr.key.indexOf(layout) === 0;
+            }else{
+              return d.attr.key.indexOf(&quot;treemap&quot;) === -1;
+            }
+          })
+        )
+
+
+    $attr.exit().remove();
+
+    $attr.enter()
+      .append(&quot;div&quot;)
+      .classed({
+        region_attr: 1,
+        &quot;input-group&quot;: 1,
+        &quot;input-group-sm&quot;: 1
+      })
+      .call(function($attr){
+        $attr.append(&quot;span&quot;).classed({&quot;input-group-btn&quot;: 1})
+          .append(&quot;button&quot;).classed({
+            btn: 1,
+            &quot;btn-default&quot;: 1,
+            &quot;btn-xs&quot;: 1,
+            attr_name: 1
+          });
+
+        $attr.append(&quot;span&quot;).classed({&quot;input-group-addon&quot;: 1, attr_ns: 1})
+          .append(&quot;i&quot;)
+          .classed({fa: 1, &quot;fa-fw&quot;: 1});
+
+        $attr.append(&quot;input&quot;).classed({&quot;form-control&quot;: 1})
+          .attr({type: &quot;text&quot;})
+          .each(function(){
+            Jupyter.keyboard_manager.register_events(this);
+          })
+          .on(&quot;change&quot;, function(d){
+            let el = d3.select(this),
+              val = parseFloat(el.property(&quot;value&quot;));
+            that.slide.set([&quot;regions&quot;, d.region.key, d.attr.key], val);
+          });
+      })
+      .on(&quot;mousedown&quot;, function(d){
+        that.makeSlider(this, d);
+      });
+
+
+    $attr.select(&quot;.attr_name&quot;).text((d) =&gt; {
+      return d.attr.key.indexOf(&quot;:&quot;) === -1 ?
+        d.attr.key :
+        d.attr.key.split(&quot;:&quot;)[1];
+    });
+    $attr.select(&quot;.attr_ns&quot;).each(function(d){
+      let hasIcon = d.attr.key.indexOf(&quot;:&quot;) !== -1;
+      let el = d3.select(this)
+        .style({
+          display: hasIcon ? null : &quot;none&quot;
+        });
+
+      if(!hasIcon){
+        return;
+      }
+
+      // TODO: put this in layout
+      let icon = {
+        treemap: &quot;tree&quot;
+      }[d.attr.key.split(&quot;:&quot;)[0]];
+
+      el.select(&quot;.fa&quot;)
+        .classed(`fa-${icon}`, 1);
+
+    })
+    $attr.select(&quot;.form-control&quot;).attr({
+      value: (d) =&gt; {
+        if(typeof d.attr.value === &quot;boolean&quot;){
+          return d.attr.value;
+        }else if(typeof d.attr.value === &quot;number&quot;){
+          return d.attr.value.toFixed(3);
+        }
+      }
+    });
+  }
+
+  makeSlider(element, d) {
+    let that = this;
+    let [x, y] = d3.mouse(element);
+    let el = d3.select(element);
+    el.on(&quot;mousemove&quot;, function(d){
+      let [x1, y1] = d3.mouse(this);
+      let dx = (x1 - x) / 20;
+      x = x1;
+      let path = [&quot;regions&quot;, d.region.key, &quot;attrs&quot;, d.attr.key];
+      that.slide.set(path, that.slide.get(path) + dx)
+    })
+    .on(&quot;mouseup&quot;, function(){
+      el.on(&quot;mousemove&quot;, null);
+    })
+    .on(&quot;mouseexit&quot;, function(){
+      el.on(&quot;mousemove&quot;, null);
+    });
+  }
+
+}
+
+export {RegionTree};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

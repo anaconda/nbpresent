@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/es6/editor.es6 | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="git://github.com/Anaconda-Server/nbpresent.git">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/editor.es6~Editor.html">Editor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mini.es6~MiniSlide.html">MiniSlide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/regiontree.es6~RegionTree.html">RegionTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/sorter.es6~Sorter.html">Sorter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/templates.es6~TemplateLibrary.html">TemplateLibrary</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/toolbar.es6~Toolbar.html">Toolbar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/tour.es6~NbpresentTour.html">NbpresentTour</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/tree.es6~Tree.html">Tree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bbox">bbox</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PART">PART</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PART_SELECT">PART_SELECT</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/cells</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/cells/notebook.es6~CellManager.html">CellManager</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/cells/standalone.es6~CellManager.html">CellManager</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/layout</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/layout/manual.es6~ManualLayout.html">ManualLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/layout/treemap.es6~TreemapLayout.html">TreemapLayout</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/mode</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/base.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/notebook.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/standalone.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/presenter</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/base.es6~Presenter.html">Presenter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/notebook.es6~NotebookPresenter.html">NotebookPresenter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/standalone.es6~StandalonePresenter.html">StandalonePresenter</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/speaker</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/speaker/base.es6~SpeakerBase.html">SpeakerBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/speaker/notebook.es6~NotebookSpeaker.html">NotebookSpeaker</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/style</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/style/base.es6~BaseStyle.html">BaseStyle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/style/slab.es6~SlabStyle.html">SlabStyle</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/es6/editor.es6</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {d3} from &quot;nbpresent-deps&quot;;
+
+import {PART} from &quot;./parts&quot;;
+
+import {RegionTree} from &quot;./regiontree&quot;;
+import {CellManager} from &quot;./cells/notebook&quot;;
+
+import {bbox} from &quot;./d3.bbox&quot;;
+
+class Editor{
+  constructor(slide, selectedRegion) {
+    this.slide = slide;
+    this.selectedRegion = selectedRegion;
+    this.regions = this.slide.select(&quot;regions&quot;);
+    this.cellManager = new CellManager();
+
+    // TODO: make these discrete to base unit
+    this.x = d3.scale.linear();
+    this.y = d3.scale.linear();
+
+
+    this.initUI();
+    this.sidebar = new RegionTree(this.slide, this.selectedRegion);
+
+    this.initBehavior();
+
+    this.update();
+
+    this.slide.on(&quot;update&quot;, ()=&gt; { this.killed || this.update(); });
+  }
+
+  destroy() {
+    this.sidebar.destroy();
+    this.$ui.transition()
+      .style({opacity: 0})
+      .remove();
+    this.killed = true;
+  }
+
+  initBehavior(){
+    this.bbox = bbox();
+  }
+
+  initUI(){
+    this.$ui = d3.select(&quot;body&quot;)
+      .append(&quot;div&quot;)
+      .classed({nbpresent_editor: 1})
+      .style({opacity: 0});
+
+    this.$bg = this.$ui.append(&quot;div&quot;)
+      .classed({slide_bg: 1});
+
+    this.$svg = this.$bg.append(&quot;svg&quot;);
+
+    this.$defs = this.$svg.append(&quot;defs&quot;);
+
+    this.$ui.transition()
+      .style({opacity: 1});
+  }
+
+  padding(){
+    return 20;
+  }
+
+  aspectRatio(){
+    // TODO: put in data
+    return 16 / 9;
+  }
+
+  bbEnd(el, d){
+    let $el = d3.select(el),
+      scales = {
+        x: this.x,
+        y: this.y,
+        width: this.x,
+        height: this.y
+      };
+
+    let selected = this.selectedRegion.get();
+
+    if(!selected){
+      return;
+    }
+
+    this.slide.merge([&quot;regions&quot;, selected.region, &quot;attrs&quot;],
+      d3.entries(scales)
+        .reduce((memo, attr) =&gt; {
+          memo[attr.key] = attr.value.invert($el.attr(attr.key));
+          return memo;
+        }, {}));
+  }
+
+  hasContent(part){
+    return (d) =&gt; (d.value.content || {}).part === part;
+  }
+
+  update(){
+    let that = this,
+      uibb = this.$ui.node().getBoundingClientRect(),
+      width = uibb.width - (this.sidebar.width() + (2 * this.padding())),
+      height = width / this.aspectRatio(),
+      regions = d3.entries(this.regions.get()),
+      {slide, region} = this.selectedRegion.get() || {},
+      selected = this.selectedRegion.get();
+
+    if(height &gt; uibb.height + 2 * this.padding()){
+      height = uibb.height - (2 * this.padding());
+      width = height * this.aspectRatio();
+    }
+
+    this.x.range([0, width]);
+    this.y.range([0, height]);
+    let {x, y} = this;
+
+    this.$bg.style({
+      left: `${(((uibb.width + this.sidebar.width()) - width) / 2)}px`,
+      top: `${(uibb.height - height) / 2}px`,
+      width: `${width}px`,
+      height: `${height}px`
+    });
+
+    this.$svg.attr({width, height});
+
+    regions.sort((a, b) =&gt; {
+      return (selected &amp;&amp; selected.region == a.key) ? -1 :
+        (selected &amp;&amp; selected.region == b.key) ? 1 :
+          (a.value.attrs.z || 0) - (b.value.attrs.z || 0)
+    });
+
+    let $region = this.$svg.selectAll(&quot;.region&quot;)
+      .data(regions, (d) =&gt; d.key)
+      .order();
+
+    $region.exit().remove();
+
+    let regionData = (region) =&gt; {
+      return directions.map((dir) =&gt; {
+        return {region, dir};
+      })
+    };
+
+    $region.enter()
+      .append(&quot;g&quot;)
+      .classed({&quot;region&quot;: 1})
+      .call(($region) =&gt; {
+        $region.append(&quot;rect&quot;)
+          .classed({region_bg: 1})
+          .each(function(d){
+            that.bbox.infect(d3.select(this))
+              .on(&quot;dragend&quot;, function(d){ that.bbEnd(this, d) })
+              .on(&quot;resizeend&quot;, function(d){ that.bbEnd(this, d) });
+          });
+      })
+      .on(&quot;mousedown&quot;, (d) =&gt; {
+        this.selectedRegion.set({slide: this.slide.get(&quot;id&quot;), region: d.key});
+      });
+
+    $region
+      .classed({
+        active: (d) =&gt; selected &amp;&amp; (d.key == selected.region),
+        content_source: this.hasContent(PART.source),
+        content_outputs: this.hasContent(PART.outputs),
+        content_widgets: this.hasContent(PART.widgets)
+      })
+    .select(&quot;.region_bg&quot;)
+      .transition()
+      .attr({
+        width: (d) =&gt; x(d.value.attrs.width),
+        height: (d) =&gt; y(d.value.attrs.height),
+        x: (d) =&gt; x(d.value.attrs.x),
+        y: (d) =&gt; y(d.value.attrs.y)
+      });
+
+    $region.filter(({value}) =&gt; !value.content)
+      .select(&quot;.region_bg&quot;)
+      .style({fill: null});
+
+
+    $region.filter(({value}) =&gt; value.content)
+      .each(function(d){
+        let $region = d3.select(this);
+        that.cellManager.thumbnail(d.value.content)
+          .catch(function(err){
+            console.warn(&quot;thumbnail error&quot;, err);
+          })
+          .then(function({uri, width, height}){
+            let id = `${d.value.content.part}-${d.value.content.cell}`,
+              bg = that.$defs.selectAll(`#${id}`).data([id]);
+
+            bg.enter().append(&quot;pattern&quot;)
+              .attr({
+                patternUnits: &quot;userSpaceOnUse&quot;,
+                id
+              })
+            .append(&quot;image&quot;)
+              .attr({
+                x: 0,
+                y: 0
+              });
+
+            bg.attr({width, height})
+              .select(&quot;image&quot;)
+              .attr({
+                &quot;xlink:href&quot;: uri,
+                width,
+                height
+              });
+
+            $region.select(&quot;.region_bg&quot;)
+              .style({
+                fill: `url(#${id})`
+              });
+          });
+      });
+  }
+}
+
+export {Editor};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

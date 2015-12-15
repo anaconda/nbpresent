@@ -6,15 +6,20 @@ function(require){
       var path = _here.concat(frag).join("/")
         .replace("//", "/")
         .replace("/./.", "/")
-        // .replace("./", "/");
       return path;
     };
 
   requirejs.config({
     paths: {
-      "nbpresent-deps": here(["nbpresent.deps.min"]),
+      "nbpresent-deps": [
+        here(["nbpresent.deps.min"]),
+        "./nbpresent/nbpresent.deps.min"
+      ],
       "nbpresent-notebook": here(["nbpresent.notebook.min"]),
-      "nbpresent-standalone": here(["nbpresent.standalone.min"])
+      "nbpresent-standalone": [
+        here(["nbpresent.standalone.min"]),
+        "nbpresent/nbpresent.standalone.min"
+      ]
     }
   });
 

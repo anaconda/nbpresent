@@ -1,0 +1,38 @@
+nbpresent package
+=================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    nbpresent.exporters
+    nbpresent.tests
+
+Submodules
+----------
+
+nbpresent.export module
+-----------------------
+
+.. automodule:: nbpresent.export
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+nbpresent.install module
+------------------------
+
+.. automodule:: nbpresent.install
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: nbpresent
+    :members:
+    :undoc-members:
+    :show-inheritance:

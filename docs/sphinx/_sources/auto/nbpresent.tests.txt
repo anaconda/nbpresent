@@ -1,0 +1,22 @@
+nbpresent.tests package
+=======================
+
+Submodules
+----------
+
+nbpresent.tests.test_notebook module
+------------------------------------
+
+.. automodule:: nbpresent.tests.test_notebook
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: nbpresent.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:

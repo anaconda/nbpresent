@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/es6/d3.bbox.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="git://github.com/Anaconda-Server/nbpresent.git">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/editor.es6~Editor.html">Editor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mini.es6~MiniSlide.html">MiniSlide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/regiontree.es6~RegionTree.html">RegionTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/sorter.es6~Sorter.html">Sorter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/templates.es6~TemplateLibrary.html">TemplateLibrary</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/toolbar.es6~Toolbar.html">Toolbar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/tour.es6~NbpresentTour.html">NbpresentTour</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/tree.es6~Tree.html">Tree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bbox">bbox</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PART">PART</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PART_SELECT">PART_SELECT</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/cells</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/cells/notebook.es6~CellManager.html">CellManager</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/cells/standalone.es6~CellManager.html">CellManager</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/layout</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/layout/manual.es6~ManualLayout.html">ManualLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/layout/treemap.es6~TreemapLayout.html">TreemapLayout</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/mode</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/base.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/notebook.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/standalone.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/presenter</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/base.es6~Presenter.html">Presenter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/notebook.es6~NotebookPresenter.html">NotebookPresenter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/standalone.es6~StandalonePresenter.html">StandalonePresenter</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/speaker</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/speaker/base.es6~SpeakerBase.html">SpeakerBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/speaker/notebook.es6~NotebookSpeaker.html">NotebookSpeaker</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/style</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/style/base.es6~BaseStyle.html">BaseStyle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/style/slab.es6~SlabStyle.html">SlabStyle</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/es6/d3.bbox.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">// Copyright (c) 2015 Lucas Beyer
+// Licensed under the MIT License (MIT)
+// Version 1.0
+// https://github.com/lucasb-eyer/d3-boundingbox
+
+// ES6 &quot;translation&quot; by (c) 2015 Nick Bollweg
+
+import {d3} from &quot;nbpresent-deps&quot;;
+
+export function bbox() {
+    // All those are initialized to default further down using the setters.
+    var xextent = null
+    var yextent = null
+    var handlesize = null
+    var dirs = null
+    var curs = null
+    var cbs = {
+        dragstart: null,
+        dragmove: null,
+        dragend: null,
+        resizestart: null,
+        resizemove: null,
+        resizeend: null
+    }
+
+    function my(selection) {
+        var drag = d3.behavior.drag()
+            .origin(function(d, i) { return {x: this.getAttribute(&quot;x&quot;), y: this.getAttribute(&quot;y&quot;)}; })
+            .on(&quot;drag.lbbbox&quot;, dragmove)
+            .on(&quot;dragstart.lbbbox&quot;, dragstart)
+            .on(&quot;dragend.lbbbox&quot;, dragend)
+        selection.call(drag)
+        selection.on(&quot;mousemove.lbbbox&quot;, move)
+        selection.on(&quot;mouseleave.lbbbox&quot;, leave)
+
+        return selection
+    }
+
+    function clamp(x, extent) { return Math.max(extent[0], Math.min(x, extent[1])); }
+    function inside(x, extent) { return extent[0] &lt; x &amp;&amp; x &lt; extent[1]; }
+
+    // Will return w, nw, n, ne, e, se, s, sw for the eight borders,
+    // M for inside, or &quot;&quot; when current location not in `dirs`.
+    function whichborder(xy, elem) {
+        var border = &quot;&quot;
+        var x = +elem.getAttribute(&quot;x&quot;)
+        var y = +elem.getAttribute(&quot;y&quot;)
+        var w = +elem.getAttribute(&quot;width&quot;)
+        var h = +elem.getAttribute(&quot;height&quot;)
+
+             if(xy[1] &lt; y + handlesize.n) border += &apos;n&apos;
+        else if(xy[1] &gt; y + h - handlesize.s) border += &apos;s&apos;
+
+             if(xy[0] &lt; x + handlesize.w) border += &apos;w&apos;
+        else if(xy[0] &gt; x + w - handlesize.e) border += &apos;e&apos;
+
+
+        if(border == &quot;&quot; &amp;&amp; (dirs.indexOf(&quot;x&quot;) &gt; -1 || dirs.indexOf(&quot;y&quot;) &gt; -1))
+            border = &quot;M&quot;
+        else if(dirs.indexOf(border) == -1)
+            border = &quot;&quot;
+
+        return border
+    }
+
+    function move(d, i) {
+        // Don&apos;t do anything if we&apos;re currently dragging.
+        // Otherwise, the cursor might jump horribly!
+        // Also don&apos;t do anything if no cursors.
+        if(this.__resize_action__ !== undefined || !curs)
+            return
+
+        var b = whichborder(d3.mouse(this), this)
+
+        var x = dirs.indexOf(&quot;x&quot;)
+        var y = dirs.indexOf(&quot;y&quot;)
+        // Bwahahahaha this works even when one is at index 0.
+        if(b == &quot;M&quot; &amp;&amp; 1/(x*y) &lt; 0)
+            document.body.style.cursor = x &gt;= 0 ? curs.x : curs.y
+        else
+            document.body.style.cursor = curs[b] || null
+    }
+
+    function leave(d, i) {
+        // Only unset cursor if we&apos;re not dragging,
+        // otherwise we get horrible cursor-flipping action.
+        // Also only unset it if we actually did set it!
+        if(this.__resize_action__ === undefined &amp;&amp; curs)
+            document.body.style.cursor = null
+    }
+
+    function dragstart(d, i) {
+        this.__resize_action__ = whichborder(d3.mouse(this), this)
+        this.__ow__ = +this.getAttribute(&quot;width&quot;)
+        this.__oh__ = +this.getAttribute(&quot;height&quot;)
+
+        if(this.__resize_action__ == &quot;M&quot;) {
+            if(cbs.dragstart) cbs.dragstart.call(this, d, i)
+        } else if(this.__resize_action__.length) {
+            if(cbs.resizestart) cbs.resizestart.call(this, d, i)
+        }
+    }
+
+    function dragend(d, i) {
+        if(this.__resize_action__ == &quot;M&quot;) {
+            if(cbs.dragend) cbs.dragend.call(this, d, i)
+        } else if(this.__resize_action__.length) {
+            if(cbs.resizeend) cbs.resizeend.call(this, d, i)
+        }
+
+        delete this.__resize_action__
+        delete this.__ow__
+        delete this.__oh__
+
+        // Still need to unset here, in case the user stop dragging
+        // while the mouse isn&apos;t on the element anymore (e.g. off-limits).
+        if(curs)
+            document.body.style.cursor = null
+    }
+
+    function dragmove(d, i) {
+        if(this.__resize_action__ == &quot;M&quot;) {
+            if(cbs.dragmove)
+                if(false === cbs.dragmove.call(this, d, i))
+                    return
+        } else if(this.__resize_action__.length) {
+            if(cbs.resizemove)
+                if(false === cbs.resizemove.call(this, d, i))
+                    return
+        }
+
+        // Potentially dynamically determine the allowed space.
+        var xext = typeof xextent === &quot;function&quot; ? xextent.call(this, d, i) : xextent
+        var yext = typeof yextent === &quot;function&quot; ? yextent.call(this, d, i) : yextent
+
+        // Handle moving around first, more easily.
+        if(this.__resize_action__ == &quot;M&quot;) {
+            if(dirs.indexOf(&quot;x&quot;) &gt; -1 &amp;&amp; d3.event.dx != 0)
+                // This is so that even moving the mouse super-fast, this still &quot;sticks&quot; to the extent.
+                this.setAttribute(&quot;x&quot;, clamp(clamp(d3.event.x, xext) + this.__ow__, xext) - this.__ow__)
+            if(dirs.indexOf(&quot;y&quot;) &gt; -1 &amp;&amp; d3.event.dy != 0)
+                this.setAttribute(&quot;y&quot;, clamp(clamp(d3.event.y, yext) + this.__oh__, yext) - this.__oh__)
+        // Now check for all possible resizes.
+        } else {
+            var x = +this.getAttribute(&quot;x&quot;)
+            var y = +this.getAttribute(&quot;y&quot;)
+
+            // First, check for vertical resizes,
+            if(/^n/.test(this.__resize_action__)) {
+                var b = y + +this.getAttribute(&quot;height&quot;)
+                var newy = clamp(clamp(d3.event.y, yext), [-Infinity, b-1])
+                this.setAttribute(&quot;y&quot;, newy)
+                this.setAttribute(&quot;height&quot;, b - newy)
+            } else if(/^s/.test(this.__resize_action__)) {
+                var b = clamp(d3.event.y + this.__oh__, yext)
+                this.setAttribute(&quot;height&quot;, clamp(b - y, [1, Infinity]))
+            }
+
+            // and then for horizontal ones. Note both may happen.
+            if(/w$/.test(this.__resize_action__)) {
+                var r = x + +this.getAttribute(&quot;width&quot;)
+                var newx = clamp(clamp(d3.event.x, xext), [-Infinity, r-1])
+                this.setAttribute(&quot;x&quot;, newx)
+                this.setAttribute(&quot;width&quot;, r - newx)
+            } else if(/e$/.test(this.__resize_action__)) {
+                var r = clamp(d3.event.x + this.__ow__, xext)
+                this.setAttribute(&quot;width&quot;, clamp(r - x, [1, Infinity]))
+            }
+        }
+    }
+
+    my.xextent = function(_) {
+        if(!arguments.length) return xextent
+        xextent = _ !== false ? _ : [-Infinity, +Infinity]
+        return my
+    }
+    my.xextent(false)
+
+    my.yextent = function(_) {
+        if(!arguments.length) return yextent
+        yextent = _ !== false ? _ : [-Infinity, +Infinity]
+        return my
+    }
+    my.yextent(false)
+
+    my.handlesize = function(_) {
+        if(!arguments.length) return handlesize
+        handlesize = !+_ ? _ : {&apos;w&apos;: _,&apos;n&apos;: _,&apos;e&apos;: _,&apos;s&apos;: _}  // coolface
+        return my
+    }
+    my.handlesize(3)
+
+    my.cursors = function(_) {
+        if(!arguments.length) return curs
+        curs = _ !== true ? _ : {
+            M: &quot;move&quot;,
+            x: &quot;col-resize&quot;,
+            y: &quot;row-resize&quot;,
+            n: &quot;n-resize&quot;,
+            e: &quot;e-resize&quot;,
+            s: &quot;s-resize&quot;,
+            w: &quot;w-resize&quot;,
+            nw: &quot;nw-resize&quot;,
+            ne: &quot;ne-resize&quot;,
+            se: &quot;se-resize&quot;,
+            sw: &quot;sw-resize&quot;
+        }
+        return my
+    }
+    my.cursors(true)
+
+    my.directions = function(_) {
+        if(!arguments.length) return dirs
+        dirs = _ !== true ? _ : [&quot;n&quot;, &quot;e&quot;, &quot;s&quot;, &quot;w&quot;, &quot;nw&quot;, &quot;ne&quot;, &quot;se&quot;, &quot;sw&quot;, &quot;x&quot;, &quot;y&quot;]
+        return my
+    }
+    my.directions(true)
+
+    my.on = function(name, cb) {
+        if(cb === undefined) return cbs[name]
+        cbs[name] = cb
+        return my
+    }
+
+    my.infect = function(selection) {
+        selection.call(my)
+        return my
+    }
+
+    my.disinfect = function(selection) {
+        selection.on(&quot;.drag&quot;, null)
+        selection.on(&quot;.lbbbox&quot;, null)
+        return my
+    }
+
+    return my
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

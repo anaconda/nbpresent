@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/es6/sorter.es6 | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="git://github.com/Anaconda-Server/nbpresent.git">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/editor.es6~Editor.html">Editor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mini.es6~MiniSlide.html">MiniSlide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/regiontree.es6~RegionTree.html">RegionTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/sorter.es6~Sorter.html">Sorter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/templates.es6~TemplateLibrary.html">TemplateLibrary</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/toolbar.es6~Toolbar.html">Toolbar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/tour.es6~NbpresentTour.html">NbpresentTour</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/tree.es6~Tree.html">Tree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bbox">bbox</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PART">PART</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PART_SELECT">PART_SELECT</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/cells</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/cells/notebook.es6~CellManager.html">CellManager</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/cells/standalone.es6~CellManager.html">CellManager</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/layout</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/layout/manual.es6~ManualLayout.html">ManualLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/layout/treemap.es6~TreemapLayout.html">TreemapLayout</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/mode</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/base.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/notebook.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/mode/standalone.es6~Mode.html">Mode</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/presenter</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/base.es6~Presenter.html">Presenter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/notebook.es6~NotebookPresenter.html">NotebookPresenter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/presenter/standalone.es6~StandalonePresenter.html">StandalonePresenter</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/speaker</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/speaker/base.es6~SpeakerBase.html">SpeakerBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/speaker/notebook.es6~NotebookSpeaker.html">NotebookSpeaker</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">es6/style</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/style/base.es6~BaseStyle.html">BaseStyle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/es6/style/slab.es6~SlabStyle.html">SlabStyle</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/es6/sorter.es6</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {d3, uuid} from &quot;nbpresent-deps&quot;;
+
+import Jupyter from &quot;base/js/namespace&quot;;
+
+import {Editor} from &quot;./editor&quot;;
+import {Toolbar} from &quot;./toolbar&quot;;
+import {PART} from &quot;./parts&quot;;
+import {MiniSlide} from &quot;./mini&quot;;
+import {TemplateLibrary} from &quot;./templates&quot;;
+
+let REMOVED = &quot;&lt;removed&gt;&quot;;
+
+class Sorter {
+  constructor(tree, tour) {
+    this.tree = tree;
+    this.tour = tour;
+
+    this.templatePicked = this.templatePicked.bind(this);
+
+    this.visible = this.tree.select([&quot;sorting&quot;]);
+    this.visible.set(false);
+
+    this.slides = this.tree.select([&quot;slides&quot;]);
+    this.selectedSlide = this.tree.select([&quot;selectedSlide&quot;]);
+    this.selectedRegion = this.tree.select([&quot;sorter&quot;, &quot;selectedRegion&quot;]);
+
+    this.selectedSlide.on(&quot;update&quot;, () =&gt; this.updateSelectedSlide());
+    this.selectedRegion.on(&quot;update&quot;, () =&gt; this.updateSelectedRegion());
+    this.slides.on(&quot;update&quot;, () =&gt; this.draw());
+    this.visible.on(&quot;update&quot;, () =&gt; this.visibleUpdated());
+
+    this.scale = {
+      x: d3.scale.linear()
+    };
+
+    this.mini = new MiniSlide(this.selectedRegion);
+
+    this.drawn = false;
+  }
+
+  visibleUpdated(){
+    let visible = this.visible.get();
+
+    if(!this.drawn){
+      this.initUI();
+      this.drawn = true;
+    }
+
+    if(visible) {
+      this.draw();
+    }else {
+      if(this.editor){
+        this.editor.destroy();
+        this.editor = null;
+      }
+      if(this.templates){
+        this.templates.destroy();
+        this.templates = null;
+      }
+    }
+
+    this.update();
+  }
+
+  show(){
+    this.visible.set(!this.visible.get());
+  }
+
+  update(){
+    let visible = this.visible.get();
+    this.$view
+      .classed({offscreen: !visible})
+      .style({
+        // necessary for FOUC
+        &quot;display&quot;: visible ? &quot;block&quot; : &quot;none&quot;
+      });
+
+    d3.select(&quot;#notebook&quot;)
+      .style({
+        &quot;margin-bottom&quot;: visible ? &quot;100px&quot; : null
+      });
+  }
+
+  initUI(){
+    this.$view = d3.select(&quot;body&quot;)
+      .append(&quot;div&quot;)
+      .classed({
+        nbpresent_sorter: 1,
+        offscreen: 1
+      })
+      .style({
+        display: &quot;none&quot;
+      });
+
+    this.$slides = this.$view.append(&quot;div&quot;)
+      .classed({slides_wrap: 1});
+
+    let $brand = this.$view.append(&quot;h4&quot;)
+      .classed({nbpresent_brand: 1})
+      .append(&quot;a&quot;)
+      .attr({
+        href: &quot;https://continuumio.github.io/nbpresent/&quot;,
+        target: &quot;_blank&quot;
+      })
+
+    $brand.append(&quot;i&quot;)
+      .attr(&quot;class&quot;, &quot;fa fa-fw fa-gift&quot;);
+
+    $brand.append(&quot;span&quot;)
+      .text(&quot;nbpresent&quot;);
+
+    this.$empty = this.$slides.append(&quot;h3&quot;)
+      .classed({empty: 1})
+      .text(&quot;No slides yet.&quot;);
+
+    let $help = this.$view.append(&quot;div&quot;)
+      .classed({nbpresent_help: 1})
+      .append(&quot;a&quot;)
+      .attr({href: &quot;#&quot;})
+    .on(&quot;click&quot;, () =&gt; this.tour.restart())
+      .append(&quot;i&quot;)
+      .attr(&quot;class&quot;, &quot;fa fa-question-circle&quot;);
+
+    this.initToolbar();
+    this.initDrag();
+  }
+
+  initDrag(){
+    let that = this,
+      dragOrigin;
+
+    this.drag = d3.behavior.drag()
+      .on(&quot;dragstart&quot;, function(d){
+        let slide = d3.select(this)
+          .classed({dragging: 1});
+
+        dragOrigin = parseFloat(slide.style(&quot;left&quot;));
+      })
+      .on(&quot;drag&quot;, function(d){
+        d3.select(this)
+          .style({
+            left: `${dragOrigin += d3.event.dx}px`,
+          });
+      })
+      .on(&quot;dragend&quot;, function(d, i){
+        let $slide = d3.select(this)
+          .classed({dragging: 0});
+
+        let left = parseFloat($slide.style(&quot;left&quot;)),
+          slides = that.tree.get(&quot;sortedSlides&quot;),
+          slideN = Math.floor(left / that.slideWidth()),
+          after;
+
+        if(left &lt; that.slideWidth() || slideN &lt; 0){
+          after = null;
+        }else if(slideN &gt; slides.length || !slides[slideN]){
+          after = slides.slice(-1)[0].key;
+        }else{
+          after = slides[slideN].key;
+        }
+
+        if(d.key !== after){
+          that.unlinkSlide(d.key);
+          that.selectedSlide.set(that.appendSlide(after, d.key));
+        }else{
+          that.draw();
+        }
+      });
+  }
+
+  // TODO: make these d3 scales!
+  slideHeight() {
+    return 100;
+  }
+
+  slideWidth(){
+    return 200;
+  }
+
+  copySlide(slide){
+    let newSlide = JSON.parse(JSON.stringify(slide));
+    newSlide.id = this.nextId();
+    newSlide.regions = d3.entries(newSlide.regions).reduce((memo, d)=&gt;{
+      let id = this.nextId();
+      // TODO: keep part?
+      memo[id] = $.extend(true, {}, d.value, {id, content: null});
+      return memo;
+    }, {});
+
+    return newSlide;
+  }
+
+  slideClicked(d){
+    if(this.templates){
+      let newSlide = this.copySlide(d.value);
+      this.templatePicked({key: newSlide.id, value: newSlide});
+      this.templates &amp;&amp; this.templates.destroy();
+      this.templates = null;
+      return;
+    }
+    this.selectedSlide.set(d.key);
+  }
+
+  draw(){
+    if(!this.$slides){
+      return;
+    }
+    let that = this;
+
+    let slides = this.tree.get(&quot;sortedSlides&quot;);
+
+    this.scale.x.range([20, this.slideWidth() + 20]);
+
+    let $slide = this.$slides.selectAll(&quot;.slide&quot;)
+      .data(slides, (d) =&gt; d.key);
+
+    $slide.enter().append(&quot;div&quot;)
+      .classed({slide: 1})
+      .call(this.drag)
+      .on(&quot;click&quot;, (d) =&gt;{
+        this.slideClicked(d)
+      })
+      .on(&quot;dblclick&quot;, (d) =&gt; this.editSlide(d.key));
+
+    $slide.exit()
+      .transition()
+      .style({
+        top: &quot;200px&quot;
+      })
+      .remove();
+
+    let selectedSlide = this.selectedSlide.get(),
+      selectedRegion = this.selectedRegion.get(),
+      selectedSlideLeft;
+
+    $slide
+      .style({
+        &quot;z-index&quot;: (d, i) =&gt; i
+      })
+      .classed({
+        active: (d) =&gt; d.key === selectedSlide
+      })
+      .transition()
+      .delay((d, i) =&gt; i * 10)
+      .style({
+        left: (d, i) =&gt; {
+          let left = this.scale.x(i);
+          if(d.key === selectedSlide){
+            selectedSlideLeft = left;
+          }
+          return `${left}px`;
+        }
+      });
+
+    $slide.call(this.mini.update);
+
+    this.$regionToolbar
+      .transition()
+      .style({
+        opacity: selectedRegion ? 1 : 0,
+        display: selectedRegion ? &quot;block&quot; : &quot;none&quot;,
+        left: `${selectedSlideLeft - 30}px`
+      });
+
+    this.$empty
+      .transition()
+      .style({opacity: 1 * !$slide[0].length })
+      .transition()
+      .style({display: $slide[0].length ? &quot;none&quot;: &quot;block&quot;});
+
+    this.$deckToolbar.call(this.deckToolbar.update);
+  }
+
+  updateSelectedRegion(){
+    let {slide, region} = this.selectedRegion.get() || {};
+    if(region){
+      this.selectedSlide.set(slide);
+      let content = this.slides.get(
+        [slide, &quot;regions&quot;, region, &quot;content&quot;]);
+      if(content){
+        this.selectCell(content.cell);
+      }
+    }else if(this.$regionToolbar){
+      this.$regionToolbar.transition()
+        .style({opacity: 0})
+        .transition()
+        .style({display: &quot;none&quot;});
+    }
+    this.draw();
+  }
+
+  // TODO: move this to the cell manager?
+  selectCell(id){
+    let cell = Jupyter.notebook.get_cells().filter(function(cell, idx){
+      if(cell.metadata.nbpresent &amp;&amp; cell.metadata.nbpresent.id == id){
+        Jupyter.notebook.select(idx);
+      };
+    });
+  }
+
+  updateSelectedSlide(){
+    let slide = this.selectedSlide.get(),
+      selected = this.selectedRegion.get() || {};
+
+    if(selected.slide != slide){
+      this.selectedRegion.set(null);
+    }
+
+    this.draw();
+    if(this.editor){
+      this.editSlide(slide);
+    }
+  }
+
+
+  initToolbar(){
+    this.deckToolbar = new Toolbar()
+      .btnClass(&quot;btn-default btn-lg&quot;);
+    this.$deckToolbar = this.$view.append(&quot;div&quot;)
+      .classed({deck_toolbar: 1})
+      .datum([
+        [{
+          icon: &quot;plus-square-o fa-2x&quot;,
+          click: () =&gt; this.addSlide(),
+          tip: &quot;Add Slide&quot;
+        }], [{
+          icon: &quot;edit fa-2x&quot;,
+          click: () =&gt; this.editSlide(this.selectedSlide.get()),
+          tip: &quot;Edit Slide&quot;,
+          visible: () =&gt; this.selectedSlide.get() &amp;&amp; !this.editor
+        }, {
+          icon: &quot;chevron-circle-down fa-2x&quot;,
+          click: () =&gt; this.editSlide(this.selectedSlide.get()),
+          tip: &quot;Back to Sorter&quot;,
+          visible: () =&gt; this.editor
+        }],
+        [{
+          icon: &quot;trash fa-2x&quot;,
+          click: () =&gt; {
+            this.removeSlide(this.selectedSlide.get());
+            this.selectedSlide.set(null);
+          },
+          tip: &quot;Delete Slide&quot;,
+          visible: () =&gt; this.selectedSlide.get()
+        }]
+      ])
+      .call(this.deckToolbar.update);
+
+    this.regionToolbar = new Toolbar();
+    this.$regionToolbar = this.$slides.append(&quot;div&quot;)
+      .classed({region_toolbar: 1})
+      .datum([
+        [{
+          icon: &quot;terminal&quot;,
+          click: () =&gt; this.linkContent(PART.source),
+          tip: &quot;Link Region to Cell Input&quot;
+        },
+        {
+          icon: &quot;image&quot;,
+          click: () =&gt; this.linkContent(PART.outputs),
+          tip: &quot;Link Region to Cell Output&quot;
+        },
+        {
+          icon: &quot;sliders&quot;,
+          click: () =&gt; this.linkContent(PART.widgets),
+          tip: &quot;Link Region to Cell Widgets&quot;
+        },
+        {
+          icon: &quot;unlink&quot;,
+          click: () =&gt; this.linkContent(null),
+          tip: &quot;Unlink Region&quot;
+        }]
+      ])
+      .call(this.regionToolbar.update);
+  }
+
+  linkContent(part){
+    let {slide, region} = this.selectedRegion.get() || {},
+      cell = Jupyter.notebook.get_selected_cell(),
+      cellId;
+
+    if(!(region &amp;&amp; cell)){
+      return;
+    }
+
+    if(part){
+      if(!cell.metadata.nbpresent){
+        cell.metadata.nbpresent = {id: this.nextId()};
+      }
+
+      cellId = cell.metadata.nbpresent.id;
+
+      this.slides.set([slide, &quot;regions&quot;, region, &quot;content&quot;], {
+        cell: cellId,
+        part
+      });
+    }else{
+      this.slides.unset([slide, &quot;regions&quot;, region, &quot;content&quot;]);
+    }
+  }
+
+  addSlide(){
+    if(!this.templates || this.templates.killed){
+      this.templates = new TemplateLibrary(this.templatePicked);
+    }else{
+      this.templates.destroy();
+      this.templates = null;
+    }
+  }
+
+  templatePicked(slide){
+    if(slide &amp;&amp; this.templates &amp;&amp; !this.templates.killed){
+      let last = this.tree.get(&quot;sortedSlides&quot;).slice(-1),
+        selected = this.selectedSlide.get();
+
+      this.slides.set([slide.key], slide.value);
+
+      let appended = this.appendSlide(
+          selected ? selected : last.length ? last[0].key : null,
+          slide.key
+        );
+
+      this.selectedSlide.set(appended);
+    }
+    if(this.templates){
+      this.templates.destroy();
+      this.templates = null;
+    }
+  }
+
+  editSlide(id){
+    if(this.editor){
+      if(this.editor.slide.get(&quot;id&quot;) === id){
+        id = null;
+      }
+      this.editor.destroy();
+      this.editor = null;
+    }
+
+    if(id){
+      // TODO: do this with an id and big tree ref?
+      this.editor = new Editor(this.slides.select(id), this.selectedRegion);
+    }
+    this.draw();
+  }
+
+  nextId(){
+    return uuid.v4();
+  }
+
+  unlinkSlide(id){
+    let {prev} = this.slides.get(id),
+      next = this.nextSlide(id);
+
+    next &amp;&amp; this.slides.set([next, &quot;prev&quot;], prev);
+    this.slides.set([id, &quot;prev&quot;], REMOVED);
+  }
+
+  removeSlide(id){
+    if(!id){
+      return;
+    }
+    this.unlinkSlide(id);
+    this.slides.unset(id);
+  }
+
+  nextSlide(id){
+    let slides = this.tree.get(&quot;sortedSlides&quot;),
+      next = slides.filter((d) =&gt; d.value.prev === id);
+
+    return next.length ? next[0].key : null;
+  }
+
+  newSlide(id, prev){
+    return {
+      id,
+      prev,
+      regions: {}
+    }
+  }
+
+  appendSlide(prev, id=null){
+    let next = this.nextSlide(prev);
+
+    if(!id){
+      id = this.nextId();
+      this.slides.set(id, this.newSlide(id, prev));
+    }else{
+      this.slides.set([id, &quot;prev&quot;], prev);
+    }
+
+    next &amp;&amp; this.slides.set([next, &quot;prev&quot;], id);
+
+    return id;
+  }
+}
+
+export {Sorter};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

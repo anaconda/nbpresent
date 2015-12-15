@@ -1,0 +1,46 @@
+nbpresent.exporters package
+===========================
+
+Submodules
+----------
+
+nbpresent.exporters.base module
+-------------------------------
+
+.. automodule:: nbpresent.exporters.base
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+nbpresent.exporters.html module
+-------------------------------
+
+.. automodule:: nbpresent.exporters.html
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+nbpresent.exporters.pdf module
+------------------------------
+
+.. automodule:: nbpresent.exporters.pdf
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+nbpresent.exporters.pdf_capture module
+--------------------------------------
+
+.. automodule:: nbpresent.exporters.pdf_capture
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: nbpresent.exporters
+    :members:
+    :undoc-members:
+    :show-inheritance:
