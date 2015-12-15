@@ -18,17 +18,12 @@ Then either run
 
     %reload_ext nbpresent
 
-\_every time you start the notebook or *enable* the extension for every
+*every time you start the notebook* or *enable* the extension for every
 notebook launch:
 
 .. code:: shell
 
     python -m nbpresent.install --enable
-
-Coming soon
-~~~~~~~~~~~
-
--  `conda package <https://github.com/ContinuumIO/nbpresent/issues/1>`__
 
 Export
 ------
@@ -83,38 +78,46 @@ Here's the whole doc:
 Development
 -----------
 
-There are several development scenarios...
+This assumes you have cloned this repository locally:
 
-The Hard Way
-~~~~~~~~~~~~
+::
 
-The ``nbpresent`` nbextension is built from ``src`` in a checked out
-repo with: - less for style - babel for es2015 - browserify for
-packaging
+    git clone https://github.com/Anaconda-Server/nbpresent.git
+    cd nbpresent
 
-These are installed via ``npm``:
+Repo Architecture
+~~~~~~~~~~~~~~~~~
+
+The ``nbpresent`` nbextension is built from ``./src`` into
+``./nbpresent/static/nbresent`` with: - ``less`` for style - ``es6``
+(via ``babel``) for javascript - ``browserify`` for packaging
+
+The ``nbpresent`` python module (server component) is stored in the
+``/nbpresent`` folder
+
+Getting Started
+~~~~~~~~~~~~~~~
+
+You'll need conda installed, either from
+`Anaconda <https://www.continuum.io/downloads>`__ or
+`miniconda <http://conda.pydata.org/miniconda.html>`__. You can import a
+Python 3.5 development environment named ``nbpresent`` from
+``./environment.yml``.
+
+.. code:: shell
+
+    conda update env
+    source activate nbpresent
+
+We *still* use ``npm`` for a lot of dependencies, so then run:
 
 .. code:: shell
 
     npm install
+    npm run build:all
 
-To build everything with sourcemaps:
-
-.. code:: shell
-
-    npm run build
-
-To rebuild on every save:
-
-.. code:: shell
-
-    npm run watch
-
-To build everything, and optimize it:
-
-.. code:: shell
-
-    npm run build
+Ensure development asset loading
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To ensure that you always get the right assets, install the nbextension
 with the ``symlink``, ``force`` and ``enable`` options:
@@ -123,31 +126,25 @@ with the ``symlink``, ``force`` and ``enable`` options:
 
     python -m nbpresent.install --overwrite --symlink --enable --user
 
-Run the tests
+You may also want to pass in ``--prefix`` instead of user.
 
-.. code:: shell
+Chore Automation
+~~~~~~~~~~~~~~~~
 
-    npm run test
-
-Build the conda package
-
-.. code:: shell
-
-    npm run conda-build
-
-Developing with conda
-~~~~~~~~~~~~~~~~~~~~~
-
-A conda package, which pre-builds the static assets and installs itself
-into the local conda environment, is built from ``conda.recipe``
-
-::
-
-    conda build conda.recipe
-
-When developing with conda, you may want to use your conda environment
-to store assets and configuration:
-
-.. code:: shell
-
-    python -m nbpresent.install --overwrite --symlink --enable --prefix="${CONDA_ENV_PATH}"
++---------------------------------------------------------------------+---------------------------+
+| Task                                                                | Command                   |
++=====================================================================+===========================+
+| Build all of the front end assets with sourcemaps for development   | ``npm run build``         |
++---------------------------------------------------------------------+---------------------------+
+| Rebuild on every save                                               | ``npm run watch``         |
++---------------------------------------------------------------------+---------------------------+
+| Rebuild all of the front end assets, and optimize it                | ``npm run dist``          |
++---------------------------------------------------------------------+---------------------------+
+| Run the CasperJS and ``nose`` tests                                 | ``npm run test``          |
++---------------------------------------------------------------------+---------------------------+
+| Check code style                                                    | ``npm run lint``          |
++---------------------------------------------------------------------+---------------------------+
+| Build the conda package                                             | ``npm run conda-build``   |
++---------------------------------------------------------------------+---------------------------+
+| Build the ESDoc and Sphinx documentation                            | ``npm run docs``          |
++---------------------------------------------------------------------+---------------------------+

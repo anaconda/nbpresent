@@ -16,6 +16,7 @@ requirements:
     - python
     - sphinx
     - flake8
+    - notebook
     - nose
     - setuptools
   run:
