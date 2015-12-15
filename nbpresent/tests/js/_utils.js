@@ -19,7 +19,7 @@
 
   root.screenshot = function(message){
     this.captureSelector(
-      "screenshots/" + nextId() + "_" + slug(message) + ".png",
+      "nbpresent/static/screenshots/" + nextId() + "_" + slug(message) + ".png",
       "body"
     );
   }
