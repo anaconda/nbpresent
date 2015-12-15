@@ -5,8 +5,6 @@ include package.json
 
 recursive-include nbpresent *
 
-exclude nbpresent/static/*.html
-exclude nbpresent/static/*.gif
 exclude nbpresent/static/.git
 
 recursive-exclude * __pycache__
