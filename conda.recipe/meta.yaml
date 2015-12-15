@@ -21,9 +21,9 @@ requirements:
     - setuptools
     - sphinx
   run:
-    - python
-    - notebook
     - funcsigs
+    - notebook
+    - python
 
 test:
   files:
