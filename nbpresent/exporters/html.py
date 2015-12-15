@@ -1,3 +1,4 @@
+import codecs
 import os
 import json
 from glob import glob
@@ -31,9 +32,10 @@ class PresentExporter(HTMLExporter):
                                        sort_keys=True)
             },
             outputs={
-                filename: open(
+                filename: codecs.open(
                     filename,
-                    "rb" if filename.split(".")[-1] in bin_ext else "r"
+                    "rb" if filename.split(".")[-1] in bin_ext else "r",
+                    encoding="utf-8"
                 ).read()
                 for filename
                 in list(glob(os.path.join(ASSETS, "*.*"))) + NB_ASSETS
