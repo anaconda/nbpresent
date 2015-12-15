@@ -97,10 +97,10 @@ You may also want to pass in `--prefix` instead of user.
 | Task | Command |
 |-|-|-|
 | Build all of the front end assets with sourcemaps for development | `npm run build` |
-| Rebuild on every save  | `npm run watch` |
-| Rebuild all of the front end assets, and optimize it  | `npm run dist` |
+| Rebuild on every save | `npm run watch` |
+| Rebuild all of the front end assets, and optimize it | `npm run dist` |
 | Run the CasperJS and `nose` tests  | `npm run test` |
-| Check code style  |  `npm run lint` |
-| Build the conda package  | `npm run conda-build` |
-| Build the ESDoc and Sphinx documentation  | `npm run docs` |
-
+| Check code style |  `npm run lint` |
+| Build the conda package | `npm run pkg:conda` |
+| Build and upload the pypi package | `npm run pkg:pypi` |
+| Build the ESDoc and Sphinx documentation | `npm run docs` |
