@@ -9,3 +9,4 @@ build/
 *.xunit.xml
 .coverage
 screenshots/
+sphinx/source/auto

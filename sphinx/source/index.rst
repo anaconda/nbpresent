@@ -12,6 +12,9 @@ Contents:
    :maxdepth: 2
 
 
+.. automodule:: nbpresent
+   :members:
+
 
 Indices and tables
 ==================
@@ -19,4 +22,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

@@ -6,6 +6,9 @@ include package.json
 recursive-include nbpresent *
 
 exclude nbpresent/static/.git
+exclude sphinx
+exclude design
+exclude Dockerfile
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
