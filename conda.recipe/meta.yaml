@@ -12,13 +12,14 @@ build:
 
 requirements:
   build:
-    - nodejs
-    - python
-    - sphinx
     - flake8
-    - notebook
+    - nodejs
     - nose
+    - notebook
+    - phantomjs
+    - python
     - setuptools
+    - sphinx
   run:
     - python
     - notebook
@@ -29,18 +30,18 @@ test:
     - package.json
   requires:
     - coverage
+    - flake8
     - fontconfig
     - freetype
     - ipywidgets
     - mock
     - nodejs
     - nose
+    - nose
     - notebook
     - phantomjs
     - python
     - requests
-    - flake8
-    - nose
 
 about:
   summary: Next generation slides for Jupyter Notebooks
