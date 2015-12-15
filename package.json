@@ -47,6 +47,7 @@
     "url": "git://github.com/Anaconda-Server/nbpresent.git"
   },
   "scripts": {
+    "all": "npm run dist && npm run lint && npm run test && npm run docs",
     "browserify-deps": "bin/browserify-deps.sh",
     "browserify-notebook": "bin/browserify-notebook.sh",
     "browserify-standalone": "bin/browserify-standalone.sh",
