@@ -12,19 +12,41 @@ build:
 
 requirements:
   build:
+    - flake8
     - nodejs
-    - python
-  run:
-    - python
+    - nose
     - notebook
+    - phantomjs
+    - python
+    - setuptools
+    - sphinx
     - funcsigs
+  run:
+    - funcsigs
+    - notebook
+    - python
 
 test:
-  imports:
-    - nbpresent
+  files:
+    - package.json
+  requires:
+    - coverage
+    - flake8
+    - fontconfig
+    - freetype
+    - funcsigs
+    - ipywidgets
+    - mock
+    - nodejs
+    - nose
+    - notebook
+    - phantomjs
+    - python
+    - requests
+
 
 about:
   summary: Next generation slides for Jupyter Notebooks
-  home: https://github.com/continuumio/nbpresent
+  home: https://github.com/Anaconda-Server/nbpresent
   license_file: LICENSE
   license: BSD License

@@ -16,7 +16,7 @@ setup(
     author="Nicholas Bollweg",
     author_email="nbollweg@continuum.io",
     license="BSD-3-Clause",
-    url="https://github.com/ContinuumIO/nbpresent",
+    url="https://github.com/Anaconda-Server/nbpresent",
     keywords="ipython jupyter inkscape markdown presentation revealjs d3",
     classifiers=["Development Status :: 4 - Beta",
                  "Framework :: IPython",

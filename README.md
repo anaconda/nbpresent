@@ -13,14 +13,10 @@ Then either run
 %reload_ext nbpresent
 ```
 
-_every time you start the notebook or _enable_ the extension for every notebook launch:
+_every time you start the notebook_ or _enable_ the extension for every notebook launch:
 ```shell
 python -m nbpresent.install --enable
 ```
-
-
-### Coming soon
-- [conda package](https://github.com/ContinuumIO/nbpresent/issues/1)
 
 ## Export
 Stock `nbconvert` doesn't store quite enough information, so you'll need to do something like this:
@@ -61,71 +57,50 @@ Here's the whole doc:
 
 
 ## Development
-There are several development scenarios...
+This assumes you have cloned this repository locally:
+```
+git clone https://github.com/Anaconda-Server/nbpresent.git
+cd nbpresent
+```
 
-### The Hard Way
-The `nbpresent` nbextension is built from `src` in a checked out repo with:
-- less for style
-- babel for es2015
-- browserify for packaging
+### Repo Architecture
 
-These are installed via `npm`:
+The `nbpresent` nbextension is built from `./src` into `./nbpresent/static/nbresent` with:
+- `less` for style
+- `es6` (via `babel`) for javascript
+- `browserify` for packaging
+
+The `nbpresent` python module (server component) is stored in the `/nbpresent` folder
+
+### Getting Started
+You'll need conda installed, either from [Anaconda](https://www.continuum.io/downloads) or [miniconda](http://conda.pydata.org/miniconda.html). You can import a Python 3.5 development environment named `nbpresent` from `./environment.yml`.
+
+```shell
+conda update env
+source activate nbpresent
+```
+
+We _still_ use `npm` for a lot of dependencies, so then run:
 ```shell
 npm install
+npm run build:all
 ```
 
-To build everything with sourcemaps:
-```shell
-npm run build
-```
-
-To rebuild on every save:
-```shell
-npm run watch
-```
-
-To build everything, and optimize it:
-```shell
-npm run build
-```
-
+### Ensure development asset loading
 To ensure that you always get the right assets, install the nbextension with the `symlink`, `force` and `enable` options:
 ```shell
 python -m nbpresent.install --overwrite --symlink --enable --user
 ```
+You may also want to pass in `--prefix` instead of user.
 
-### Developing with conda
-A conda package, which pre-builds the static assets and installs itself into the local conda environment, is built from `conda.recipe`
-
-```
-conda build conda.recipe
-```
-
-When developing with conda, you may want to use your conda environment to store assets and configuration:
-```shell
-python -m nbpresent.install --overwrite --symlink --enable --prefix="${CONDA_ENV_PATH}"
-```
-
-### Developing with docker compose
-A number of intermediate Dockerfiles are available for different development
-workflows. These are most easily managed with docker-compose.
-
-For building a pristine conda environment, use `conda_base`.
-For a build of nbpresent, with all tests, use `conda_build`.
-For a live, running notebook with nbpresent installed, use `conda`.
-
->> META: TODO: make templates?
-
-Here is the build chain:
-
-```shell
-docker-compose build conda_base && \
-docker-compose build conda_build && \
-docker-compose build conda && \
-docker-compose up conda
-```
-
-
-```python
-
-```
+### Chore Automation
+| Task | Command |
+|-|-|-|
+| Build all of the front end assets with sourcemaps for development | `npm run build` |
+| Rebuild on every save | `npm run watch` |
+| Rebuild all of the front end assets, and optimize it | `npm run dist` |
+| Run the CasperJS and `nose` tests  | `npm run test` |
+| Check code style |  `npm run lint` |
+| Build the conda package | `npm run pkg:conda` |
+| Build and upload the pypi package | `npm run pkg:pypi` |
+| Build the ESDoc and Sphinx documentation | `npm run docs` |

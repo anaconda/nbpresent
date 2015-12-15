@@ -9,6 +9,6 @@ engine:
   - python=3.5
 
 script:
-  - conda build conda.recipe -c javascript -c nbcio
+  - conda build conda.recipe -c javascript -c mutirri
 
 build_targets: conda

@@ -25,6 +25,9 @@ class MiniSlide {
   }
 
   clicked(d){
+    // if called outside the d3 context...
+    d = d || d3.select(this).datum();
+
     if(!this.selectedRegion){
       return;
     }

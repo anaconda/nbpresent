@@ -31,8 +31,8 @@
   <meta charset="utf-8" />
   <title>{{resources['metadata']['name']}}</title>
 
-  <script src="./require.js"></script>
-  <script src="./jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
   {% for css in resources.inlining.css -%}
       <style type="text/css">
@@ -67,6 +67,8 @@
     }
   }
   </style>
+  <link rel="stylesheet" href="./nbpresent/nbpresent.min.css">
+
 
   <!-- Custom stylesheet, it must be in the same directory as the html file -->
   <link rel="stylesheet" href="custom.css">
@@ -83,47 +85,21 @@
     {{ resources.nbpresent.metadata }}
   </script>
   <script>
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill
-    if (!Function.prototype.bind) {
-      Function.prototype.bind = function(oThis) {
-        if (typeof this !== 'function') {
-          // closest thing possible to the ECMAScript 5
-          // internal IsCallable function
-          throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
-        }
-
-        var aArgs   = Array.prototype.slice.call(arguments, 1),
-            fToBind = this,
-            fNOP    = function() {},
-            fBound  = function() {
-              return fToBind.apply(this instanceof fNOP
-                     ? this
-                     : oThis,
-                     aArgs.concat(Array.prototype.slice.call(arguments)));
-            };
-
-        if (this.prototype) {
-          // native functions don't have a prototype
-          fNOP.prototype = this.prototype;
-        }
-        fBound.prototype = new fNOP();
-
-        return fBound;
-      };
-    }
-  </script>
-  <script>
     ;(function(){
       requirejs({
         paths: {
           jquery: [
             "./jquery.min",
             "components/jquery/jquery.min"
+          ],
+          nbpresent_loader: [
+            "./nbpresent.min",
+            "./nbpresent/nbpresent.min"
           ]
         }
       }, [
         "jquery",
-        "./nbpresent.min.js"
+        "nbpresent_loader"
       ], function($, loader){
         loader.load_presentation_standalone();
       }, function(err){

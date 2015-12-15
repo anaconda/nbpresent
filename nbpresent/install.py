@@ -2,7 +2,7 @@
 
 import argparse
 import os
-import subprocess
+# import subprocess
 from os.path import (
     abspath,
     dirname,
@@ -15,7 +15,7 @@ try:
 except ImportError:
     from funcsigs import signature
 
-from jupyter_core.paths import jupyter_config_dir, ENV_CONFIG_PATH
+from jupyter_core.paths import jupyter_config_dir  # , ENV_CONFIG_PATH
 
 
 def install(enable=False, **kwargs):
@@ -40,6 +40,7 @@ def install(enable=False, **kwargs):
     install_nbextension(directory, **kwargs)
 
     if enable:
+        path = jupyter_config_dir()
         if "prefix" in kwargs:
             path = join(kwargs["prefix"], "etc", "jupyter")
             if not exists(path):
@@ -62,13 +63,13 @@ def install(enable=False, **kwargs):
         print("New config...")
         pprint(cm.get("jupyter_notebook_config"))
 
-        try:
-            subprocess.call(["conda", "info", "--root"])
-            print("conda detected")
-            _jupyter_config_dir = ENV_CONFIG_PATH[0]
-        except OSError:
-            print("conda not detected")
-            _jupyter_config_dir = jupyter_config_dir()
+        _jupyter_config_dir = jupyter_config_dir()
+        # try:
+        #     subprocess.call(["conda", "info", "--root"])
+        #     print("conda detected")
+        #     _jupyter_config_dir = ENV_CONFIG_PATH[0]
+        # except OSError:
+        #     print("conda not detected")
 
         cm = ConfigManager(config_dir=join(_jupyter_config_dir, "nbconfig"))
         print(

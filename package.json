@@ -1,12 +1,13 @@
 {
   "author": "nicholas bollweg",
   "bugs": {
-    "url": "https://github.com/bollwyvl/nbpresent/issues"
+    "url": "https://github.com/Anaconda-Server/nbpresent/issues"
   },
   "dependencies": {
     "baobab": "^2.1.1",
     "d3": "~3.5.6",
-    "html2canvas": "~0.5.0-alpha2",
+    "html2canvas": "0.5.0-alpha2",
+    "phantomjs-polyfill": "0.0.1",
     "uuid": "^2.0.1",
     "vanilla-slab": "~0.2.3"
   },
@@ -17,18 +18,25 @@
     "babel-preset-es2015": "^6.1.18",
     "babelify": "^7.2.0",
     "browserify": "~11.2.0",
+    "casperjs": "^1.1.0-beta3",
     "disc": "^1.3.2",
+    "esdoc": "^0.4.3",
     "eslint": "~1.7.1",
     "less": "~2.5.3",
     "less-plugin-autoprefix": "~1.5.1",
     "less-plugin-clean-css": "~1.5.1",
+    "lodash": "^3.10.1",
     "uglifyify": "~3.0.1",
     "watch": "~0.16.0"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
     "rules": {
-      "strict": 0
+      "strict": 1
+    },
+    "env": {
+      "es6": true,
+      "browser": true
     }
   },
   "license": "BSD-3-Clause",
@@ -36,21 +44,34 @@
   "name": "nbpresent",
   "repository": {
     "type": "git",
-    "url": "git://github.com/bollwyvl/nbpresent.git"
+    "url": "git://github.com/Anaconda-Server/nbpresent.git"
   },
   "scripts": {
-    "dist": "EXTRA='-g uglifyify' npm run build",
-    "browserify": "bin/browserify.sh",
-    "watch:browserify": "watch 'npm run browserify' src/js",
+    "all": "npm run dist && npm run lint && npm run test && npm run docs",
     "browserify-deps": "bin/browserify-deps.sh",
-    "watch:browserify-deps": "watch 'EXTRA=--debug npm run browserify-deps' src/es6",
     "browserify-notebook": "bin/browserify-notebook.sh",
-    "watch:browserify-notebook": "watch 'EXTRA=--debug npm run browserify-notebook' src/es6",
     "browserify-standalone": "bin/browserify-standalone.sh",
-    "watch:browserify-standalone": "watch 'EXTRA=--debug npm run browserify-standalone' src/es6",
-    "less": "bin/less.sh",
-    "watch:less": "watch 'npm run less' src/less",
+    "browserify": "bin/browserify.sh",
     "build": "npm run browserify && npm run less && npm run browserify-deps && npm run browserify-standalone && npm run browserify-notebook",
+    "pkg:conda": "conda build conda.recipe -c javascript -c mutirri",
+    "pkg:pypi": "python setup.py register -r pypi && python setup.py sdist && python setup.py bdist_wheel && python setup.py sdist bdist_wheel upload -r pypi",
+    "dist": "EXTRA='-g uglifyify' npm run build",
+    "docs": "npm run docs:clean && npm run docs:esdoc && npm run docs:sphinx && npm run docs:notebooks",
+    "docs:clean": "rm -rf nbpresent/static/docs",
+    "docs:esdoc": "esdoc -c .esdoc",
+    "docs:sphinx": "sphinx-apidoc -f -o ./sphinx/source/auto nbpresent && cd sphinx && make html && mv -fu build/html ../nbpresent/static/docs/sphinx",
+    "docs:notebooks": "nbpresent -i notebooks/index.ipynb -o nbpresent/static/index.html",
+    "readme": "jupyter nbconvert notebooks/README.ipynb --to=rst --stdout > README.rst && jupyter nbconvert notebooks/README.ipynb --to=markdown --stdout > README.md",
+    "lint": "npm run lint:eslint && npm run lint:flake8",
+    "lint:eslint": "eslint --ext es6 ./src",
+    "lint:flake8": "flake8 nbpresent setup.py sphinx",
+    "less": "bin/less.sh",
+    "test": "python -m nose nbpresent",
+    "watch:browserify-deps": "watch 'EXTRA=--debug npm run browserify-deps' src/es6",
+    "watch:browserify-notebook": "watch 'EXTRA=--debug npm run browserify-notebook' src/es6",
+    "watch:browserify-standalone": "watch 'EXTRA=--debug npm run browserify-standalone' src/es6",
+    "watch:browserify": "watch 'npm run browserify' src/js",
+    "watch:less": "watch 'npm run less' src/less",
     "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-notebook watch:browserify-standalone watch:less"
   },
   "version": "0.4.0"
