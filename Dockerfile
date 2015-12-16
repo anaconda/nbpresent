@@ -2,7 +2,7 @@ FROM andrewosh/binder-base
 
 USER main
 
-RUN source activate python3 \
+RUN /bin/bash -c "source activate python3 \
   && conda install \
     -y \
     -c nbcio \
@@ -11,4 +11,4 @@ RUN source activate python3 \
     --no-cache-dir \
     bqplot \
     qgrid \
-  && conda env export
+  && conda env export"
