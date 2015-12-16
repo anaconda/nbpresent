@@ -7,6 +7,7 @@ RUN /bin/bash -c "source activate python3 \
     -y \
     -c nbcio \
     nbpresent \
+    notebook \
   && pip install \
     --no-cache-dir \
     bqplot \
