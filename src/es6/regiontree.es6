@@ -62,6 +62,10 @@ class RegionTree {
           icon: "tree",
           click: () => this.layout("treemap"),
           tip: "Treemap Layout"
+        },{
+          icon: "calculator",
+          click: () => this.layout("grid"),
+          tip: "Grid Layout"
         }],
         // TODO: fix this
         // [{
@@ -195,7 +199,8 @@ class RegionTree {
 
       // TODO: put this in layout
       let icon = {
-        treemap: "tree"
+        treemap: "tree",
+        grid: "calculator"
       }[d.attr.key.split(":")[0]];
 
       el.select(".fa")
