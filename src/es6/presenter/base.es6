@@ -4,6 +4,7 @@ import {SpeakerBase} from "../speaker/base";
 
 import {ManualLayout} from "../layout/manual";
 import {TreemapLayout} from "../layout/treemap";
+import {GridLayout} from "../layout/grid";
 
 import {PARTS, PART_SELECT} from "../parts";
 import {SlabStyle} from "../style/slab";
@@ -53,7 +54,8 @@ export class Presenter {
   layoutClass(slide){
     return {
       manual: ManualLayout,
-      treemap: TreemapLayout
+      treemap: TreemapLayout,
+      grid: GridLayout
     }[slide.value.layout || "manual"];
   }
 
