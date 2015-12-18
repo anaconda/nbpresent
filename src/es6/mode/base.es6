@@ -1,6 +1,6 @@
 import {d3} from "nbpresent-deps";
 
-export class Mode {
+export class BaseMode {
   constructor(root){
     this.root = root;
     this.init();
