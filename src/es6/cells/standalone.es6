@@ -7,7 +7,7 @@ import {PARTS, PART_SELECT} from "../parts";
 
 let _thumbs = {};
 
-export class CellManager {
+export class StandaloneCellManager {
   getCells(){
     let cells = {};
 

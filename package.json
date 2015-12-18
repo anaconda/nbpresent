@@ -20,7 +20,7 @@
     "browserify": "~11.2.0",
     "casperjs": "^1.1.0-beta3",
     "disc": "^1.3.2",
-    "esdoc": "^0.4.3",
+    "esdoc": "^0.4.0",
     "eslint": "~1.7.1",
     "less": "~2.5.3",
     "less-plugin-autoprefix": "~1.5.1",
@@ -72,6 +72,8 @@
     "watch:browserify-standalone": "watch 'EXTRA=--debug npm run browserify-standalone' src/es6",
     "watch:browserify": "watch 'npm run browserify' src/js",
     "watch:less": "watch 'npm run less' src/less",
+    "watch:docs:esdoc": "watch 'npm run docs:esdoc' src/es6",
+    "watch:docs:sphinx": "watch 'npm run docs:sphinx' nbpresent/",
     "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-notebook watch:browserify-standalone watch:less"
   },
   "version": "0.4.2"

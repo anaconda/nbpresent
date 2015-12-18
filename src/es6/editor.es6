@@ -3,70 +3,144 @@ import {d3} from "nbpresent-deps";
 import {PART} from "./parts";
 
 import {RegionTree} from "./regiontree";
-import {CellManager} from "./cells/notebook";
+import {NotebookCellManager} from "./cells/notebook";
 
 import {bbox} from "./d3.bbox";
 
-class Editor{
+
+
+/** The visual editor overlay for drag-and-drop positioning of slide regions.
+  */
+export class Editor {
+  /** Make a new Editor.
+    * @param {baobab.Cursor} slide - the slide to edit
+    * @param {object} selectedRegion - the slide id and region id
+    * @listens {/slides/{slide}}  */
   constructor(slide, selectedRegion) {
+    /** whether this Editor has been killed.
+      * @type {bool} */
+    this.killed = false;
+
+    /** cursor pointed at a specific slide.
+      * @type {baobab.Cursor} */
     this.slide = slide;
+
+    /** the currently selected region
+      * @type {object}
+      * @property {string} selectedRegion.region
+      * @property {string} selectedRegion.slide */
     this.selectedRegion = selectedRegion;
+
+    /** a sub-cursor for just region changes
+      * @type {baobab.Cursor} */
     this.regions = this.slide.select("regions");
-    this.cellManager = new CellManager();
+
+    /** handles bookkeeping with the browser
+      * @type {NotebookCellManager} */
+    this.cellManager = new NotebookCellManager();
 
     // TODO: make these discrete to base unit
+    /** the relative size to screen width transfer function
+      * @type {d3.scale} */
     this.x = d3.scale.linear();
+
+    /** the relative size to screen height transfer function
+      * @type {d3.scale} */
     this.y = d3.scale.linear();
 
-
+    // ready to init
     this.initUI();
+
+    // TODO: move this?
+    /** sub-ui for editing regions
+      * @type {RegionTree} */
     this.sidebar = new RegionTree(this.slide, this.selectedRegion);
 
+    // ready to behave
     this.initBehavior();
 
+    // fake data event
     this.update();
 
+    // subscribe to event when cursor changes
     this.slide.on("update", ()=> { this.killed || this.update(); });
   }
 
+  /**
+   * Destroy the editor and its children utterly.
+   */
   destroy() {
     this.sidebar.destroy();
     this.$ui.transition()
       .style({opacity: 0})
       .remove();
+
     this.killed = true;
   }
 
+
+  /**
+   * Create d3 behaviors.
+   * @return {Editor}
+   */
   initBehavior(){
+    /** @type {d3.bbox} */
     this.bbox = bbox();
+
+    return this;
   }
 
+  /**
+   * Create all UI chrome.
+   * @return {Editor}
+   */
   initUI(){
+    /** @type {d3.selection} */
     this.$ui = d3.select("body")
       .append("div")
       .classed({nbpresent_editor: 1})
       .style({opacity: 0});
 
+    /** @type {d3.selection} */
     this.$bg = this.$ui.append("div")
       .classed({slide_bg: 1});
 
+    /** @type {d3.selection} */
     this.$svg = this.$bg.append("svg");
 
+    /** @type {d3.selection} */
     this.$defs = this.$svg.append("defs");
 
     this.$ui.transition()
       .style({opacity: 1});
+
+    return this;
   }
 
+
+  /**
+   * A stand-in for themed padding
+   * @return {Number}
+   */
   padding(){
     return 20;
   }
 
+
+  /**
+   * A stand-in for themed aspect ratio
+   * @return {Number}
+   */
   aspectRatio(){
     // TODO: put in data
     return 16 / 9;
   }
 
+  /**
+   * The "end" event of the d3.bbox control.
+   * @param {Element} el - the DOM element (usually `this` in d3 callbacks)
+   * @param {Object} d - the datum for the element
+   */
   bbEnd(el, d){
     let $el = d3.select(el),
       scales = {
@@ -90,11 +164,21 @@ class Editor{
         }, {}));
   }
 
+  /**
+   * A d3 filter factory that determines whether a region contains a part of a
+   * part type.
+   * @param {PART_SELECT} part - the type of part to seek
+   * @return {bool}
+   */
   hasContent(part){
     return (d) => (d.value.content || {}).part === part;
   }
 
+  /**
+   * The main tree callback.
+   */
   update(){
+    // TODO: this really needs to be refactored.
     let that = this,
       uibb = this.$ui.node().getBoundingClientRect(),
       width = uibb.width - (this.sidebar.width() + (2 * this.padding())),
@@ -214,5 +298,3 @@ class Editor{
       });
   }
 }
-
-export {Editor};
