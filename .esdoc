@@ -1,4 +1,4 @@
 {
-  "source": "./src",
+  "source": "./src/es6",
   "destination": "./nbpresent/static/docs/esdoc"
 }

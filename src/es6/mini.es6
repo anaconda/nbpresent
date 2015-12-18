@@ -1,12 +1,12 @@
 import {d3} from "nbpresent-deps";
 
-import {CellManager} from "./cells/notebook";
+import {NotebookCellManager} from "./cells/notebook";
 import {PART} from "./parts";
 
 class MiniSlide {
   constructor(selectedRegion) {
     this.selectedRegion = selectedRegion;
-    this.cellManager = new CellManager();
+    this.cellManager = new NotebookCellManager();
 
     this._regions = (d, i) => d.value.regions;
 

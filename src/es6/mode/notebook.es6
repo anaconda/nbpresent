@@ -9,9 +9,9 @@ import {PART} from "../parts";
 import {NbpresentTour} from "../tour";
 import {Tree} from "../tree";
 
-import {Mode as BaseMode} from "./base";
+import {BaseMode} from "./base";
 
-export class Mode extends BaseMode {
+export class NotebookMode extends BaseMode {
   init() {
     this.initStylesheet();
 

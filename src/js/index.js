@@ -28,8 +28,8 @@ function(require){
     requirejs(["require", ns + "deps"], function(require, deps){
       nbpresent.deps = deps;
       requirejs(["require", ns + env], function(require, mode){
-        nbpresent.Mode = mode.Mode;
-        window.nbpresent.mode = new mode.Mode(_here[0].replace("./", "."));
+        nbpresent.Mode = mode.Mode || mode.NotebookMode || mode.StandaloneMode;
+        window.nbpresent.mode = new nbpresent.Mode(_here[0].replace("./", "."));
       });
     });
   }
