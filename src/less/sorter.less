@@ -4,7 +4,8 @@
   right: 0;
   left: 0;
   bottom: 0;
-  height: @sorter-height;
+  top: 0;
+  // height: @sorter-height;
   color: @jpy-brand;
   box-shadow: @nbpresent-z-shadow;
   transition: bottom 0.2s;
@@ -39,7 +40,7 @@
   .deck_toolbar{
     position: absolute;
     left: 50%;
-    top: -40px;
+    top: 0;
   }
 
   .region_toolbar{
@@ -50,14 +51,11 @@
   }
 
   .slides_wrap {
-    padding-top: 30px;
-    padding-bottom: 30px;
-    height: @sorter-height;
     overflow-x: auto;
     overflow-y: hidden;
     position: relative;
-    margin: 0;
-    right: 0;
+    height: 100%;
+    width: 100%;
 
     .empty {
       position: absolute;
