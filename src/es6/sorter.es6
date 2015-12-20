@@ -74,11 +74,6 @@ class Sorter {
         // necessary for FOUC
         "display": visible ? "block" : "none"
       });
-
-    d3.select("#notebook")
-      .style({
-        "margin-bottom": visible ? "100px" : null
-      });
   }
 
   initUI(){
@@ -101,7 +96,7 @@ class Sorter {
       .attr({
         href: "https://anaconda-server.github.io/nbpresent/",
         target: "_blank"
-      })
+      });
 
     $brand.append("i")
       .attr("class", "fa fa-fw fa-gift");
@@ -224,9 +219,6 @@ class Sorter {
 
     $slide.exit()
       .transition()
-      .style({
-        top: "200px"
-      })
       .remove();
 
     let selectedSlide = this.selectedSlide.get(),
@@ -235,7 +227,11 @@ class Sorter {
 
     $slide
       .style({
-        "z-index": (d, i) => i
+        "z-index": (d, i) => i,
+        top: (d, i) => {
+          // TODO: handle subslides
+          return "50%";
+        }
       })
       .classed({
         active: (d) => d.key === selectedSlide
