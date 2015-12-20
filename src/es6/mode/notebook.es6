@@ -15,12 +15,7 @@ import {BaseMode} from "./base";
 
 export class NotebookMode extends BaseMode {
   init() {
-    let tree = new Tree({
-      slides: this.metadata().slides,
-      root: this.root
-    });
-
-    this.tree = tree.tree;
+    super.init();
 
     this.slides = this.tree.select(["slides"]);
     this.slides.on("update", () => this.metadata(true))
@@ -32,6 +27,13 @@ export class NotebookMode extends BaseMode {
     this.sorter = new Sorter(this.tree, this.tour);
 
     this.initToolbar();
+  }
+
+  loadData() {
+    return {
+      slides: this.metadata().slides,
+      root: this.root
+    };
   }
 
   metadata(update){

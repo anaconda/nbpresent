@@ -2,7 +2,7 @@ import {d3} from "nbpresent-deps";
 
 let fn = d3.functor;
 
-class Toolbar {
+export class Toolbar {
   constructor(){
     this._btnClass = fn("btn-default");
     this._btnGroupClass = fn("btn-group");
@@ -81,5 +81,3 @@ class Toolbar {
     $group.exit().remove();
   }
 }
-
-export {Toolbar};
