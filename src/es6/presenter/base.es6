@@ -49,9 +49,11 @@ export class Presenter {
       .style({display: "none"});
   }
 
-
-
+  /** Decode the slide object through the registry of layout classes.
+    * @param {Object} slide - the key, value of the current slide
+    * @return {Class} */
   layoutClass(slide){
+    // TODO: refactor this into plugin mechanism
     return {
       manual: ManualLayout,
       treemap: TreemapLayout,
@@ -59,6 +61,9 @@ export class Presenter {
     }[slide.value.layout || "manual"];
   }
 
+  /** Initialize the layout
+    * @param {Object} slide - the immutable data of the current slide
+    * @return {RegionTree} */
   updateLayout(slide){
     let LayoutClass = this.layoutClass(slide);
 
@@ -75,6 +80,7 @@ export class Presenter {
       );
     }
     this.layout.init();
+    return this;
   }
 
   present() {

@@ -35,8 +35,13 @@ class RegionTree {
     return 300;
   }
 
+
+  /** Set the layout to the given key
+    * @param {String} layout - the layout to use
+    * @return {RegionTree} */
   layout(layout){
     this.slide.set("layout", layout);
+    return this;
   }
 
   initUI(){
