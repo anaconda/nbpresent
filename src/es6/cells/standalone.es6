@@ -3,7 +3,7 @@ import {d3, html2canvas} from "nbpresent-deps";
 // boo nasty hack
 window.html2canvas = html2canvas;
 
-import {PARTS, PART_SELECT} from "../parts";
+import {PART, PART_SELECT} from "../parts";
 
 let _thumbs = {};
 
@@ -32,7 +32,8 @@ export class StandaloneCellManager {
     }
 
     let $el = d3.select(cell.element[0]),
-      part = $el.select(PART_SELECT[content.part]);
+      part = content.part === PART.whole ?
+        $el : $el.select(PART_SELECT[content.part]);
 
     return part;
   }
