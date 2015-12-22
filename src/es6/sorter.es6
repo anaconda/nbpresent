@@ -13,9 +13,10 @@ import {AriseTome} from "./tome/arise";
 let REMOVED = "<removed>";
 
 class Sorter {
-  constructor(tree, tour) {
+  constructor(tree, tour, parentMode) {
     this.tree = tree;
     this.tour = tour;
+    this.parentMode = parentMode;
 
     this.templatePicked = this.templatePicked.bind(this);
 
@@ -382,6 +383,12 @@ class Sorter {
           icon: "book fa-2x",
           click: () => this.show(),
           tip: "Back to Notebook"
+        }, {
+          icon: "youtube-play fa-2x",
+          click: () => {
+            this.parentMode.present();
+          },
+          tip: "Present"
         }],
         [{
           icon: "trash fa-2x",
