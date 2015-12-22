@@ -28,9 +28,6 @@ export class NotebookMode extends BaseMode {
     this.tour = new NbpresentTour(this);
     this.tour.init();
 
-    this.presenter = new NotebookPresenter(this.tree, this.tour);
-    this.sorter = new Sorter(this.tree, this.tour);
-
     this.initToolbar();
   }
 
@@ -67,13 +64,17 @@ export class NotebookMode extends BaseMode {
   }
 
   show(){
+    if(!this.sorter){
+      this.sorter = new Sorter(this.tree, this.tour);
+    }
     this.sorter.show();
     this.tour.start();
-    $('#header-container').toggle();
-    $('.header-bar').toggle();
   }
 
   present(){
+    if(!this.presenter){
+      this.presenter = new NotebookPresenter(this.tree, this.tour);
+    }
     this.presenter.presenting.set(true);
   }
 
