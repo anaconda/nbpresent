@@ -77,7 +77,8 @@ class MiniSlide {
         },
         content_source: this.hasContent(PART.source),
         content_outputs: this.hasContent(PART.outputs),
-        content_widgets: this.hasContent(PART.widgets)
+        content_widgets: this.hasContent(PART.widgets),
+        content_whole: this.hasContent(PART.whole)
       })
       // TODO: scale
       .style({

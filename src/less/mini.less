@@ -36,24 +36,30 @@
 
     transition: border 0.2s;
 
-    &.content_source, &.content_outputs, &.content_widgets{
+    &.content_source,
+    &.content_outputs,
+    &.content_widgets,
+    &.content_whole {
        border: solid 1px black;
     }
 
-
-    &.content_source{
+    &.content_source {
       background-color: rgba(0, 0, 128, 0.25);
     }
 
-    &.content_outputs{
+    &.content_outputs {
       background-color: rgba(139, 0, 0, 0.25);
     }
 
-    &.content_widgets{
+    &.content_widgets {
       background-color: rgba(139, 0, 128, 0.25);
     }
 
-    &.active{
+    &.content_whole {
+      background-color: fadeOut(@jpy-brand, 75%);
+    }
+
+    &.active {
       transition: border 0.2s;
       border: solid 3px @jpy-brand;
     }

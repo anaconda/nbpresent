@@ -4,7 +4,7 @@ import Jupyter from "base/js/namespace";
 
 import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
-import {PART, PART_SELECT} from "./parts";
+import {PART, PART_SELECT, partColor} from "./parts";
 import {MiniSlide} from "./mini";
 import {TemplateLibrary} from "./templates";
 
@@ -429,17 +429,19 @@ class Sorter {
   }
 
   linkContentMode(){
+    // TODO: refactor this whole thing into a class
     let wasLinking = this.$view.classed("linking"),
-      inputs = d3.selectAll(".inner_cell"),
-      outputs = d3.selectAll(".cell > .output_wrapper"),
-      widgets = d3.selectAll(".cell > .widget-area");
-
+      header = d3.select("#header"),
+      site = d3.select("#site");
     this.$view
       .classed({linking: !wasLinking});
 
-    this.$linkOverlay = this.$linkOverlay || d3.select("body")
+    this.$linkOverlay = this.$linkOverlay || d3.select("#notebook")
       .append("div")
-      .classed({"nbpresent-sorter-link-overlay": 1});
+      .classed({"nbpresent-sorter-link-overlay": 1})
+      .call((overlay)=>{
+        overlay.append("span").classed({label: 1});
+      });
 
     if(wasLinking){
       d3.select(window).on("mousemove.nbpresent-sorter-linking", null);
@@ -456,7 +458,8 @@ class Sorter {
           parts = {
             source: cellect.select(PART_SELECT.source).node(),
             outputs: cellect.select(PART_SELECT.outputs).node(),
-            widgets: cellect.select(PART_SELECT.widgets).node()
+            widgets: cellect.select(PART_SELECT.widgets).node(),
+            whole: cellect.node()
           };
 
         if(parts.source && parts.source.contains(d3.event.target)){
@@ -465,23 +468,32 @@ class Sorter {
           part = PART.outputs;
         }else if(parts.widgets && parts.widgets.contains(d3.event.target)){
           part = PART.widgets;
+        }else if(parts.whole && parts.whole.contains(d3.event.target)){
+          part = PART.whole;
         }
 
         el = parts[part];
 
         if(part && el){
-          let bb = el.getBoundingClientRect();
+          let bb = el.getBoundingClientRect(),
+            heightOffset = header.property("clientHeight") -
+              site.property("scrollTop");
+
           this.$linkOverlay
             .style({
-              left: `${bb.left}px`,
-              top: `${bb.top}px`,
-              width: `${bb.width}px`,
-              height: `${bb.height}px`,
+              left: `${bb.left + 1 }px`,
+              top: `${(bb.top - heightOffset) + 1}px`,
+              width: `${bb.width - 2}px`,
+              height: `${bb.height - 2}px`,
+              "background-color": partColor(part)
             })
             .on("click", ()=> {
               this.linkContent(part, cell);
               this.linkContentMode();
-            });
+            })
+            .select(".label")
+            .text(`Link to ${part}`)
+
           return true;
         }
       })

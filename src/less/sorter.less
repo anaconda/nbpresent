@@ -3,6 +3,16 @@
   opacity: 0.5;
   background-color: yellow;
   z-index: @z-sorter;
+  text-align: center;
+  font-size: 48px;
+  display: table;
+
+  .label {
+    display: table-cell;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .nbpresent_sorter{
@@ -54,6 +64,7 @@
     transition: all 0.3s;
     bottom: 100%;
     opacity: 0;
+    display: none;
   }
 
   .slide_toolbar {
