@@ -14,9 +14,8 @@ export class BaseTome {
   }
 
   execute(){
-    console.debug(this, "execute!");
     this.study().map((d)=>{
-      console.log(d);
+      this.sorter.slides.set([d.id], d);
     });
   }
 }
