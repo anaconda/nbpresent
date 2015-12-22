@@ -20,23 +20,45 @@ export class AriseTome extends BaseTome {
       prev;
 
     Jupyter.notebook.get_cells().map((cell, i) => {
-      prev = (slides.slice(-1)[0] || {}).id;
+      prev = slides.slice(-1)[0];
 
       let slideType = (cell.metadata.slideshow || {}) .slide_type ||
         (i ? "-" : "slide");
 
       switch(slideType){
         case "slide":
-          slides.push(this.fromSlideshowSlide(cell, prev));
+          slides.push(this.fromSlideshowSlide(cell, prev ? prev.id : null));
           break;
         case "subslide":
+          console.debug("subslide not implemented yet");
+          break;
         case "fragment":
+          console.debug("fragment not implemented yet");
+          break;
         case "note":
+          console.debug("note not implemented yet");
+          break;
         case "-":
+          prev && this.fromSlideshowContinuation(cell, prev);
       }
     });
 
     return slides;
+  }
+
+  fromSlideshowContinuation(cell, prev){
+    let id = this.sorter.nextId(),
+      cellId = this.sorter.cellId(cell);
+    prev.regions[id] = {
+      id,
+      content: {cell: cellId, part: PART.whole},
+      attrs: {
+        x: 0.1,
+        y: 0.5,
+        width: 0.8,
+        height: 0.4
+      }
+    };
   }
 
   fromSlideshowSlide(cell, prev=null){
