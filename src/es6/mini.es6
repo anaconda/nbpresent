@@ -86,32 +86,6 @@ class MiniSlide {
         left: (d) => `${d.region.value.attrs.x * 160}px`,
         top: (d) => `${d.region.value.attrs.y * 90}px`
       });
-
-    // TODO: this needs to be much better/faster
-    $region
-      .filter((d) => d.region.value.content)
-      .filter(function(d){
-        let el = d3.select(this);
-        return el.classed("active") || el.style("background-image") === "none";
-      })
-      .each(function(d){
-        var $region = d3.select(this);
-        that.cellManager.thumbnail(d.region.value.content)
-          .catch(function(err){
-            $region
-              .style({
-                "background": "#333",
-                "background-image": null
-              });
-          })
-          .then(function({uri, width, height}){
-            $region
-              .style({
-                background: null,
-                "background-image": `url("${uri}")`
-              });
-          });
-      });
   }
 }
 

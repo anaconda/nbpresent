@@ -36,16 +36,21 @@
 
     transition: border 0.2s;
 
+    &.content_source, &.content_outputs, &.content_widgets{
+       border: solid 1px black;
+    }
+
+
     &.content_source{
-      border: solid 3px rgba(0, 0, 128, 0.25);
+      background-color: rgba(0, 0, 128, 0.25);
     }
 
     &.content_outputs{
-      border: solid 3px rgba(139, 0, 0, 0.25);
+      background-color: rgba(139, 0, 0, 0.25);
     }
 
     &.content_widgets{
-      border: solid 3px rgba(139, 0, 128, 0.25);
+      background-color: rgba(139, 0, 128, 0.25);
     }
 
     &.active{

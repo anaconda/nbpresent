@@ -1,3 +1,10 @@
+.nbpresent-sorter-link-overlay {
+  position: absolute;
+  opacity: 0.5;
+  background-color: yellow;
+  z-index: @z-sorter;
+}
+
 .nbpresent_sorter{
   z-index: @z-sorter;
   position: fixed;
@@ -15,6 +22,15 @@
   &.empty .sorter_empty {
     position: absolute;
     top: 0;
+  }
+
+  &.linking {
+    opacity: 0.5;
+    top: 80%;
+    transition: all 0.3s;
+    .deck_toolbar {
+      display: none;
+    }
   }
 
   .nbpresent_brand, .nbpresent_help {
