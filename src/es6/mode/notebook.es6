@@ -48,7 +48,7 @@ export class NotebookMode extends BaseMode {
 
   show(){
     if(!this.sorter){
-      this.sorter = new Sorter(this.tree, this.tour);
+      this.sorter = new Sorter(this.tree, this.tour, this);
     }
     this.sorter.show();
     this.tour.start();
