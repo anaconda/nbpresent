@@ -4,7 +4,7 @@ import Jupyter from "base/js/namespace";
 
 import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
-import {PART} from "./parts";
+import {PART, PART_SELECT} from "./parts";
 import {MiniSlide} from "./mini";
 import {TemplateLibrary} from "./templates";
 
@@ -306,7 +306,17 @@ class Sorter {
         }
       });
 
+
     $slide.call(this.mini.update);
+
+    this.$regionToolbar
+      .style({
+        opacity: selectedRegion ? 1 : 0,
+        display: selectedRegion ? "block" : "none",
+        left: `${selectedSlideLeft - 30}px`,
+        top: "50%",
+        "margin-top": "-45px"
+      });
 
     this.$deckToolbar.call(this.deckToolbar.update);
   }
@@ -385,32 +395,22 @@ class Sorter {
       ])
       .call(this.deckToolbar.update);
 
-    // this.regionToolbar = new Toolbar();
-    // this.$regionToolbar = this.$slides.append("div")
-    //   .classed({region_toolbar: 1})
-    //   .datum([
-    //     [{
-    //       icon: "terminal",
-    //       click: () => this.linkContent(PART.source),
-    //       tip: "Link Region to Cell Input"
-    //     },
-    //     {
-    //       icon: "image",
-    //       click: () => this.linkContent(PART.outputs),
-    //       tip: "Link Region to Cell Output"
-    //     },
-    //     {
-    //       icon: "sliders",
-    //       click: () => this.linkContent(PART.widgets),
-    //       tip: "Link Region to Cell Widgets"
-    //     },
-    //     {
-    //       icon: "unlink",
-    //       click: () => this.linkContent(null),
-    //       tip: "Unlink Region"
-    //     }]
-    //   ])
-    //   .call(this.regionToolbar.update);
+    this.regionToolbar = new Toolbar();
+    this.$regionToolbar = this.$slides.append("div")
+      .classed({region_toolbar: 1})
+      .datum([
+        [{
+          icon: "link",
+          click: () => this.linkContentMode(),
+          tip: "Link Region to Cell (Part)"
+        },
+        {
+          icon: "unlink",
+          click: () => this.linkContent(null),
+          tip: "Unlink Region"
+        }]
+      ])
+      .call(this.regionToolbar.update);
   }
 
   cellId(cell){
@@ -421,10 +421,72 @@ class Sorter {
     return cell.metadata.nbpresent.id;
   }
 
-  linkContent(part){
+  linkContentMode(){
+    let wasLinking = this.$view.classed("linking"),
+      inputs = d3.selectAll(".inner_cell"),
+      outputs = d3.selectAll(".cell > .output_wrapper"),
+      widgets = d3.selectAll(".cell > .widget-area");
+
+    this.$view
+      .classed({linking: !wasLinking});
+
+    this.$linkOverlay = this.$linkOverlay || d3.select("body")
+      .append("div")
+      .classed({"nbpresent-sorter-link-overlay": 1});
+
+    if(wasLinking){
+      d3.select(window).on("mousemove.nbpresent-sorter-linking", null);
+      this.$linkOverlay.remove();
+      this.$linkOverlay = null;
+      return;
+    }
+
+    d3.select(window).on("mousemove.nbpresent-sorter-linking", ()=>{
+      Jupyter.notebook.get_cells().some((cell)=>{
+        let part,
+          el,
+          cellect = d3.select(cell.element[0]),
+          parts = {
+            source: cellect.select(PART_SELECT.source).node(),
+            outputs: cellect.select(PART_SELECT.outputs).node(),
+            widgets: cellect.select(PART_SELECT.widgets).node()
+          };
+
+        if(parts.source && parts.source.contains(d3.event.target)){
+          part = PART.source;
+        }else if(parts.outputs && parts.outputs.contains(d3.event.target)){
+          part = PART.outputs;
+        }else if(parts.widgets && parts.widgets.contains(d3.event.target)){
+          part = PART.widgets;
+        }
+
+        el = parts[part];
+
+        if(part && el){
+          let bb = el.getBoundingClientRect();
+          this.$linkOverlay
+            .style({
+              left: `${bb.left}px`,
+              top: `${bb.top}px`,
+              width: `${bb.width}px`,
+              height: `${bb.height}px`,
+            })
+            .on("click", ()=> {
+              this.linkContent(part, cell);
+              this.linkContentMode();
+            });
+          return true;
+        }
+      })
+    });
+  }
+
+
+  linkContent(part, cell){
     let {slide, region} = this.selectedRegion.get() || {},
-      cell = Jupyter.notebook.get_selected_cell(),
       cellId;
+
+    cell = cell || Jupyter.notebook.get_selected_cell();
 
     if(!(region && cell)){
       return;
@@ -456,7 +518,6 @@ class Sorter {
     * @param {String} [prev] - where to insert the slide, or after selected
   */
   templatePicked(slide, prev=null){
-    console.log("templatePicked", slide, prev);
     if(slide && this.templates && !this.templates.killed){
       let last = this.tree.get("sortedSlides").slice(-1),
         selected = this.selectedSlide.get();
