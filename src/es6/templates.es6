@@ -78,7 +78,7 @@ class TemplateLibrary {
 
     this.$ui.append("button")
       .classed({btn: 1, hide_library: 1, "btn-default": 1})
-      .on("click", () => this.picked(null))
+      .on("click", (d) => this.picked(null))
       .append("i")
       .classed({fa: 1, "fa-remove": 1});
 
@@ -100,7 +100,7 @@ class TemplateLibrary {
       .classed({slide: 1})
       .call(this.mini.update);
 
-    $slide.on("click", this.picked);
+    $slide.on("click", (d) => this.picked(d));
   }
 }
 

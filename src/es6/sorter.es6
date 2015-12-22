@@ -8,6 +8,8 @@ import {PART} from "./parts";
 import {MiniSlide} from "./mini";
 import {TemplateLibrary} from "./templates";
 
+import {AriseTome} from "./tome/arise";
+
 let REMOVED = "<removed>";
 
 class Sorter {
@@ -36,6 +38,8 @@ class Sorter {
     this.mini = new MiniSlide(this.selectedRegion);
 
     this.drawn = false;
+
+    this.tomes = [new AriseTome(this)];
   }
 
   visibleUpdated(){
@@ -69,11 +73,7 @@ class Sorter {
   update(){
     let visible = this.visible.get();
     this.$view
-      .classed({offscreen: !visible})
-      .style({
-        // necessary for FOUC
-        "display": visible ? "block" : "none"
-      });
+      .classed({offscreen: !visible});
   }
 
   initUI(){
@@ -82,9 +82,6 @@ class Sorter {
       .classed({
         nbpresent_sorter: 1,
         offscreen: 1
-      })
-      .style({
-        display: "none"
       });
 
     this.$slides = this.$view.append("div")
@@ -104,9 +101,6 @@ class Sorter {
     $brand.append("span")
       .text("nbpresent");
 
-    this.$empty = this.$slides.append("h3")
-      .classed({empty: 1})
-      .text("No slides yet.");
 
     let $help = this.$view.append("div")
       .classed({nbpresent_help: 1})
@@ -116,50 +110,77 @@ class Sorter {
       .append("i")
       .attr("class", "fa fa-question-circle");
 
+    this.$empty = this.$view.append("div")
+      .classed({sorter_empty: 1});
+
+    this.$empty.append("h1")
+      .text("no nbpresent slides yet");
+
     this.initToolbar();
     this.initDrag();
   }
 
   initDrag(){
     let that = this,
-      dragOrigin;
+      origX,
+      origY,
+      startY,
+      startX,
+      dx,
+      dy,
+      newX,
+      m,
+      it,
+      bb,
+      threshold = 10,
+      body = d3.select("body").node(),
+      mouse = () => d3.mouse(body);
+
+    function updateD(){
+      m = mouse();
+      dx = m[0] - startX;
+      dy = m[1] - startY;
+      newX = origX + dx;
+    }
 
     this.drag = d3.behavior.drag()
       .on("dragstart", function(d){
-        let slide = d3.select(this)
-          .classed({dragging: 1});
-
-        dragOrigin = parseFloat(slide.style("left"));
+        it = d3.select(this);
+        origX = parseFloat(it.style("left"));
+        m = mouse();
+        startX = m[0];
+        startY = m[1];
       })
-      .on("drag", function(d){
-        d3.select(this)
-          .style({
-            left: `${dragOrigin += d3.event.dx}px`,
+      .on("drag", (d) => {
+        updateD();
+        if(!d.key || Math.abs(dx) < threshold){
+          it.classed({dragging: 0})
+          return;
+        }
+        it.classed({dragging: 1})
+          .style({left: `${newX}px`});
+      })
+      .on("dragend", (d) => {
+        updateD();
+        it.classed({dragging: 0});
+        if(!d.key || Math.abs(dx) < threshold){
+          return;
+        }
+
+        let replaced = false;
+        this.$slides.selectAll(".slide")
+          .each(function(other){
+            if(replaced || other.key == d.key){
+              return;
+            }
+            bb = this.getBoundingClientRect();
+            m = d3.mouse(this);
+            if(m[0] > 0 && m[0] < bb.width && m[1] > 0 && m[1] < bb.height){
+              that.unlinkSlide(d.key);
+              that.selectedSlide.set(that.appendSlide(other.key, d.key));
+              replaced = true;
+            }
           });
-      })
-      .on("dragend", function(d, i){
-        let $slide = d3.select(this)
-          .classed({dragging: 0});
-
-        let left = parseFloat($slide.style("left")),
-          slides = that.tree.get("sortedSlides"),
-          slideN = Math.floor(left / that.slideWidth()),
-          after;
-
-        if(left < that.slideWidth() || slideN < 0){
-          after = null;
-        }else if(slideN > slides.length || !slides[slideN]){
-          after = slides.slice(-1)[0].key;
-        }else{
-          after = slides[slideN].key;
-        }
-
-        if(d.key !== after){
-          that.unlinkSlide(d.key);
-          that.selectedSlide.set(that.appendSlide(after, d.key));
-        }else{
-          that.draw();
-        }
       });
   }
 
@@ -172,13 +193,15 @@ class Sorter {
     return 200;
   }
 
-  copySlide(slide){
+  copySlide(slide, stripContent=true){
     let newSlide = JSON.parse(JSON.stringify(slide));
     newSlide.id = this.nextId();
     newSlide.regions = d3.entries(newSlide.regions).reduce((memo, d)=>{
       let id = this.nextId();
       // TODO: keep part?
-      memo[id] = $.extend(true, {}, d.value, {id, content: null});
+      memo[id] = $.extend(true, {}, d.value, {id},
+        stripContent ? {content: null} : {}
+      );
       return memo;
     }, {});
 
@@ -186,6 +209,11 @@ class Sorter {
   }
 
   slideClicked(d){
+    if(!d.key && !this.templates){
+      this.templates = new TemplateLibrary(this.templatePicked);
+      return;
+    }
+
     if(this.templates){
       let newSlide = this.copySlide(d.value);
       this.templatePicked({key: newSlide.id, value: newSlide});
@@ -193,7 +221,26 @@ class Sorter {
       this.templates = null;
       return;
     }
-    this.selectedSlide.set(d.key);
+  }
+
+  updateEmpty(){
+    var tome = this.$empty.selectAll(".tome")
+      .data(this.tomes);
+
+    tome.enter()
+      .append("div")
+      .classed({tome: 1})
+      .call((tome) => {
+        tome.append("h3");
+        tome.append("button")
+          .classed({btn: 1})
+          .text("import")
+          .on("click", (d)=> d.execute());
+      });
+
+    tome.select("h3").text((d)=> d.name());
+
+    tome.exit().remove();
   }
 
   draw(){
@@ -204,22 +251,30 @@ class Sorter {
 
     let slides = this.tree.get("sortedSlides");
 
+    this.$view.classed({empty: !slides.length});
+
+    if(!slides.length){
+      this.updateEmpty();
+      slides = [{value: {}}];
+    }else{
+      slides = [{value: {}}].concat(
+        slides,
+        [{value: {prev: slides.slice(-1)[0].key}}
+      ]);
+    }
+
     this.scale.x.range([20, this.slideWidth() + 20]);
 
     let $slide = this.$slides.selectAll(".slide")
-      .data(slides, (d) => d.key);
+      .data(slides, (d) => `${d.key}:${d.value.prev}`);
 
     $slide.enter().append("div")
       .classed({slide: 1})
       .call(this.drag)
-      .on("click", (d) =>{
-        this.slideClicked(d)
-      })
+      .on("click", (d) => this.slideClicked(d))
       .on("dblclick", (d) => this.editSlide(d.key));
 
-    $slide.exit()
-      .transition()
-      .remove();
+    $slide.exit().remove();
 
     let selectedSlide = this.selectedSlide.get(),
       selectedRegion = this.selectedRegion.get(),
@@ -237,11 +292,14 @@ class Sorter {
         active: (d) => d.key === selectedSlide
       })
       .transition()
-      .delay((d, i) => i * 10)
       .style({
         left: (d, i) => {
           let left = this.scale.x(i);
           if(d.key === selectedSlide){
+            this.$slides.transition()
+              .style({
+                left: `${document.documentElement.clientWidth / 2 - left}px`
+              })
             selectedSlideLeft = left;
           }
           return `${left}px`;
@@ -249,20 +307,6 @@ class Sorter {
       });
 
     $slide.call(this.mini.update);
-
-    this.$regionToolbar
-      .transition()
-      .style({
-        opacity: selectedRegion ? 1 : 0,
-        display: selectedRegion ? "block" : "none",
-        left: `${selectedSlideLeft - 30}px`
-      });
-
-    this.$empty
-      .transition()
-      .style({opacity: 1 * !$slide[0].length })
-      .transition()
-      .style({display: $slide[0].length ? "none": "block"});
 
     this.$deckToolbar.call(this.deckToolbar.update);
   }
@@ -276,11 +320,6 @@ class Sorter {
       if(content){
         this.selectCell(content.cell);
       }
-    }else if(this.$regionToolbar){
-      this.$regionToolbar.transition()
-        .style({opacity: 0})
-        .transition()
-        .style({display: "none"});
     }
     this.draw();
   }
@@ -329,6 +368,10 @@ class Sorter {
           click: () => this.editSlide(this.selectedSlide.get()),
           tip: "Back to Sorter",
           visible: () => this.editor
+        }, {
+          icon: "book fa-2x",
+          click: () => this.show(),
+          tip: "Back to Notebook"
         }],
         [{
           icon: "trash fa-2x",
@@ -342,32 +385,40 @@ class Sorter {
       ])
       .call(this.deckToolbar.update);
 
-    this.regionToolbar = new Toolbar();
-    this.$regionToolbar = this.$slides.append("div")
-      .classed({region_toolbar: 1})
-      .datum([
-        [{
-          icon: "terminal",
-          click: () => this.linkContent(PART.source),
-          tip: "Link Region to Cell Input"
-        },
-        {
-          icon: "image",
-          click: () => this.linkContent(PART.outputs),
-          tip: "Link Region to Cell Output"
-        },
-        {
-          icon: "sliders",
-          click: () => this.linkContent(PART.widgets),
-          tip: "Link Region to Cell Widgets"
-        },
-        {
-          icon: "unlink",
-          click: () => this.linkContent(null),
-          tip: "Unlink Region"
-        }]
-      ])
-      .call(this.regionToolbar.update);
+    // this.regionToolbar = new Toolbar();
+    // this.$regionToolbar = this.$slides.append("div")
+    //   .classed({region_toolbar: 1})
+    //   .datum([
+    //     [{
+    //       icon: "terminal",
+    //       click: () => this.linkContent(PART.source),
+    //       tip: "Link Region to Cell Input"
+    //     },
+    //     {
+    //       icon: "image",
+    //       click: () => this.linkContent(PART.outputs),
+    //       tip: "Link Region to Cell Output"
+    //     },
+    //     {
+    //       icon: "sliders",
+    //       click: () => this.linkContent(PART.widgets),
+    //       tip: "Link Region to Cell Widgets"
+    //     },
+    //     {
+    //       icon: "unlink",
+    //       click: () => this.linkContent(null),
+    //       tip: "Unlink Region"
+    //     }]
+    //   ])
+    //   .call(this.regionToolbar.update);
+  }
+
+  cellId(cell){
+    if(!cell.metadata.nbpresent){
+      cell.metadata.nbpresent = {id: this.nextId()};
+    }
+
+    return cell.metadata.nbpresent.id;
   }
 
   linkContent(part){
@@ -380,11 +431,7 @@ class Sorter {
     }
 
     if(part){
-      if(!cell.metadata.nbpresent){
-        cell.metadata.nbpresent = {id: this.nextId()};
-      }
-
-      cellId = cell.metadata.nbpresent.id;
+      cellId = this.cellId(cell);
 
       this.slides.set([slide, "regions", region, "content"], {
         cell: cellId,
@@ -404,11 +451,17 @@ class Sorter {
     }
   }
 
-  templatePicked(slide){
+  /** Handle a slide template click (either from library or sorter)
+    * @param {Object} slide - the slide key, value to use
+    * @param {String} [prev] - where to insert the slide, or after selected
+  */
+  templatePicked(slide, prev=null){
+    console.log("templatePicked", slide, prev);
     if(slide && this.templates && !this.templates.killed){
       let last = this.tree.get("sortedSlides").slice(-1),
         selected = this.selectedSlide.get();
 
+      // actually updates the Baobab cursor.
       this.slides.set([slide.key], slide.value);
 
       let appended = this.appendSlide(
@@ -475,7 +528,12 @@ class Sorter {
     }
   }
 
-  appendSlide(prev, id=null){
+  /** Fix up the order of the slides linked list
+    * @param {String} [prev] - after what slide to insert the slide, or
+    *        or the beginning
+    * @param {String} [id] - the new id value to use, or create a slide
+    */
+  appendSlide(prev=null, id=null){
     let next = this.nextSlide(prev);
 
     if(!id){

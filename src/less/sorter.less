@@ -8,8 +8,14 @@
   // height: @sorter-height;
   color: @jpy-brand;
   box-shadow: @nbpresent-z-shadow;
-  transition: bottom 0.2s;
+  transition: all 0.3s;
   background-color: @ui-bg;
+  opacity: 1.0;
+
+  &.empty .sorter_empty {
+    position: absolute;
+    top: 0;
+  }
 
   .nbpresent_brand, .nbpresent_help {
     position: absolute;
@@ -29,8 +35,9 @@
   }
 
   &.offscreen {
-    transition: bottom 0.2s;
-    bottom: -1 * (@sorter-height + 5);
+    transition: all 0.3s;
+    bottom: 100%;
+    opacity: 0;
   }
 
   .slide_toolbar {
