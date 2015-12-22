@@ -1,5 +1,6 @@
 import Jupyter from "base/js/namespace";
 
+import {PART} from "../parts";
 import {BaseTome} from "./base";
 
 /** import slideshow/RISE presentations */
@@ -48,7 +49,7 @@ export class AriseTome extends BaseTome {
       id: regionId,
       content: {
         cell: cellId,
-        part: "full"
+        part: PART.whole
       },
       attrs: {
         x: 0.1,

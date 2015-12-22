@@ -6,7 +6,7 @@ import {ManualLayout} from "../layout/manual";
 import {TreemapLayout} from "../layout/treemap";
 import {GridLayout} from "../layout/grid";
 
-import {PARTS, PART_SELECT} from "../parts";
+import {PART, PART_SELECT} from "../parts";
 import {SlabStyle} from "../style/slab";
 
 let PREFIX = [
@@ -137,7 +137,9 @@ export class Presenter {
         }
 
         let $el = d3.select(cell.element[0]),
-          part = $el.select(PART_SELECT[content.part]);
+          part = content.part === PART.whole ?
+            $el :
+            $el.select(PART_SELECT[content.part]);
 
         part
           .classed({
@@ -163,7 +165,9 @@ export class Presenter {
 
   allPartSelect(){
     return d3.entries(PART_SELECT)
+      .filter(({value}) => value)
       .map(({value}) => `.cell ${value}`)
+      .concat([".cell"])
       .join(", ");
   }
 
