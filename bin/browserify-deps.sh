@@ -4,9 +4,10 @@
 browserify \
   --standalone nbpresent-deps \
   --extension es6 \
-  --external jquery \
   --external base/js/namespace \
+  --external jquery \
   --external notebook/js/celltoolbar \
+  --external underscore \
   --transform [ babelify --sourceMapRelative . ] \
   ${EXTRA} \
   --outfile ${DIST}/nbpresent.deps.min.js \

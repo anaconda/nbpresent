@@ -5,15 +5,16 @@
 browserify \
   --standalone nbpresent-notebook \
   --extension es6 \
-  --external bootstraptour \
+  --external baobab \
   --external base/js/namespace \
-  --external notebook/js/celltoolbar \
-  --external jquery \
+  --external bootstraptour \
   --external d3 \
   --external html2canvas \
-  --external baobab \
-  --external uuid \
+  --external jquery \
   --external nbpresent-deps \
+  --external notebook/js/celltoolbar \
+  --external underscore \
+  --external uuid \
   --transform [ babelify --sourceMapRelative . ] \
   ${EXTRA} \
   --outfile ${DIST}/nbpresent.notebook.min.js \
