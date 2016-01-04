@@ -115,7 +115,19 @@ class Sorter {
       .classed({sorter_empty: 1});
 
     this.$empty.append("h1")
-      .text("no nbpresent slides yet");
+      .text("no slides yet");
+
+    this.$empty.append("p")
+      .call((p)=>{
+        p.append("span")
+          .text("You can create an empty slide by pressing ");
+        p.append("a")
+          .on("click", () => this.addSlide())
+          .append("i").classed({"fa fa-plus-square-o fa-2x": 1});
+        p.append("span")
+          .text(" or by importing slides:");
+      });
+
 
     this.$empty.append("div")
       .classed({tomes: 1});
@@ -238,11 +250,9 @@ class Sorter {
         tome.append("h3");
         tome.append("button")
           .classed({btn: 1})
-          .text("import")
+          .text((d) => d.name())
           .on("click", (d)=> d.execute());
       });
-
-    tome.select("h3").text((d)=> d.name());
 
     tome.exit().remove();
   }
@@ -409,6 +419,11 @@ class Sorter {
           icon: "unlink",
           click: () => this.linkContent(null),
           tip: "Unlink Region"
+        },
+        {
+          icon: "trash",
+          click: () => this.destroyRegion(),
+          tip: "Destroy Region"
         }]
       ])
       .call(this.regionToolbar.update);
@@ -497,7 +512,9 @@ class Sorter {
     });
   }
 
-
+  /** Link the currently selected region to a cell part
+    * @param {String} part - one of {@link PART}
+    * @return {Sorter} */
   linkContent(part, cell){
     let {slide, region} = this.selectedRegion.get() || {},
       cellId;
@@ -505,7 +522,7 @@ class Sorter {
     cell = cell || Jupyter.notebook.get_selected_cell();
 
     if(!(region && cell)){
-      return;
+      return this;
     }
 
     if(part){
@@ -518,6 +535,19 @@ class Sorter {
     }else{
       this.slides.unset([slide, "regions", region, "content"]);
     }
+    return this;
+  }
+
+  /** Destroy the currently selected region utterly
+    * @return {Sorter} */
+  destroyRegion(){
+    let {slide, region} = this.selectedRegion.get() || {};
+    if(!region){
+      return;
+    }
+    this.slides.unset([slide, "regions", region]);
+    this.selectedRegion.unset();
+    return this;
   }
 
   addSlide(){
