@@ -66,9 +66,7 @@ export class Editor {
     this.slide.on("update", ()=> { this.killed || this.update(); });
   }
 
-  /**
-   * Destroy the editor and its children utterly.
-   */
+  /** Destroy the editor and its children utterly. */
   destroy() {
     this.sidebar.destroy();
     this.$ui.transition()
@@ -79,10 +77,8 @@ export class Editor {
   }
 
 
-  /**
-   * Create d3 behaviors.
-   * @return {Editor}
-   */
+  /** Create d3 behaviors.
+    * @return {Editor} */
   initBehavior(){
     /** @type {d3.bbox} */
     this.bbox = bbox();
@@ -90,10 +86,8 @@ export class Editor {
     return this;
   }
 
-  /**
-   * Create all UI chrome.
-   * @return {Editor}
-   */
+  /** Create all UI chrome.
+    * @return {Editor} */
   initUI(){
     /** @type {d3.selection} */
     this.$ui = d3.select("body")
