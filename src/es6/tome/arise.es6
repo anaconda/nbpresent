@@ -5,21 +5,31 @@ import {BaseTome} from "./base";
 
 /** import slideshow/RISE presentations */
 export class AriseTome extends BaseTome {
+  cells() {
+    return Jupyter.notebook.get_cells();
+  }
+
   name() {
-    return "Import Slideshow";
+    let hasSlides = this.cells()
+      .filter(({metadata}) => {
+        return [
+          "slide"
+          //"subslide"
+        ].indexOf((metadata.slideshow || {}).cell_type) > -1
+      }).length || 1;
+    return `Import ${hasSlides} from reveal.js slideshow`;
   }
 
   relevant() {
-    return Jupyter.notebook.get_cells().any((cell, i) => {
-      return cell.metadata.slideshow;
-    });
+    return this.cells()
+      .any(({metadata}) => metadata.slideshow);
   }
 
   study(){
     let slides = [],
       prev;
 
-    Jupyter.notebook.get_cells().map((cell, i) => {
+    this.cells().map((cell, i) => {
       prev = slides.slice(-1)[0];
 
       let slideType = (cell.metadata.slideshow || {}) .slide_type ||
