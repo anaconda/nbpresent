@@ -10,3 +10,5 @@ build/
 .coverage
 screenshots/
 sphinx/source/auto
+npm-debug.log*
+.eggs/
