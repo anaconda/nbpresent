@@ -23,6 +23,8 @@ setup(
                  "Programming Language :: Python",
                  "License :: OSI Approved :: BSD License"],
     packages=["nbpresent"],
+    setup_requires=["notebook"],
+    tests_require=["nose", "requests", "coverage"],
     include_package_data=True,
     entry_points={
         'console_scripts': ['nbpresent=nbpresent.export:main'],

@@ -11,3 +11,5 @@ build/
 screenshots/
 sphinx/source/auto
 README.rst
+npm-debug.log*
+.eggs/
