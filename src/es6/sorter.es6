@@ -117,6 +117,9 @@ class Sorter {
     this.$empty.append("h1")
       .text("no nbpresent slides yet");
 
+    this.$empty.append("div")
+      .classed({tomes: 1});
+
     this.initToolbar();
     this.initDrag();
   }
@@ -225,7 +228,7 @@ class Sorter {
   }
 
   updateEmpty(){
-    var tome = this.$empty.selectAll(".tome")
+    var tome = this.$empty.select(".tomes").selectAll(".tome")
       .data(this.tomes);
 
     tome.enter()
@@ -283,11 +286,7 @@ class Sorter {
 
     $slide
       .style({
-        "z-index": (d, i) => i,
-        top: (d, i) => {
-          // TODO: handle subslides
-          return "50%";
-        }
+        "z-index": (d, i) => i
       })
       .classed({
         active: (d) => d.key === selectedSlide
@@ -297,10 +296,6 @@ class Sorter {
         left: (d, i) => {
           let left = this.scale.x(i);
           if(d.key === selectedSlide){
-            this.$slides.transition()
-              .style({
-                left: `${document.documentElement.clientWidth / 2 - left}px`
-              })
             selectedSlideLeft = left;
           }
           return `${left}px`;
@@ -314,9 +309,7 @@ class Sorter {
       .style({
         opacity: selectedRegion ? 1 : 0,
         display: selectedRegion ? "block" : "none",
-        left: `${selectedSlideLeft - 30}px`,
-        top: "50%",
-        "margin-top": "-45px"
+        left: `${selectedSlideLeft - 30}px`
       });
 
     this.$deckToolbar.call(this.deckToolbar.update);
@@ -340,6 +333,7 @@ class Sorter {
     let cell = Jupyter.notebook.get_cells().filter(function(cell, idx){
       if(cell.metadata.nbpresent && cell.metadata.nbpresent.id == id){
         Jupyter.notebook.select(idx);
+        Jupyter.notebook.scroll_to_cell(idx);
       };
     });
   }
@@ -449,6 +443,9 @@ class Sorter {
       this.$linkOverlay = null;
       return;
     }
+
+    this.editor.destroy();
+    this.editor = null;
 
     d3.select(window).on("mousemove.nbpresent-sorter-linking", ()=>{
       Jupyter.notebook.get_cells().some((cell)=>{
