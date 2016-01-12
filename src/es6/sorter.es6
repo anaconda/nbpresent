@@ -12,6 +12,10 @@ import {AriseTome} from "./tome/arise";
 
 let REMOVED = "<removed>";
 
+
+/** The main user experience for creating and reordering slides, as well as
+  * defining the relationship between notebook cells {@link PART}s and slide
+  * regions. Not available in {@link StandaloneMode} */
 class Sorter {
   constructor(tree, tour, parentMode) {
     this.tree = tree;
@@ -54,17 +58,31 @@ class Sorter {
     if(visible) {
       this.draw();
     }else {
-      if(this.editor){
-        this.editor.destroy();
-        this.editor = null;
-      }
-      if(this.templates){
-        this.templates.destroy();
-        this.templates = null;
-      }
+      this.hideEditor()
+        .hideTemplates();
     }
 
     this.update();
+  }
+
+  /** Hide the slide editor
+    * @return {Sorter} */
+  hideEditor(){
+    if(this.editor){
+      this.editor.destroy();
+      this.editor = null;
+    }
+    return this;
+  }
+
+  /** Hide the template library
+    * @return {Sorter} */
+  hideTemplates(){
+    if(this.templates){
+      this.templates.destroy();
+      this.templates = null;
+    }
+    return this;
   }
 
   show(){
@@ -233,8 +251,7 @@ class Sorter {
     if(this.templates){
       let newSlide = this.copySlide(d.value);
       this.templatePicked({key: newSlide.id, value: newSlide});
-      this.templates && this.templates.destroy();
-      this.templates = null;
+      this.hideTemplates();
       return;
     }
   }
@@ -459,8 +476,7 @@ class Sorter {
       return;
     }
 
-    this.editor.destroy();
-    this.editor = null;
+    this.hideEditor();
 
     d3.select(window).on("mousemove.nbpresent-sorter-linking", ()=>{
       Jupyter.notebook.get_cells().some((cell)=>{
@@ -554,8 +570,7 @@ class Sorter {
     if(!this.templates || this.templates.killed){
       this.templates = new TemplateLibrary(this.templatePicked);
     }else{
-      this.templates.destroy();
-      this.templates = null;
+      this.hideTemplates();
     }
   }
 
@@ -578,10 +593,7 @@ class Sorter {
 
       this.selectedSlide.set(appended);
     }
-    if(this.templates){
-      this.templates.destroy();
-      this.templates = null;
-    }
+    this.hideTemplates();
   }
 
   editSlide(id){
@@ -589,8 +601,7 @@ class Sorter {
       if(this.editor.slide.get("id") === id){
         id = null;
       }
-      this.editor.destroy();
-      this.editor = null;
+      this.hideEditor();
     }
 
     if(id){
