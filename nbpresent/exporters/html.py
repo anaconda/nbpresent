@@ -36,7 +36,7 @@ class PresentExporter(HTMLExporter):
                     filename,
                     "rb" if filename.split(".")[-1] in bin_ext else "r",
                     encoding="utf-8"
-                ).read()
+                ).read().encode("utf-8")
                 for filename
                 in list(glob(os.path.join(ASSETS, "*.*"))) + NB_ASSETS
             }
