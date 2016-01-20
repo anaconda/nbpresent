@@ -12,14 +12,10 @@ build:
 
 requirements:
   build:
-    - flake8
     - nodejs
-    - nose
     - notebook
-    - phantomjs
     - python
     - setuptools
-    - sphinx
     - funcsigs
   run:
     - funcsigs
@@ -32,7 +28,6 @@ test:
   requires:
     - coverage
     - flake8
-    - fontconfig
     - freetype
     - funcsigs
     - ipywidgets
@@ -40,9 +35,10 @@ test:
     - nodejs
     - nose
     - notebook
-    - phantomjs
     - python
     - requests
+    - fontconfig [linux]
+    - phantomjs [linux]
 
 
 about:

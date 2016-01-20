@@ -7,7 +7,6 @@
     },
     name: "main",
     out: "../../nbpresent/static/nbpresent/nbpresent.static.min.js",
-    // generateSourceMaps: true,
-    // preserveLicenseComments: false,
+    preserveLicenseComments: true,
     optimize: "uglify2"
 })

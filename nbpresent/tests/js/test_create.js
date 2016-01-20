@@ -5,9 +5,6 @@ function create_test(){
 
   this
     .canSeeAndClick("the sorter button", "#nbpresent_sorter_btn")
-    .canSeeAndClick("the tour",
-      ".tour-nbpresent", ".tour-nbpresent .popover-navigation > .btn")
-    .waitWhileVisible(".tour-nbpresent")
     .canSeeAndClick("the add slide button", ".deck_toolbar .fa-plus-square-o")
     .canSeeAndClick("a slide template in the library",
       ".nbpresent_template_library .slide")
