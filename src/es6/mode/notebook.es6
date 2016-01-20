@@ -1,9 +1,7 @@
-import $ from "jquery";
-
 import Jupyter from "base/js/namespace";
 import {CellToolbar} from "notebook/js/celltoolbar";
 
-import {d3} from "nbpresent-deps";
+import {d3, $} from "nbpresent-deps";
 
 import {NotebookPresenter} from "../presenter/notebook";
 import {Sorter} from "../sorter";
@@ -15,6 +13,8 @@ import {Mode as BaseMode} from "./base";
 
 export class Mode extends BaseMode {
   init() {
+    this.initStylesheet();
+
     let tree = new Tree({
       slides: this.metadata().slides,
       root: this.root
@@ -32,6 +32,25 @@ export class Mode extends BaseMode {
     this.sorter = new Sorter(this.tree, this.tour);
 
     this.initToolbar();
+  }
+
+  initStylesheet(){
+    let css = d3.select("head")
+      .selectAll("link#nbpresent-css")
+      .data([1]);
+
+    if(css.node()){
+      console.warn("nbpresent extension already loaded!");
+      return;
+    }
+
+    css.enter()
+      .append("link")
+      .attr({id: "nbpresent-css"})
+      .attr({
+        rel: "stylesheet",
+        href: `${this.root}/nbpresent.min.css`
+      });
   }
 
   metadata(update){
@@ -115,7 +134,7 @@ export class Mode extends BaseMode {
     dlMenu.insert("li", ":nth-child(4)")
       .append("a")
       .classed({download_nbpresent_html: 1})
-      .text("Presentation (.zip)")
+      .text("Presentation (.html)")
       .on("click", () => this.nbconvert("nbpresent"));
 
     dlMenu.insert("li", ":nth-child(5)")

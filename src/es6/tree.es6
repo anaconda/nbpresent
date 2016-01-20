@@ -1,6 +1,4 @@
-import $ from "jquery";
-
-import {Baobab, d3} from "nbpresent-deps";
+import {Baobab, d3, $} from "nbpresent-deps";
 
 export class Tree {
   constructor(obj){
