@@ -1,3 +1,9 @@
+casper.notebook_test(function(){
+  casper.screenshot.init("01_create");
+  casper.viewport(1440, 900)
+    .then(create_test);
+});
+
 function create_test(){
   _ = this.vendor._;
 
@@ -55,9 +61,3 @@ function create_test(){
     .canSeeAndClick("the presenter button", "#nbpresent_present_btn")
     .canSeeAndClick("the presenter", ".nbpresent_presenter")
 }
-
-
-casper.notebook_test(function(){
-  casper.viewport(1440, 900)
-    .then(create_test);
-});
