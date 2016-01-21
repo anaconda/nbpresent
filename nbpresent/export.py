@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+import codecs
 import os
 import sys
 
@@ -27,9 +28,14 @@ def export(ipynb=None, outfile=None, out_format=None, verbose=None):
     mode, stream = (["wb+", sys.stdout.buffer]
                     if out_format in ["pdf", "zip"]
                     else ["w+", sys.stdout])
+
     if outfile is not None:
-        with open(outfile, mode) as f:
-            f.write(output)
+        if out_format in ["zip"]:
+            with open(outfile, mode) as fp:
+                fp.write(output)
+        else:
+            with codecs.open(outfile, mode, encoding="utf-8") as fp:
+                fp.write(output)
     else:
         stream.write(output)
 
