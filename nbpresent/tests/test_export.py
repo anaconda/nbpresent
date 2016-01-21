@@ -1,22 +1,19 @@
 from glob import glob
 import os
-import sys
-from subprocess import (
-    Popen,
-    PIPE
-)
 import socket
+import subprocess
+import tempfile
+import sys
+import shutil
 
 from ..export import export
 
-here = os.path.dirname(__file__)
 
-
+# utility function
 def join(*bits): return os.path.abspath(os.path.join(*bits))
 
 
-NBPRESENT_HTML = os.path.abspath(
-    join(here, "..", "static"))
+here = os.path.dirname(__file__)
 
 http_module = None
 
@@ -39,23 +36,26 @@ def unused_port():
 
 
 def test_export():
+    tmpdir = tempfile.mkdtemp()
     env = dict(os.environ)
-    env.update(NBPRESENT_TEST_HTTP_PORT=str(unused_port()))
+    env.update(
+        NBPRESENT_TEST_HTTP_PORT=str(unused_port())
+    )
 
-    httpd = Popen([
+    httpd = subprocess.Popen([
             sys.executable, "-m", http_module,
             env["NBPRESENT_TEST_HTTP_PORT"],
             "--bind=127.0.0.1"
         ],
-        cwd=NBPRESENT_HTML)
+        cwd=tmpdir)
 
     try:
         export(
-            join(here, "..", "..", "notebooks", "index.ipynb"),
-            join(NBPRESENT_HTML, "index.html"),
+            join(here, "notebooks", "Basics.ipynb"),
+            join(tmpdir, "Basics.html"),
             "html")
 
-        assert 0 == Popen([
+        assert 0 == subprocess.Popen([
                 "casperjs", "test",
                 "--includes={}".format(
                     ",".join(glob(join(here, 'js', '_*.js')))),
@@ -63,6 +63,7 @@ def test_export():
             env=env).wait()
     finally:
         httpd.kill()
+        shutil.rmtree(tmpdir)
 
 
 if __name__ == '__main__':
