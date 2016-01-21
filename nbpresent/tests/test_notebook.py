@@ -32,7 +32,7 @@ class NBPresentTestController(jstest.JSController):
         extra_args = kwargs.pop('extra_args', None)
         super(NBPresentTestController, self).__init__(section, *args, **kwargs)
 
-        test_cases = glob.glob(os.path.join(here, 'js', 'test_*.js'))
+        test_cases = glob.glob(os.path.join(here, 'js', 'test_notebook_*.js'))
         js_test_dir = jstest.get_js_test_dir()
 
         includes = [

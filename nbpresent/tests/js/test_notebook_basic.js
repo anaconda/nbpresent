@@ -1,5 +1,5 @@
 casper.notebook_test(function(){
-  casper.screenshot.init("00_basic");
+  casper.screenshot.init("basic");
   casper.viewport(1440, 900)
     .then(basic_test);
 });
