@@ -32,7 +32,7 @@ class NBPresentTestController(jstest.JSController):
         extra_args = kwargs.pop('extra_args', None)
         super(NBPresentTestController, self).__init__(section, *args, **kwargs)
 
-        test_cases = glob.glob(os.path.join(here, 'js', 'test_*.js'))
+        test_cases = glob.glob(os.path.join(here, 'js', 'test_notebook_*.js'))
         js_test_dir = jstest.get_js_test_dir()
 
         includes = [
@@ -100,7 +100,8 @@ class NBPresentTestController(jstest.JSController):
             self.server_port = 0
             self._init_server()
             if self.server_port:
-                self.cmd.append("--port=%i" % self.server_port)
+                self.cmd.append('--url=http://localhost:%i%s' % (
+                    self.server_port, self.base_url))
             else:
                 # don't launch tests if the server didn't start
                 self.cmd = [sys.executable, '-c', 'raise SystemExit(1)']

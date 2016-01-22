@@ -1,6 +1,4 @@
-import $ from "jquery";
-
-import {d3, uuid} from "nbpresent-deps";
+import {d3, uuid, $} from "nbpresent-deps";
 
 import {MiniSlide} from "./mini";
 

@@ -1,13 +1,17 @@
 import codecs
 import os
 import json
-from glob import glob
+
+from collections import (
+    OrderedDict,
+    defaultdict
+)
 
 from nbconvert.exporters.html import HTMLExporter
 
 from .base import (
     APP_ROOT,
-    ASSETS,
+    STANDALONE_ASSETS,
     NB_ASSETS
 )
 
@@ -25,21 +29,26 @@ class PresentExporter(HTMLExporter):
         bin_ext = ["woff", "ttf"]
 
         resources = self._init_resources(resources)
+
+        assets = defaultdict(OrderedDict)
+
+        to_inline = NB_ASSETS + STANDALONE_ASSETS
+
+        for filename in to_inline:
+            ext = filename.split(".")[-1]
+            mode = "rb" if ext in bin_ext else "r"
+            with codecs.open(filename, mode, encoding="utf-8") as fp:
+                assets[ext].update({
+                    os.path.basename(filename): fp.read()
+                })
+
         resources.update(
             nbpresent={
                 "metadata": json.dumps(nb.metadata.get("nbpresent", {}),
                                        indent=2,
                                        sort_keys=True)
             },
-            outputs={
-                filename: codecs.open(
-                    filename,
-                    "rb" if filename.split(".")[-1] in bin_ext else "r",
-                    encoding="utf-8"
-                ).read()
-                for filename
-                in list(glob(os.path.join(ASSETS, "*.*"))) + NB_ASSETS
-            }
+            nbpresent_assets=assets
         )
 
         return super(PresentExporter, self).from_notebook_node(

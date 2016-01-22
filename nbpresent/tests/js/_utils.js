@@ -7,7 +7,8 @@
     _img = 0,
     node_modules = system.env.NBPRESENT_TEST_MODULES || "../../../node_modules",
     vendor = root.vendor = root.vendor ? root.vendor : (root.vendor = {}),
-    _ = root.vendor._ = require(node_modules + "/lodash");
+    _ = root.vendor._ = require(node_modules + "/lodash"),
+    _shotDir = "_unnamed";
 
   function nextId(){
     return ("000" + (_img++)).slice(-4);
@@ -17,12 +18,28 @@
     return text.replace(/[^a-z0-9]/g, "_");
   }
 
+
   root.screenshot = function(message){
-    this.captureSelector(
-      "nbpresent/static/screenshots/" + nextId() + "_" + slug(message) + ".png",
+    return this.captureSelector([
+        "screenshots/",
+         _shotDir,
+         "/",
+         nextId(),
+         "_",
+         slug(message),
+         ".png",
+      ].join(""),
       "body"
     );
-  }
+  };
+
+
+  root.screenshot.init = function(ns){
+    _shotDir = ns;
+    _img = 0;
+    return root;
+  };
+
 
   root.canSeeAndClick = function(message, visible, click){
     return this

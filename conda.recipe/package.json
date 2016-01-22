@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "casperjs": "^1.1.0-beta3",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "phantomjs": "<2"
   }
 }

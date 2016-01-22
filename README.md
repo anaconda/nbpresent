@@ -42,7 +42,7 @@ Here's the whole doc:
 !nbpresent --help
 ```
 
-    usage: nbpresent [-h] [-i IPYNB] [-o OUTFILE] [-f {html,zip,pdf}]
+    usage: nbpresent [-h] [-i IPYNB] [-o OUTFILE] [-f {html,pdf}]
     
     Generate a static nbpresent presentation from a Jupyter Notebook
     
@@ -52,7 +52,7 @@ Here's the whole doc:
                             Input file (otherwise read from stdin)
       -o OUTFILE, --outfile OUTFILE
                             Output file (otherwise write to stdout)
-      -f {html,zip,pdf}, --out-format {html,zip,pdf}
+      -f {html,pdf}, --out-format {html,pdf}
                             Output format
 
 
@@ -95,7 +95,7 @@ You may also want to pass in `--prefix` instead of user.
 
 ### Chore Automation
 | Task | Command |
-|-|-|-|
+|------|---------|
 | Build all of the front end assets with sourcemaps for development | `npm run build` |
 | Rebuild on every save | `npm run watch` |
 | Rebuild all of the front end assets, and optimize it | `npm run dist` |

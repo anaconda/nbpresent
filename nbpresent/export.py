@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+import codecs
 import os
 import sys
 
@@ -6,14 +7,14 @@ from .exporters import (
     APP_ROOT
 )
 
+BINARY_FORMATS = ["pdf"]
+
 
 def export(ipynb=None, outfile=None, out_format=None, verbose=None):
     if out_format in ["pdf"]:
         from .exporters.pdf import PDFPresentExporter as Exporter
     elif out_format in ["html"]:
         from .exporters.html import PresentExporter as Exporter
-    elif out_format in ["zip"]:
-        raise NotImplemented("zip output like the browser app coming soon")
 
     exp = Exporter(
         template_file="nbpresent",
@@ -25,11 +26,16 @@ def export(ipynb=None, outfile=None, out_format=None, verbose=None):
         output, resources = exp.from_file(sys.stdin)
 
     mode, stream = (["wb+", sys.stdout.buffer]
-                    if out_format in ["pdf", "zip"]
+                    if out_format in BINARY_FORMATS
                     else ["w+", sys.stdout])
+
     if outfile is not None:
-        with open(outfile, mode) as f:
-            f.write(output)
+        if out_format in BINARY_FORMATS:
+            with open(outfile, mode) as fp:
+                fp.write(output)
+        else:
+            with codecs.open(outfile, mode, encoding="utf-8") as fp:
+                fp.write(output)
     else:
         stream.write(output)
 
@@ -47,7 +53,7 @@ def main():
     parser.add_argument(
         "-f", "--out-format",
         default="html",
-        choices=["html", "zip", "pdf"],
+        choices=["html", "pdf"],
         help="Output format"
     )
 
