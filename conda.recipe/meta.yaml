@@ -17,6 +17,7 @@ requirements:
     - python
     - setuptools
     - funcsigs
+    - npm [win-32]
   run:
     - funcsigs
     - notebook
@@ -41,6 +42,7 @@ test:
     - requests
     - fontconfig [linux]
     - phantomjs [linux]
+    - npm [win-32]
 
 
 about:
