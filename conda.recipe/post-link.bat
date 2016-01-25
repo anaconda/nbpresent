@@ -1,1 +1,1 @@
-"%PREFIX%/bin/python" -m nbpresent.install --overwrite --enable --prefix="%PREFIX%"
+"%PYTHON%" -m nbpresent.install --overwrite --enable --prefix="%PREFIX%"
