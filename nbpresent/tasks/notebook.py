@@ -12,7 +12,7 @@ from ._env import (
 )
 
 
-def main():
+def main(**opts):
     args = [
         node_bin("browserify"),
         "--standalone", "nbpresent-notebook",
@@ -29,8 +29,8 @@ def main():
     ) + transform + [
         "--outfile", join(DIST, "nbpresent.notebook.min.js"),
         join(SRC, "es6", "mode", "notebook.es6")
-    ]
-    return Popen(args, shell=True).wait()
+    ] + opts.get("browserify", [])
+    return Popen(args).wait()
 
 
 if __name__ == "__main__":

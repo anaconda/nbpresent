@@ -2,7 +2,6 @@ from subprocess import Popen
 import sys
 
 from ._env import (
-    DIST,
     SRC,
     join,
     node_bin,
@@ -11,12 +10,9 @@ from ._env import (
 
 def main(**opts):
     args = [
-        node_bin("lessc"),
-        "--autoprefix",
-        "--clean-css",
-        join(SRC, "less", "index.less"),
-        join(DIST, "nbpresent.min.css")
-    ] + opts.get("less", [])
+        node_bin("r.js"),
+        "-o", join(SRC, "js", "build.js"),
+    ] + opts.get("requirejs", [])
     return Popen(args).wait()
 
 

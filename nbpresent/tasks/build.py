@@ -2,19 +2,28 @@ import sys
 
 from . import (
     deps,
-    index,
     less,
+    index,
     notebook,
+    standalone,
+    requirejs,
 )
 
 
-def main():
-    return sum([it.main() for it in [
+def main(**opts):
+    return sum([it.main(**opts) for it in [
+        less,
         deps,
         index,
         notebook,
-        less,
+        standalone,
+        requirejs,
     ]])
 
 if __name__ == "__main__":
-    sys.exit(main())
+    opts = {}
+    if "dist" in sys.argv[1:]:
+        opts.update(
+            browserify=["-g", "uglifyify"]
+        )
+    sys.exit(main(**opts))
