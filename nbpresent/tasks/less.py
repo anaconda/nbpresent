@@ -4,6 +4,7 @@ import sys
 from ._env import (
     DIST,
     SRC,
+    IS_WIN,
     join,
     node_bin,
 )
@@ -17,7 +18,7 @@ def main(**opts):
         join(SRC, "less", "index.less"),
         join(DIST, "nbpresent.min.css")
     ] + opts.get("less", [])
-    return Popen(args).wait()
+    return Popen(args, shell=IS_WIN).wait()
 
 
 if __name__ == "__main__":
