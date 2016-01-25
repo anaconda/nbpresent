@@ -37,8 +37,14 @@ def main(**opts):
 
 if __name__ == "__main__":
     opts = {}
-    if "release" in sys.argv[1:]:
+    args = sys.argv[1:]
+    if "release" in args:
         opts.update(
             browserify=["-g", "uglifyify"]
         )
+    if "dev" in args:
+        opts.update(
+            browserify=["--debug"]
+        )
+
     sys.exit(main(**opts))
