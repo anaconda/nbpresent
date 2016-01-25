@@ -1,1 +1,1 @@
-"%PREFIX%/bin/python" -m nose nbpresent
+"%PREFIX%\python.exe" -m nose nbpresent
