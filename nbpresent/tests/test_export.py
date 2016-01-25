@@ -66,7 +66,7 @@ def test_export():
             join(tmpdir, "Basics.html"),
             "html")
         args = [
-            node_bin("casperjs{}".format(".cmd" if IS_WIN else "")),
+            "casperjs{}".format(".cmd" if IS_WIN else ""),
             "test",
             "--includes={}".format(
                 ",".join(glob(join(here, 'js', '_*.js')))),
