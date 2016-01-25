@@ -8,7 +8,7 @@ from ._env import (
 )
 
 
-def main():
+def main(**opts):
     shutil.copyfile(
         join(SRC, "js", "index.js"),
         join(DIST, "nbpresent.min.js")
