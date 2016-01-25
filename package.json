@@ -74,7 +74,7 @@
     "lint:eslint": "eslint --ext es6 ./src",
     "lint:flake8": "flake8 nbpresent setup.py sphinx",
     "less": "python -m nbpresent.tasks.less",
-    "test": "nosetests nbpresent.tests",
+    "test": "python -m nose nbpresent",
     "watch": "watch 'npm run build:dev' src"
   },
   "version": "0.5.1"
