@@ -5,6 +5,11 @@ import subprocess
 import tempfile
 import sys
 import shutil
+import platform
+
+
+IS_WIN = "Windows" in platform.system()
+
 
 from ..export import export
 
@@ -16,6 +21,11 @@ def join(*bits): return os.path.abspath(os.path.join(*bits))
 here = os.path.dirname(__file__)
 
 http_module = None
+
+
+def node_bin(*bits):
+    return os.path.abspath(
+        os.path.join(here, "..", "..", "node_modules", ".bin", *bits))
 
 try:
     import http.server as httpd
@@ -39,7 +49,8 @@ def test_export():
     tmpdir = tempfile.mkdtemp()
     env = dict(os.environ)
     env.update(
-        NBPRESENT_TEST_HTTP_PORT=str(unused_port())
+        NBPRESENT_TEST_HTTP_PORT=str(unused_port()),
+        PATH=os.pathsep.join([env["PATH"], node_bin()])
     )
 
     httpd = subprocess.Popen([
@@ -54,16 +65,23 @@ def test_export():
             join(here, "notebooks", "Basics.ipynb"),
             join(tmpdir, "Basics.html"),
             "html")
+        args = [
+            node_bin("casperjs{}".format(".cmd" if IS_WIN else "")),
+            "test",
+            "--includes={}".format(
+                ",".join(glob(join(here, 'js', '_*.js')))),
+        ] + glob(join(here, 'js', 'test_export_*.js'))
 
-        assert 0 == subprocess.Popen([
-                "casperjs", "test",
-                "--includes={}".format(
-                    ",".join(glob(join(here, 'js', '_*.js')))),
-            ] + glob(join(here, 'js', 'test_export_*.js')),
-            env=env).wait()
+        proc = subprocess.Popen(
+            args,
+            stdout=subprocess.PIPE,
+            env=env
+        )
+        proc.communicate()
+
+        assert proc.returncode == 0
     finally:
         httpd.kill()
-        shutil.rmtree(tmpdir)
 
 
 if __name__ == '__main__':
