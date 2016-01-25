@@ -27,6 +27,7 @@
     "less-plugin-autoprefix": "~1.5.1",
     "less-plugin-clean-css": "~1.5.1",
     "lodash": "^3.10.1",
+    "phantomjs": "^1.9.19",
     "requirejs": "^2.1.22",
     "uglifyify": "~3.0.1",
     "watch": "~0.16.0"
@@ -72,7 +73,7 @@
     "lint:eslint": "eslint --ext es6 ./src",
     "lint:flake8": "flake8 nbpresent setup.py sphinx",
     "less": "python -m nbpresent.tasks.less",
-    "test": "python -m nose nbpresent",
+    "test": "nosetests nbpresent.tests",
     "watch": "watch 'npm run build:dev' src"
   },
   "version": "0.5.0"
