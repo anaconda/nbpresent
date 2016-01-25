@@ -3,6 +3,7 @@ from os.path import (
     abspath,
     join,
 )
+import platform
 
 
 PKG = "nbpresent"
@@ -11,6 +12,8 @@ REPO_ROOT = abspath(join(dirname(__file__), "..", ".."))
 PKG_ROOT = join(REPO_ROOT, PKG)
 SRC = join(REPO_ROOT, "src")
 DIST = join(PKG_ROOT, "static", PKG)
+
+IS_WIN = "Windows" in platform.system()
 
 
 def node_bin(*it):

@@ -9,6 +9,7 @@ from ._env import (
     external,
     extension,
     transform,
+    IS_WIN,
 )
 
 
@@ -22,7 +23,7 @@ def main(**opts):
         "--outfile", join(DIST, "nbpresent.deps.min.js"),
         join(SRC, "es6", "vendor.es6")
     ] + opts.get("browserify", [])
-    return Popen(args).wait()
+    return Popen(args, shell=IS_WIN).wait()
 
 
 if __name__ == "__main__":
