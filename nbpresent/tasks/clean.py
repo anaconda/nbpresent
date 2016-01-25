@@ -8,7 +8,8 @@ from ._env import (
 
 
 def main(**opts):
-    shutil.rmtree(DIST)
+    if os.path.exists(DIST):
+        shutil.rmtree(DIST)
     os.makedirs(DIST)
 
 if __name__ == "__main__":
