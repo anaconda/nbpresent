@@ -1,1 +1,2 @@
-"%PREFIX%\python.exe" -m nose nbpresent
+"%PREFIX%\bin\npm" install .
+"%PREFIX%\bin\npm" run test
