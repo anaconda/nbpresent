@@ -1,4 +1,5 @@
+cd "%RECIPE_DIR%\.."
 npm install .
-npm run dist
+npm run build:release
 "%PYTHON%" setup.py install
 if errorlevel 1 exit 1
