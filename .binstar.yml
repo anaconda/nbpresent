@@ -13,6 +13,6 @@ engine:
   - python=3.5
 
 script:
-  - conda build conda.recipe -c javascript -c mutirri -c cpcloud
+  - conda build conda.recipe -c javascript -c mutirri -c cpcloud -c anaconda-nb-extensions
 
 build_targets: conda

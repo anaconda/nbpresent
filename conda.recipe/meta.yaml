@@ -21,6 +21,7 @@ requirements:
     - funcsigs
     - notebook
     - python
+    - nb_config_manager
 
 test:
   files:
