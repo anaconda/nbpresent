@@ -22,7 +22,6 @@ requirements:
     - notebook
     - python
     - nb_config_manager
-    - nbbrowserpdf
 
 test:
   files:
