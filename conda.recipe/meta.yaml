@@ -21,6 +21,8 @@ requirements:
     - funcsigs
     - notebook
     - python
+    - nb_config_manager
+    - nbbrowserpdf
 
 test:
   files:
