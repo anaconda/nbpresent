@@ -34,9 +34,6 @@ def install(enable=False, **kwargs):
     from notebook.services.config import ConfigManager
 
     directory = join(abspath(dirname(__file__)), 'static', 'nbpresent')
-    print(list(glob(join(directory, "*"))))
-    print(list(glob(join(directory, "..", "*"))))
-    print(list(glob(join(directory, "..", "..", "*"))))
 
     kwargs = {k: v for k, v in kwargs.items() if not (v is None)}
 
