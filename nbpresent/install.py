@@ -2,6 +2,7 @@
 
 import argparse
 import os
+from glob import glob
 # import subprocess
 from os.path import (
     abspath,
@@ -32,7 +33,7 @@ def install(enable=False, **kwargs):
     from notebook.nbextensions import install_nbextension
     from notebook.services.config import ConfigManager
 
-    directory = join(dirname(abspath(__file__)), 'static', 'nbpresent')
+    directory = join(abspath(dirname(__file__)), 'static', 'nbpresent')
 
     kwargs = {k: v for k, v in kwargs.items() if not (v is None)}
 

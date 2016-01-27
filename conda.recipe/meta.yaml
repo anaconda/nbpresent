@@ -17,6 +17,8 @@ requirements:
     - python
     - setuptools
     - funcsigs
+    - npm [win]
+    - npm [linux-32]
   run:
     - funcsigs
     - notebook
@@ -33,6 +35,7 @@ test:
     - funcsigs
     - ipywidgets
     - mock
+    - nb_config_manager
     - nodejs
     - nose
     - notebook
@@ -40,6 +43,8 @@ test:
     - requests
     - fontconfig [linux]
     - phantomjs [linux]
+    - npm [win]
+    - npm [linux-32]
 
 
 about:
