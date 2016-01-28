@@ -33,6 +33,7 @@ test:
     - funcsigs
     - ipywidgets
     - mock
+    - nb_config_manager
     - nodejs
     - nose
     - notebook
