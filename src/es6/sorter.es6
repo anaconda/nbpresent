@@ -99,7 +99,7 @@ class Sorter {
       .classed({nbpresent_brand: 1})
       .append("a")
       .attr({
-        href: "https://continuumio.github.io/nbpresent/",
+        href: "https://anaconda-server.github.io/nbpresent/",
         target: "_blank"
       })
 
