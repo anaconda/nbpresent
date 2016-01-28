@@ -27,6 +27,7 @@
     "less-plugin-autoprefix": "~1.5.1",
     "less-plugin-clean-css": "~1.5.1",
     "lodash": "^3.10.1",
+    "phantomjs": "<2",
     "requirejs": "^2.1.22",
     "uglifyify": "~3.0.1",
     "watch": "~0.16.0"
