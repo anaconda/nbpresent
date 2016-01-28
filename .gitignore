@@ -12,3 +12,4 @@ screenshots/
 sphinx/source/auto
 npm-debug.log*
 .eggs/
+README.rst
