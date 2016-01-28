@@ -78,5 +78,5 @@
     "watch:less": "watch 'npm run less' src/less",
     "watch": "./bin/watch.sh watch:browserify watch:browserify-deps watch:browserify-notebook watch:browserify-standalone watch:less"
   },
-  "version": "0.5.0"
+  "version": "0.5.1"
 }
