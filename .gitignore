@@ -13,3 +13,4 @@ sphinx/source/auto
 README.rst
 npm-debug.log*
 .eggs/
+README.rst
