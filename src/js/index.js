@@ -1,41 +1,96 @@
-define(["require"],
-function(require){
-  var ns = "nbpresent-",
-    _here = [require.toUrl(".").split("?")[0]],
-    here = function(frag){
-      var path = _here.concat(frag).join("/")
-        .replace("//", "/")
-        .replace("/./.", "/")
-      return path;
-    };
+define(
+["require", "jquery", "base/js/namespace"],
+function(require, $, Jupyter){
+  // here's your namespace global
+  var nbpresent = window.nbpresent = {loading: true};
 
-  requirejs.config({
-    paths: {
-      "nbpresent-deps": [
-        here(["nbpresent.deps.min"]),
-        "./nbpresent/nbpresent.deps.min"
-      ],
-      "nbpresent-notebook": here(["nbpresent.notebook.min"]),
-      "nbpresent-standalone": [
-        here(["nbpresent.standalone.min"]),
-        "nbpresent/nbpresent.standalone.min"
-      ]
-    }
-  });
+  var $dlMenu = $("#download_html").parent();
 
-  function init(env){
-    var nbpresent = window.nbpresent = {loading: true};
-    requirejs(["require", ns + "deps"], function(require, deps){
-      nbpresent.deps = deps;
-      requirejs(["require", ns + env], function(require, mode){
-        nbpresent.Mode = mode.Mode || mode.NotebookMode || mode.StandaloneMode;
-        window.nbpresent.mode = new nbpresent.Mode(_here[0].replace("./", "."));
+  var formats = [
+    {key: "nbpresent", label: "Presentation (.html)"},
+    {key: "nbpresent_pdf", label: "Presentation (.pdf)"}
+  ];
+
+  function load_ipython_extension() {
+    initToolbar();
+    initMenu();
+    initNbpresent();
+  }
+
+  function initNbpresent(){
+    requirejs.config({
+      paths: {
+        "nbpresent-deps": require.toUrl("./nbpresent.deps.min.js"),
+        "nbpresent-notebook": require.toUrl("./nbpresent.notebook.min.js")
+      }
+    });
+
+    requirejs(["nbpresent-deps"], function(deps){
+      requirejs(["nbpresent-notebook"], function(mode){
+        nbpresent.mode = new mode.NotebookMode(
+          require.toUrl(".").split("?")[0]
+        );
       });
     });
   }
 
+  function show(){
+    nbpresent.mode && nbpresent.mode.show();
+  }
+
+  function present(){
+    nbpresent.mode && nbpresent.mode.present();
+  }
+
+  function nbconvert(key){
+    Jupyter.menubar._nbconvert(key, true);
+  }
+
+  // set up the UI before doing anything else to avoid UI delay
+  function initToolbar(){
+    $("#view_menu").append(
+      $("<li/>").append(
+        $("<a/>").text("Toggle Slide Sorter").on("click", show)));
+
+    // TODO: make this one button!
+    Jupyter.toolbar.add_buttons_group([
+      {
+        label: "Slide Sorter",
+        icon: "fa-th-large",
+        callback: show,
+        id: "nbpresent_sorter_btn"
+      },
+      {
+        label: "Present",
+        icon: "fa-youtube-play",
+        callback: present,
+        id: "nbpresent_present_btn"
+      }
+    ]);
+  }
+
+  function initMenu(){
+    $.get(Jupyter.notebook.base_url + "api/nbconvert", formatsLoaded);
+  }
+
+  function dlMenuItem(format){
+    $("<li/>")
+      .append(
+        $("<a/>", {"class": "download_" + format.key})
+          .text(format.label)
+          .on("click", function(){ nbconvert(format.key); })
+      )
+      .appendTo($dlMenu)
+  };
+
+  function formatsLoaded(available){
+    // update the download chrome
+    formats.map(function(format){
+      available[format.key] && dlMenuItem(format);
+    });
+  }
+
   return {
-    load_ipython_extension: function(){ init("notebook"); },
-    load_presentation_standalone: function(){ init("standalone"); }
+    load_ipython_extension: load_ipython_extension
   };
 });
