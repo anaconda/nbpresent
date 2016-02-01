@@ -1,75 +1,16 @@
 name: nbpresent
+channels:
+  - anaconda-nb-extensions
+  - javascript
+  - mutirri
+  - cpcloud
 dependencies:
-- anaconda-client
-- bokeh
-- clyent
-- cycler
-- decorator
-- flask
-- freetype
-- ipykernel
-- ipython
-- ipython_genutils
-- ipywidgets
-- itsdangerous
-- jinja2
-- jpeg
-- jsonschema
-- jupyter_client
-- jupyter_core
-- libgfortran
-- libpng
-- libsodium
-- libtiff
-- libxml2
-- markupsafe
-- matplotlib
-- mistune
-- nbconvert
-- nbformat
-- nodejs
-- notebook
-- numpy
-- openblas
-- openssl
-- pandas
-- path.py
-- pexpect
-- pickleshare
-- pillow
-- pip
-- ptyprocess
-- pygments
-- pyparsing
-- pyqt
-- python
-- python-dateutil
-- pytz
-- pyyaml
-- pyzmq
-- qt
-- readline
-- requests
-- setuptools
-- simplegeneric
-- sip
-- six
-- sqlite
-- terminado
-- tk
-- tornado
-- traitlets
-- werkzeug
-- wheel
-- xz
-- yaml
-- zeromq
-- zlib
-- pip:
-  - bqplot
-  - ghost.py
-  - ipython-genutils
-  - jupyter-client
-  - jupyter-core
-  - pypdf2
-  - qgrid
+  - anaconda-client
+  - ipywidgets
+  - nodejs
+  - notebook
+  - nb_config_manager
+  - coverage
+  - flake8
+  - mock
+  - requests
