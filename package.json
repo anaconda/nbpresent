@@ -10,7 +10,8 @@
     "phantomjs-polyfill": "0.0.1",
     "underscore": "^1.8.3",
     "uuid": "^2.0.1",
-    "vanilla-slab": "~0.2.3"
+    "vanilla-slab": "~0.2.3",
+    "webfontloader": "^1.6.21"
   },
   "description": "This will be the home of the next generation of slide authoring presentation for [Jupyter Notebooks](https://github.com/jupyter/notebook).",
   "devDependencies": {

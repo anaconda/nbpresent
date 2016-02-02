@@ -14,10 +14,12 @@ export class StandaloneMode extends BaseMode {
   }
 
   loadData() {
-    let slides = JSON.parse(d3.select("#nbpresent_tree").text());
+    let tree = JSON.parse(d3.select("#nbpresent_tree").text());
 
+    // TODO: centralize serialized keys
     return {
-      slides: slides.slides,
+      slides: tree.slides || {},
+      theme: tree.theme || {},
       root: this.root
     };
   }

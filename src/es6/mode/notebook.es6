@@ -16,13 +16,22 @@ export class NotebookMode extends BaseMode {
 
     let tree = new Tree({
       slides: this.metadata().slides,
+      theme: this.metadata().theme,
       root: this.root
     });
 
     this.tree = tree.tree;
 
     this.slides = this.tree.select(["slides"]);
-    this.slides.on("update", () => this.metadata(true))
+
+    this.theme = this.tree.select(["theme"]);
+
+    [this.slides, this.theme].map((cursor)=>{
+      cursor.on("update", () => {
+        console.log("saving metadata");
+        this.metadata(true)
+      })
+    });
 
     this.tour = new NbpresentTour(this);
   }
@@ -50,11 +59,13 @@ export class NotebookMode extends BaseMode {
     let md = Jupyter.notebook.metadata;
     if(update){
       md.nbpresent = {
-        slides: this.slides.serialize()
+        slides: this.slides.serialize(),
+        theme: this.theme.serialize(),
       };
     }else{
       return md.nbpresent || {
-        slides: {}
+        slides: {},
+        theme: {}
       }
     }
   }

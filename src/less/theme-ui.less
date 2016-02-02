@@ -1,0 +1,60 @@
+@theme-overlay-toolbar-height: 32px;
+
+.nbpresent-theme-overlay {
+  position: fixed;
+  bottom: @sorter-height;
+  right: 0;
+  left: 0;
+  top: 0;
+  background-color: rgba(50, 50, 50, 0.85);
+  z-index: @z-editor;
+  overflow-y: scroll;
+
+  .nbpresent-theme-overlay-toolbar{
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 0;
+    height: @theme-overlay-toolbar-height;
+    background: black;
+    box-shadow: @nbpresent-z-shadow;
+    opacity: 0.9;
+    z-index: 1;
+  }
+
+  .dropdown-menu{
+    max-height: 50vh;
+    overflow-y: scroll;
+  }
+
+  .theme-rules {
+    padding-top: @theme-overlay-toolbar-height + 10;
+    .theme-rule {
+      margin-bottom: 5px;
+
+      .btn {
+        background-color: #222;
+        color: @jpy-brand;
+        border: none;
+      }
+
+      .selector-label {
+        color: @jpy-brand;
+        text-align: right;
+        span {
+          margin-right: 10px;
+          float: right;
+        }
+      }
+
+      .selector-exemplar {
+        background-color: #fff;
+        padding: 10px;
+        * {
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+}
+}
