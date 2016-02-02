@@ -44,7 +44,8 @@ if __name__ == "__main__":
         )
     if "dev" in args:
         opts.update(
-            browserify=["--debug"]
+            browserify=["--debug"],
+            less=["--source-map-map-inline"]
         )
 
     sys.exit(main(**opts))

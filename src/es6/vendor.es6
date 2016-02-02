@@ -5,6 +5,7 @@ import uuid from "uuid";
 import VanillaSlab from "vanilla-slab";
 import Baobab from "baobab";
 import $ from "jquery";
+import WebFont from "webfontloader";
 
 
 export {
@@ -14,4 +15,5 @@ export {
   VanillaSlab,
   Baobab,
   $,
+  WebFont,
 };

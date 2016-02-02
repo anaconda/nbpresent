@@ -9,6 +9,7 @@ import {MiniSlide} from "./mini";
 import {TemplateLibrary} from "./templates";
 import {NotebookCellManager} from "./cells/notebook";
 import {LinkOverlay} from "./cells/overlay";
+import {ThemeOverlay} from "./theme/overlay";
 
 import {AriseTome} from "./tome/arise";
 
@@ -403,6 +404,11 @@ class Sorter {
           visible: () => this.selectedSlide.get() && !this.editor
         }],
         [{
+          icon: "paint-brush  fa-2x",
+          tip: "Hi!",
+          click: () => this.themeMode()
+        }],
+        [{
           icon: "trash fa-2x",
           click: () => {
             this.removeSlide(this.selectedSlide.get());
@@ -431,7 +437,7 @@ class Sorter {
       .datum([
         [{
           icon: "link",
-          click: () => this.linkContentMode(),
+          click: () => this.linkContentOverlay(),
           tip: "Link Region to Cell (Part)"
         },{
           icon: "unlink",
@@ -463,7 +469,19 @@ class Sorter {
     return cell.metadata.nbpresent.id;
   }
 
-  linkContentMode(){
+  themeMode(){
+    if(this.themeOverlay){
+      this.themeOverlay.destroy();
+      this.themeOverlay = null;
+    }else{
+      this.themeOverlay = new ThemeOverlay(
+        this.tree,
+        this.cellManager
+      );
+    }
+  }
+
+  linkContentOverlay(){
     if(this.linkOverlay){
       this.linkOverlay.destroy();
       this.linkOverlay = null;
@@ -471,9 +489,8 @@ class Sorter {
       this.linkOverlay = new LinkOverlay(
         this.cellManager,
         ({part, cell}) => {
-          console.log(this, this.linkContent, part, cell);
           this.linkContent(part, cell);
-          this.linkContentMode();
+          this.linkContentOverlay();
         }
       );
     }

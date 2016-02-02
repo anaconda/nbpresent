@@ -29,7 +29,6 @@ export class BaseLayout {
           .map((d) => {
             var attrs = {};
             attrs[key] = value;
-            console.log(attrs);
             this.tree.merge(
               ["slides", this.slide.key, "regions", d.key, "attrs"],
               attrs

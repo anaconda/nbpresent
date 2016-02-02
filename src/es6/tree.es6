@@ -7,7 +7,9 @@ export class Tree {
       presenter: {presenting: false},
       sorter: {},
       editor: {},
-      sortedSlides: Baobab.monkey(["slides"], this.sortedSlides)
+      sortedSlides: Baobab.monkey(["slides"], this.sortedSlides),
+      themer: {},
+      theme: {}
     }, obj));
   }
 
