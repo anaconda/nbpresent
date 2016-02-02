@@ -4,9 +4,11 @@ import Jupyter from "base/js/namespace";
 
 import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
-import {PART, PART_SELECT, partColor} from "./parts";
+import {PART, PART_SELECT} from "./parts";
 import {MiniSlide} from "./mini";
 import {TemplateLibrary} from "./templates";
+import {NotebookCellManager} from "./cells/notebook";
+import {LinkOverlay} from "./cells/overlay";
 
 import {AriseTome} from "./tome/arise";
 
@@ -21,6 +23,7 @@ class Sorter {
     this.tree = tree;
     this.tour = tour;
     this.parentMode = parentMode;
+    this.cellManager = new NotebookCellManager();
 
     this.templatePicked = this.templatePicked.bind(this);
 
@@ -114,12 +117,8 @@ class Sorter {
         target: "_blank"
       });
 
-    $brand.append("i")
-      .attr("class", "fa fa-fw fa-gift");
-
     $brand.append("span")
       .text("nbpresent");
-
 
     let $help = this.$view.append("div")
       .classed({nbpresent_help: 1})
@@ -334,10 +333,11 @@ class Sorter {
 
     this.$regionToolbar
       .style({
-        opacity: selectedRegion ? 1 : 0,
-        display: selectedRegion ? "block" : "none",
-        left: `${selectedSlideLeft - 30}px`
-      });
+          opacity: selectedRegion ? 1 : 0,
+          display: selectedRegion ? "block" : "none",
+          left: `${selectedSlideLeft}px`
+        })
+        .call(this.regionToolbar.update);
 
     this.$deckToolbar.call(this.deckToolbar.update);
   }
@@ -382,7 +382,8 @@ class Sorter {
 
   initToolbar(){
     this.deckToolbar = new Toolbar()
-      .btnClass("btn-default btn-lg");
+      .btnClass("btn-default btn-lg")
+      .tipOptions({container: "body", placement: "top"});
     this.$deckToolbar = this.$view.append("div")
       .classed({deck_toolbar: 1})
       .datum([
@@ -391,25 +392,15 @@ class Sorter {
           click: () => this.addSlide(),
           tip: "Add Slide"
         }], [{
-          icon: "edit fa-2x",
-          click: () => this.editSlide(this.selectedSlide.get()),
-          tip: "Edit Slide",
-          visible: () => this.selectedSlide.get() && !this.editor
-        }, {
           icon: "chevron-circle-down fa-2x",
           click: () => this.editSlide(this.selectedSlide.get()),
           tip: "Back to Sorter",
           visible: () => this.editor
         }, {
-          icon: "book fa-2x",
-          click: () => this.show(),
-          tip: "Back to Notebook"
-        }, {
-          icon: "youtube-play fa-2x",
-          click: () => {
-            this.parentMode.present();
-          },
-          tip: "Present"
+          icon: "edit fa-2x",
+          click: () => this.editSlide(this.selectedSlide.get()),
+          tip: "Edit Slide",
+          visible: () => this.selectedSlide.get() && !this.editor
         }],
         [{
           icon: "trash fa-2x",
@@ -419,6 +410,17 @@ class Sorter {
           },
           tip: "Delete Slide",
           visible: () => this.selectedSlide.get()
+        }],
+        [{
+          icon: "book fa-2x",
+          click: () => this.show(),
+          tip: "Back to Notebook"
+        }, {
+          icon: "youtube-play fa-2x",
+          click: () => {
+            this.parentMode.present();
+          },
+          tip: "Present"
         }]
       ])
       .call(this.deckToolbar.update);
@@ -431,13 +433,20 @@ class Sorter {
           icon: "link",
           click: () => this.linkContentMode(),
           tip: "Link Region to Cell (Part)"
-        },
-        {
+        },{
           icon: "unlink",
           click: () => this.linkContent(null),
-          tip: "Unlink Region"
-        },
-        {
+          tip: "Unlink Region",
+          visible: () => {
+            let selected = this.selectedRegion.get();
+            if(!selected){
+              return;
+            }
+            return this.slides.get([
+              selected.slide, "regions", selected.region, "content"]);
+          }
+        }],
+        [{
           icon: "trash",
           click: () => this.destroyRegion(),
           tip: "Destroy Region"
@@ -455,81 +464,24 @@ class Sorter {
   }
 
   linkContentMode(){
-    // TODO: refactor this whole thing into a class
-    let wasLinking = this.$view.classed("linking"),
-      header = d3.select("#header"),
-      site = d3.select("#site");
-    this.$view
-      .classed({linking: !wasLinking});
-
-    this.$linkOverlay = this.$linkOverlay || d3.select("#notebook")
-      .append("div")
-      .classed({"nbpresent-sorter-link-overlay": 1})
-      .call((overlay)=>{
-        overlay.append("span").classed({label: 1});
-      });
-
-    if(wasLinking){
-      d3.select(window).on("mousemove.nbpresent-sorter-linking", null);
-      this.$linkOverlay.remove();
-      this.$linkOverlay = null;
-      return;
+    if(this.linkOverlay){
+      this.linkOverlay.destroy();
+      this.linkOverlay = null;
+    }else{
+      this.linkOverlay = new LinkOverlay(
+        this.cellManager,
+        ({part, cell}) => {
+          console.log(this, this.linkContent, part, cell);
+          this.linkContent(part, cell);
+          this.linkContentMode();
+        }
+      );
     }
-
-    this.hideEditor();
-
-    d3.select(window).on("mousemove.nbpresent-sorter-linking", ()=>{
-      Jupyter.notebook.get_cells().some((cell)=>{
-        let part,
-          el,
-          cellect = d3.select(cell.element[0]),
-          parts = {
-            source: cellect.select(PART_SELECT.source).node(),
-            outputs: cellect.select(PART_SELECT.outputs).node(),
-            widgets: cellect.select(PART_SELECT.widgets).node(),
-            whole: cellect.node()
-          };
-
-        if(parts.source && parts.source.contains(d3.event.target)){
-          part = PART.source;
-        }else if(parts.outputs && parts.outputs.contains(d3.event.target)){
-          part = PART.outputs;
-        }else if(parts.widgets && parts.widgets.contains(d3.event.target)){
-          part = PART.widgets;
-        }else if(parts.whole && parts.whole.contains(d3.event.target)){
-          part = PART.whole;
-        }
-
-        el = parts[part];
-
-        if(part && el){
-          let bb = el.getBoundingClientRect(),
-            heightOffset = header.property("clientHeight") -
-              site.property("scrollTop");
-
-          this.$linkOverlay
-            .style({
-              left: `${bb.left + 1 }px`,
-              top: `${(bb.top - heightOffset) + 1}px`,
-              width: `${bb.width - 2}px`,
-              height: `${bb.height - 2}px`,
-              "background-color": partColor(part)
-            })
-            .on("click", ()=> {
-              this.linkContent(part, cell);
-              this.linkContentMode();
-            })
-            .select(".label")
-            .text(`Link to ${part}`)
-
-          return true;
-        }
-      })
-    });
   }
 
   /** Link the currently selected region to a cell part
     * @param {String} part - one of {@link PART}
+    * @param {Cell} cell - a Jupyter notebook cell
     * @return {Sorter} */
   linkContent(part, cell){
     let {slide, region} = this.selectedRegion.get() || {},
