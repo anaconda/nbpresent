@@ -38,7 +38,6 @@ export class LinkOverlay{
     $part.enter()
       .append("div").classed({"part-overlay": 1})
       .on("click", ({part, cell}) => {
-        console.log(part, cell, this, this.done);
         this.done({part, cell: cell.value})
       })
       .call(($part)=> {
