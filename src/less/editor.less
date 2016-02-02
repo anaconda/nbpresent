@@ -1,9 +1,9 @@
 .nbpresent_editor {
   position: fixed;
-  top: @sorter-height;
+  bottom: @sorter-height;
   right: 0;
   left: 0;
-  bottom: 0;
+  top: 0;
   background-color: rgba(50, 50, 50, 0.5);
   z-index: @z-editor;
 
@@ -53,9 +53,9 @@
   z-index: @z-regiontree;
   position: absolute;
   width: @editor-sidebar-width;
-  top: @sorter-height;
+  bottom: @sorter-height;
   left: 0;
-  bottom: 0;
+  top: 0;
   background-color: @ui-bg;
   overflow-y: auto;
   overflow-x: hidden;
@@ -63,7 +63,7 @@
 
   .nbpresent_toolbar {
     position: fixed;
-    top: @sorter-height;
+    top: 0;
     z-index: @z-regiontree + 1;
     width: @editor-sidebar-width - 10;
     background-color: @ui-bg;

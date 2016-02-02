@@ -1,26 +1,9 @@
-.nbpresent-sorter-link-overlay {
-  position: absolute;
-  opacity: 0.5;
-  background-color: yellow;
-  z-index: @z-sorter;
-  text-align: center;
-  font-size: 48px;
-  display: table;
-
-  .label {
-    display: table-cell;
-    vertical-align: middle;
-    margin: 0;
-    padding: 0;
-  }
-}
-
 .nbpresent_sorter{
   z-index: @z-sorter;
   position: fixed;
   right: 0;
   left: 0;
-  top: 0;
+  bottom: 0;
   height: @sorter-height;
 
   // height: @sorter-height;
@@ -68,7 +51,6 @@
 
   .nbpresent_brand, .nbpresent_help {
     position: absolute;
-    right: 0;
     bottom: 0;
     margin: 5px 10px;
     padding: 0;
@@ -78,9 +60,14 @@
     }
   }
 
+  .nbpresent_brand {
+    left: 0;
+  }
+
   .nbpresent_help {
-    bottom: inherit;
-    top: 0;
+    right: 0;
+    width: 32px;
+    text-align:right;
   }
 
   &.offscreen {
@@ -90,29 +77,34 @@
     display: none;
   }
 
-  .slide_toolbar {
-    position: absolute;
-    top: @sorter-slide-height + 30;
-  }
-  .deck_toolbar{
+  .deck_toolbar, .region_toolbar{
     position: absolute;
     left: 50%;
-    top: 0;
+    text-align: center;
+  }
+
+  .deck_toolbar{
+    margin-left: -25%;
+    width: 50%;
+    bottom: 0;
+
+    .btn-group {
+      float: none;
+    }
   }
 
   .region_toolbar{
-    position: absolute;
     opacity: 0;
     display: none;
-    top: 100px;
+    top: 0;
   }
 
   .slides_wrap {
     overflow-x: auto;
-    overflow-y: auto;
+    overflow-y: hidden;
     position: relative;
     width: 100%;
-    top: 64px;
+    padding-top: 36px;
     height: @sorter-height - 60;
 
     .empty {
