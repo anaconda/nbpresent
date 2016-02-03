@@ -1,118 +1,116 @@
-.nbpresent_sorter{
-  z-index: @z-sorter;
-  position: fixed;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  height: @sorter-height;
-
-  // height: @sorter-height;
-  color: @jpy-brand;
-  box-shadow: @nbpresent-z-shadow;
-  transition: all 0.3s;
-  background-color: @ui-bg;
-  opacity: 0.9;
-
-
-  .sorter_empty {
-    display: none;
-
-    h1 {
-      float: left;
-    }
-
-    a, .btn {
-      color: @jpy-brand;
-      background-color: transparent;
-    }
-
-    .btn{
-      border: solid 1px @jpy-brand;
-    }
+body.nbpresent_sorting {
+  #notebook {
+    margin-bottom: @sorter-height * 0.75;
   }
+  .nbpresent_sorter{
+    z-index: @z-sorter;
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    height: @sorter-height;
 
-  &.empty .sorter_empty {
-    display: block;
-    position: absolute;
-    top: 25%;
-    left: 25%;
-    width: 50%;
-    text-align: center;
-    .tomes {
-      display: flex;
+    // height: @sorter-height;
+    color: @jpy-brand;
+    box-shadow: @nbpresent-z-shadow;
+    transition: all 0.3s;
+    background-color: @ui-bg;
+    opacity: 0.9;
 
-      .tome {
-        flex: 1;
-        text-align: center;
+
+    .sorter_empty {
+      display: none;
+
+      h1 {
+        float: left;
+      }
+
+      a, .btn {
+        color: @jpy-brand;
+        background-color: transparent;
+      }
+
+      .btn{
+        border: solid 1px @jpy-brand;
       }
     }
-  }
 
-
-  .nbpresent_brand, .nbpresent_help {
-    position: absolute;
-    bottom: 0;
-    margin: 0 20px 20px 20px;
-    padding: 0;
-
-    a {
-      color: @jpy-brand;
-    }
-  }
-
-  .nbpresent_brand {
-    left: 0;
-  }
-
-  .nbpresent_help {
-    right: 0;
-    width: 32px;
-    text-align:right;
-  }
-
-  &.offscreen {
-    transition: all 0.3s;
-    bottom: 100%;
-    opacity: 0;
-    display: none;
-  }
-
-  .deck_toolbar, .region_toolbar{
-    position: absolute;
-    left: 50%;
-    text-align: center;
-  }
-
-  .deck_toolbar{
-    margin-left: -25%;
-    width: 50%;
-    bottom: 0;
-
-    .btn-group {
-      float: none;
-    }
-  }
-
-  .region_toolbar{
-    opacity: 0;
-    display: none;
-    top: 0;
-  }
-
-  .slides_wrap {
-    overflow-x: auto;
-    overflow-y: hidden;
-    position: relative;
-    width: 100%;
-    padding-top: 36px;
-    height: @sorter-height - 60;
-
-    .empty {
+    &.empty .sorter_empty {
+      display: block;
       position: absolute;
+      top: 25%;
+      left: 25%;
+      width: 50%;
+      text-align: center;
+      .tomes {
+        display: flex;
+
+        .tome {
+          flex: 1;
+          text-align: center;
+        }
+      }
     }
 
-    .slide.mini {
+
+    .nbpresent_brand, .nbpresent_help {
       position: absolute;
+      bottom: 0;
+      margin: 0 20px 20px 20px;
+      padding: 0;
+
+      a {
+        color: @jpy-brand;
+      }
+    }
+
+    .nbpresent_brand {
+      left: 0;
+    }
+
+    .nbpresent_help {
+      right: 0;
+      width: 32px;
+      text-align:right;
+    }
+
+    .deck_toolbar, .region_toolbar{
+      position: absolute;
+      left: 50%;
+      text-align: center;
+    }
+
+    .deck_toolbar{
+      left: 100px;
+      right: 100px;
+      bottom: 0;
+
+      .btn-group {
+        float: none;
+      }
+    }
+
+    .region_toolbar{
+      opacity: 0;
+      display: none;
+      top: 0;
+    }
+
+    .slides_wrap {
+      overflow-x: auto;
+      overflow-y: hidden;
+      position: relative;
+      width: 100%;
+      padding-top: 36px;
+      height: @sorter-height - 60;
+
+      .empty {
+        position: absolute;
+      }
+
+      .slide.mini {
+        position: absolute;
+      }
     }
   }
 }

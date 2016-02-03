@@ -63,7 +63,9 @@ class Sorter {
       this.draw();
     }else {
       this.hideEditor()
-        .hideTemplates();
+        .hideTemplates()
+        .hideThemeOverlay()
+        .hideLinkOverlay();
     }
 
     this.update();
@@ -89,22 +91,46 @@ class Sorter {
     return this;
   }
 
+
+  /** Hide the theme editor
+    * @return {Sorter} */
+  hideThemeOverlay(){
+    if(this.themeOverlay){
+      this.themeOverlay.destroy();
+      this.themeOverlay = null;
+    }
+    return this;
+  }
+
+
+  /** Hide the therem library
+    * @return {Sorter} */
+  hideLinkOverlay(){
+    if(this.linkOverlay){
+      this.linkOverlay.destroy();
+      this.linkOverlay = null;
+    }
+    return this;
+  }
+
+
   show(){
     this.visible.set(!this.visible.get());
   }
 
   update(){
     let visible = this.visible.get();
-    this.$view
-      .classed({offscreen: !visible});
+
+    d3.select("body")
+      .classed({nbpresent_sorting: visible});
+
   }
 
   initUI(){
     this.$view = d3.select("body")
       .append("div")
       .classed({
-        nbpresent_sorter: 1,
-        offscreen: 1
+        nbpresent_sorter: 1
       });
 
     this.$slides = this.$view.append("div")

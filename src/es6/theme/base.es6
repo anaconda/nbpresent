@@ -30,7 +30,7 @@ export class ThemeBase{
         });
 
         return `${PRESENT_PREFIX} ${key}{
-          line-height: 1;
+          line-height: 1.1;
           ${directives.join("\n")}
         }`;
       })
