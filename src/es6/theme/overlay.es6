@@ -40,7 +40,6 @@ export class ThemeOverlay{
     this.tree = tree;
     this.manager = manager;
     this.theme = tree.select(["theme"]);
-    console.log(this.theme);
     this.themer = tree.select(".").root().select(["themer"]);
     this.exampleText = this.themer.select("exampleText");
 
@@ -73,14 +72,33 @@ export class ThemeOverlay{
 
 
     this.$toolbar = this.$ui.append("div")
-      .classed({"nbpresent-theme-overlay-toolbar": 1});
+      .classed({
+        "nbpresent-theme-overlay-toolbar": 1,
+        "row": 1
+      });
 
     this.$example = this.$toolbar.append("input")
-      .classed({"theme-example-text": 1, "input": 1})
-      .text(text)
+      .classed({"theme-example-text": 1, "input": 1, "col-xs-3": 1})
+      .property({value: text})
       .attr("placeholder", "Custom Example Text")
       .on("input", () => {
         this.themer.set(["exampleText"], this.$example.property("value"));
+      });
+
+
+    this.$focusContent = this.$toolbar.append("div")
+      .classed({
+        "focus-content": 1,
+        "col-xs-2": 1
+      })
+      .call((focus)=>{
+        focus.append("input")
+          .attr({type: "checkbox"})
+          .on("change", ()=>{
+            this.themer.set(["focusContent"], d3.event.target.checked);
+          });
+        focus.append("label")
+          .text("Content Focus");
       });
 
     this.$rules = this.$ui.append("div")
@@ -96,7 +114,8 @@ export class ThemeOverlay{
       rule = this.$rules.selectAll(".theme-rule")
       .data(SYMB.map((key)=> {
         return {key, value: rules[key]};
-      }, ({key}) => key));
+      }, ({key}) => key)),
+      overlay = this;
 
     console.table(rules, rule.data());
 
@@ -113,14 +132,18 @@ export class ThemeOverlay{
         rule.append("div")
           .classed({
             "selector-exemplar": 1,
-            "col-xs-6": 1
+            "col-xs-8": 1
           });
 
-        rule.append("div")
+        let $fontGroup = rule.append("div")
+          .classed({"col-xs-1": 1})
+          .append("div")
+          .classed({"input-group": 1});
+
+        $fontGroup.append("div")
           .classed({
             "selector-font-name": 1,
-            "dropdown": 1,
-            "col-xs-2": 1
+            "input-group-btn": 1
           })
           .call(function(dropdown){
             dropdown.append("button")
@@ -131,17 +154,45 @@ export class ThemeOverlay{
             dropdown.append("ul")
               .classed({"dropdown-menu": 1});
           });
+
+        $fontGroup.append("input")
+          .classed({
+            "selector-font-size": 1,
+            "form-control": 1
+          })
+          .attr({
+            type: "number"
+          })
+          .on("input", function({key, value}){
+            var val = parseFloat(this.value);
+            val = !isNaN(val) ? val : null;
+            if(val){
+              overlay.theme.set([key, "font-size"], parseFloat(this.value));
+            }else{
+              overlay.theme.unset([key, "font-size"]);
+            }
+          });
       });
 
-    rule.filter(({key}) => !this.selectorUsed(key)).remove();
+    if(this.themer.get(["focusContent"])){
+      rule.filter(({key}) => !this.selectorUsed(key)).remove();
+    }
 
     rule.select(".selector-label span")
       .text(({key}) => key);
 
-    let overlay = this;
-
     rule.select(".selector-exemplar").each(function(d){
-      let exemplar = d3.select(this);
+      let exemplar = d3.select(this),
+        text = overlay.exampleText.get();
+
+      if(!text && overlay.themer.get(["focusContent"])){
+        let exEl = overlay.selectorUsed(d.key);
+        if(exEl){
+          text = d3.select(exEl).text();
+        }
+      }
+
+      text = text ||   _.sample(PANGRAMS)
 
       exemplar.selectAll(":not(" + d.key + ")").remove();
 
@@ -151,17 +202,24 @@ export class ThemeOverlay{
       el.enter()
         .append(d.key);
 
-      el.attr({"contentEditable": "true"});
+      el.attr({"contentEditable": "true"})
+        .text(text)
+        .style({
+          "font-family": ({value={}}) => value["font-family"],
+          "font-size": ({value={}}) => value["font-size"] + "px"
+        });
 
-      el.text(overlay.exampleText.get() || _.sample(PANGRAMS));
-      el.style({"font-family": ({key, value})=> {
-        return (value && value["font-family"]) || null
-      }});
       el.exit().remove();
     });
 
     rule.select(".selector-font-name")
       .call((dropdown) => this.updateFont(dropdown));
+
+    rule.select(".selector-font-size")
+      .property({
+        value: ({value={}}) => value["font-size"]
+      });
+
   }
 
   updateFont(dropdown){

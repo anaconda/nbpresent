@@ -19,39 +19,20 @@ export class BaseCellManager {
     throw Error("Not Implemented");
   }
 
-  getPart(content){
+  getPart(content, element){
     let cell = this.getCells()[content.cell];
 
-    if(!cell){
+    if(!cell && !element){
       return null;
     }
 
-    let $el = d3.select(cell.element[0]),
+    let $el = d3.select(element || cell.element[0]),
       part = content.part === PART.whole ?
         $el : $el.select(PART_SELECT[content.part]);
 
     return part;
   }
 
-  /**
-   Generate a sparse matrix of:
-   cell * part * {cell, part, bb}
- ]
-  */
-  cellPartGeometry(){
-    let mgr = this;
-    return d3.entries(this.getCells()).map((cell)=>{
-      let parts = d3.entries(PART_SELECT).map((part)=>{
-        return mgr.getPart({cell: cell.key, part: part.key})
-          .map(function(data){
-            let el = data[0],
-              bb = el && el.getBoundingClientRect();
-            return {cell, part: part.key, bb};
-          });
-      });
-      return parts;
-    });
-  }
 
   thumbnail(content){
     let key = `${content.cell}-${content.part}`
