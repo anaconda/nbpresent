@@ -3,14 +3,8 @@ import _ from "underscore";
 
 import Jupyter from "base/js/namespace";
 
-import {FONTS} from "./fonts";
+import {FONTS, SYMB} from "./fonts";
 
-export const SYMB = `h1 h2 h3 h4 h5 h6 h7
-    ul ol li
-    code blockquote pre
-    strong em a
-    table thead tbody tfoot th td`
-  .split(/\s+/);
 
 // http://clagnut.com/blog/2380/#Perfect_pangrams_in_English_.2826_letters.29
 export const PANGRAMS = [
@@ -42,6 +36,8 @@ export class ThemeOverlay{
     this.theme = tree.select(["theme"]);
     this.themer = tree.select(".").root().select(["themer"]);
     this.exampleText = this.themer.select("exampleText");
+
+    this.rules = this.theme.select(["rules"]);
 
     this.theme.on("update", (e)=> this.update(e));
     this.themer.on("update", (e)=> this.update(e));
@@ -110,7 +106,7 @@ export class ThemeOverlay{
   /** Draw all of the rules
   */
   update(){
-    let rules = this.theme.get(),
+    let rules = this.rules.get() || {},
       rule = this.$rules.selectAll(".theme-rule")
       .data(SYMB.map((key)=> {
         return {key, value: rules[key]};
@@ -167,9 +163,9 @@ export class ThemeOverlay{
             var val = parseFloat(this.value);
             val = !isNaN(val) ? val : null;
             if(val){
-              overlay.theme.set([key, "font-size"], parseFloat(this.value));
+              overlay.rules.set([key, "font-size"], parseFloat(this.value));
             }else{
-              overlay.theme.unset([key, "font-size"]);
+              overlay.rules.unset([key, "font-size"]);
             }
           });
       });
@@ -206,7 +202,7 @@ export class ThemeOverlay{
         .text(text)
         .style({
           "font-family": ({value={}}) => value["font-family"],
-          "font-size": ({value={}}) => value["font-size"] + "px"
+          "font-size": ({value={}}) => value["font-size"] + "rem"
         });
 
       el.exit().remove();
@@ -216,8 +212,14 @@ export class ThemeOverlay{
       .call((dropdown) => this.updateFont(dropdown));
 
     rule.select(".selector-font-size")
+      .attr({
+        placeholder: function({key}){
+          return d3.select(this.parentNode.parentNode.parentNode)
+            .select(key).style("font-size");
+        }
+      })
       .property({
-        value: ({value={}}) => value["font-size"]
+        value: ({value={}}) => value["font-size"],
       });
 
   }
@@ -236,7 +238,7 @@ export class ThemeOverlay{
       .append("a")
       .on("click", ({key, font})=> {
         console.log(key, font, this.theme.get());
-        this.theme.set([key, "font-family"], font);
+        this.rules.set([key, "font-family"], font);
       });
 
     li.select("a")
