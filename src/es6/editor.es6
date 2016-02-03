@@ -252,43 +252,5 @@ export class Editor {
     $region.filter(({value}) => !value.content)
       .select(".region_bg")
       .style({fill: null});
-
-
-    $region.filter(({value}) => value.content)
-      .each(function(d){
-        let $region = d3.select(this);
-        that.cellManager.thumbnail(d.value.content)
-          .catch(function(err){
-            console.warn("thumbnail error", err);
-          })
-          .then(function({uri, width, height}){
-            let id = `${d.value.content.part}-${d.value.content.cell}`,
-              bg = that.$defs.selectAll(`#${id}`).data([id]);
-
-            bg.enter().append("pattern")
-              .attr({
-                patternUnits: "userSpaceOnUse",
-                id
-              })
-            .append("image")
-              .attr({
-                x: 0,
-                y: 0
-              });
-
-            bg.attr({width, height})
-              .select("image")
-              .attr({
-                "xlink:href": uri,
-                width,
-                height
-              });
-
-            $region.select(".region_bg")
-              .style({
-                fill: `url(#${id})`
-              });
-          });
-      });
   }
 }
