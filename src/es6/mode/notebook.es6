@@ -12,19 +12,8 @@ import {BaseMode} from "./base";
 
 export class NotebookMode extends BaseMode {
   init() {
+    super.init();
     this.initStylesheet();
-
-    let tree = new Tree({
-      slides: this.metadata().slides,
-      theme: this.metadata().theme,
-      root: this.root
-    });
-
-    this.tree = tree.tree;
-
-    this.slides = this.tree.select(["slides"]);
-
-    this.theme = this.tree.select(["theme"]);
 
     [this.slides, this.theme].map((cursor)=>{
       cursor.on("update", () => {

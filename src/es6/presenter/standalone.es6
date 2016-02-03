@@ -1,8 +1,8 @@
-import {StandalongCellManager} from "../cells/standalone";
+import {StandaloneCellManager} from "../cells/standalone";
 import {Presenter} from "./base";
 
 export class StandalonePresenter extends Presenter {
   makeCellManager() {
-    return new StandalongCellManager();
+    return new StandaloneCellManager();
   }
 }

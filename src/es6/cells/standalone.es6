@@ -1,3 +1,4 @@
+import {d3} from "nbpresent-deps";
 import {BaseCellManager} from "./base";
 
 
