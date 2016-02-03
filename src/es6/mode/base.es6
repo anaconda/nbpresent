@@ -8,9 +8,22 @@ export class BaseMode {
   /** Make a new Editor.
     * @param {baobab.Cursor} slide - the slide to edit */
   constructor(root){
-    /** the metadata root of a running nbpresent mode
-      * @type {baobab.Cursor} */
     this.root = root;
+
+    this.tree = new Tree({
+      slides: this.metadata().slides,
+      theme: this.metadata().theme,
+      root: this.root
+    }).tree;
+
+    this.slides = this.tree.select(["slides"]);
+
+    this.theme = this.tree.select(["theme"]);
+
     this.init();
+  }
+
+  init(){
+    
   }
 }

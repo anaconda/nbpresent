@@ -13,7 +13,7 @@ export class StandaloneMode extends BaseMode {
     this.presenter.presenting.set(true);
   }
 
-  loadData() {
+  metadata() {
     let tree = JSON.parse(d3.select("#nbpresent_tree").text());
 
     // TODO: centralize serialized keys

@@ -8,6 +8,5 @@
     },
     name: "main",
     out: "../../nbpresent/static/nbpresent/nbpresent.static.min.js",
-    preserveLicenseComments: true,
-    optimize: "uglify2"
+    preserveLicenseComments: true
 })
