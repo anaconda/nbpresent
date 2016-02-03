@@ -1,4 +1,7 @@
+import {d3} from "nbpresent-deps";
 import Jupyter from "base/js/namespace";
+
+import {PART, PART_SELECT} from "../parts";
 
 import {BaseCellManager} from "./base";
 
@@ -16,5 +19,35 @@ export class NotebookCellManager extends BaseCellManager {
       }
       return memo;
     }, {});
+  }
+
+  cellId(){
+    try {
+      return cell.metadata.nbpresent.id;
+    }catch(err){
+      return null;
+    }
+  }
+
+  /**
+   Generate a sparse matrix of:
+   cell * part * {cell, part, bb}
+ ]
+  */
+  cellPartGeometry(){
+    let mgr = this;
+    return Jupyter.notebook.get_cells().map((cell)=>{
+      let key = this.cellId(cell);
+
+      let parts = d3.entries(PART_SELECT).map((part)=>{
+        return mgr.getPart({cell: key, part: part.key}, cell.element[0])
+          .map(function(data){
+            let el = data[0],
+              bb = el && el.getBoundingClientRect();
+            return {cell: {key, value: cell}, part: part.key, bb};
+          });
+      });
+      return parts;
+    });
   }
 }

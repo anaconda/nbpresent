@@ -23,7 +23,6 @@ export class LinkOverlay{
     this.$ui.remove();
   }
 
-
   update(){
     let heightOffset = this.$header.property("clientHeight") -
       this.$site.property("scrollTop"),
