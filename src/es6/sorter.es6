@@ -127,7 +127,7 @@ class Sorter {
       .attr({href: "#"})
     .on("click", () => this.tour.restart())
       .append("i")
-      .attr("class", "fa fa-question-circle");
+      .attr("class", "fa fa-question-circle fa-2x");
 
     this.$empty = this.$view.append("div")
       .classed({sorter_empty: 1});

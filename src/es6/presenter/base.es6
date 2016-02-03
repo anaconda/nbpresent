@@ -2,6 +2,8 @@ import {d3} from "nbpresent-deps";
 
 import {SpeakerBase} from "../speaker/base";
 
+import {ThemeBase} from "../theme/base";
+
 import {ManualLayout} from "../layout/manual";
 import {TreemapLayout} from "../layout/treemap";
 import {GridLayout} from "../layout/grid";
@@ -38,6 +40,7 @@ export class Presenter {
     throw new Error("Not implemented");
   }
 
+
   makeSpeaker(tree){
     return new SpeakerBase(tree);
   }
@@ -47,6 +50,10 @@ export class Presenter {
       .append("div")
       .classed({nbpresent_presenter: 1})
       .style({display: "none"});
+
+    this.$style = d3.select("head")
+      .append("style")
+      .classed({"nbpresent-presenter-style": 1});
   }
 
   /** Decode the slide object through the registry of layout classes.
@@ -83,6 +90,25 @@ export class Presenter {
     return this;
   }
 
+
+  themeClass(slide){
+    // TODO: refactor this into plugin mechanism
+    return ThemeBase;
+  }
+
+  updateTheme(slide){
+    let ThemeClass = this.themeClass(slide);
+    // this.theme.cleanup()
+    this.theme = new ThemeClass(
+      this.tree,
+      this.cellManager,
+      slide,
+      this.$style
+    );
+    this.theme.init();
+    return this;
+  }
+
   present() {
     this.update();
   }
@@ -115,7 +141,8 @@ export class Presenter {
       return this.current.set(this.tree.get(["sortedSlides", 0, "key"]));
     }
 
-    this.updateLayout(slide);
+    this.updateLayout(slide)
+      .updateTheme(slide);
 
     if(!presenting){
       return this.clean(true);
@@ -139,13 +166,16 @@ export class Presenter {
         let $el = d3.select(cell.element[0]),
           part = content.part === PART.whole ?
             $el :
-            $el.select(PART_SELECT[content.part]);
+            $el.select(PART_SELECT[content.part]),
+          regionCls = `nbpresent-region-${region.key}`;
 
         part
+          .classed(regionCls, 1)
           .classed({
             nbpresent_unpresent: 0,
             nbpresent_present: 1
           })
+          .each(() => that.theme.update(region, part))
           .each(() => that.layout.update(region, part));
         // TODO: now do styles
         d3.entries(region.value.style).map((style) => {
