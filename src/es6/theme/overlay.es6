@@ -103,15 +103,29 @@ export class ThemeOverlay{
     this.update();
   }
 
+  getExemplar(here, tag){
+    let parent = d3.select(here.parentNode),
+      found = null;
+
+    while(true){
+      found = parent.select(tag);
+      if(found[0][0]){
+        return found;
+      }
+      found = null;
+      parent = d3.select(parent.node().parentNode);
+    }
+  }
+
   /** Draw all of the rules
   */
   update(){
     let rules = this.rules.get() || {},
       rule = this.$rules.selectAll(".theme-rule")
-      .data(SYMB.map((key)=> {
-        return {key, value: rules[key]};
-      }, ({key}) => key)),
-      overlay = this;
+        .data(SYMB.map((key)=> {
+          return {key, value: rules[key]};
+        })),
+        overlay = this;
 
     console.table(rules, rule.data());
 
@@ -131,42 +145,45 @@ export class ThemeOverlay{
             "col-xs-8": 1
           });
 
-        let $fontGroup = rule.append("div")
-          .classed({"col-xs-1": 1})
-          .append("div")
-          .classed({"input-group": 1});
 
-        $fontGroup.append("div")
-          .classed({
-            "selector-font-name": 1,
-            "input-group-btn": 1
-          })
-          .call(function(dropdown){
-            dropdown.append("button")
-              .classed({"btn btn-default dropdown-toggle": 1})
-              .attr({"data-toggle": "dropdown"})
-              .append("i")
-              .classed({"fa fa-font fa-2x": 1});
-            dropdown.append("ul")
-              .classed({"dropdown-menu": 1});
-          });
+        rule.append("div")
+          .classed({"col-xs-2": 1})
+          .call((font)=>{
 
-        $fontGroup.append("input")
-          .classed({
-            "selector-font-size": 1,
-            "form-control": 1
-          })
-          .attr({
-            type: "number"
-          })
-          .on("input", function({key, value}){
-            var val = parseFloat(this.value);
-            val = !isNaN(val) ? val : null;
-            if(val){
-              overlay.rules.set([key, "font-size"], parseFloat(this.value));
-            }else{
-              overlay.rules.unset([key, "font-size"]);
-            }
+            let $fontGroup = font.append("div")
+              .append("div")
+              .classed({"input-group": 1});
+
+            $fontGroup.append("div")
+              .classed({
+                "selector-font-name": 1,
+                "input-group-btn": 1
+              })
+              .call(function(dropdown){
+                dropdown.append("a")
+                  .classed({"btn btn-default dropdown-toggle": 1})
+                  .attr({"data-toggle": "dropdown"})
+                dropdown.append("ul")
+                  .classed({"dropdown-menu": 1});
+              });
+
+            $fontGroup.append("input")
+              .classed({
+                "selector-font-size": 1,
+                "form-control": 1
+              })
+              .attr({
+                type: "number"
+              })
+              .on("input", function({key, value}){
+                var val = parseFloat(this.value);
+                val = !isNaN(val) ? val : null;
+                if(val){
+                  overlay.rules.set([key, "font-size"], parseFloat(this.value));
+                }else{
+                  overlay.rules.unset([key, "font-size"]);
+                }
+              });
           });
       });
 
@@ -209,13 +226,16 @@ export class ThemeOverlay{
     });
 
     rule.select(".selector-font-name")
-      .call((dropdown) => this.updateFont(dropdown));
+      .call((dropdown) => this.updateFont(dropdown))
+      .select(".btn")
+      .text(function({key}){
+        return overlay.getExemplar(this, key).style("font-family");
+      });
 
     rule.select(".selector-font-size")
       .attr({
         placeholder: function({key}){
-          return d3.select(this.parentNode.parentNode.parentNode)
-            .select(key).style("font-size");
+          return overlay.getExemplar(this, key).style("font-size");
         }
       })
       .property({

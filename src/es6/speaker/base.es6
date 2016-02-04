@@ -11,20 +11,54 @@ export class SpeakerBase {
     this.initUI();
 
     this.presenting.on("update", () => this.update());
-
     this.update();
   }
 
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({nbpresent_speaker: 1});
+      .classed({nbpresent_speaker: 1})
+      .on("mouseover", ()=> this.focused = true )
+      .on("mouseout", ()=> {
+        this.focused = false;
+        this.startDecay();
+      });
 
     this.initToolbar();
+    this.startDecay();
   }
 
   update(){
     this.$ui.style({display: this.presenting.get() ? null : "none"});
+  }
+
+  decay(){
+    this.energy = (this.energy || 0) * 0.8;
+    this.$ui.style({
+      opacity: this.focused ? 1 : this.energy,
+      display: "block"
+    });
+
+    if(this.focused){
+      clearInterval(this.decayInterval);
+      this.decayInterval = null;
+    }else if(this.energy <= 0.1){
+      this.$ui.style({display: "none"});
+      clearInterval(this.decayInterval);
+      this.decayInterval = null;
+      this.energy = 0;
+    }
+  }
+
+  startDecay(){
+    this.energy = 0.6;
+    if(!this.decayInerval){
+      this.decayInerval = setInterval(()=>this.decay(), 50)
+    }
+  }
+
+  hint(){
+    this.startDecay();
   }
 
   toolbarIcons(){

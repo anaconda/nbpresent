@@ -1,22 +1,27 @@
-.nbpresent_speaker{
-  z-index: @z-speaker;
-  display: block;
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
+body.nbpresent_presenting {
+  .nbpresent_speaker{
+    z-index: @z-speaker;
+    display: block;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
 
-  .presenter_toolbar {
-    opacity: 0;
-    transition: all 0.2s;
-    float: right;
-
-    &:hover, &.fake_hover{
-      opacity: 1;
+    .presenter_toolbar {
       transition: all 0.2s;
-    }
+      float: right;
 
-    a {
-      color: @jpy-brand;
+      &:hover, &.fake_hover{
+        opacity: 1;
+        transition: all 0.2s;
+      }
+
+      a {
+        color: @jpy-brand;
+      }
     }
   }
+}
+
+body:not(.nbpresent_presenting) .nbpresent_speaker{
+  display: none;
 }
