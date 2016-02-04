@@ -51,6 +51,8 @@ export class Presenter {
       .classed({nbpresent_presenter: 1})
       .style({display: "none"});
 
+    d3.select(window).on("mousemove", ()=> this.speaker.hint());
+
     this.$style = d3.select("head")
       .append("style")
       .classed({"nbpresent-presenter-style": 1});

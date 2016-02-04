@@ -62,13 +62,25 @@ class Sorter {
     if(visible) {
       this.draw();
     }else {
-      this.hideEditor()
-        .hideTemplates()
-        .hideThemeOverlay()
-        .hideLinkOverlay();
+      this.cleanup();
     }
 
     this.update();
+  }
+
+  cleanup(){
+    this.hideEditor()
+      .hideTemplates()
+      .hideThemeOverlay()
+      .hideLinkOverlay();
+
+    d3.select("body")
+      .classed({nbpresent_sorting: 0});
+  }
+
+  destroy(){
+    this.cleanup();
+    this.$view.remove();
   }
 
   /** Hide the slide editor
@@ -406,7 +418,6 @@ class Sorter {
     }
   }
 
-
   initToolbar(){
     this.deckToolbar = new Toolbar()
       .btnClass("btn-default btn-lg")
@@ -431,7 +442,7 @@ class Sorter {
         }],
         [{
           icon: "paint-brush  fa-2x",
-          tip: "Hi!",
+          tip: "Theme",
           click: () => this.themeMode()
         }],
         [{
