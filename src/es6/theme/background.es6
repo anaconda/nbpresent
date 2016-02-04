@@ -16,11 +16,17 @@ export class BackgroundPicker {
     this.tree = tree;
     this.manager = manager;
 
-    this.newBackground = this.tree.select(["themer", "newBackground"]);
-    this.newBackground.on("update", (e) => this.update(e));
+    this.themer = this.tree.select(["themer"]);
+
+    this.newBackground = this.themer.select(["newBackground"]);
+    this.newBackground.on("update", () => this.updateNewBackground());
+
+    this.paletteCache = this.themer.select(["paletteCache"]);
+    this.paletteCache.on("update", () => this.updatePaletteCache());
+    this.paletteCache.on("update", () => this.updateBackgrounds());
 
     this.backgrounds = this.tree.select(["theme", "backgrounds"]);
-    this.backgrounds.on("update", (e) => this.update(e));
+    this.backgrounds.on("update", () => this.updateBackgrounds());
 
     this.boxScale = {
       x: d3.scale.ordinal()
@@ -91,13 +97,27 @@ export class BackgroundPicker {
     this.$scratch = this.$makeNew.append("canvas")
       .classed({"theme-scratch": 1});
 
-    this.update();
+    this.updateBackgrounds();
+    this.updateNewBackground();
   }
 
-  update(e){
+  updatePaletteCache(){
+    d3.entries(this.paletteCache.get())
+      .map(({key, value})=>{
+        if(value === -1){
+          this.paletteCache.set([key], 0);
+          let v = new Vibrant(key);
+          v.getPalette((err, patches)=>{
+            this.paletteCache.set([key], JSON.parse(JSON.stringify(patches)));
+          });
+        }
+      });
+  }
+
+  updateBackgrounds(){
     let picker = this,
       background = this.$backgrounds.selectAll(".theme-background-thumbnail")
-        .data(() => this.backgrounds.get() || []);
+        .data(this.backgrounds.get());
 
     background.enter().append("div")
       .classed({"theme-background-thumbnail pull-left": 1})
@@ -117,25 +137,48 @@ export class BackgroundPicker {
         thumb.append("svg")
           .call((svg) => this.initHandles(svg))
           .append("g").classed({handles: 1});
+
+        thumb.append("div")
+          .classed({"theme-background-palette": 1});
       });
 
     background.each(function(d, i){
       picker.drawHandles(d3.select(this), picker.backgrounds.select(i));
-      var v = new Vibrant(d["background-image"]);
-      v.getPalette((err, palette)=>{
-        console.log(err);
-        console.log(palette);
-      })
+
+      picker.paletteCache.exists([d["background-image"]]) ||
+        picker.paletteCache.set([d["background-image"]], -1);
     });
 
     background.style({
       "background-image": (d)=> `url(${d["background-image"]})`
     });
 
-    background.exit().remove();
+    let swatch = background.select(".theme-background-palette")
+      .selectAll(".background-palette-swatch")
+      .data((d)=>{
+        let palette = this.paletteCache.get(d["background-image"]);
+        if(palette && palette != -1){
+          return d3.entries(palette).map(({key, value}) => {
+            return value.rgb;
+          });
+        }
+        return [];
+      });
 
-    let li = this.$dropdown.selectAll("li")
-      .data(d3.merge(this.findImages()).map((el)=> picker.dataUri(el)));
+    swatch.enter().append("div")
+      .classed({"background-palette-swatch": 1});
+
+    swatch.style({
+      "background-color": ([r, g, b])=> `rgb(${r}, ${g}, ${b})`
+    });
+
+    background.exit().remove();
+  }
+
+  updateNewBackground(){
+    let picker = this,
+      li = this.$dropdown.selectAll("li")
+        .data(d3.merge(this.findImages()).map((el)=> picker.dataUri(el)));
 
     li.enter().append("li")
       .append("a")

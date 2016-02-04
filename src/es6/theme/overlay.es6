@@ -18,11 +18,12 @@ export class ThemeOverlay{
     this.textBase = this.theme.select(["text-base"]);
 
     this.themer = tree.select(".").root().select(["themer"]);
+    this.focusContent = this.themer.select(["focuseContent"]);
     this.exampleText = this.themer.select("exampleText");
 
     this.background = new BackgroundPicker(tree, manager);
 
-    [this.theme, this.themer]
+    [this.rules, this.textBase, this.focusContent, this.exampleText]
       .map(({on})=> on("update", (e)=> this.update(e)));
 
     WebFont.load({
@@ -77,7 +78,7 @@ export class ThemeOverlay{
         focus.append("input")
           .attr({type: "checkbox"})
           .on("change", ()=>{
-            this.themer.set(["focusContent"], d3.event.target.checked);
+            this.focusContent.set(d3.event.target.checked);
           });
         focus.append("label")
           .append("i")
@@ -91,7 +92,7 @@ export class ThemeOverlay{
       .property({value: text})
       .attr("placeholder", "Custom Example Text")
       .on("input", () => {
-        this.themer.set(["exampleText"], this.$example.property("value"));
+        this.exampleText.set(this.$example.property("value"));
       });
 
     this.$baseText = this.$toolbar.append("div")
@@ -209,7 +210,7 @@ export class ThemeOverlay{
           .call((font) => this.fontMenu(font));
       });
 
-    if(this.themer.get(["focusContent"])){
+    if(this.focusContent.get()){
       rule.filter(({key}) => !this.selectorUsed(key)).remove();
     }
 
@@ -220,7 +221,7 @@ export class ThemeOverlay{
       let exemplar = d3.select(this),
         text = overlay.exampleText.get();
 
-      if(!text && overlay.themer.get(["focusContent"])){
+      if(!text && overlay.focusContent.get()){
         let exEl = overlay.selectorUsed(d.key);
         if(exEl){
           text = d3.select(exEl).text();
