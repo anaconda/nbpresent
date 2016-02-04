@@ -1,4 +1,4 @@
-import {d3} from "nbpresent-deps";
+import {d3, Vibrant} from "nbpresent-deps";
 
 import {JPY_BRAND, UI_BG} from "../less";
 
@@ -121,6 +121,11 @@ export class BackgroundPicker {
 
     background.each(function(d, i){
       picker.drawHandles(d3.select(this), picker.backgrounds.select(i));
+      var v = new Vibrant(d["background-image"]);
+      v.getPalette((err, palette)=>{
+        console.log(err);
+        console.log(palette);
+      })
     });
 
     background.style({
