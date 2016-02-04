@@ -7,16 +7,20 @@ export class ThemeBase{
   constructor(tree, manager, slide, style){
     this.tree = tree;
     this.rules = this.tree.select(["theme", "rules"]);
+    this.textBase = this.tree.select(["theme", "text-base"]);
     this.manager = manager;
     this.slide = slide;
     this.$style = style;
   }
 
-  init(){
+  update(region, part){
   }
 
-  update(region, part){
-    let rules = d3.entries(this.rules.get())
+  init(){
+    let rules = [{
+      key: "",
+      value: this.textBase.get()
+    }].concat(d3.entries(this.rules.get()))
       .map(({key, value})=>{
         let directives = d3.entries(value).map(({key, value})=>{
 
@@ -28,7 +32,6 @@ export class ThemeBase{
 
           return `\t${key}: ${value};`;
         });
-
         return `${PRESENT_PREFIX} ${key}{
           line-height: 1.1;
           ${directives.join("\n")}
@@ -36,7 +39,7 @@ export class ThemeBase{
       })
       .join("\n");
 
-    this.$style.text(`/* generted */
+    this.$style.text(`/* ${new Date()} */
       ${rules}
     `);
   }
