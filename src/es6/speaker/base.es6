@@ -72,10 +72,7 @@ export class SpeakerBase {
       }],
       [{
         icon: "step-backward",
-        click: () => {
-          let current = that.tree.get(["slides", this.current.get()]);
-          this.current.set(current.prev);
-        },
+        click: () => this.retreat(),
         tip: "Previous Slide"
       }],
       [{
@@ -84,6 +81,11 @@ export class SpeakerBase {
         tip: "Next Slide"
       }]
     ];
+  }
+
+  retreat(){
+    let current = this.tree.get(["slides", this.current.get()]);
+    this.current.set(current.prev);
   }
 
   advance(){
