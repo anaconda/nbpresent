@@ -27,6 +27,71 @@
     }
   }
 
+  .theme-scratch {
+    position: fixed;
+    left: -9999px;
+    top: -9999px;
+  }
+
+  .nbpresent-theme-overlay-backgrounds{
+    margin-top: @theme-overlay-toolbar-height + 10;
+
+    .nbpresent-background-picker {
+      li a {
+        width: @sorter-slide-width;
+        height: @sorter-slide-height;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+    }
+
+    svg {
+      .bg {
+        stroke: @jpy-brand;
+        stroke-width: 2px;
+        fill: black;
+      }
+      .handle circle{
+        fill: @jpy-brand;
+        stroke: @jpy-brand;
+        stroke-width: 2px;
+      }
+    }
+
+    .theme-background-thumbnails{
+      padding: 10px 0 30px 0;
+
+      button{
+        position: absolute;
+        right: 0;
+        top: 105%;
+      }
+
+      .theme-background-thumbnail{
+        position: relative;
+
+        margin-left: 10px;
+        &:first-of-type {
+          margin-left: 0;
+        }
+
+        width: @sorter-slide-width;
+        height: @sorter-slide-height;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+
+        svg {
+          rect {
+            fill: transparent;
+          }
+        }
+      }
+    }
+  }
+
   .dropdown-menu{
     max-height: 50vh;
     overflow-y: scroll;
@@ -41,7 +106,6 @@
   }
 
   .theme-rules {
-    padding-top: @theme-overlay-toolbar-height + 10;
     .theme-rule {
       margin-bottom: 5px;
 

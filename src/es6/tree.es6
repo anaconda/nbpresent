@@ -8,8 +8,13 @@ export class Tree {
       sorter: {},
       editor: {},
       sortedSlides: Baobab.monkey(["slides"], this.sortedSlides),
-      themer: {},
-      theme: {}
+      themer: {
+        newBackground: {}
+      },
+      theme: {
+        backgrounds: [],
+        rules: {}
+      }
     }, obj));
   }
 

@@ -3,31 +3,9 @@ import _ from "underscore";
 
 import Jupyter from "base/js/namespace";
 
-import {FONTS, SYMB} from "./fonts";
+import {FONTS, SYMB, PANGRAMS} from "./fonts";
+import {BackgroundPicker} from "./background";
 
-
-// http://clagnut.com/blog/2380/#Perfect_pangrams_in_English_.2826_letters.29
-export const PANGRAMS = [
-  "A zenith of Xvurj’s cwm KL Gybdq",
-  "Zombies play crwth, quj FDG xvnk",
-  "Blowzy night-frumps vex’d Jack Q.",
-  "Dwarf mobs quiz lynx.jpg, kvetch!",
-  "Frowzy things plumb vex’d Jack Q.",
-  "G.B. fjords vex quick waltz nymph.",
-  "Glum Schwartzkopf vex’d by NJ IQ.",
-  "Gym DJ Beck vows phiz tranq flux.",
-  "Jerk gawps foxy Qum Blvd. chintz.",
-  "JFK got my VHS, PC and XLR web quiz.",
-  "Jocks find quartz glyph, vex BMW.",
-  "J.Q. Vandz struck my big fox whelp.",
-  "J.Q. Schwartz flung D.V. Pike my box.",
-  "Jump dogs, why vex Fritz Blank QC?",
-  "Mr. Jock, TV quiz PhD, bags few lynx.",
-  "New job: fix Mr. Gluck’s hazy TV, PDQ!",
-  "Quartz glyph job vex’d cwm finks.",
-  "Quartz jock vends BMW glyph fix.",
-  "The glib czar junks my VW Fox PDQ."
-];
 
 export class ThemeOverlay{
   constructor(tree, manager){
@@ -41,6 +19,8 @@ export class ThemeOverlay{
 
     this.themer = tree.select(".").root().select(["themer"]);
     this.exampleText = this.themer.select("exampleText");
+
+    this.background = new BackgroundPicker(tree, manager);
 
     [this.theme, this.themer]
       .map(({on})=> on("update", (e)=> this.update(e)));
@@ -76,11 +56,22 @@ export class ThemeOverlay{
         "row": 1
       });
 
+    this.$background = this.$ui.append("div")
+      .classed({
+        "nbpresent-theme-overlay-backgrounds": 1
+      })
+      .call((background) => this.background.init(background));
+
+    this.$palette = this.$ui.append("div")
+      .classed({
+        "nbpresent-theme-overlay-palette": 1,
+        "row": 1
+      }).text("palette");
 
     this.$focusContent = this.$toolbar.append("div")
       .classed({
         "focus-content": 1,
-        "col-xs-1": 1
+        "col-md-1": 1
       })
       .call((focus)=>{
         focus.append("input")
@@ -94,7 +85,7 @@ export class ThemeOverlay{
       });
 
     this.$example = this.$toolbar.append("div")
-      .classed({"col-xs-8": 1})
+      .classed({"col-md-8": 1})
       .append("input")
       .classed({"theme-example-text": 1, "form-control": 1})
       .property({value: text})
@@ -104,7 +95,7 @@ export class ThemeOverlay{
       });
 
     this.$baseText = this.$toolbar.append("div")
-      .classed({"theme-base-font": 1, "col-xs-2": 1})
+      .classed({"theme-base-font": 1, "col-md-2": 1})
       .datum({key: null, value: null})
       .call((font) => this.fontMenu(font));
 
@@ -201,7 +192,7 @@ export class ThemeOverlay{
       .call((rule)=>{
         rule.append("div")
           .classed({
-            "col-xs-1": 1,
+            "col-md-1": 1,
             "selector-label": 1
           })
           .append("span");
@@ -209,12 +200,12 @@ export class ThemeOverlay{
         rule.append("div")
           .classed({
             "selector-exemplar": 1,
-            "col-xs-8": 1
+            "col-md-8": 1
           });
 
 
         rule.append("div")
-          .classed({"col-xs-2": 1})
+          .classed({"col-md-2": 1})
           .call((font) => this.fontMenu(font));
       });
 
@@ -255,7 +246,6 @@ export class ThemeOverlay{
           "font-size": ({value={}}) => {
             let txt = value["font-size"] || overlay.textBase.get(["font-size"]);
             txt = txt ? `${txt}rem` : null;
-            console.log(txt);
             return txt;
           }
         });
@@ -308,6 +298,7 @@ export class ThemeOverlay{
   }
 
   destroy(){
+    this.background.destroy();
     this.$ui.remove();
   }
 }
