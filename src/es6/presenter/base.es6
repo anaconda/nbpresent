@@ -56,6 +56,9 @@ export class Presenter {
     this.$style = d3.select("head")
       .append("style")
       .classed({"nbpresent-presenter-style": 1});
+
+    this.$backgrounds = this.$ui.append("div")
+      .classed({"nbpresent-presenter-backgrounds": 1});
   }
 
   initActions(){

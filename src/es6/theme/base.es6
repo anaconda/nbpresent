@@ -7,6 +7,7 @@ export class ThemeBase{
   constructor(tree, manager, slide, style){
     this.tree = tree;
     this.rules = this.tree.select(["theme", "rules"]);
+    this.backgrounds = this.tree.select(["theme", "backgrounds"]);
     this.textBase = this.tree.select(["theme", "text-base"]);
     this.manager = manager;
     this.slide = slide;
@@ -14,6 +15,7 @@ export class ThemeBase{
   }
 
   update(region, part){
+    // TODO: allow per-region (heh, and per-slide) theme customization
   }
 
   init(){
@@ -42,6 +44,30 @@ export class ThemeBase{
     this.$style.text(`/* ${new Date()} */
       ${rules}
     `);
+
+    let background = d3.select(".nbpresent-presenter-backgrounds")
+      .selectAll(".nbpresent-presenter-background")
+      .data(this.backgrounds.get());
+
+    background.exit().remove();
+
+    background.enter().append("img").classed({
+      "nbpresent-presenter-background": 1
+    });
+
+
+    background.attr({
+      "src": (d) => d["background-image"]
+    })
+    .each(function(d){
+      console.log(d);
+    })
+    .style({
+      left: ({x})=> x === "left" ? 0 : null,
+      right: ({x})=> x === "right" ? 0 : null,
+      top: ({y})=> y === "top" ? 0 : null,
+      bottom: ({y})=> y === "bottom" ? 0 : null,
+    });
   }
 
 
