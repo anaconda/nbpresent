@@ -31,16 +31,19 @@ export const PANGRAMS = [
 
 export class ThemeOverlay{
   constructor(tree, manager){
-    this.tree = tree;
     this.manager = manager;
+
+    this.tree = tree;
+
     this.theme = tree.select(["theme"]);
+    this.rules = this.theme.select(["rules"]);
+    this.textBase = this.theme.select(["text-base"]);
+
     this.themer = tree.select(".").root().select(["themer"]);
     this.exampleText = this.themer.select("exampleText");
 
-    this.rules = this.theme.select(["rules"]);
-
-    this.theme.on("update", (e)=> this.update(e));
-    this.themer.on("update", (e)=> this.update(e));
+    [this.theme, this.themer]
+      .map(({on})=> on("update", (e)=> this.update(e)));
 
     WebFont.load({
       google: {
@@ -73,19 +76,11 @@ export class ThemeOverlay{
         "row": 1
       });
 
-    this.$example = this.$toolbar.append("input")
-      .classed({"theme-example-text": 1, "input": 1, "col-xs-3": 1})
-      .property({value: text})
-      .attr("placeholder", "Custom Example Text")
-      .on("input", () => {
-        this.themer.set(["exampleText"], this.$example.property("value"));
-      });
-
 
     this.$focusContent = this.$toolbar.append("div")
       .classed({
         "focus-content": 1,
-        "col-xs-2": 1
+        "col-xs-1": 1
       })
       .call((focus)=>{
         focus.append("input")
@@ -94,8 +89,24 @@ export class ThemeOverlay{
             this.themer.set(["focusContent"], d3.event.target.checked);
           });
         focus.append("label")
-          .text("Content Focus");
+          .append("i")
+          .classed({"fa fa-compress fa-2x": 1});
       });
+
+    this.$example = this.$toolbar.append("div")
+      .classed({"col-xs-8": 1})
+      .append("input")
+      .classed({"theme-example-text": 1, "form-control": 1})
+      .property({value: text})
+      .attr("placeholder", "Custom Example Text")
+      .on("input", () => {
+        this.themer.set(["exampleText"], this.$example.property("value"));
+      });
+
+    this.$baseText = this.$toolbar.append("div")
+      .classed({"theme-base-font": 1, "col-xs-2": 1})
+      .datum({key: null, value: null})
+      .call((font) => this.fontMenu(font));
 
     this.$rules = this.$ui.append("div")
       .classed({"theme-rules": 1});
@@ -117,17 +128,73 @@ export class ThemeOverlay{
     }
   }
 
+  fontMenu(font){
+    let overlay = this;
+    let $fontGroup = font.append("div")
+      .append("div")
+      .classed({"input-group": 1});
+
+    $fontGroup.append("div")
+      .classed({
+        "selector-font-name": 1,
+        "input-group-btn": 1
+      })
+      .call(function(dropdown){
+        dropdown.append("a")
+          .classed({"btn btn-default dropdown-toggle": 1})
+          .attr({"data-toggle": "dropdown"})
+        dropdown.append("ul")
+          .classed({"dropdown-menu": 1});
+      });
+
+    $fontGroup.append("input")
+      .classed({
+        "selector-font-size": 1,
+        "form-control": 1
+      })
+      .attr({
+        type: "number"
+      })
+      .on("input", function({key, value}){
+        var val = parseFloat(this.value);
+        val = !isNaN(val) ? val : null;
+        if(key){
+          if(val){
+            overlay.rules.set([key, "font-size"], parseFloat(this.value));
+          }else{
+            overlay.rules.unset([key, "font-size"]);
+          }
+        }else{
+          if(val){
+            overlay.textBase.set(["font-size"], parseFloat(this.value));
+          }else{
+            overlay.textBase.unset(["font-size"]);
+          }
+        }
+      });
+  }
+
   /** Draw all of the rules
   */
   update(){
+    this.$baseText
+      .datum({value: this.textBase.get()})
+      .select(".selector-font-name")
+      .call((dropdown) => this.updateFontMenu(dropdown))
+      .select(".btn")
+      .text(this.textBase.get(["font-family"]));
+
+    this.$baseText.select(".selector-font-size")
+      .property({
+        value: ({value={}}) => value["font-size"],
+      });
+
     let rules = this.rules.get() || {},
       rule = this.$rules.selectAll(".theme-rule")
         .data(SYMB.map((key)=> {
           return {key, value: rules[key]};
         })),
         overlay = this;
-
-    console.table(rules, rule.data());
 
     rule.enter().append("div")
       .classed({"theme-rule": 1, row: 1})
@@ -148,43 +215,7 @@ export class ThemeOverlay{
 
         rule.append("div")
           .classed({"col-xs-2": 1})
-          .call((font)=>{
-
-            let $fontGroup = font.append("div")
-              .append("div")
-              .classed({"input-group": 1});
-
-            $fontGroup.append("div")
-              .classed({
-                "selector-font-name": 1,
-                "input-group-btn": 1
-              })
-              .call(function(dropdown){
-                dropdown.append("a")
-                  .classed({"btn btn-default dropdown-toggle": 1})
-                  .attr({"data-toggle": "dropdown"})
-                dropdown.append("ul")
-                  .classed({"dropdown-menu": 1});
-              });
-
-            $fontGroup.append("input")
-              .classed({
-                "selector-font-size": 1,
-                "form-control": 1
-              })
-              .attr({
-                type: "number"
-              })
-              .on("input", function({key, value}){
-                var val = parseFloat(this.value);
-                val = !isNaN(val) ? val : null;
-                if(val){
-                  overlay.rules.set([key, "font-size"], parseFloat(this.value));
-                }else{
-                  overlay.rules.unset([key, "font-size"]);
-                }
-              });
-          });
+          .call((font) => this.fontMenu(font));
       });
 
     if(this.themer.get(["focusContent"])){
@@ -212,21 +243,28 @@ export class ThemeOverlay{
       let el = exemplar.selectAll(d.key)
         .data([d]);
 
-      el.enter()
+      el.attr({"contentEditable": "true"})
+        .enter()
         .append(d.key);
 
-      el.attr({"contentEditable": "true"})
-        .text(text)
+      el.text(text)
         .style({
-          "font-family": ({value={}}) => value["font-family"],
-          "font-size": ({value={}}) => value["font-size"] + "rem"
+          "font-family": ({value={}}) => {
+            return value["font-family"] || overlay.textBase.get(["font-family"]);
+          },
+          "font-size": ({value={}}) => {
+            let txt = value["font-size"] || overlay.textBase.get(["font-size"]);
+            txt = txt ? `${txt}rem` : null;
+            console.log(txt);
+            return txt;
+          }
         });
 
       el.exit().remove();
     });
 
     rule.select(".selector-font-name")
-      .call((dropdown) => this.updateFont(dropdown))
+      .call((dropdown) => this.updateFontMenu(dropdown))
       .select(".btn")
       .text(function({key}){
         return overlay.getExemplar(this, key).style("font-family");
@@ -244,7 +282,7 @@ export class ThemeOverlay{
 
   }
 
-  updateFont(dropdown){
+  updateFontMenu(dropdown){
     let li = dropdown.select(".dropdown-menu")
       .selectAll("li")
       .data(({key, value}) => {
@@ -257,8 +295,11 @@ export class ThemeOverlay{
       .append("li")
       .append("a")
       .on("click", ({key, font})=> {
-        console.log(key, font, this.theme.get());
-        this.rules.set([key, "font-family"], font);
+        if(key){
+          this.rules.set([key, "font-family"], font);
+        }else{
+          this.textBase.set(["font-family"], font);
+        }
       });
 
     li.select("a")
