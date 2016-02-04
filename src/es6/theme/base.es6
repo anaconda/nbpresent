@@ -57,14 +57,11 @@ export class ThemeBase{
 
 
     background.attr({
-      "src": (d) => d["background-image"]
-    })
-    .each(function(d){
-      console.log(d);
+      src: (d) => d["background-image"]
     })
     .style({
-      left: ({x})=> x === "left" ? 0 : null,
-      right: ({x})=> x === "right" ? 0 : null,
+      left: ({x})=> !["left", "center"].indexOf(x) ? 0 : null,
+      right: ({x})=> !["right", "center"].indexOf(x) ? 0 : null,
       top: ({y})=> y === "top" ? 0 : null,
       bottom: ({y})=> y === "bottom" ? 0 : null,
     });

@@ -6,6 +6,7 @@ import VanillaSlab from "vanilla-slab";
 import Baobab from "baobab";
 import $ from "jquery";
 import WebFont from "webfontloader";
+import Vibrant from "node-vibrant";
 
 
 export {
@@ -16,4 +17,5 @@ export {
   Baobab,
   $,
   WebFont,
+  Vibrant
 };
