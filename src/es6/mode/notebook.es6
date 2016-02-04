@@ -14,6 +14,7 @@ export class NotebookMode extends BaseMode {
   init() {
     super.init();
     this.initStylesheet();
+    this.initActions();
 
     [this.slides, this.theme].map((cursor)=>{
       cursor.on("update", () => {
@@ -23,6 +24,36 @@ export class NotebookMode extends BaseMode {
     });
 
     this.tour = new NbpresentTour(this);
+
+  }
+
+  initActions(){
+    var _actions = {
+      "show-sorter": {
+        icon: 'fa-gift',
+        help: 'show the slide sorter',
+        handler: (env)=> this.show()
+      },
+      "show-presentation": {
+        icon: 'fa-youtube-play',
+        help: 'show presentation',
+        handler: (env)=> this.presenter && this.presenter.presenting.get() ?
+          this.unpresent() :
+          this.present()
+      }
+    };
+
+    d3.entries(_actions).map(({key, value}) => {
+      Jupyter.notebook.keyboard_manager.actions.register(
+        value,
+        key,
+        "nbpresent"
+      );
+    });
+
+    Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts({
+      "esc": "nbpresent:show-presentation"
+    });
   }
 
   initStylesheet(){

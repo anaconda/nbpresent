@@ -58,6 +58,14 @@ export class Presenter {
       .classed({"nbpresent-presenter-style": 1});
   }
 
+  initActions(){
+
+  }
+
+  deinitActions(){
+
+  }
+
   /** Decode the slide object through the registry of layout classes.
     * @param {Object} slide - the key, value of the current slide
     * @return {Class} */
@@ -112,6 +120,11 @@ export class Presenter {
   }
 
   present() {
+    if(!this.presenting.get()){
+      this.deinitActions();
+    }else{
+      this.initActions();
+    }
     this.update();
   }
 
