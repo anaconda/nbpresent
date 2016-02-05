@@ -4,7 +4,9 @@ import _ from "underscore";
 import Jupyter from "base/js/namespace";
 
 import {FONTS, SYMB, PANGRAMS} from "./fonts";
+
 import {BackgroundPicker} from "./background";
+import {PaletteBuilder} from "./palette";
 
 
 export class ThemeOverlay{
@@ -21,9 +23,16 @@ export class ThemeOverlay{
     this.focusContent = this.themer.select(["focuseContent"]);
     this.exampleText = this.themer.select("exampleText");
 
-    this.background = new BackgroundPicker(tree, manager);
+    this.background = new BackgroundPicker(tree);
+    this.palette = new PaletteBuilder(tree);
 
-    [this.rules, this.textBase, this.focusContent, this.exampleText]
+    [
+      this.rules,
+      this.textBase,
+      this.focusContent,
+      this.exampleText,
+      this.palette.palette
+    ]
       .map(({on})=> on("update", (e)=> this.update(e)));
 
     WebFont.load({
@@ -50,24 +59,30 @@ export class ThemeOverlay{
       })
       .each(function(){ Jupyter.keyboard_manager.register_events(this); });
 
+    let row = this.$ui.append("div")
+      .classed({row: 1});
+
+
+    this.$background = row.append("div")
+      .classed({
+        "nbpresent-theme-overlay-backgrounds col-md-2": 1,
+      })
+      .call((background) => this.background.init(background));
+
+    this.$palette = row.append("div")
+      .classed({
+        "nbpresent-theme-overlay-palette col-md-2": 1
+      })
+      .call((palette) => this.palette.init(palette));
+
+    this.$rules = row.append("div")
+      .classed({"theme-rules col-md-8": 1});
 
     this.$toolbar = this.$ui.append("div")
       .classed({
         "nbpresent-theme-overlay-toolbar": 1,
         "row": 1
       });
-
-    this.$background = this.$ui.append("div")
-      .classed({
-        "nbpresent-theme-overlay-backgrounds": 1
-      })
-      .call((background) => this.background.init(background));
-
-    this.$palette = this.$ui.append("div")
-      .classed({
-        "nbpresent-theme-overlay-palette": 1,
-        "row": 1
-      }).text("palette");
 
     this.$focusContent = this.$toolbar.append("div")
       .classed({
@@ -96,12 +111,9 @@ export class ThemeOverlay{
       });
 
     this.$baseText = this.$toolbar.append("div")
-      .classed({"theme-base-font": 1, "col-md-2": 1})
+      .classed({"theme-base-font": 1, "col-md-3": 1})
       .datum({key: null, value: null})
       .call((font) => this.fontMenu(font));
-
-    this.$rules = this.$ui.append("div")
-      .classed({"theme-rules": 1});
 
     this.update();
   }
@@ -122,27 +134,14 @@ export class ThemeOverlay{
 
   fontMenu(font){
     let overlay = this;
-    let $fontGroup = font.append("div")
-      .append("div")
-      .classed({"input-group": 1});
 
-    $fontGroup.append("div")
-      .classed({
-        "selector-font-name": 1,
-        "input-group-btn": 1
-      })
-      .call(function(dropdown){
-        dropdown.append("a")
-          .classed({"btn btn-default dropdown-toggle": 1})
-          .attr({"data-toggle": "dropdown"})
-        dropdown.append("ul")
-          .classed({"dropdown-menu": 1});
-      });
+    let fontGroup = font.append("div").classed({row: 1});
 
-    $fontGroup.append("input")
+
+    fontGroup.append("div").classed({"col-md-4": 1})
+      .append("input")
       .classed({
-        "selector-font-size": 1,
-        "form-control": 1
+        "selector-font-size form-control": 1
       })
       .attr({
         type: "number"
@@ -164,6 +163,29 @@ export class ThemeOverlay{
           }
         }
       });
+
+    fontGroup.append("div").classed({
+        "selector-font-name dropdown col-md-7": 1
+      })
+      .call(function(dropdown){
+        dropdown.append("a")
+          .classed({"btn btn-default dropdown-toggle": 1})
+          .attr({"data-toggle": "dropdown"})
+        dropdown.append("ul")
+          .classed({"dropdown-menu": 1});
+      });
+
+    fontGroup.append("div")
+      .classed({
+        "selector-color dropdown col-md-1": 1
+      })
+      .call(function(dropdown){
+        dropdown.append("a")
+          .classed({"btn btn-default dropdown-toggle": 1})
+          .attr({"data-toggle": "dropdown"})
+        dropdown.append("ul")
+          .classed({"dropdown-menu": 1});
+      });
   }
 
   /** Draw all of the rules
@@ -175,6 +197,9 @@ export class ThemeOverlay{
       .call((dropdown) => this.updateFontMenu(dropdown))
       .select(".btn")
       .text(this.textBase.get(["font-family"]));
+
+    this.$baseText.select(".selector-font-color")
+      .call((dropdown) => this.updateColorMenu(dropdown));
 
     this.$baseText.select(".selector-font-size")
       .property({
@@ -189,25 +214,26 @@ export class ThemeOverlay{
         overlay = this;
 
     rule.enter().append("div")
-      .classed({"theme-rule": 1, row: 1})
+      .classed({"theme-rule": 1})
       .call((rule)=>{
-        rule.append("div")
+        let settingsRow = rule.append("div")
+          .classed({row: 1});
+
+        settingsRow.append("div")
           .classed({
-            "col-md-1": 1,
-            "selector-label": 1
+            "selector-label col-md-1": 2
           })
           .append("span");
 
+        settingsRow.append("div")
+          .classed({"col-md-5": 1})
+          .call((font) => this.fontMenu(font));
+
         rule.append("div")
           .classed({
-            "selector-exemplar": 1,
-            "col-md-8": 1
+            "selector-exemplar": 1
           });
 
-
-        rule.append("div")
-          .classed({"col-md-2": 1})
-          .call((font) => this.fontMenu(font));
       });
 
     if(this.focusContent.get()){
@@ -235,9 +261,9 @@ export class ThemeOverlay{
       let el = exemplar.selectAll(d.key)
         .data([d]);
 
-      el.attr({"contentEditable": "true"})
-        .enter()
-        .append(d.key);
+      el.enter()
+        .append(d.key)
+        .attr({"contentEditable": "true"});
 
       el.text(text)
         .style({
@@ -248,6 +274,9 @@ export class ThemeOverlay{
             let txt = value["font-size"] || overlay.textBase.get(["font-size"]);
             txt = txt ? `${txt}rem` : null;
             return txt;
+          },
+          "color": ({value={}}) => {
+            return value.color ? `rgb(${value.color})` : null;
           }
         });
 
@@ -271,6 +300,41 @@ export class ThemeOverlay{
         value: ({value={}}) => value["font-size"],
       });
 
+    rule.select(".selector-color")
+      .call((dropdown) => this.updateColorMenu(dropdown))
+      .style({
+        "background-color": function({key}){
+          return overlay.getExemplar(this, key).style("color");
+        }
+      });
+
+  }
+
+  updateColorMenu(dropdown){
+    let li = dropdown.select(".dropdown-menu")
+      .selectAll("li")
+      .data(({key, value})=> {
+        return d3.entries(this.palette.palette.get() || {})
+          .map((color) => {
+            return {key, value, color: color.value};
+          })
+      })
+
+    li.enter()
+      .append("li")
+      .append("a")
+      .text(" ")
+      .on("click", ({key, color}) => {
+        if(key){
+          this.rules.set([key, "color"], color.rgb);
+        }else{
+          this.textBase.set(["color"], color.rgb);
+        }
+      });
+
+    li.select("a").style({"background-color": ({color}) => {
+      return `rgb(${color.rgb})`;
+    }});
   }
 
   updateFontMenu(dropdown){

@@ -25,12 +25,18 @@ export class ThemeBase{
     }].concat(d3.entries(this.rules.get()))
       .map(({key, value})=>{
         let directives = d3.entries(value).map(({key, value})=>{
-
-          if(key === "font-family"){
-            WebFont.load({google: {families: [value] }});
+          switch(key){
+            case "font-size":
+              value = `${value}rem`;
+              break;
+            case "font-family":
+              WebFont.load({google: {families: [value] }});
+              value = `"${value}"`;
+              break;
+            case "color":
+              value = `rgb(${value})`;
+              break;
           }
-
-          value = _.isNumber(value) ? `${value}rem` : `"${value}"`;
 
           return `\t${key}: ${value};`;
         });
@@ -41,13 +47,11 @@ export class ThemeBase{
       })
       .join("\n");
 
-    this.$style.text(`/* ${new Date()} */
-      ${rules}
-    `);
+    this.$style.text(rules);
 
     let background = d3.select(".nbpresent-presenter-backgrounds")
       .selectAll(".nbpresent-presenter-background")
-      .data(this.backgrounds.get());
+      .data(this.backgrounds.get() || []);
 
     background.exit().remove();
 
@@ -57,7 +61,7 @@ export class ThemeBase{
 
 
     background.attr({
-      src: (d) => d["background-image"]
+      src: ({src}) => src
     })
     .style({
       left: ({x})=> !["left", "center"].indexOf(x) ? 0 : null,

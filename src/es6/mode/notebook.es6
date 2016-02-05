@@ -18,7 +18,7 @@ export class NotebookMode extends BaseMode {
 
     [this.slides, this.theme].map((cursor)=>{
       cursor.on("update", () => {
-        console.log("saving metadata");
+        console.info("saving metadata");
         this.metadata(true)
       })
     });

@@ -27,9 +27,11 @@ function(require, $, Jupyter){
 
     requirejs(["nbpresent-deps"], function(deps){
       requirejs(["nbpresent-notebook"], function(mode){
-        nbpresent.mode = new mode.NotebookMode(
-          require.toUrl(".").split("?")[0]
-        );
+        setTimeout(function(){
+          nbpresent.mode = new mode.NotebookMode(
+            require.toUrl(".").split("?")[0]
+          );
+        }, 1000);
       });
     });
   }

@@ -13,7 +13,8 @@ export class Tree {
       },
       theme: {
         backgrounds: [],
-        rules: {}
+        rules: {},
+        palette: {}
       }
     }, obj));
   }
