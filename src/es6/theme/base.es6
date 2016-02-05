@@ -55,9 +55,10 @@ export class ThemeBase{
 
     this.$style.text(rules);
 
-    let background = d3.select(".nbpresent-presenter-backgrounds")
-      .selectAll(".nbpresent-presenter-background")
-      .data(this.backgrounds.get() || []);
+    let backgrounds = this.backgrounds.get() || {},
+      background = d3.select(".nbpresent-presenter-backgrounds")
+        .selectAll(".nbpresent-presenter-background")
+        .data(d3.entries(backgrounds, ({key}) => key));
 
     background.exit().remove();
 
@@ -67,13 +68,13 @@ export class ThemeBase{
 
 
     background.attr({
-      src: ({src}) => src
+      src: ({value}) => value.src
     })
     .style({
-      left: ({x})=> !["left", "center"].indexOf(x) ? 0 : null,
-      right: ({x})=> !["right", "center"].indexOf(x) ? 0 : null,
-      top: ({y})=> y === "top" ? 0 : null,
-      bottom: ({y})=> y === "bottom" ? 0 : null,
+      left: ({value})=> !["left", "center"].indexOf(value.x) ? 0 : null,
+      right: ({value})=> !["right", "center"].indexOf(value.x) ? 0 : null,
+      top: ({value})=> value.y === "top" ? 0 : null,
+      bottom: ({value})=> value.y === "bottom" ? 0 : null,
     });
   }
 

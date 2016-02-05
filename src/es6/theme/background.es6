@@ -77,20 +77,6 @@ export class BackgroundPicker {
     this.$grid.append("svg")
       .call((svg)=>this.initHandles(svg));
 
-    this.$attach = this.$makeNew.append("div");
-
-    this.$attach.append("button")
-      .classed({"btn btn-default": 1})
-      .append("i")
-      .classed({"fa fa-thumbs-up fa-2x": 1})
-      .on("click", ()=>{
-        if(!this.backgrounds.get()){
-          this.backgrounds.set([this.newBackground.get()]);
-        }else{
-          this.backgrounds.push(this.newBackground.get());
-        }
-        this.newBackground.set({});
-      });
 
     this.$scratch = this.$makeNew.append("canvas")
       .classed({"theme-scratch": 1});
@@ -127,8 +113,9 @@ export class BackgroundPicker {
 
   updateBackgrounds(){
     let picker = this,
+      backgrounds = this.backgrounds.get() || {},
       background = this.$backgrounds.selectAll(".theme-background-thumbnail")
-        .data(this.backgrounds.get() || []);
+        .data(d3.entries(backgrounds, ({key})=>key));
 
     background.enter().append("div")
       .classed({"theme-background-thumbnail row": 1})
@@ -148,29 +135,22 @@ export class BackgroundPicker {
             btn.append("i")
               .classed({"fa fa-trash": 1});
           })
-          .on("click", (d) => {
-            this.backgrounds.splice(
-              [this.backgrounds.get().indexOf(d), 1]
-            )
-          });
+          .on("click", ({key}) => this.backgrounds.unset(key));
       });
 
-    background.each(function(d, i){
-      picker.drawHandles(d3.select(this), picker.backgrounds.select(i));
-
-      picker.paletteCache.exists([d.src]) ||
-        picker.paletteCache.set([d.src], -1);
+    background.each(function({key, value}){
+      picker.drawHandles(d3.select(this), picker.backgrounds.select([key]));
+      picker.paletteCache.exists([value.src]) ||
+        picker.paletteCache.set([value.src], -1);
     });
 
     background.select("img")
-      .attr({
-        src: ({src}) => src
-      });
+      .attr({src: ({value}) => value.src});
 
     let swatch = background.select(".theme-background-palette")
       .selectAll(".background-palette-swatch")
-      .data((d)=>{
-        let palette = this.paletteCache.get([d.src]);
+      .data(({value})=>{
+        let palette = this.paletteCache.get([value.src]);
         if(palette && palette != -1){
           return d3.entries(palette).map(({key, value}) => {
             return {key, value: value.rgb};
@@ -207,8 +187,14 @@ export class BackgroundPicker {
 
     li.enter().append("li")
       .append("a")
-      .on("click", function(uri){
-        picker.newBackground.set(["src"], uri);
+      .on("click", (uri) => {
+        let id = uuid.v4();
+        this.backgrounds.set([id], {
+          id,
+          src: uri,
+          x: BG_POS_H[0],
+          y: BG_POS_H[1],
+        });
       });
 
     li.exit().remove();
@@ -222,10 +208,6 @@ export class BackgroundPicker {
         return this.newBackground.get(["src"]) ? "block" : "none"
       }})
       .call((container) => this.drawHandles(container, this.newBackground));
-
-    this.$attach.style({
-      display: this.newBackground.get("x") ? "block" : "none"
-    });
   }
 
   initHandles(svg){
@@ -256,7 +238,8 @@ export class BackgroundPicker {
 
     let act = cursor.get();
 
-    handle.select("circle").attr({
+    handle.select("circle")
+      .attr({
         cx: ({x}) => this.boxScale.x(x),
         cy: ({y}) => this.boxScale.y(y),
         r: HANDLE_RADIUS
