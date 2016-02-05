@@ -177,7 +177,7 @@ export class Editor {
       uibb = this.$ui.node().getBoundingClientRect(),
       width = uibb.width - (this.sidebar.width() + (2 * this.padding())),
       height = width / this.aspectRatio(),
-      regions = d3.entries(this.regions.get()),
+      regions = d3.entries(this.regions.get() || {}),
       {slide, region} = this.selectedRegion.get() || {},
       selected = this.selectedRegion.get();
 

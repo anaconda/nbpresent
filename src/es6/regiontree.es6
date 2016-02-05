@@ -108,7 +108,7 @@ class RegionTree {
 
     let that = this;
 
-    let regions = d3.entries(this.slide.get("regions")),
+    let regions = d3.entries(this.slide.get("regions") || {}),
       $region = this.$ui.selectAll(".region_info")
         .data(regions, (d) => d.key),
       slide = this.slide.get();
