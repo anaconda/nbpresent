@@ -7,11 +7,14 @@ export class ThemeBase{
   constructor(tree, manager, slide, style){
     this.tree = tree;
     this.rules = this.tree.select(["theme", "rules"]);
+    this.palette = this.tree.select(["theme", "palette"]);
+
     this.backgrounds = this.tree.select(["theme", "backgrounds"]);
     this.textBase = this.tree.select(["theme", "text-base"]);
     this.manager = manager;
     this.slide = slide;
     this.$style = style;
+
   }
 
   update(region, part){
@@ -19,6 +22,8 @@ export class ThemeBase{
   }
 
   init(){
+    let palette = this.palette.get();
+
     let rules = [{
       key: "",
       value: this.textBase.get()
@@ -34,7 +39,8 @@ export class ThemeBase{
               value = `"${value}"`;
               break;
             case "color":
-              value = `rgb(${value})`;
+              let {rgb=[0, 0, 0], a=1.0} = palette[value] || {};
+              value = `rgba(${rgb}, ${a})`;
               break;
           }
 

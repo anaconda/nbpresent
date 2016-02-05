@@ -1,4 +1,4 @@
-import {d3} from "nbpresent-deps";
+import {d3, uuid} from "nbpresent-deps";
 
 export class PaletteBuilder {
   constructor(tree){
@@ -17,6 +17,17 @@ export class PaletteBuilder {
   init(panel){
     this.$ui = panel;
 
+    this.$confirm = this.$ui.append("button")
+      .classed({"btn btn-default": 1})
+      .text("Colors...")
+      .on("click", ()=>{
+        let id = uuid.v4();
+        this.palette.set([id], {
+          id,
+          rgb: [255, 255, 255]
+        });
+      });
+
     this.$chips = this.$ui.append("div")
       .classed({"palette-chips": 1});
 
@@ -30,14 +41,21 @@ export class PaletteBuilder {
     chip.enter().append("div")
       .classed({"palette-chip": 1})
       .call((chip)=>{
-        chip.append("div")
-          .classed({"palette-chip-example": 1});
+        chip.append("input")
+          .classed({"palette-chip-example": 1})
+          .attr({type: "color"})
+          .on("change", ({key}) => {
+            let {r,g,b} = d3.rgb(d3.event.target.value);
+            this.palette.set([key, "rgb"], [r, g, b]);
+          });
         chip.append("div")
           .classed({"palette-chip-details": 1});
       });
 
-    chip.select(".palette-chip-example").style({
-      "background-color": ({value}) => `rgb(${value.rgb})`
+    chip.select(".palette-chip-example").property({
+      "value": ({value}) => {
+        return d3.rgb.apply(null, value.rgb).toString();
+      }
     });
 
     chip.exit().remove();

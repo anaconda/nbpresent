@@ -29,6 +29,12 @@ export class BackgroundPicker {
 
     this.palette = this.tree.select(["theme", "palette"]);
 
+    try{
+      this.serializer = new window.XMLSerializer();
+    }catch(err){
+      console.info("Might have some issues serializing SVG");
+    }
+
     this.boxScale = {
       x: d3.scale.ordinal()
         .domain(BG_POS_H)
@@ -60,7 +66,7 @@ export class BackgroundPicker {
         dropdown.append("button")
           .classed({"btn btn-default dropdown-toggle": 1})
           .attr({type: "button", "data-toggle": "dropdown"})
-          .text("Background");
+          .text("Backgrounds...");
 
         this.$dropdown = dropdown.append("ul")
           .classed({"dropdown-menu nbpresent-background-picker": 1});
@@ -154,7 +160,7 @@ export class BackgroundPicker {
         let palette = this.paletteCache.get(d.src);
         if(palette && palette != -1){
           return d3.entries(palette).map(({key, value}) => {
-            return value;
+            return {rgb: value.rgb};
           });
         }
         return [];
@@ -162,11 +168,11 @@ export class BackgroundPicker {
 
     swatch.enter().append("div")
       .classed({"background-palette-swatch": 1})
-      .on("click", ({rgb}) => {
+      .on("click", ({key, value}) => {
         let id = uuid.v4();
         this.palette.set([id], {
           id,
-          rgb
+          rgb: value.rgb
         });
       });
 
@@ -253,6 +259,9 @@ export class BackgroundPicker {
     let uri;
 
     switch(el.tagName.toLowerCase()){
+      case 'svg':
+        uri = `data:image/svg+xml;utf8,${this.serialize(el)}`;
+        break;
       case 'canvas':
         uri = el.toDataURL();
         break;
@@ -273,6 +282,12 @@ export class BackgroundPicker {
     }
 
     return uri;
+  }
+
+  serialize(node) {
+    return this.serializer ? this.serializer.serializeToString(node) :
+      node.xml ? node.xml :
+      "";
   }
 
   findImages(){

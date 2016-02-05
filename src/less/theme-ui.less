@@ -9,6 +9,25 @@
   z-index: @z-editor;
   overflow-y: scroll;
 
+  .btn {
+    background: none;
+    color: @jpy-brand;
+    border: none;
+  }
+
+  input[type="color"] {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    background-color: black;
+    border: solid 1px @jpy-brand;
+  }
+
+  .selector-label {
+    color: @jpy-brand;
+    font-size: 18px;
+  }
+
   .nbpresent-theme-overlay-toolbar{
     position: fixed;
     right: 20px;
@@ -92,30 +111,18 @@
   }
 
   .nbpresent-theme-overlay-palette{
-    padding: 0 10px;
-    .palette-chip {
-      float:left;
-      width: 100%;
+    input[type="color"] {
+      width: 64px;
+      height: 64px;
+    }
+    .palette-chip{
       margin-bottom: 10px;
-      .palette-chip-example{
-        float: left;
-        height: 64px;
-        width: 64px;
-      }
-      .palette-chip-details{
-      }
     }
   }
 
   .dropdown-menu{
     max-height: 50vh;
     overflow-y: scroll;
-  }
-
-  .btn {
-    background: none;
-    color: @jpy-brand;
-    border: none;
   }
 
   .selector-font-label{
@@ -131,12 +138,24 @@
   }
 
   .selector-color {
+    border: solid 1px @jpy-brand;
+
+    & > a {
+      opacity: 0;
+    }
+
     .dropdown-menu {
       padding: 0;
       background-color: @ui-bg;
+      width: 32px;
+      min-width: 32px;
+      overflow-x: hidden;
     }
+
     li {
-      float: left;
+      margin:0;
+      padding:0;
+      width: 32px;
       a {
        width: 32px;
        height: 32px;
@@ -151,17 +170,10 @@
     overflow-y: auto;
     right: 0;
     padding-right: 20px;
-    padding-top: 60px;
+    padding-top: 100px;
 
     .theme-rule {
       margin-bottom: 10px;
-
-      .selector-label {
-        color: @jpy-brand;
-        span {
-          font-size: 18px;
-        }
-      }
 
       .selector-exemplar {
         background-color: #fff;
