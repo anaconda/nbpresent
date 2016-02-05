@@ -12,7 +12,7 @@ export class Tree {
         newBackground: {}
       },
       theme: {
-        backgrounds: [],
+        backgrounds: {},
         rules: {},
         palette: {}
       }
