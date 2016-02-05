@@ -206,7 +206,7 @@ export class Editor {
     });
 
     let $region = this.$svg.selectAll(".region")
-      .data(regions, (d) => d.key)
+      .data(regions, ({key}) => key)
       .order();
 
     $region.exit().remove();

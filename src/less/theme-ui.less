@@ -1,3 +1,5 @@
+@theme-swatch-size: 24px;
+
 .nbpresent-theme-overlay {
   position: fixed;
   bottom: @sorter-height;
@@ -17,8 +19,8 @@
 
   input[type="color"] {
     padding: 0;
-    width: 32px;
-    height: 32px;
+    width: @theme-swatch-size;
+    height: @theme-swatch-size;
     background-color: black;
     border: solid 1px @jpy-brand;
   }
@@ -28,28 +30,13 @@
     font-size: 18px;
   }
 
-  .nbpresent-theme-overlay-toolbar{
-    position: fixed;
-    right: 20px;
-    left: 33.33%;
-    top: 20px;
-    background: black;
-    box-shadow: @nbpresent-z-shadow;
-    opacity: 0.9;
-    z-index: 1;
-    padding: 5px;
-
-    .focus-content label{
-      color: @jpy-brand;
-      padding: 0 20px 0 5px;
-    }
-  }
 
   .background-palette-swatch{
-    width: 16px;
-    height: 16px;
+    width: @theme-swatch-size;
+    height: @theme-swatch-size;
     float: left;
     margin: 0 4px 0 0;
+    border: solid 1px @jpy-brand;
   }
 
   .theme-scratch {
@@ -117,6 +104,10 @@
     }
     .palette-chip{
       margin-bottom: 10px;
+
+      .palette-chip-details{
+        float: left;
+      }
     }
   }
 
@@ -147,30 +138,37 @@
     .dropdown-menu {
       padding: 0;
       background-color: @ui-bg;
-      width: 32px;
-      min-width: 32px;
+      width: @theme-swatch-size;
+      min-width: @theme-swatch-size;
       overflow-x: hidden;
     }
 
     li {
       margin:0;
       padding:0;
-      width: 32px;
+      width: @theme-swatch-size;
       a {
-       width: 32px;
-       height: 32px;
+       width: @theme-swatch-size;
+       height: @theme-swatch-size;
      }
     }
   }
 
   .theme-rules {
-    position: fixed;
-    bottom: @sorter-height;
-    top: 20px;
-    overflow-y: auto;
-    right: 0;
     padding-right: 20px;
-    padding-top: 100px;
+
+    .nbpresent-theme-overlay-toolbar{
+      margin-bottom: 20px;
+      .focus-content label{
+        color: @jpy-brand;
+        padding: 0 20px 0 5px;
+      }
+    }
+
+    .theme-rule-wrap {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
 
     .theme-rule {
       margin-bottom: 10px;
