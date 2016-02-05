@@ -51,7 +51,7 @@ export class BaseCellManager {
             height: canvas.height
           };
         }, (err)=>{
-          console.log(err)
+          console.error(err);
         });
     }
 
