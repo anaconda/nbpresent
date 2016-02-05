@@ -104,9 +104,22 @@ export class BackgroundPicker {
       .map(({key, value})=>{
         if(value === -1){
           this.paletteCache.set([key], 0);
-          let v = new Vibrant(key);
-          v.getPalette((err, patches)=>{
-            this.paletteCache.set([key], JSON.parse(JSON.stringify(patches)));
+          (new Vibrant(key)).getPalette((err, patches)=>{
+            if(err){
+              console.error(err);
+              return;
+            }
+            patches = JSON.parse(JSON.stringify(patches));
+
+            let goodPatches = {};
+
+            d3.entries(patches).map(({key, value})=>{
+              if(value){
+                goodPatches[key] = value;
+              }
+            });
+
+            this.paletteCache.set([key], goodPatches);
           });
         }
       });
@@ -157,14 +170,16 @@ export class BackgroundPicker {
     let swatch = background.select(".theme-background-palette")
       .selectAll(".background-palette-swatch")
       .data((d)=>{
-        let palette = this.paletteCache.get(d.src);
+        let palette = this.paletteCache.get([d.src]);
         if(palette && palette != -1){
           return d3.entries(palette).map(({key, value}) => {
-            return {rgb: value.rgb};
+            return {key, value: value.rgb};
           });
         }
         return [];
       });
+
+    swatch.exit().remove();
 
     swatch.enter().append("div")
       .classed({"background-palette-swatch": 1})
@@ -172,13 +187,13 @@ export class BackgroundPicker {
         let id = uuid.v4();
         this.palette.set([id], {
           id,
-          rgb: value.rgb
+          rgb: value
         });
       });
 
     swatch.style({
-      "background-color": ({rgb})=> {
-        return `rgb(${rgb})`
+      "background-color": ({value})=> {
+        return `rgb(${value})`
       }
     });
 

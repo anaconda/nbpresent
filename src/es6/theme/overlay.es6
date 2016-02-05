@@ -66,34 +66,35 @@ export class ThemeOverlay{
 
     this.$background = row.append("div")
       .classed({
-        "nbpresent-theme-overlay-backgrounds col-md-2": 1,
+        "nbpresent-theme-overlay-backgrounds col-md-2 col-xs-6": 1,
       })
       .call((background) => this.backgroundUI.init(background));
 
     this.$palette = row.append("div")
       .classed({
-        "nbpresent-theme-overlay-palette col-md-2": 1
+        "nbpresent-theme-overlay-palette col-md-2 col-xs-6": 1
       })
       .call((palette) => this.paletteUI.init(palette));
 
     this.$rules = row.append("div")
-      .classed({"theme-rules col-md-8": 1});
+      .classed({"theme-rules col-md-8 col-xs-12": 1});
 
-    this.$toolbar = this.$ui.append("div")
-      .classed({
-        "nbpresent-theme-overlay-toolbar": 1
-      });
+    this.$toolbar = this.$rules.append("div")
+      .classed({"nbpresent-theme-overlay-toolbar": 1});
+
+    this.$ruleWrap = this.$rules.append("div")
+      .classed({"theme-rule-wrap": 1});
 
     this.$toolbar.append("div").classed({row: 1})
       .call((row)=>{
         this.$baseText = row.append("div")
-          .classed({"theme-base-font col-md-6": 1})
+          .classed({"theme-base-font col-xs-6": 1})
           .datum({key: null, value: null})
           .call((font) => this.fontMenu(font));
 
         this.$focusContent = row.append("div")
           .classed({
-            "focus-content col-md-2 col-md-offset-3": 1
+            "focus-content col-xs-2 col-xs-offset-3": 1
           })
           .call((focus)=>{
             focus.append("input")
@@ -110,7 +111,7 @@ export class ThemeOverlay{
     this.$toolbar.append("div").classed({row: 1})
       .call((row)=>{
         this.$example = row.append("div")
-          .classed({"col-md-8": 1})
+          .classed({"col-xs-12": 1})
           .append("input")
           .classed({"theme-example-text": 1, "form-control": 1})
           .property({value: text})
@@ -142,11 +143,11 @@ export class ThemeOverlay{
       row = font.append("div").classed({row: 1});
 
     row.append("div")
-      .classed({"selector-label col-md-3": 1})
+      .classed({"selector-label col-xs-3": 1})
       .text("∅");
 
     row.append("div")
-      .classed({"selector-color dropdown col-md-1": 1})
+      .classed({"selector-color dropdown col-xs-1": 1})
       .call(function(dropdown){
         dropdown.append("a")
           .classed({"btn btn-default dropdown-toggle": 1})
@@ -155,7 +156,7 @@ export class ThemeOverlay{
           .classed({"dropdown-menu": 1});
       });
 
-    row.append("div").classed({"col-md-4": 1})
+    row.append("div").classed({"col-xs-4": 1})
       .append("input")
       .classed({"selector-font-size form-control": 1})
       .attr({
@@ -180,7 +181,7 @@ export class ThemeOverlay{
       });
 
     row.append("div").classed({
-        "selector-font-name dropdown col-md-4": 1
+        "selector-font-name dropdown col-xs-4": 1
       })
       .call(function(dropdown){
         dropdown.append("a")
@@ -197,14 +198,15 @@ export class ThemeOverlay{
   update(){
     let overlay = this,
       rules = this.rules.get() || {},
-      rule = this.$rules.selectAll(".theme-rule")
+      rule = this.$ruleWrap.selectAll(".theme-rule")
         .data(SYMB.map((key)=> {
           return {key, value: rules[key]};
-        })),
+        }), ({key}) => key),
       palette = this.palette.get() || {},
       exampleText = this.exampleText.get() || "",
-      textBase = overlay.textBase.get() || {},
-      baseColor = textBase.color && `rgb(${palette[textBase.color].rgb})`,
+      textBase = this.textBase.get() || {},
+      baseColor = textBase.color && palette[textBase.color],
+      baseBg = baseColor && `rgb(${baseColor.rgb})`,
       focusContent = this.focusContent.get();
 
     this.$baseText
@@ -212,15 +214,14 @@ export class ThemeOverlay{
       .select(".selector-font-name")
       .call((dropdown) => this.updateFontMenu(dropdown))
       .select(".btn")
-      .text(textBase["font-family"]);
+      .text(textBase["font-family"] || "sans-serif");
 
     this.$baseText.select(".selector-color")
       .call((dropdown) => this.updateColorMenu(dropdown))
-      .style({
-        "background-color": baseColor
-      });
+      .style({"background-color": baseBg});
 
     this.$baseText.select(".selector-font-size")
+      .attr({placeholder: "14px"})
       .property({
         value: ({value={}}) => value["font-size"],
       });
@@ -232,7 +233,7 @@ export class ThemeOverlay{
           .classed({row: 1});
 
         settingsRow.append("div")
-          .classed({"col-md-6": 1})
+          .classed({"col-md-6 col-xs-12": 1})
           .call((font) => this.fontMenu(font));
 
         rule.append("div")
@@ -272,7 +273,7 @@ export class ThemeOverlay{
       el.text(text)
         .style({
           "font-family": ({value={}}) => {
-            return value["font-family"] || overlay.textBase.get(["font-family"]);
+            return value["font-family"] || textBase["font-family"];
           },
           "font-size": ({value={}}) => {
             let txt = value["font-size"] || textBase["font-size"];
@@ -284,7 +285,7 @@ export class ThemeOverlay{
             if(color){
               return `rgba(${color.rgb}, ${color.a || 1.0})`;
             }
-            return baseColor;
+            return baseBg;
           }
         });
 
@@ -329,7 +330,7 @@ export class ThemeOverlay{
           return colors.map((color) => {
             return {key, value, color: color.value};
           });
-        });
+        }, ({key}) => key);
 
     li.enter()
       .append("li")
@@ -355,7 +356,7 @@ export class ThemeOverlay{
         return FONTS.map((font) => {
           return {font, key, value};
         });
-      });
+      }, ({key}) => key);
 
     li.enter()
       .append("li")

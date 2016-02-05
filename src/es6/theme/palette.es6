@@ -36,7 +36,7 @@ export class PaletteBuilder {
 
   update(){
     let chip = this.$chips.selectAll(".palette-chip")
-      .data(d3.entries(this.palette.get() || {}));
+      .data(d3.entries(this.palette.get() || {}), ({key}) => key);
 
     chip.enter().append("div")
       .classed({"palette-chip": 1})
@@ -49,15 +49,29 @@ export class PaletteBuilder {
             this.palette.set([key, "rgb"], [r, g, b]);
           });
         chip.append("div")
-          .classed({"palette-chip-details": 1});
+          .classed({"palette-chip-details": 1})
+          .call((details)=>{
+            details.append("button")
+              .classed({"btn btn-default pull-right": 1})
+              .call((btn)=>{
+                btn.append("i")
+                  .classed({"fa fa-trash": 1});
+              })
+              .on("click", ({key}) => {
+                console.group(key);
+                console.log(this.palette.get());
+                this.palette.unset([key]);
+                console.log(this.palette.get());
+              });
+          });
       });
+
+    chip.exit().remove();
 
     chip.select(".palette-chip-example").property({
       "value": ({value}) => {
         return d3.rgb.apply(null, value.rgb).toString();
       }
     });
-
-    chip.exit().remove();
   }
 }
