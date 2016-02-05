@@ -330,7 +330,7 @@ export class ThemeOverlay{
           return colors.map((color) => {
             return {key, value, color: color.value};
           });
-        }, ({key}) => key);
+        });
 
     li.enter()
       .append("li")
@@ -356,7 +356,7 @@ export class ThemeOverlay{
         return FONTS.map((font) => {
           return {font, key, value};
         });
-      }, ({key}) => key);
+      });
 
     li.enter()
       .append("li")

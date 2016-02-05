@@ -4,8 +4,8 @@ import {JPY_BRAND, UI_BG} from "../less";
 
 export const THUMBNAIL_MIN_DIM = 48;
 
-export const BG_POS_H = ["left", "center", "right"],
-  BG_POS_V = ["top", "middle", "bottom"],
+export const BG_POS_H = ["left", "right"],
+  BG_POS_V = ["top", "bottom"],
   BG_POSITIONS = d3.merge(
     BG_POS_H.map((x) => BG_POS_V.map((y)=> { return {x, y}; }))
   ),
@@ -38,10 +38,10 @@ export class BackgroundPicker {
     this.boxScale = {
       x: d3.scale.ordinal()
         .domain(BG_POS_H)
-        .range([0, 80, 160]),
+        .range([0, 160]),
       y: d3.scale.ordinal()
         .domain(BG_POS_V)
-        .range([0, 45, 90])
+        .range([0, 90])
     }
   }
 
