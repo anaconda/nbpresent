@@ -1,3 +1,7 @@
+body:not(.nbpresent_presenting) .nbpresent_presenter{
+  display: none;
+}
+
 body.nbpresent_presenting {
   overflow: hidden;
   #notebook-container {
@@ -7,8 +11,6 @@ body.nbpresent_presenting {
 }
 
 .nbpresent_presenter {
-  opacity: 0;
-  display: none;
   z-index: @z-present;
   background-color: white;
   position: fixed;

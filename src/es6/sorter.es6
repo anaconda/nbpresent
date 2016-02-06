@@ -61,11 +61,10 @@ class Sorter {
 
     if(visible) {
       this.draw();
+      this.update();
     }else {
-      this.cleanup();
+      this.destroy();
     }
-
-    this.update();
   }
 
   cleanup(){
@@ -81,6 +80,8 @@ class Sorter {
   destroy(){
     this.cleanup();
     this.$view.remove();
+    d3.selectAll(".ui-tooltip").remove();
+    this.destroyed = true;
   }
 
   /** Hide the slide editor
@@ -511,6 +512,9 @@ class Sorter {
       this.themeOverlay.destroy();
       this.themeOverlay = null;
     }else{
+      this.hideEditor()
+        .hideLinkOverlay()
+        .hideTemplates();
       this.themeOverlay = new ThemeOverlay(
         this.tree,
         this.cellManager
@@ -523,6 +527,9 @@ class Sorter {
       this.linkOverlay.destroy();
       this.linkOverlay = null;
     }else{
+      this.hideEditor()
+        .hideThemeOverlay()
+        .hideTemplates();
       this.linkOverlay = new LinkOverlay(
         this.cellManager,
         ({part, cell}) => {
@@ -611,6 +618,9 @@ class Sorter {
     }
 
     if(id){
+      this.hideTemplates()
+        .hideLinkOverlay()
+        .hideThemeOverlay();
       // TODO: do this with an id and big tree ref?
       this.editor = new Editor(this.slides.select(id), this.selectedRegion);
     }

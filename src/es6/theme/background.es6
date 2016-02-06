@@ -9,7 +9,9 @@ export const BG_POS_H = ["left", "right"],
   BG_POSITIONS = d3.merge(
     BG_POS_H.map((x) => BG_POS_V.map((y)=> { return {x, y}; }))
   ),
-  HANDLE_RADIUS = 10;
+  HANDLE_RADIUS = 10,
+  PCACHE_REQUEST = -1,
+  PCACHE_STARTED = 0;
 
 export class BackgroundPicker {
   constructor(tree){
@@ -55,9 +57,7 @@ export class BackgroundPicker {
     this.$makeNew = this.$ui.append("div");
 
     this.$backgrounds = this.$ui.append("div")
-      .classed({
-        "theme-background-thumbnails": 1
-      })
+      .classed({"theme-background-thumbnails": 1})
       .append("div");
 
     this.$makeNew.append("div")
@@ -88,25 +88,26 @@ export class BackgroundPicker {
   updatePaletteCache(){
     d3.entries(this.paletteCache.get() || {})
       .map(({key, value})=>{
-        if(value === -1){
-          this.paletteCache.set([key], 0);
-          (new Vibrant(key)).getPalette((err, patches)=>{
-            if(err){
-              console.error(err);
-              return;
-            }
-            patches = JSON.parse(JSON.stringify(patches));
+        if(value === PCACHE_REQUEST){
+          this.paletteCache.set([key], PCACHE_STARTED);
 
-            let goodPatches = {};
-
-            d3.entries(patches).map(({key, value})=>{
-              if(value){
-                goodPatches[key] = value;
+          Vibrant.from(key)
+            .getPalette((err, patches) => {
+              if(err){
+                return console.error(err);
               }
-            });
+              patches = JSON.parse(JSON.stringify(patches));
 
-            this.paletteCache.set([key], goodPatches);
-          });
+              patches = d3.entries(patches)
+                .reduce((memo, {key, value})=>{
+                  if(value){
+                    memo[key] = value;
+                  }
+                  return memo;
+                }, {});
+
+              this.paletteCache.set([key], patches);
+            });
         }
       });
   }
@@ -115,7 +116,7 @@ export class BackgroundPicker {
     let picker = this,
       backgrounds = this.backgrounds.get() || {},
       background = this.$backgrounds.selectAll(".theme-background-thumbnail")
-        .data(d3.entries(backgrounds, ({key})=>key));
+        .data(d3.entries(backgrounds, ({key}) => key));
 
     background.enter().append("div")
       .classed({"theme-background-thumbnail row": 1})
@@ -135,26 +136,28 @@ export class BackgroundPicker {
             btn.append("i")
               .classed({"fa fa-trash": 1});
           })
-          .on("click", ({key}) => this.backgrounds.unset(key));
       });
 
     background.each(function({key, value}){
       picker.drawHandles(d3.select(this), picker.backgrounds.select([key]));
       picker.paletteCache.exists([value.src]) ||
-        picker.paletteCache.set([value.src], -1);
+        picker.paletteCache.set([value.src], PCACHE_REQUEST);
     });
+
+    background.select("button")
+      .on("click", ({key}) => {
+        this.backgrounds.unset([key]);
+      });
 
     background.select("img")
       .attr({src: ({value}) => value.src});
 
     let swatch = background.select(".theme-background-palette")
       .selectAll(".background-palette-swatch")
-      .data(({value})=>{
+      .data(({key, value})=>{
         let palette = this.paletteCache.get([value.src]);
-        if(palette && palette != -1){
-          return d3.entries(palette).map(({key, value}) => {
-            return {key, value: value.rgb};
-          });
+        if(palette && palette != PCACHE_REQUEST){
+          return d3.entries(palette);
         }
         return [];
       });
@@ -167,17 +170,15 @@ export class BackgroundPicker {
         let id = uuid.v4();
         this.palette.set([id], {
           id,
-          rgb: value
+          rgb: value.rgb
         });
       });
 
-    swatch.style({
-      "background-color": ({value})=> {
-        return `rgb(${value})`
-      }
-    });
+    swatch.style({"background-color": ({value})=> `rgb(${value.rgb})`});
 
     background.exit().remove();
+
+    return this;
   }
 
   updateNewBackground(){
@@ -200,7 +201,9 @@ export class BackgroundPicker {
     li.exit().remove();
 
     li.select("a").style({
-      "background-image": (uri) => `url(${uri})`
+      "background-image": (uri) => {
+        return `url(${uri})`
+      }
     });
 
     this.$grid
@@ -208,6 +211,8 @@ export class BackgroundPicker {
         return this.newBackground.get(["src"]) ? "block" : "none"
       }})
       .call((container) => this.drawHandles(container, this.newBackground));
+
+    return this;
   }
 
   initHandles(svg){
@@ -258,7 +263,7 @@ export class BackgroundPicker {
 
     switch(el.tagName.toLowerCase()){
       case 'svg':
-        uri = `data:image/svg+xml;utf8,${this.serialize(el)}`;
+        uri = `data:image/svg+xml;base64,${btoa(this.serialize(el))}`;
         break;
       case 'canvas':
         uri = el.toDataURL();

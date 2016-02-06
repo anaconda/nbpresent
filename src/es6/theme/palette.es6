@@ -58,10 +58,7 @@ export class PaletteBuilder {
                   .classed({"fa fa-trash": 1});
               })
               .on("click", ({key}) => {
-                console.group(key);
-                console.log(this.palette.get());
                 this.palette.unset([key]);
-                console.log(this.palette.get());
               });
           });
       });

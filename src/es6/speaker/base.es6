@@ -35,15 +35,13 @@ export class SpeakerBase {
   decay(){
     this.energy = (this.energy || 0) * 0.8;
     this.$ui.style({
-      opacity: this.focused ? 1 : this.energy,
-      display: "block"
+      opacity: this.focused ? 1 : this.energy
     });
 
     if(this.focused){
       clearInterval(this.decayInterval);
       this.decayInterval = null;
     }else if(this.energy <= 0.1){
-      this.$ui.style({display: "none"});
       clearInterval(this.decayInterval);
       this.decayInterval = null;
       this.energy = 0;

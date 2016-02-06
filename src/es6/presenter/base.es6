@@ -48,8 +48,7 @@ export class Presenter {
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({nbpresent_presenter: 1})
-      .style({display: "none"});
+      .classed({nbpresent_presenter: 1});
 
     d3.select(window).on("mousemove", ()=> this.speaker.hint());
 
@@ -140,14 +139,6 @@ export class Presenter {
     let presenting = this.presenting.get();
 
     d3.select("body").classed({nbpresent_presenting: presenting});
-
-    this.$ui
-      .style({
-        "display": presenting ? "block" : "none"
-      })
-      .style({
-        opacity: +presenting,
-      });
 
     let current = this.current.get(),
       slide = this.tree.get(["sortedSlides", (d) => d.key == current]);
