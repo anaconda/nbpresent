@@ -11,6 +11,8 @@ export class StandaloneMode extends BaseMode {
     this.presenter = new StandalonePresenter(this.tree);
 
     this.presenter.presenting.set(true);
+    
+    return this;
   }
 
   metadata() {
