@@ -15,6 +15,13 @@ import {AriseTome} from "./tome/arise";
 
 let REMOVED = "<removed>";
 
+const MODE_NAMES = [
+  "editor",
+  "templates",
+  "linkOverlay",
+  "themeOverlay"
+];
+
 
 /** The main user experience for creating and reordering slides, as well as
   * defining the relationship between notebook cells {@link PART}s and slide
@@ -68,10 +75,7 @@ class Sorter {
   }
 
   cleanup(){
-    this.hideEditor()
-      .hideTemplates()
-      .hideThemeOverlay()
-      .hideLinkOverlay();
+    this.focusMode();
 
     d3.select("body")
       .classed({nbpresent_sorting: 0});
@@ -84,48 +88,18 @@ class Sorter {
     this.destroyed = true;
   }
 
-  /** Hide the slide editor
-    * @return {Sorter} */
-  hideEditor(){
-    if(this.editor){
-      this.editor.destroy();
-      this.editor = null;
-    }
+  focusMode(except=[]){
+    let mode;
+    MODE_NAMES.map((name) => {
+      mode = this[name];
+      if(!mode || except.indexOf(name) !== -1){
+        return;
+      }
+      mode.destroy();
+      this[name] = null;
+    });
     return this;
   }
-
-  /** Hide the template library
-    * @return {Sorter} */
-  hideTemplates(){
-    if(this.templates){
-      this.templates.destroy();
-      this.templates = null;
-    }
-    return this;
-  }
-
-
-  /** Hide the theme editor
-    * @return {Sorter} */
-  hideThemeOverlay(){
-    if(this.themeOverlay){
-      this.themeOverlay.destroy();
-      this.themeOverlay = null;
-    }
-    return this;
-  }
-
-
-  /** Hide the therem library
-    * @return {Sorter} */
-  hideLinkOverlay(){
-    if(this.linkOverlay){
-      this.linkOverlay.destroy();
-      this.linkOverlay = null;
-    }
-    return this;
-  }
-
 
   show(){
     this.visible.set(!this.visible.get());
@@ -290,7 +264,7 @@ class Sorter {
     if(this.templates){
       let newSlide = this.copySlide(d.value);
       this.templatePicked({key: newSlide.id, value: newSlide});
-      this.hideTemplates();
+      this.focusMode();
       return;
     }
   }
@@ -380,6 +354,8 @@ class Sorter {
         .call(this.regionToolbar.update);
 
     this.$deckToolbar.call(this.deckToolbar.update);
+
+    return this;
   }
 
   updateSelectedRegion(){
@@ -392,7 +368,7 @@ class Sorter {
         this.selectCell(content.cell);
       }
     }
-    this.draw();
+    return this.draw();
   }
 
   // TODO: move this to the cell manager?
@@ -512,13 +488,8 @@ class Sorter {
       this.themeOverlay.destroy();
       this.themeOverlay = null;
     }else{
-      this.hideEditor()
-        .hideLinkOverlay()
-        .hideTemplates();
-      this.themeOverlay = new ThemeOverlay(
-        this.tree,
-        this.cellManager
-      );
+      this.focusMode(["themeOverlay"]);
+      this.themeOverlay = new ThemeOverlay(this.tree);
     }
   }
 
@@ -527,9 +498,7 @@ class Sorter {
       this.linkOverlay.destroy();
       this.linkOverlay = null;
     }else{
-      this.hideEditor()
-        .hideThemeOverlay()
-        .hideTemplates();
+      this.focusMode(["linkOverlay"]);
       this.linkOverlay = new LinkOverlay(
         this.cellManager,
         ({part, cell}) => {
@@ -583,7 +552,7 @@ class Sorter {
     if(!this.templates || this.templates.killed){
       this.templates = new TemplateLibrary(this.templatePicked);
     }else{
-      this.hideTemplates();
+      this.focusMode();
     }
   }
 
@@ -606,7 +575,7 @@ class Sorter {
 
       this.selectedSlide.set(appended);
     }
-    this.hideTemplates();
+    this.focusMode();
   }
 
   editSlide(id){
@@ -614,13 +583,11 @@ class Sorter {
       if(this.editor.slide.get("id") === id){
         id = null;
       }
-      this.hideEditor();
+      this.focusMode();
     }
 
     if(id){
-      this.hideTemplates()
-        .hideLinkOverlay()
-        .hideThemeOverlay();
+      this.focusMode(["editor"]);
       // TODO: do this with an id and big tree ref?
       this.editor = new Editor(this.slides.select(id), this.selectedRegion);
     }

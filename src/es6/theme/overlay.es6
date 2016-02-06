@@ -10,9 +10,7 @@ import {PaletteBuilder} from "./palette";
 
 
 export class ThemeOverlay{
-  constructor(tree, manager){
-    this.manager = manager;
-
+  constructor(tree){
     this.tree = tree;
 
     this.theme = tree.select(["theme"]);
