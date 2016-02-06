@@ -4,8 +4,8 @@ import {PART} from "./parts";
 
 class NbpresentTour {
 
-  constructor(nbpresent) {
-    this.nbpresent = nbpresent;
+  constructor(mode) {
+    this.mode = mode;
 
     let fake_hover = (selector, value) => d3.selectAll(selector).classed({
       fake_hover: value
@@ -40,7 +40,7 @@ class NbpresentTour {
           title: "Deck Toolbar",
           content: "Let's create a new slide",
           placement: "top",
-          onNext: () => this.nbpresent.sorter.addSlide()
+          onNext: () => this.mode.sorter.addSlide()
         },
         {
           element: ".from_template",
@@ -59,7 +59,7 @@ class NbpresentTour {
           title: "Simple Template",
           position: "top",
           content: "Let's use this one",
-          onNext: () => this.nbpresent.sorter.templatePicked(
+          onNext: () => this.mode.sorter.templatePicked(
             d3.select(".nbpresent_template_library .slide:nth-of-type(2)")
               .datum()
           )
@@ -115,7 +115,7 @@ class NbpresentTour {
           placement: "top",
           title: "Part Thumbnail",
           content: "A part thumbnail might look a little funny, but you should usually be able to get an idea of what you're seeing.",
-          onShow: () => this.nbpresent.sorter.linkContent(PART.source)
+          onShow: () => this.tour.sorter.linkContent(PART.source)
         },
         {
           title: "Achievement Unlocked: Presentation",
@@ -126,7 +126,7 @@ class NbpresentTour {
           title: "Great, let's have a look",
           placement: "bottom",
           content: "Clicking this button brings up the Presenter",
-          onNext: () => this.nbpresent.present()
+          onNext: () => this.tour.present()
         },
         {
           title: "Looks great!",
@@ -176,15 +176,15 @@ class NbpresentTour {
           placement: "top",
           onShown: () => fake_hover(".presenter_toolbar", true),
           onHidden: () => fake_hover(".presenter_toolbar", 0) &&
-            this.nbpresent.unpresent()
+            this.tour.unpresent()
         },
         {
           element: ".deck_toolbar .fa-edit",
           title: "Edit Slide",
           content: "If you need more control, you can edit a Slide's Regions directly",
           placement: "top",
-          onHidden: () => this.nbpresent.sorter.editSlide(
-            this.nbpresent.sorter.selectedSlide.get()
+          onHidden: () => this.tour.sorter.editSlide(
+            this.tour.sorter.selectedSlide.get()
           )
         },
         {
@@ -211,7 +211,7 @@ class NbpresentTour {
           title: "Magic Layouts",
           content: "In addition to manually moving regions around, you can use other Layouts, like this Treemap, which will fill the slide",
           onHidden: () => {
-            this.nbpresent.sorter.editor.sidebar.layout("treemap");
+            this.tour.sorter.editor.sidebar.layout("treemap");
           }
         },
         {
