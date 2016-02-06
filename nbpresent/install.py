@@ -2,8 +2,6 @@
 
 import argparse
 import os
-from glob import glob
-# import subprocess
 from os.path import (
     abspath,
     dirname,
@@ -78,7 +76,7 @@ def install(enable=False, **kwargs):
         cm.update(
             "notebook", {
                 "load_extensions": {
-                    "nbpresent/nbpresent.min": True
+                    "nbpresent/js/nbpresent.min": True
                 },
             }
         )

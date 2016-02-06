@@ -12,6 +12,8 @@ REPO_ROOT = abspath(join(dirname(__file__), "..", ".."))
 PKG_ROOT = join(REPO_ROOT, PKG)
 SRC = join(REPO_ROOT, "src")
 DIST = join(PKG_ROOT, "static", PKG)
+JS = join(DIST, "js")
+CSS = join(DIST, "css")
 
 IS_WIN = "Windows" in platform.system()
 

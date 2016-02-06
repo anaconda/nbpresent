@@ -2,19 +2,26 @@ import Jupyter from "base/js/namespace";
 
 import {d3, $} from "nbpresent-deps";
 
+import {PART} from "../parts";
+import {Tree} from "../tree";
+
+import {Toolbar} from "../toolbar";
 import {NotebookPresenter} from "../presenter/notebook";
 import {Sorter} from "../sorter";
-import {PART} from "../parts";
+
 import {NbpresentTour} from "../tour";
-import {Tree} from "../tree";
 
 import {BaseMode} from "./base";
 
 export class NotebookMode extends BaseMode {
   init() {
     super.init()
+      .initUI()
       .initStylesheet()
       .initActions();
+
+    this.enabled = this.tree.select(["enabled"]);
+    this.enabled.on("update", () => this.enabledChanged());
 
     [this.slides, this.theme].map((cursor)=>{
       cursor.on("update", () => {
@@ -24,6 +31,46 @@ export class NotebookMode extends BaseMode {
     });
 
     this.tour = new NbpresentTour(this);
+
+    this.$body = d3.select("body");
+    this.$header = d3.select("#header");
+
+    this.tree.set(["active"], false);
+    this.tree.on
+
+    return this;
+  }
+
+  initUI(){
+    this.appBar = new Toolbar()
+      .btnClass("btn-default btn-lg")
+      .btnGroupClass("btn-group-vertical")
+      .tipOptions({container: "body", placement: "top"});
+
+    this.$appBar = d3.select("body").append("div")
+      .classed({"nbpresent-app-bar": 1})
+      .datum([
+        [{
+          icon: "youtube-play fa-2x",
+          label: "Present",
+          click: () => this.present(),
+          tip: "Present"
+        }],
+        [{
+          icon: "th-large fa-2x",
+          label: "Slides",
+          click: () => this.editSlide(this.selectedSlide.get()),
+          tip: "Edit Slide",
+          // visible: () => this.selectedSlide.get() && !this.editor
+        }],
+        [{
+          icon: "paint-brush  fa-2x",
+          tip: "Theme",
+          label: "Theme",
+          click: () => this.themeMode()
+        }]
+      ])
+      .call(this.appBar.update);
     return this;
   }
 
@@ -71,7 +118,7 @@ export class NotebookMode extends BaseMode {
       .attr({id: "nbpresent-css"})
       .attr({
         rel: "stylesheet",
-        href: `${this.root}/nbpresent.min.css`
+        href: `${this.root}/../css/nbpresent.min.css`
       });
 
     return this;
@@ -92,15 +139,26 @@ export class NotebookMode extends BaseMode {
     }
   }
 
-  show(){
-    if(!this.sorter || this.sorter.destroyed){
+  enabledChanged(){
+    const enabled = this.enabled.get();
+
+    if(!enabled){
+      this.sorter && this.sorter.destroy();
+      this.sorter = null;
+    }else{
       this.ensurePresenter();
+      this.$appBar.style({
+        "padding-top": `${this.$header.node().clientHeight}px`
+      });
       this.sorter = new Sorter(this.tree, this.tour, this);
       this.sorter.show();
-    }else{
-      this.sorter.destroy();
-      this.sorter = null;
     }
+
+    this.$body.classed({"nbpresent-app-enabled": enabled});
+  }
+
+  show(){
+    this.enabled.set(!this.enabled.get());
     return this;
   }
 

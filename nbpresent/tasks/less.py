@@ -2,7 +2,7 @@ from subprocess import Popen
 import sys
 
 from ._env import (
-    DIST,
+    CSS,
     SRC,
     IS_WIN,
     join,
@@ -15,8 +15,9 @@ def main(**opts):
         node_bin("lessc"),
         "--autoprefix",
         "--clean-css",
+        "--include-path={}".format(node_bin("..")),
         join(SRC, "less", "index.less"),
-        join(DIST, "nbpresent.min.css")
+        join(CSS, "nbpresent.min.css")
     ] + opts.get("less", [])
     return Popen(args, shell=IS_WIN).wait()
 

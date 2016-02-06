@@ -4,18 +4,17 @@ import socket
 import subprocess
 import tempfile
 import sys
-import shutil
 import platform
+
+from ..export import export
 
 
 IS_WIN = "Windows" in platform.system()
 
 
-from ..export import export
-
-
 # utility function
-def join(*bits): return os.path.abspath(os.path.join(*bits))
+def join(*bits):
+    return os.path.abspath(os.path.join(*bits))
 
 
 here = os.path.dirname(__file__)

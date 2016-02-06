@@ -2,7 +2,7 @@ from subprocess import Popen
 import sys
 
 from ._env import (
-    DIST,
+    JS,
     SRC,
     join,
     node_bin,
@@ -20,7 +20,7 @@ def main(**opts):
     ] + extension + external(
         "jquery", "base/js/namespace", "notebook/js/celltoolbar"
     ) + transform + [
-        "--outfile", join(DIST, "nbpresent.deps.min.js"),
+        "--outfile", join(JS, "nbpresent.deps.min.js"),
         join(SRC, "es6", "vendor.es6")
     ] + opts.get("browserify", [])
     return Popen(args, shell=IS_WIN).wait()

@@ -2,7 +2,7 @@ from subprocess import Popen
 import sys
 
 from ._env import (
-    DIST,
+    JS,
     SRC,
     join,
     node_bin,
@@ -28,7 +28,7 @@ def main(**opts):
         "uuid",
         "nbpresent-deps"
     ) + transform + [
-        "--outfile", join(DIST, "nbpresent.notebook.min.js"),
+        "--outfile", join(JS, "nbpresent.notebook.min.js"),
         join(SRC, "es6", "mode", "notebook.es6")
     ] + opts.get("browserify", [])
     return Popen(args, shell=IS_WIN).wait()

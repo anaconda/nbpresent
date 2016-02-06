@@ -4,10 +4,12 @@ body.nbpresent_sorting {
   }
   #nbpresent_sorter_btn{
     color: @jpy-brand;
-    box-shadow: @nbpresent-z-shadow;
+    box-shadow: @z-shadow;
     background-color: #222;
   }
   .nbpresent_sorter{
+    .nbpresent-ui();
+
     z-index: @z-sorter;
     position: fixed;
     right: 0;
@@ -17,7 +19,7 @@ body.nbpresent_sorting {
 
     // height: @sorter-height;
     color: @jpy-brand;
-    box-shadow: @nbpresent-z-shadow;
+    box-shadow: @z-shadow;
     transition: all 0.3s;
     background-color: @ui-bg;
     opacity: 0.9;
