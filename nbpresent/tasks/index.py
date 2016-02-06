@@ -2,7 +2,7 @@ import sys
 import shutil
 
 from ._env import (
-    DIST,
+    JS,
     SRC,
     join,
 )
@@ -11,7 +11,7 @@ from ._env import (
 def main(**opts):
     shutil.copyfile(
         join(SRC, "js", "index.js"),
-        join(DIST, "nbpresent.min.js")
+        join(JS, "nbpresent.min.js")
     )
     return 0
 

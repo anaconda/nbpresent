@@ -55,7 +55,6 @@ class NBPresentTestController(jstest.JSController):
         if IS_WIN:
             self.cmd[0] = "{}.cmd".format(self.cmd[0])
 
-
     def launch(self, buffer_output=False, capture_output=False):
         # print('*** ENV:', self.env)  # dbg
         # print('*** CMD:', self.cmd)  # dbg
@@ -63,10 +62,11 @@ class NBPresentTestController(jstest.JSController):
         env.update(self.env)
         if buffer_output:
             capture_output = True
-        self.stdout_capturer = c = jstest.StreamCapturer(echo=not buffer_output)
+        self.stdout_capturer = c = jstest.StreamCapturer(
+            echo=not buffer_output)
         c.start()
         stdout = c.writefd if capture_output else None
-        stderr = subprocess.STDOUT if capture_output else None
+        # stderr = subprocess.STDOUT if capture_output else None
         self.process = subprocess.Popen(
             self.cmd,
             stderr=subprocess.PIPE,

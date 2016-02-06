@@ -1,0 +1,26 @@
+.nbpresent-app-bar {
+  opacity: 0;
+  margin-left: -@app-bar-width;
+  transition-property: margin-left;
+  transition-duration: 0.2s;
+}
+
+body.nbpresent-app-enabled {
+  #notebook_panel {
+    margin-left: @app-bar-width;
+  }
+
+  .nbpresent-app-bar {
+    .nbpresent-ui();
+    opacity: 1;
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    margin-left: 0;
+    width: @app-bar-width;
+    background-color: @ui-bg;
+    transition-property: margin-left;
+    transition-duration: 0.2s;
+  }
+}
