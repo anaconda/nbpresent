@@ -24,6 +24,6 @@ export class BaseMode {
   }
 
   init(){
-    
+    return this;
   }
 }

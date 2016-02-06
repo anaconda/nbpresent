@@ -12,9 +12,9 @@ import {BaseMode} from "./base";
 
 export class NotebookMode extends BaseMode {
   init() {
-    super.init();
-    this.initStylesheet();
-    this.initActions();
+    super.init()
+      .initStylesheet()
+      .initActions();
 
     [this.slides, this.theme].map((cursor)=>{
       cursor.on("update", () => {
@@ -24,7 +24,7 @@ export class NotebookMode extends BaseMode {
     });
 
     this.tour = new NbpresentTour(this);
-
+    return this;
   }
 
   initActions(){
@@ -73,6 +73,8 @@ export class NotebookMode extends BaseMode {
         rel: "stylesheet",
         href: `${this.root}/nbpresent.min.css`
       });
+
+    return this;
   }
 
   metadata(update){
@@ -99,6 +101,7 @@ export class NotebookMode extends BaseMode {
       this.sorter.destroy();
       this.sorter = null;
     }
+    return this;
   }
 
 
@@ -106,14 +109,17 @@ export class NotebookMode extends BaseMode {
     if(!this.presenter){
       this.presenter = new NotebookPresenter(this.tree, this.tour);
     }
+    return this;
   }
 
   present(){
     this.ensurePresenter();
     this.presenter.presenting.set(true);
+    return this;
   }
 
   unpresent(){
     this.presenter.presenting.set(false);
+    return this;
   }
 }
