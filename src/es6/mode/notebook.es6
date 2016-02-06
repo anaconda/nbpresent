@@ -19,7 +19,7 @@ export class NotebookMode extends BaseMode {
     [this.slides, this.theme].map((cursor)=>{
       cursor.on("update", () => {
         console.info("saving metadata");
-        this.metadata(true)
+        this.metadata(true);
       })
     });
 
@@ -32,7 +32,7 @@ export class NotebookMode extends BaseMode {
       "show-sorter": {
         icon: 'fa-gift',
         help: 'show the slide sorter',
-        handler: (env)=> this.show()
+        handler: (env) => this.show()
       },
       "show-presentation": {
         icon: 'fa-youtube-play',
@@ -91,7 +91,8 @@ export class NotebookMode extends BaseMode {
   }
 
   show(){
-    if(!this.sorter){
+    if(!this.sorter || this.sorter.destroyed){
+      this.ensurePresenter();
       this.sorter = new Sorter(this.tree, this.tour, this);
       this.sorter.show();
     }else{
@@ -100,10 +101,15 @@ export class NotebookMode extends BaseMode {
     }
   }
 
-  present(){
+
+  ensurePresenter(){
     if(!this.presenter){
       this.presenter = new NotebookPresenter(this.tree, this.tour);
     }
+  }
+
+  present(){
+    this.ensurePresenter();
     this.presenter.presenting.set(true);
   }
 
