@@ -30,8 +30,6 @@ export class NotebookMode extends BaseMode {
       })
     });
 
-    this.tour = new NbpresentTour(this);
-
     this.$body = d3.select("body");
     this.$header = d3.select("#header");
 
@@ -68,6 +66,12 @@ export class NotebookMode extends BaseMode {
           tip: "Theme",
           label: "Theme",
           click: () => this.themeMode()
+        }],
+        [{
+          icon: "question-circle  fa-2x",
+          tip: "Help",
+          label: "Help",
+          click: () => this.ensureTour().restart()
         }]
       ])
       .call(this.appBar.update);
@@ -139,6 +143,13 @@ export class NotebookMode extends BaseMode {
     }
   }
 
+  ensureTour(){
+    if(!this.tour){
+      this.tour = new NbpresentTour(this);
+    }
+    return this.tour;
+  }
+
   enabledChanged(){
     const enabled = this.enabled.get();
 
@@ -150,7 +161,7 @@ export class NotebookMode extends BaseMode {
       this.$appBar.style({
         "padding-top": `${this.$header.node().clientHeight}px`
       });
-      this.sorter = new Sorter(this.tree, this.tour, this);
+      this.sorter = new Sorter(this.tree, this);
       this.sorter.show();
     }
 
@@ -165,7 +176,7 @@ export class NotebookMode extends BaseMode {
 
   ensurePresenter(){
     if(!this.presenter){
-      this.presenter = new NotebookPresenter(this.tree, this.tour);
+      this.presenter = new NotebookPresenter(this.tree);
     }
     return this;
   }

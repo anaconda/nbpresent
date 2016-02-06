@@ -27,9 +27,8 @@ const MODE_NAMES = [
   * defining the relationship between notebook cells {@link PART}s and slide
   * regions. Not available in {@link StandaloneMode} */
 class Sorter {
-  constructor(tree, tour, parentMode) {
+  constructor(tree, parentMode) {
     this.tree = tree;
-    this.tour = tour;
     this.parentMode = parentMode;
     this.cellManager = new NotebookCellManager();
 
@@ -133,14 +132,6 @@ class Sorter {
 
     $brand.append("span")
       .text("nbpresent");
-
-    let $help = this.$view.append("div")
-      .classed({nbpresent_help: 1})
-      .append("a")
-      .attr({href: "#"})
-    .on("click", () => this.tour.restart())
-      .append("i")
-      .attr("class", "fa fa-question-circle fa-2x");
 
     this.$empty = this.$view.append("div")
       .classed({sorter_empty: 1});
