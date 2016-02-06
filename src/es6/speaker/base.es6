@@ -5,13 +5,19 @@ import {Toolbar} from "../toolbar";
 export class SpeakerBase {
   constructor(tree){
     this.tree = tree;
-    this.current = this.tree.select(["selectedSlide"]);
-    this.presenting = this.tree.select(["presenting"]);
+    this.current = this.tree.select(["app", "selectedSlide"]);
 
-    this.initUI();
-
+    this.presenting = this.tree.select(["app", "presenting"]);
     this.presenting.on("update", () => this.update());
-    this.update();
+
+    this
+      .init()
+      .initUI()
+      .update();
+  }
+
+  init(){
+    return this;
   }
 
   initUI(){
@@ -26,6 +32,7 @@ export class SpeakerBase {
 
     this.initToolbar();
     this.startDecay();
+    return this;
   }
 
   update(){
@@ -66,17 +73,17 @@ export class SpeakerBase {
       [{
         icon: "fast-backward",
         click: () => that.current.set(this.tree.get(["sortedSlides", 0, "key"])),
-        tip: "Back to Start"
+        label: "First"
       }],
       [{
         icon: "step-backward",
         click: () => this.retreat(),
-        tip: "Previous Slide"
+        label: "Previous"
       }],
       [{
         icon: "step-forward",
         click: () => this.advance(),
-        tip: "Next Slide"
+        label: "Next"
       }]
     ];
   }
@@ -112,5 +119,7 @@ export class SpeakerBase {
       .classed({presenter_toolbar: 1})
       .datum(this.toolbarIcons())
       .call(toolbar.update);
+
+    return this;
   }
 }

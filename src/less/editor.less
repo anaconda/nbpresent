@@ -2,8 +2,8 @@
   .nbpresent-ui();
   position: fixed;
   bottom: @sorter-height;
-  right: 0;
-  left: 0;
+  right: @app-bar-width;
+  left: @editor-sidebar-width;
   top: 0;
   background-color: rgba(50, 50, 50, 0.5);
   z-index: @z-editor;
@@ -50,7 +50,9 @@
 }
 
 // TODO: move this?
-.nbpresent_regiontree {
+.nbpresent-regiontree {
+  .nbpresent-ui();
+
   z-index: @z-regiontree;
   position: absolute;
   width: @editor-sidebar-width;
@@ -60,9 +62,9 @@
   background-color: @ui-bg;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 30px;
+  padding-top: @btn-titled-height;
 
-  .nbpresent_toolbar {
+  .nbpresent-toolbar {
     position: fixed;
     top: 0;
     z-index: @z-regiontree + 1;

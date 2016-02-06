@@ -36,13 +36,9 @@ export class LinkOverlay{
 
     $part.enter()
       .append("div").classed({"part-overlay": 1})
-      .on("click", ({part, cell}) => {
-        this.done({part, cell: cell.value})
-      })
+      .on("click", ({part, cell}) => this.done({part, cell: cell.value}))
       .call(($part)=> {
-        $part.append("i").classed({
-          fa: 1, "fa-fw": 1, "fa-2x": 1, "fa-link": 1
-        });
+        $part.append("i").classed({"fa fa-fw fa-2x fa-link": 1});
       });
 
     let whole = (part) => part === PART.whole

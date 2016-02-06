@@ -18,13 +18,13 @@ class NbpresentTour {
       orphan: true,
       steps: [
         {
-          element: "#nbpresent_sorter_btn",
+          element: "#nbpresent-app-btn",
           title: "Thanks for using nbpresent",
           placement: "bottom",
           content: "You just activated the nbpresent Sorter! Click Next to take the tour"
         },
         {
-          element: "#nbpresent_sorter_btn",
+          element: "#nbpresent-app-btn",
           title: "Sorter",
           placement: "bottom",
           content: "You can add, reorder and remix your slides into a great presentation"
@@ -36,7 +36,7 @@ class NbpresentTour {
           content: "With the Presenter, you can view that presentation, tweak the content in-place, and publish it to the world. But first..."
         },
         {
-          element: ".deck_toolbar .fa-plus-square-o",
+          element: ".nbpresent-deck-toolbar .fa-plus-square-o",
           title: "Deck Toolbar",
           content: "Let's create a new slide",
           placement: "top",
@@ -115,7 +115,7 @@ class NbpresentTour {
           placement: "top",
           title: "Part Thumbnail",
           content: "A part thumbnail might look a little funny, but you should usually be able to get an idea of what you're seeing.",
-          onShow: () => this.tour.sorter.linkContent(PART.source)
+          onShow: () => this.mode.sorter.linkContent(PART.source)
         },
         {
           title: "Achievement Unlocked: Presentation",
@@ -126,7 +126,7 @@ class NbpresentTour {
           title: "Great, let's have a look",
           placement: "bottom",
           content: "Clicking this button brings up the Presenter",
-          onNext: () => this.tour.present()
+          onNext: () => this.mode.present()
         },
         {
           title: "Looks great!",
@@ -176,15 +176,15 @@ class NbpresentTour {
           placement: "top",
           onShown: () => fake_hover(".presenter_toolbar", true),
           onHidden: () => fake_hover(".presenter_toolbar", 0) &&
-            this.tour.unpresent()
+            this.mode.present()
         },
         {
-          element: ".deck_toolbar .fa-edit",
+          element: ".nbpresent-deck-toolbar .fa-edit",
           title: "Edit Slide",
           content: "If you need more control, you can edit a Slide's Regions directly",
           placement: "top",
-          onHidden: () => this.tour.sorter.editSlide(
-            this.tour.sorter.selectedSlide.get()
+          onHidden: () => this.mode.sorter.editSlide(
+            this.mode.sorter.selectedSlide.get()
           )
         },
         {
@@ -194,7 +194,7 @@ class NbpresentTour {
           content: "This is the Region editor. You can click and drag Regions around and resize them."
         },
         {
-          element: ".nbpresent_regiontree",
+          element: ".nbpresent-regiontree",
           placement: "right",
           title: "Region Tree",
           content: "This is the Region tree. It lets you reorder Regions and see the details of how your Regions will show their linked Parts."
@@ -206,12 +206,12 @@ class NbpresentTour {
           content: "All of the properties of a region can be edited here"
         },
         {
-          element: ".nbpresent_regiontree .btn-toolbar .fa-tree",
+          element: ".nbpresent-regiontree .btn-toolbar .fa-tree",
           placement: "right",
           title: "Magic Layouts",
           content: "In addition to manually moving regions around, you can use other Layouts, like this Treemap, which will fill the slide",
           onHidden: () => {
-            this.tour.sorter.editor.sidebar.layout("treemap");
+            this.mode.sorter.editor.sidebar.layout("treemap");
           }
         },
         {

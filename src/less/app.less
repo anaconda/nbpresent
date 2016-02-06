@@ -1,0 +1,64 @@
+.nbpresent-app {
+  opacity: 0;
+  margin-right: -@app-bar-width;
+  transition-property: margin-right opacity;
+  transition-duration: 0.2s;
+}
+
+body.nbpresent-app-enabled {
+  #notebook_panel {
+    margin-right: @app-bar-width;
+  }
+
+  #maintoolbar{
+    padding-right: @app-bar-width;
+  }
+
+  #nbpresent-app-btn{
+    color: @jpy-brand;
+    box-shadow: @z-shadow;
+    background-color: @ui-bg;
+  }
+
+  &.nbpresent-presenting{
+    .nbpresent-app {
+      opacity: 0;
+      transition-property: opacity;
+      transition-duration: 0.2s;
+      &:hover{
+        opacity: 0.5;
+        transition-property: opacity;
+        transition-duration: 0.2s;
+      }
+    }
+  }
+
+  .nbpresent-app {
+    .nbpresent-ui();
+
+    opacity: 1;
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin-right: 0;
+    width: @app-bar-width;
+    z-index: @z-app-bar;
+
+    box-shadow: @z-shadow;
+    background-color: @ui-bg;
+    transition-property: margin-right opacity;
+    transition-duration: 0.2s;
+
+    .nbpresent-deck-toolbar {
+      position: absolute;
+      bottom: 0;
+    }
+
+    .btn-toolbar {
+      margin: 0;
+      right: 0;
+    }
+  }
+}

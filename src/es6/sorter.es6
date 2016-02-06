@@ -9,7 +9,6 @@ import {MiniSlide} from "./mini";
 import {TemplateLibrary} from "./templates";
 import {NotebookCellManager} from "./cells/notebook";
 import {LinkOverlay} from "./cells/overlay";
-import {ThemeOverlay} from "./theme/overlay";
 
 import {AriseTome} from "./tome/arise";
 
@@ -18,8 +17,7 @@ let REMOVED = "<removed>";
 const MODE_NAMES = [
   "editor",
   "templates",
-  "linkOverlay",
-  "themeOverlay"
+  "linkOverlay"
 ];
 
 
@@ -27,24 +25,19 @@ const MODE_NAMES = [
   * defining the relationship between notebook cells {@link PART}s and slide
   * regions. Not available in {@link StandaloneMode} */
 class Sorter {
-  constructor(tree, parentMode) {
+  constructor(tree) {
     this.tree = tree;
-    this.parentMode = parentMode;
     this.cellManager = new NotebookCellManager();
 
     this.templatePicked = this.templatePicked.bind(this);
 
-    this.visible = this.tree.select(["sorting"]);
-    this.visible.set(false);
-
     this.slides = this.tree.select(["slides"]);
-    this.selectedSlide = this.tree.select(["selectedSlide"]);
-    this.selectedRegion = this.tree.select(["sorter", "selectedRegion"]);
+    this.selectedSlide = this.tree.select(["app", "selectedSlide"]);
+    this.selectedRegion = this.tree.select(["app", "selectedRegion"]);
 
     this.selectedSlide.on("update", () => this.updateSelectedSlide());
     this.selectedRegion.on("update", () => this.updateSelectedRegion());
     this.slides.on("update", () => this.draw());
-    this.visible.on("update", () => this.visibleUpdated());
 
     this.scale = {
       x: d3.scale.linear()
@@ -55,34 +48,24 @@ class Sorter {
     this.drawn = false;
 
     this.tomes = [new AriseTome(this)];
-  }
 
-  visibleUpdated(){
-    let visible = this.visible.get();
-
-    if(!this.drawn){
-      this.initUI();
-      this.drawn = true;
-    }
-
-    if(visible) {
-      this.draw();
-      this.update();
-    }else {
-      this.destroy();
-    }
+    this.initUI()
+      .initToolbar()
+      .initDrag()
+      .draw();
   }
 
   cleanup(){
     this.focusMode();
-
-    d3.select("body")
-      .classed({nbpresent_sorting: 0});
   }
 
   destroy(){
+    d3.select("body")
+      .classed({"nbpresent-sorting": 0});
+
     this.cleanup();
-    this.$view.remove();
+    this.$ui.remove();
+    this.$deckToolbar.remove();
     d3.selectAll(".ui-tooltip").remove();
     this.destroyed = true;
   }
@@ -100,40 +83,20 @@ class Sorter {
     return this;
   }
 
-  show(){
-    this.visible.set(!this.visible.get());
-  }
-
-  update(){
-    let visible = this.visible.get();
-
-    d3.select("body")
-      .classed({nbpresent_sorting: visible});
-
-  }
-
   initUI(){
-    this.$view = d3.select("body")
-      .append("div")
-      .classed({
-        nbpresent_sorter: 1
-      });
+    this.$body = d3.select("body")
+      .classed({"nbpresent-sorting": 1});
 
-    this.$slides = this.$view.append("div")
+    this.$app = this.$body.select(".nbpresent-app");
+
+    this.$ui = this.$body
+      .append("div")
+      .classed({"nbpresent-sorter": 1});
+
+    this.$slides = this.$ui.append("div")
       .classed({slides_wrap: 1});
 
-    let $brand = this.$view.append("h4")
-      .classed({nbpresent_brand: 1})
-      .append("a")
-      .attr({
-        href: "https://anaconda-server.github.io/nbpresent/",
-        target: "_blank"
-      });
-
-    $brand.append("span")
-      .text("nbpresent");
-
-    this.$empty = this.$view.append("div")
+    this.$empty = this.$ui.append("div")
       .classed({sorter_empty: 1});
 
     this.$empty.append("h1")
@@ -154,8 +117,7 @@ class Sorter {
     this.$empty.append("div")
       .classed({tomes: 1});
 
-    this.initToolbar();
-    this.initDrag();
+    return this;
   }
 
   initDrag(){
@@ -220,6 +182,8 @@ class Sorter {
             }
           });
       });
+
+    return this;
   }
 
   // TODO: make these d3 scales!
@@ -286,7 +250,7 @@ class Sorter {
 
     let slides = this.tree.get("sortedSlides");
 
-    this.$view.classed({empty: !slides.length});
+    this.$ui.classed({empty: !slides.length});
 
     if(!slides.length){
       this.updateEmpty();
@@ -390,64 +354,50 @@ class Sorter {
     this.deckToolbar = new Toolbar()
       .btnClass("btn-default btn-lg")
       .tipOptions({container: "body", placement: "top"});
-    this.$deckToolbar = this.$view.append("div")
-      .classed({deck_toolbar: 1})
+
+    this.$deckToolbar = this.$app.append("div")
+      .classed({"nbpresent-deck-toolbar": 1})
       .datum([
         [{
-          icon: "plus-square-o fa-2x",
+          icon: "plus-square-o fa-2x fa-fw",
           click: () => this.addSlide(),
-          tip: "Add Slide"
+          label: "+ Slide"
         }], [{
-          icon: "chevron-circle-down fa-2x",
+          icon: "chevron-circle-down fa-2x fa-fw",
           click: () => this.editSlide(this.selectedSlide.get()),
-          tip: "Back to Sorter",
+          label: "Leave",
           visible: () => this.editor
         }, {
-          icon: "edit fa-2x",
+          icon: "edit fa-2x fa-fw",
           click: () => this.editSlide(this.selectedSlide.get()),
-          tip: "Edit Slide",
+          label: "Edit",
           visible: () => this.selectedSlide.get() && !this.editor
         }],
         [{
-          icon: "paint-brush  fa-2x",
-          tip: "Theme",
-          click: () => this.themeMode()
-        }],
-        [{
-          icon: "trash fa-2x",
+          icon: "trash fa-2x fa-fw",
           click: () => {
             this.removeSlide(this.selectedSlide.get());
             this.selectedSlide.set(null);
           },
-          tip: "Delete Slide",
+          label: "- Slide",
           visible: () => this.selectedSlide.get()
-        }],
-        [{
-          icon: "book fa-2x",
-          click: () => this.show(),
-          tip: "Back to Notebook"
-        }, {
-          icon: "youtube-play fa-2x",
-          click: () => {
-            this.parentMode.present();
-          },
-          tip: "Present"
         }]
       ])
       .call(this.deckToolbar.update);
 
     this.regionToolbar = new Toolbar();
+
     this.$regionToolbar = this.$slides.append("div")
       .classed({region_toolbar: 1})
       .datum([
         [{
           icon: "link",
           click: () => this.linkContentOverlay(),
-          tip: "Link Region to Cell (Part)"
+          label: "Link"
         },{
           icon: "unlink",
           click: () => this.linkContent(null),
-          tip: "Unlink Region",
+          label: "Unlink",
           visible: () => {
             let selected = this.selectedRegion.get();
             if(!selected){
@@ -460,10 +410,12 @@ class Sorter {
         [{
           icon: "trash",
           click: () => this.destroyRegion(),
-          tip: "Destroy Region"
+          label: "- Region"
         }]
       ])
       .call(this.regionToolbar.update);
+
+    return this;
   }
 
   cellId(cell){
@@ -472,16 +424,6 @@ class Sorter {
     }
 
     return cell.metadata.nbpresent.id;
-  }
-
-  themeMode(){
-    if(this.themeOverlay){
-      this.themeOverlay.destroy();
-      this.themeOverlay = null;
-    }else{
-      this.focusMode(["themeOverlay"]);
-      this.themeOverlay = new ThemeOverlay(this.tree);
-    }
   }
 
   linkContentOverlay(){

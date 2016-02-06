@@ -52,18 +52,18 @@ function(require, $, Jupyter){
   function initToolbar(){
     $("#view_menu").append(
       $("<li/>").append(
-        $("<a/>").text("Toggle Slide Sorter").on("click", show)));
+        $("<a/>").text("Toggle Presentation").on("click", show)));
 
     // TODO: make this one button!
     Jupyter.toolbar.add_buttons_group([
       {
-        label: "Slide Sorter",
-        icon: "fa-th-large",
+        label: "Edit Presentation",
+        icon: "fa-gift",
         callback: show,
-        id: "nbpresent_sorter_btn"
+        id: "nbpresent-app-btn"
       },
       {
-        label: "Present",
+        label: "Show Presentation",
         icon: "fa-youtube-play",
         callback: present,
         id: "nbpresent_present_btn"
