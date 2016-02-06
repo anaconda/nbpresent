@@ -7,21 +7,33 @@ import {Tree} from "../tree";
 
 import {Toolbar} from "../toolbar";
 import {NotebookPresenter} from "../presenter/notebook";
+
 import {Sorter} from "../sorter";
+import {ThemeOverlay} from "../theme/overlay";
 
 import {NbpresentTour} from "../tour";
 
 import {BaseMode} from "./base";
 
+
+const THEMER = "themer",
+  SORTER = "sorter",
+  MODES = [
+    THEMER,
+    SORTER
+  ];
+
 export class NotebookMode extends BaseMode {
   init() {
     super.init()
-      .initUI()
-      .initStylesheet()
-      .initActions();
+      .initActions()
+      .initStylesheet();
 
-    this.enabled = this.tree.select(["enabled"]);
+    this.enabled = this.tree.select(["app", "enabled"]);
     this.enabled.on("update", () => this.enabledChanged());
+
+    this.mode = this.tree.select(["app", "mode"]);
+    this.mode.on("update", () => this.modeUpdated());
 
     [this.slides, this.theme].map((cursor)=>{
       cursor.on("update", () => {
@@ -31,21 +43,20 @@ export class NotebookMode extends BaseMode {
     });
 
     this.$body = d3.select("body");
-    this.$header = d3.select("#header");
 
-    this.tree.set(["active"], false);
-    this.tree.on
-
-    return this;
+    return this.initUI();
   }
 
   initUI(){
+    this.$ui = this.$body.append("div")
+      .classed({"nbpresent-app": 1});
+
     this.appBar = new Toolbar()
       .btnClass("btn-default btn-lg")
       .btnGroupClass("btn-group-vertical")
       .tipOptions({container: "body", placement: "top"});
 
-    this.$appBar = d3.select("body").append("div")
+    this.$appBar = this.$ui.append("div")
       .classed({"nbpresent-app-bar": 1})
       .datum([
         [{
@@ -57,24 +68,25 @@ export class NotebookMode extends BaseMode {
         [{
           icon: "th-large fa-2x",
           label: "Slides",
-          click: () => this.editSlide(this.selectedSlide.get()),
-          tip: "Edit Slide",
-          // visible: () => this.selectedSlide.get() && !this.editor
+          click: () => this.mode.set(this.mode.get() === SORTER ? null : SORTER)
         }],
         [{
-          icon: "paint-brush  fa-2x",
-          tip: "Theme",
+          icon: "paint-brush fa-2x",
           label: "Theme",
-          click: () => this.themeMode()
+          click: () => this.mode.set(this.mode.get() === THEMER ? null : THEMER)
         }],
         [{
-          icon: "question-circle  fa-2x",
-          tip: "Help",
+          icon: "gift fa-2x",
+          label: "About",
+          click: () => console.debug("open a window")
+        },{
+          icon: "question-circle fa-2x",
           label: "Help",
           click: () => this.ensureTour().restart()
         }]
       ])
       .call(this.appBar.update);
+
     return this;
   }
 
@@ -82,15 +94,13 @@ export class NotebookMode extends BaseMode {
     var _actions = {
       "show-sorter": {
         icon: 'fa-gift',
-        help: 'show the slide sorter',
+        help: 'enable nbpresent',
         handler: (env) => this.show()
       },
       "show-presentation": {
         icon: 'fa-youtube-play',
         help: 'show presentation',
-        handler: (env)=> this.presenter && this.presenter.presenting.get() ?
-          this.unpresent() :
-          this.present()
+        handler: (env)=> this.present()
       }
     };
 
@@ -105,6 +115,8 @@ export class NotebookMode extends BaseMode {
     Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts({
       "esc": "nbpresent:show-presentation"
     });
+
+    return this;
   }
 
   initStylesheet(){
@@ -153,19 +165,36 @@ export class NotebookMode extends BaseMode {
   enabledChanged(){
     const enabled = this.enabled.get();
 
-    if(!enabled){
-      this.sorter && this.sorter.destroy();
-      this.sorter = null;
-    }else{
+    if(enabled){
       this.ensurePresenter();
-      this.$appBar.style({
-        "padding-top": `${this.$header.node().clientHeight}px`
-      });
-      this.sorter = new Sorter(this.tree, this);
-      this.sorter.show();
     }
 
     this.$body.classed({"nbpresent-app-enabled": enabled});
+  }
+
+  modeClass(mode){
+    return {
+      themer: ThemeOverlay,
+      sorter: Sorter
+    }[mode];
+  }
+
+  modeUpdated(){
+    const current = this.mode.get();
+
+    MODES.filter((mode) => (mode !== current) && this[mode])
+      .map((mode) => {
+        this[mode].destroy();
+        delete this[mode];
+      });
+
+    if(current && this[current]){
+      return;
+    }
+
+    let ModeClass = this.modeClass(current);
+
+    current && (this[current] = new ModeClass(this.tree));
   }
 
   show(){
@@ -183,12 +212,11 @@ export class NotebookMode extends BaseMode {
 
   present(){
     this.ensurePresenter();
-    this.presenter.presenting.set(true);
-    return this;
-  }
 
-  unpresent(){
-    this.presenter.presenting.set(false);
+    const presenting = this.presenter.presenting.get();
+
+    this.presenter.presenting.set(!presenting);
+
     return this;
   }
 }

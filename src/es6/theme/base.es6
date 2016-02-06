@@ -1,7 +1,7 @@
 import {d3, WebFont} from "nbpresent-deps";
 import _ from "underscore";
 
-const PRESENT_PREFIX = ".nbpresent_presenting .nbpresent_present";
+const PRESENT_PREFIX = ".nbpresent-presenting .nbpresent_present";
 
 export class ThemeBase{
   constructor(tree, manager, slide, style){

@@ -17,7 +17,7 @@ export class BackgroundPicker {
   constructor(tree){
     this.tree = tree;
 
-    this.themer = this.tree.select(["themer"]);
+    this.themer = this.tree.select(["app", "themer"]);
 
     this.newBackground = this.themer.select(["newBackground"]);
     this.newBackground.on("update", () => this.updateNewBackground());
@@ -241,7 +241,7 @@ export class BackgroundPicker {
       .append("circle")
       .on("click", ({x, y}) => cursor.merge({x, y}));
 
-    let act = cursor.get();
+    let act = cursor.get() || {};
 
     handle.select("circle")
       .attr({

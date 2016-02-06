@@ -28,8 +28,8 @@ export class Presenter {
 
     this.initUI();
 
-    this.presenting = this.tree.select(["presenting"]);
-    this.current = this.tree.select(["selectedSlide"]);
+    this.presenting = this.tree.select(["app", "presenting"]);
+    this.current = this.tree.select(["app", "selectedSlide"]);
 
     this.tree.on("update", () => this.update());
     this.presenting.on("update", () => this.present());
@@ -136,9 +136,9 @@ export class Presenter {
 
   update() {
     let that = this;
-    let presenting = this.presenting.get();
+    const presenting = this.presenting.get();
 
-    d3.select("body").classed({nbpresent_presenting: presenting});
+    d3.select("body").classed({"nbpresent-presenting": presenting});
 
     let current = this.current.get(),
       slide = this.tree.get(["sortedSlides", (d) => d.key == current]);

@@ -15,8 +15,7 @@
   }
 
   &.active {
-    transition: border 0.2s;
-    border-color: @jpy-brand;
+    border: solid 3px @jpy-brand;
   }
 
   &.dragging {
@@ -32,8 +31,6 @@
     background-repeat: no-repeat;
     border: dashed 3px rgba(128,128,128,0.5);
     border-radius: 2px;
-
-    transition: border 0.2s;
 
     &.content_source,
     &.content_outputs,
@@ -59,7 +56,6 @@
     }
 
     &.active {
-      transition: border 0.2s;
       border: solid 3px @jpy-brand;
     }
   }

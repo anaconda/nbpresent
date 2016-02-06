@@ -1,4 +1,4 @@
-body.nbpresent_presenting {
+body.nbpresent-presenting {
   .nbpresent_speaker{
     .nbpresent-ui();
 
@@ -6,7 +6,7 @@ body.nbpresent_presenting {
     display: block;
     position: fixed;
     bottom: 10px;
-    right: 10px;
+    right: @app-bar-width;
 
     .presenter_toolbar {
       transition: all 0.2s;
@@ -24,6 +24,6 @@ body.nbpresent_presenting {
   }
 }
 
-body:not(.nbpresent_presenting) .nbpresent_speaker{
+body:not(.nbpresent-presenting) .nbpresent_speaker{
   display: none;
 }

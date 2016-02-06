@@ -4,7 +4,7 @@ export class PaletteBuilder {
   constructor(tree){
     this.tree = tree;
     this.theme = this.tree.select(["theme"]);
-    this.themer = this.tree.select(["themer"]);
+    this.themer = this.tree.select(["app", "themer"]);
 
     this.palette = this.theme.select(["palette"]);
     this.palette.on("update", ()=>this.update());

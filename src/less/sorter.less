@@ -1,18 +1,14 @@
-body.nbpresent_sorting {
-  #notebook_panel {
-    margin-bottom: @sorter-height * 1.5;
+body.nbpresent-sorting {
+  #notebook {
+    margin-bottom: @sorter-height;
   }
-  #nbpresent_sorter_btn{
-    color: @jpy-brand;
-    box-shadow: @z-shadow;
-    background-color: #222;
-  }
-  .nbpresent_sorter{
+
+  .nbpresent-sorter{
     .nbpresent-ui();
 
     z-index: @z-sorter;
     position: fixed;
-    right: 0;
+    right: @app-bar-width;
     left: 0;
     bottom: 0;
     height: @sorter-height;
@@ -23,7 +19,6 @@ body.nbpresent_sorting {
     transition: all 0.3s;
     background-color: @ui-bg;
     opacity: 0.9;
-
 
     .sorter_empty {
       display: none;
@@ -59,48 +54,15 @@ body.nbpresent_sorting {
       }
     }
 
-
-    .nbpresent_brand, .nbpresent_help {
-      position: absolute;
-      bottom: 0;
-      margin: 0 20px 20px 20px;
-      padding: 0;
-
-      a {
-        color: @jpy-brand;
-      }
-    }
-
-    .nbpresent_brand {
-      left: 0;
-    }
-
-    .nbpresent_help {
-      right: 0;
-      width: 32px;
-      text-align:right;
-    }
-
-    .deck_toolbar, .region_toolbar{
-      position: absolute;
-      left: 50%;
-      text-align: center;
-    }
-
-    .deck_toolbar{
-      left: 100px;
-      right: 100px;
-      bottom: 0;
-
-      .btn-group {
-        float: none;
-      }
-    }
-
     .region_toolbar{
-      opacity: 0;
+      position: absolute;
       display: none;
       top: 0;
+      left: 50%;
+
+      opacity: 0;
+
+      text-align: center;
     }
 
     .slides_wrap {
@@ -108,8 +70,8 @@ body.nbpresent_sorting {
       overflow-y: hidden;
       position: relative;
       width: 100%;
-      padding-top: 36px;
-      height: @sorter-height - 60;
+      padding-top: @btn-titled-height;
+      height: @sorter-height;
 
       .empty {
         position: absolute;

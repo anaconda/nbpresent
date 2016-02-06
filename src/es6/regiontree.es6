@@ -47,7 +47,7 @@ class RegionTree {
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({nbpresent_regiontree: 1});
+      .classed({"nbpresent-regiontree": 1});
 
     let toolbar = new Toolbar();
 
@@ -56,28 +56,22 @@ class RegionTree {
         [{
           icon: "plus-square-o",
           click: () => this.addRegion(),
-          tip: "Add Region"
+          label: "+ Region"
         }],
         // TODO: make this extensible
         [{
           icon: "arrows",
           click: () => this.layout("manual"),
-          tip: "Manual Layout"
-        },{
+          label: "Manual"
+        }, {
           icon: "tree",
           click: () => this.layout("treemap"),
-          tip: "Treemap Layout"
-        },{
+          label: "Treemap"
+        }, {
           icon: "calculator",
           click: () => this.layout("grid"),
-          tip: "Grid Layout"
-        }],
-        // TODO: fix this
-        // [{
-        //   icon: "header",
-        //   click: () => this.toggleStyle("slab"),
-        //   tip: "Toggle Slab Effect"
-        // }],
+          label: "Grid"
+        }]
       ])
       .call(toolbar.update);
   }
