@@ -9,7 +9,6 @@ import {TreemapLayout} from "../layout/treemap";
 import {GridLayout} from "../layout/grid";
 
 import {PART, PART_SELECT} from "../parts";
-import {SlabStyle} from "../style/slab";
 
 let PREFIX = [
   "-webkit-",
@@ -54,10 +53,10 @@ export class Presenter {
 
     this.$style = d3.select("head")
       .append("style")
-      .classed({"nbpresent-presenter-style": 1});
+      .classed({"nbp-presenter-style": 1});
 
     this.$backgrounds = this.$ui.append("div")
-      .classed({"nbpresent-presenter-backgrounds": 1});
+      .classed({"nbp-presenter-backgrounds": 1});
   }
 
   initActions(){
@@ -138,7 +137,7 @@ export class Presenter {
     let that = this;
     const presenting = this.presenting.get();
 
-    d3.select("body").classed({"nbpresent-presenting": presenting});
+    d3.select("body").classed({"nbp-presenting": presenting});
 
     let current = this.current.get(),
       slide = this.tree.get(["sortedSlides", (d) => d.key == current]);
@@ -176,7 +175,7 @@ export class Presenter {
           part = content.part === PART.whole ?
             $el :
             $el.select(PART_SELECT[content.part]),
-          regionCls = `nbpresent-region-${region.key}`;
+          regionCls = `nbp-region-${region.key}`;
 
         part
           .classed(regionCls, 1)
@@ -186,15 +185,6 @@ export class Presenter {
           })
           .each(() => that.theme.update(region, part))
           .each(() => that.layout.update(region, part));
-        // TODO: now do styles
-        d3.entries(region.value.style).map((style) => {
-          // TODO: make this extensible
-
-          if(style.value && style.key === "slab"){
-            let styler = new SlabStyle();
-            styler.update(part);
-          }
-        })
       });
 
 

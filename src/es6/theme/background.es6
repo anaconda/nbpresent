@@ -69,7 +69,7 @@ export class BackgroundPicker {
           .text("Backgrounds...");
 
         this.$dropdown = dropdown.append("ul")
-          .classed({"dropdown-menu nbpresent-background-picker": 1});
+          .classed({"dropdown-menu nbp-background-picker": 1});
       });
 
     this.$grid = this.$makeNew.append("div");

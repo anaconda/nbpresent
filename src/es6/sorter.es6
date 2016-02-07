@@ -61,7 +61,7 @@ class Sorter {
 
   destroy(){
     d3.select("body")
-      .classed({"nbpresent-sorting": 0});
+      .classed({"nbp-sorting": 0});
 
     this.cleanup();
     this.$ui.remove();
@@ -85,13 +85,13 @@ class Sorter {
 
   initUI(){
     this.$body = d3.select("body")
-      .classed({"nbpresent-sorting": 1});
+      .classed({"nbp-sorting": 1});
 
-    this.$app = this.$body.select(".nbpresent-app");
+    this.$app = this.$body.select(".nbp-app");
 
     this.$ui = this.$body
       .append("div")
-      .classed({"nbpresent-sorter": 1});
+      .classed({"nbp-sorter": 1});
 
     this.$slides = this.$ui.append("div")
       .classed({slides_wrap: 1});
@@ -356,7 +356,7 @@ class Sorter {
       .tipOptions({container: "body", placement: "top"});
 
     this.$deckToolbar = this.$app.append("div")
-      .classed({"nbpresent-deck-toolbar": 1})
+      .classed({"nbp-deck-toolbar": 1})
       .datum([
         [{
           icon: "plus-square-o fa-2x fa-fw",

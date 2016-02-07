@@ -60,7 +60,7 @@ function(require, $, Jupyter){
         label: "Edit Presentation",
         icon: "fa-gift",
         callback: show,
-        id: "nbpresent-app-btn"
+        id: "nbp-app-btn"
       },
       {
         label: "Show Presentation",

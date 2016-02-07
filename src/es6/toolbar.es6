@@ -31,7 +31,7 @@ export class Toolbar {
 
   update($selection){
     let that = this;
-    $selection.classed({"btn-toolbar": 1, "nbpresent-toolbar": 1});
+    $selection.classed({"btn-toolbar nbp-toolbar": 1});
 
     let $group = $selection.selectAll(".btn-toolbar-group")
       .data((d) => d)

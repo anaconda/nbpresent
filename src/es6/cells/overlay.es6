@@ -15,7 +15,7 @@ export class LinkOverlay{
     this.$site = d3.select("#site");
     this.$ui = d3.select("#notebook-container")
       .append("div")
-      .classed({"nbpresent-link-overlay": 1});
+      .classed({"nbp-link-overlay": 1});
     this.update();
   }
 

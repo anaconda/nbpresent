@@ -13,7 +13,7 @@ function basic_test(){
       this.canSeeAndClick("the body", "body");
     })
     .then(function(){
-      ["#nbpresent-app-btn",
+      ["#nbp-app-btn",
         "#nbpresent_present_btn",
         ".download_nbpresent_html",
         ".download_nbpresent_pdf"

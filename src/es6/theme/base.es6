@@ -1,7 +1,7 @@
 import {d3, WebFont} from "nbpresent-deps";
 import _ from "underscore";
 
-const PRESENT_PREFIX = ".nbpresent-presenting .nbpresent_present";
+const PRESENT_PREFIX = ".nbp-presenting .nbpresent_present";
 
 export class ThemeBase{
   constructor(tree, manager, slide, style){
@@ -56,14 +56,14 @@ export class ThemeBase{
     this.$style.text(rules);
 
     let backgrounds = this.backgrounds.get() || {},
-      background = d3.select(".nbpresent-presenter-backgrounds")
-        .selectAll(".nbpresent-presenter-background")
+      background = d3.select(".nbp-presenter-backgrounds")
+        .selectAll(".nbp-presenter-background")
         .data(d3.entries(backgrounds, ({key}) => key));
 
     background.exit().remove();
 
     background.enter().append("img").classed({
-      "nbpresent-presenter-background": 1
+      "nbp-presenter-background": 1
     });
 
 
