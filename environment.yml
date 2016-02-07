@@ -1,16 +1,17 @@
 name: nbpresent
 channels:
   - anaconda-nb-extensions
+  - cpcloud
   - javascript
   - mutirri
-  - cpcloud
 dependencies:
   - anaconda-client
-  - ipywidgets
-  - nodejs
-  - notebook
-  - nb_config_manager
   - coverage
   - flake8
+  - ipywidgets
   - mock
+  - nb_config_manager
+  - nodejs
+  - nose
+  - notebook
   - requests
