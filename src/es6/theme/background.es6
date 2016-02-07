@@ -14,8 +14,10 @@ export const BG_POS_H = ["left", "right"],
   PCACHE_STARTED = 0;
 
 export class BackgroundPicker {
-  constructor(tree){
+  constructor(tree, theme){
     this.tree = tree;
+
+    this.theme = theme;
 
     this.themer = this.tree.select(["app", "themer"]);
 
@@ -26,10 +28,10 @@ export class BackgroundPicker {
     this.paletteCache.on("update", () => this.updatePaletteCache());
     this.paletteCache.on("update", () => this.updateBackgrounds());
 
-    this.backgrounds = this.tree.select(["theme", "backgrounds"]);
+    this.backgrounds = this.theme.select(["backgrounds"]);
     this.backgrounds.on("update", () => this.updateBackgrounds());
 
-    this.palette = this.tree.select(["theme", "palette"]);
+    this.palette = this.theme.select(["palette"]);
 
     try{
       this.serializer = new window.XMLSerializer();

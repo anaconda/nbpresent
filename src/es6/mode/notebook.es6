@@ -11,7 +11,7 @@ import {Toolbar} from "../toolbar";
 import {NotebookPresenter} from "../presenter/notebook";
 
 import {Sorter} from "../sorter";
-import {ThemeOverlay} from "../theme/overlay";
+import {ThemeManager} from "../theme/manager";
 
 import {NbpresentTour} from "../tour";
 
@@ -42,7 +42,7 @@ export class NotebookMode extends BaseMode {
       this.metadata(true);
     }, 1e3);
 
-    [this.slides, this.theme].map((cursor)=>{
+    [this.slides, this.themes].map((cursor)=>{
       cursor.on("update", debouncedSave);
     });
 
@@ -150,12 +150,12 @@ export class NotebookMode extends BaseMode {
     if(update){
       md.nbpresent = {
         slides: this.slides.serialize(),
-        theme: this.theme.serialize(),
+        themes: this.themes.serialize(),
       };
     }else{
       return md.nbpresent || {
         slides: {},
-        theme: {}
+        themes: {}
       }
     }
   }
@@ -179,7 +179,7 @@ export class NotebookMode extends BaseMode {
 
   modeClass(mode){
     return {
-      themer: ThemeOverlay,
+      themer: ThemeManager,
       sorter: Sorter
     }[mode];
   }

@@ -6,17 +6,15 @@ import {loadFonts} from "./fonts";
 const PRESENT_PREFIX = ".nbp-presenting .nbpresent_present";
 
 export class ThemeBase{
-  constructor(tree, manager, slide, style){
-    this.tree = tree;
-    this.rules = this.tree.select(["theme", "rules"]);
-    this.palette = this.tree.select(["theme", "palette"]);
+  constructor(theme, slide, style){
+    this.theme = theme;
+    this.rules = theme.select(["rules"]);
+    this.palette = theme.select(["palette"]);
 
-    this.backgrounds = this.tree.select(["theme", "backgrounds"]);
-    this.textBase = this.tree.select(["theme", "text-base"]);
-    this.manager = manager;
+    this.backgrounds = theme.select(["backgrounds"]);
+    this.textBase = theme.select(["text-base"]);
     this.slide = slide;
     this.$style = style;
-
   }
 
   update(region, part){
