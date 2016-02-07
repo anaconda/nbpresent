@@ -1,3 +1,5 @@
+import _ from "underscore";
+
 import Jupyter from "base/js/namespace";
 
 import {d3, $} from "nbpresent-deps";
@@ -35,17 +37,20 @@ export class NotebookMode extends BaseMode {
     this.mode = this.tree.select(["app", "mode"]);
     this.mode.on("update", () => this.modeUpdated());
 
+    let debouncedSave = _.debounce(()=>{
+      console.info("saving metadata");
+      this.metadata(true);
+    }, 1e3);
+
     [this.slides, this.theme].map((cursor)=>{
-      cursor.on("update", () => {
-        console.info("saving metadata");
-        this.metadata(true);
-      })
+      cursor.on("update", debouncedSave);
     });
 
     this.$body = d3.select("body");
 
     return this.initUI();
   }
+
 
   initUI(){
     this.$ui = this.$body.append("div")

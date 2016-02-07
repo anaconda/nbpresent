@@ -94,7 +94,7 @@ export class BackgroundPicker {
           Vibrant.from(key)
             .getPalette((err, patches) => {
               if(err){
-                return console.error(err);
+                return console.error("palette error", {key, value}, err);
               }
               patches = JSON.parse(JSON.stringify(patches));
 

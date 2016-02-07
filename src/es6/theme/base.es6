@@ -1,5 +1,7 @@
-import {d3, WebFont} from "nbpresent-deps";
 import _ from "underscore";
+import {d3} from "nbpresent-deps";
+
+import {loadFonts} from "./fonts";
 
 const PRESENT_PREFIX = ".nbp-presenting .nbpresent_present";
 
@@ -35,7 +37,7 @@ export class ThemeBase{
               value = `${value}rem`;
               break;
             case "font-family":
-              WebFont.load({google: {families: [value] }});
+              loadFonts([value]);
               value = `"${value}"`;
               break;
             case "color":

@@ -1,3 +1,7 @@
+import _ from "underscore";
+import {d3, WebFont} from "nbpresent-deps";
+
+
 export const SYMB = `h1 h2 h3 h4 h5 h6 h7
     ul ol li
     blockquote pre code
@@ -127,3 +131,20 @@ export const FONTS = [
   "Walter Turncoat",
   "Yeseva One"
 ];
+
+let _fontLoaded = {
+  Lato: 1,
+  "google:Lato": 1
+};
+
+/* TODO: a generalized namespace thingy for fonts, a la JSON-LD:
+   - google:Lato
+   - nbp:Lato
+*/
+export function loadFonts(fonts){
+  fonts = _.difference(fonts, _.keys(_fontLoaded));
+  if(!fonts.length){ return []; }
+  WebFont.load({google: {families: fonts }});
+  _.extend(_fontLoaded, _.object(fonts, fonts));
+  return fonts;
+}
