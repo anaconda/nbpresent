@@ -3,7 +3,7 @@
 
 {% macro nbpresent_id(cell) -%}
   {% if cell.metadata.nbpresent %}
-    data-nbpresent-id="{{ cell.metadata.nbpresent.id }}"
+    data-nbp-id="{{ cell.metadata.nbpresent.id }}"
   {% endif %}
 {%- endmacro %}
 

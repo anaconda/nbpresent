@@ -13,7 +13,7 @@ export class StandaloneCellManager extends BaseCellManager {
 
     d3.selectAll(".cell").each(function(){
       let el = d3.select(this),
-        id = el.attr("data-nbpresent-id");
+        id = el.attr("data-nbp-id");
 
       if(id){
         cells[id] = {

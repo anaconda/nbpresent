@@ -49,7 +49,7 @@ export class NotebookMode extends BaseMode {
 
   initUI(){
     this.$ui = this.$body.append("div")
-      .classed({"nbpresent-app": 1});
+      .classed({"nbp-app": 1});
 
     this.appBar = new Toolbar()
       .btnClass("btn-default btn-lg")
@@ -57,7 +57,7 @@ export class NotebookMode extends BaseMode {
       .tipOptions({container: "body", placement: "top"});
 
     this.$appBar = this.$ui.append("div")
-      .classed({"nbpresent-app-bar": 1})
+      .classed({"nbp-app-bar": 1})
       .datum([
         [{
           icon: "youtube-play fa-2x",
@@ -121,7 +121,7 @@ export class NotebookMode extends BaseMode {
 
   initStylesheet(){
     let css = d3.select("head")
-      .selectAll("link#nbpresent-css")
+      .selectAll("link#nbp-css")
       .data([1]);
 
     if(css.node()){
@@ -131,7 +131,7 @@ export class NotebookMode extends BaseMode {
 
     css.enter()
       .append("link")
-      .attr({id: "nbpresent-css"})
+      .attr({id: "nbp-css"})
       .attr({
         rel: "stylesheet",
         href: `${this.root}/../css/nbpresent.min.css`
@@ -169,7 +169,7 @@ export class NotebookMode extends BaseMode {
       this.ensurePresenter();
     }
 
-    this.$body.classed({"nbpresent-app-enabled": enabled});
+    this.$body.classed({"nbp-app-enabled": enabled});
   }
 
   modeClass(mode){

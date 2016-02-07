@@ -30,10 +30,10 @@ class SlideCaptureServer(CaptureServer):
         )
 
     def page_ready(self):
-        """ Wait until nbpresent-css gets created
+        """ Wait until nbpresent app gets created
         """
         self.session.wait_for_page_loaded()
-        self.session.wait_for_selector("#nbpresent-css")
+        self.session.wait_for_selector(".nbp-app")
         time.sleep(1)
 
     def print_to_pdf(self, path):

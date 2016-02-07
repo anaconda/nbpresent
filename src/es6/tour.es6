@@ -18,13 +18,13 @@ class NbpresentTour {
       orphan: true,
       steps: [
         {
-          element: "#nbpresent-app-btn",
+          element: "#nbp-app-btn",
           title: "Thanks for using nbpresent",
           placement: "bottom",
           content: "You just activated the nbpresent Sorter! Click Next to take the tour"
         },
         {
-          element: "#nbpresent-app-btn",
+          element: "#nbp-app-btn",
           title: "Sorter",
           placement: "bottom",
           content: "You can add, reorder and remix your slides into a great presentation"
@@ -36,7 +36,7 @@ class NbpresentTour {
           content: "With the Presenter, you can view that presentation, tweak the content in-place, and publish it to the world. But first..."
         },
         {
-          element: ".nbpresent-deck-toolbar .fa-plus-square-o",
+          element: ".nbp-deck-toolbar .fa-plus-square-o",
           title: "Deck Toolbar",
           content: "Let's create a new slide",
           placement: "top",
@@ -179,7 +179,7 @@ class NbpresentTour {
             this.mode.present()
         },
         {
-          element: ".nbpresent-deck-toolbar .fa-edit",
+          element: ".nbp-deck-toolbar .fa-edit",
           title: "Edit Slide",
           content: "If you need more control, you can edit a Slide's Regions directly",
           placement: "top",
@@ -194,7 +194,7 @@ class NbpresentTour {
           content: "This is the Region editor. You can click and drag Regions around and resize them."
         },
         {
-          element: ".nbpresent-regiontree",
+          element: ".nbp-regiontree",
           placement: "right",
           title: "Region Tree",
           content: "This is the Region tree. It lets you reorder Regions and see the details of how your Regions will show their linked Parts."
@@ -206,7 +206,7 @@ class NbpresentTour {
           content: "All of the properties of a region can be edited here"
         },
         {
-          element: ".nbpresent-regiontree .btn-toolbar .fa-tree",
+          element: ".nbp-regiontree .btn-toolbar .fa-tree",
           placement: "right",
           title: "Magic Layouts",
           content: "In addition to manually moving regions around, you can use other Layouts, like this Treemap, which will fill the slide",

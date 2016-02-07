@@ -47,7 +47,7 @@ class RegionTree {
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({"nbpresent-regiontree": 1});
+      .classed({"nbp-regiontree": 1});
 
     let toolbar = new Toolbar();
 

@@ -13,7 +13,7 @@ casper.test.begin("Does exported HTML look okay?", function(test){
 });
 
 function export_test(){
-  return this.canSeeAndClick("body", "body.nbpresent-presenting")
+  return this.canSeeAndClick("body", "body.nbp-presenting")
     .canSeeAndClick("markdown", ".text_cell h1")
     .canSeeAndClick("code source", ".code_cell .input_area")
     .canSeeAndClick("code output", ".code_cell .output_text")
@@ -25,5 +25,5 @@ function export_test(){
     .then(function(){ return this.mouse.move(1430, 890); })
     .canSeeAndClick("previous slide button", ".fa-step-backward")
     .wait(300)
-    .canSeeAndClick("fin", "body.nbpresent-presenting");
+    .canSeeAndClick("fin", "body.nbp-presenting");
 }

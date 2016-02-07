@@ -1,8 +1,8 @@
-body:not(.nbpresent-presenting) .nbpresent_presenter{
+body:not(.nbp-presenting) .nbpresent_presenter{
   display: none;
 }
 
-body.nbpresent-presenting {
+body.nbp-presenting {
   overflow: hidden;
   #notebook-container {
     position:absolute;
@@ -11,7 +11,7 @@ body.nbpresent-presenting {
 }
 
 .nbpresent_presenter {
-  .nbpresent-ui();
+  .nbp-ui();
   z-index: @z-present;
   background-color: white;
   position: fixed;
@@ -20,7 +20,7 @@ body.nbpresent-presenting {
   bottom: 0;
   right: 0;
 
-  .nbpresent-presenter-background {
+  .nbp-presenter-background {
     position: fixed;
     max-width: 100vw;
   }

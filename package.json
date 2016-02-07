@@ -11,7 +11,6 @@
     "phantomjs-polyfill": "0.0.1",
     "underscore": "^1.8.3",
     "uuid": "^2.0.1",
-    "vanilla-slab": "~0.2.3",
     "vibrant": "0.0.1",
     "webfontloader": "^1.6.21"
   },
