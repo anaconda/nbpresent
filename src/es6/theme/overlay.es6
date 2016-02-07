@@ -43,8 +43,12 @@ export class ThemeOverlay{
 
     loadFonts(FONTS);
 
-    this.textZoom = d3.behavior.zoom()
-      .on("zoom", (d, i) => this.textZoomed(d, i));
+    this.fontZoom = d3.behavior.zoom()
+      .on("zoom", this._zoomCycle("font-family", FONTS));
+
+    this.sizeZoom = d3.behavior.zoom()
+      .on("zoom", this._zoomCycle("font-size", d3.range(2, 30, 0.125)));
+
 
     this.init();
   }
@@ -168,6 +172,7 @@ export class ThemeOverlay{
       .attr({
         type: "number"
       })
+      .call(this.sizeZoom)
       .on("input", function({key, value}){
         var val = parseFloat(this.value);
         val = !isNaN(val) ? val : null;
@@ -193,7 +198,7 @@ export class ThemeOverlay{
         dropdown.append("a")
           .classed({"btn btn-default dropdown-toggle": 1})
           .attr({"data-toggle": "dropdown"})
-          .call((btn) => overlay.textZoom(btn));
+          .call(overlay.fontZoom);
 
         dropdown.append("ul")
           .classed({"dropdown-menu": 1});
@@ -201,23 +206,58 @@ export class ThemeOverlay{
 
   }
 
-  textZoomed({key, value}){
-    let len = FONTS.length,
-      ff = !key ? this.textBase.get(["font-family"]) || "Lato" :
-        this.rules.get([key, "font-family"]),
+  fontZoomed({key, value}){
+    let attr = "font-family",
+      len = FONTS.length,
+      val = !key ? this.textBase.get([attr]) || "Lato" :
+        this.rules.get([key, attr]),
       scaled = parseInt(20 * ((d3.event.scale && Math.log(d3.event.scale)) || 0)),
-      nextFont = FONTS[Math.abs(scaled % len)];
+      newVal = FONTS[Math.abs(scaled % len)];
 
-    if(ff == nextFont){
+    if(val === newVal){
       return;
     }
 
     if(!key){
-      this.textBase.set(["font-family"], nextFont);
+      this.textBase.set([attr], nextFont);
     }else{
-      this.rules.set([key, "font-family"], nextFont)
+      this.rules.set([key, attr], nextFont);
     }
   }
+
+  sizeZoomed({key, value}){
+    let attr = "font-size",
+      val = !key ? this.textBase.get([attr]) || "Lato" :
+        this.rules.get([key, attr]);
+
+    if(val === newVal){
+      return;
+    }
+
+    if(!key){
+      this.textBase.set([attr], nextFont);
+    }else{
+      this.rules.set([key, attr], nextFont)
+    }
+  }
+
+  /** factory for d3.behavior.zoom
+  */
+  _zoomCycle(attr, choices, scale=20){
+    const len = choices.length;
+
+    return ({key, value}) => {
+      let cursor = key ? this.rules : this.textBase,
+        path = key ? [key, attr] : [attr],
+        val = cursor.get(path),
+        scaled = parseInt(
+          scale * ((d3.event.scale && Math.log(d3.event.scale)) || 0)),
+        newVal = choices[Math.abs(scaled % len)];
+
+      return val === newVal ? null : cursor.set(path, newVal);
+    }
+  }
+
 
   /** Draw all of the rules
   */
