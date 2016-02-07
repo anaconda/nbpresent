@@ -1,3 +1,5 @@
+import _ from "underscore";
+
 import {d3} from "nbpresent-deps";
 
 let fn = d3.functor;
@@ -49,7 +51,7 @@ export class Toolbar {
       .classed({btn: 1})
       .call(($btn)=>{
         $btn.append("i");
-        $btn.append("span");
+        $btn.append("label");
       });
 
     $btn.attr({
@@ -69,12 +71,28 @@ export class Toolbar {
       })
       .on("click", (d) => d.click());
 
+    // regular icons
     $btn.select("i")
+      .filter(({icon}) => _.isString(icon))
       .attr({
-        "class": (d) => `fa fa-fw fa-2x fa-${d.icon}`,
-      });
+        "class": ({icon}) => `fa fa-fw fa-2x fa-${icon}`,
+      })
+      .selectAll("i").remove();
 
-    $btn.select("span")
+    // handle stacked icons
+    let stacked = $btn.select("i")
+      .filter(({icon}) => !_.isString(icon))
+      .attr({"class": "fa-stack"})
+      .selectAll("i")
+      .data((d) => d.icon.map(() => d));
+
+    stacked.exit().remove();
+
+    stacked.enter().append("i");
+
+    stacked.attr({"class": ({icon}, i) => `fa fa-${icon[i]}`});
+
+    $btn.select("label")
       .text(({label}) => label);
 
     $btn.filter((d) => d.visible && !d.visible())

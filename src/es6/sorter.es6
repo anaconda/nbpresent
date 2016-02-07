@@ -363,6 +363,14 @@ class Sorter {
           click: () => this.addSlide(),
           label: "+ Slide"
         }], [{
+          icon: [
+            "square-o fa-stack-2x",
+            "paint-brush fa-stack-1x"
+          ],
+          click: () => console.log("foo"),
+          label: "Theme",
+          visible: () => this.selectedSlide.get()
+        }], [{
           icon: "chevron-circle-down fa-2x fa-fw",
           click: () => this.editSlide(this.selectedSlide.get()),
           label: "Leave",
@@ -374,7 +382,10 @@ class Sorter {
           visible: () => this.selectedSlide.get() && !this.editor
         }],
         [{
-          icon: "trash fa-2x fa-fw",
+          icon: [
+            "square-o fa-stack-2x",
+            "trash fa-stack-1x"
+          ],
           click: () => {
             this.removeSlide(this.selectedSlide.get());
             this.selectedSlide.set(null);
