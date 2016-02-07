@@ -69,9 +69,7 @@ export class Editor {
   /** Destroy the editor and its children utterly. */
   destroy() {
     this.sidebar.destroy();
-    this.$ui.transition()
-      .style({opacity: 0})
-      .remove();
+    this.$ui.remove();
 
     this.destroyed = true;
   }
@@ -94,8 +92,7 @@ export class Editor {
     /** @type {d3.selection} */
     this.$ui = d3.select("body")
       .append("div")
-      .classed({nbpresent_editor: 1})
-      .style({opacity: 0});
+      .classed({nbpresent_editor: 1});
 
     /** @type {d3.selection} */
     this.$bg = this.$ui.append("div")
@@ -106,9 +103,6 @@ export class Editor {
 
     /** @type {d3.selection} */
     this.$defs = this.$svg.append("defs");
-
-    this.$ui.transition()
-      .style({opacity: 1});
 
     return this;
   }
@@ -177,7 +171,7 @@ export class Editor {
     // TODO: this really needs to be refactored.
     let that = this,
       uibb = this.$ui.node().getBoundingClientRect(),
-      width = uibb.width - (this.sidebar.width() + (2 * this.padding())),
+      width = uibb.width - ((2 * this.padding())),
       height = width / this.aspectRatio(),
       regions = d3.entries(this.regions.get() || {}),
       {slide, region} = this.selectedRegion.get() || {},
@@ -193,7 +187,7 @@ export class Editor {
     let {x, y} = this;
 
     this.$bg.style({
-      left: `${(((uibb.width + this.sidebar.width()) - width) / 2)}px`,
+      left: `${(((uibb.width) - width) / 2)}px`,
       top: `${(uibb.height - height) / 2}px`,
       width: `${width}px`,
       height: `${height}px`
