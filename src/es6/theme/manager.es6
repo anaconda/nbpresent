@@ -57,7 +57,7 @@ export class ThemeManager {
       .on("click", ({key}) => this.current.set(key));
 
     theme.classed({
-      "nbp-theme-thumbnail-current": ({key}) => key === current
+      "nbp-theme-preview-current": ({key}) => key === current
     });
 
     if(!this.editor || (this.editor.theme.get(["id"]) !== current)){

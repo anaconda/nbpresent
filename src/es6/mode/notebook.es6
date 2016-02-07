@@ -77,7 +77,7 @@ export class NotebookMode extends BaseMode {
         }],
         [{
           icon: "paint-brush fa-2x",
-          label: "Theme",
+          label: "Themes",
           click: () => this.mode.set(this.mode.get() === THEMER ? null : THEMER)
         }],
         [{
