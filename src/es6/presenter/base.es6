@@ -114,7 +114,7 @@ export class Presenter {
 
   updateTheme(slide){
     let ThemeClass = this.themeClass(slide),
-      themeId = slide.theme || this.themes.get(["default"]);
+      themeId = slide.value.theme || this.themes.get(["default"]);
 
     if(!themeId){
       let themes = d3.values(this.themes.get(["theme"]) || {});
@@ -123,6 +123,8 @@ export class Presenter {
     }
 
     themeId = themeId || "<default>";
+
+    console.log(themeId);
 
     this.theme = new ThemeClass(
       this.themes.select(["theme", themeId]),

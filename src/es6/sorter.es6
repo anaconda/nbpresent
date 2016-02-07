@@ -12,6 +12,8 @@ import {LinkOverlay} from "./cells/overlay";
 
 import {AriseTome} from "./tome/arise";
 
+import {ThemeCard} from "./theme/card";
+
 let REMOVED = "<removed>";
 
 const MODE_NAMES = [
@@ -32,6 +34,7 @@ class Sorter {
     this.templatePicked = this.templatePicked.bind(this);
 
     this.slides = this.tree.select(["slides"]);
+    this.themes = this.tree.select(["themes", "theme"]);
     this.selectedSlide = this.tree.select(["app", "selectedSlide"]);
     this.selectedRegion = this.tree.select(["app", "selectedRegion"]);
 
@@ -367,7 +370,7 @@ class Sorter {
             "square-o fa-stack-2x",
             "paint-brush fa-stack-1x"
           ],
-          click: () => console.log("foo"),
+          click: () => this.pickTheme(),
           label: "Theme",
           visible: () => this.selectedSlide.get()
         }], [{
@@ -427,6 +430,35 @@ class Sorter {
       .call(this.regionToolbar.update);
 
     return this;
+  }
+
+  pickTheme(){
+    if(this.$themePicker){
+      this.$themePicker.remove();
+      delete this.$themePicker;
+      return;
+    }
+
+    // TODO: options
+    this.themeCard = new ThemeCard();
+
+    this.$themePicker = this.$body.append("div")
+      .classed({"nbp-slide-theme-picker": 1});
+
+    let themes = this.themes.get() || {},
+      theme = this.$themePicker.selectAll(".nbp-slide-theme-picker-theme")
+        .data(d3.entries(themes));
+
+    theme.enter().append("div")
+      .classed({"nbp-slide-theme-picker-theme": 1})
+      .on("click", () => this.$themePicker.remove())
+      .on("mouseover", ({key}) => {
+        this.slides.set([this.selectedSlide.get(), "theme"], key);
+      });
+
+    theme.exit().remove();
+
+    this.themeCard.update(theme);
   }
 
   cellId(cell){

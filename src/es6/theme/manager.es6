@@ -3,6 +3,7 @@ import {d3, uuid} from "nbpresent-deps";
 import {Toolbar} from "../toolbar";
 
 import {ThemeEditor} from "./editor";
+import {ThemeCard} from "./card";
 
 export class ThemeManager {
   constructor(tree){
@@ -13,6 +14,8 @@ export class ThemeManager {
     let mgrCursor = tree.select(["app", "theme-manager"]);
 
     this.current = mgrCursor.select(["current"]);
+
+    this.card = new ThemeCard();
 
     [this.themes, mgrCursor]
       .map(({on})=> on("update", () => this.update()));
@@ -56,19 +59,21 @@ export class ThemeManager {
       .classed({"nbp-theme-preview": 1})
       .on("click", ({key}) => this.current.set(key));
 
+    this.card.update(theme);
+
     theme.classed({
       "nbp-theme-preview-current": ({key}) => key === current
     });
 
-    if(!this.editor || (this.editor.theme.get(["id"]) !== current)){
-      this.editor && this.editor.destroy();
+    if(this.editor && this.editor.theme.get(["id"]) !== current){
+      this.editor.destroy();
+    }
 
-      if(current){
-        this.editor = new ThemeEditor(
-          this.tree,
-          this.themes.select([current])
-        );
-      }
+    if(current){
+      this.editor = new ThemeEditor(
+        this.tree,
+        this.themes.select([current])
+      );
     }
 
     return this;
