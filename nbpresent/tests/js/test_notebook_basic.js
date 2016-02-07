@@ -15,8 +15,7 @@ function basic_test(){
     .then(function(){
       ["#nbp-app-btn",
         "#nbpresent_present_btn",
-        ".download_nbpresent_html",
-        ".download_nbpresent_pdf"
+        ".download_nbpresent"
       ].map(function(selector){ t.assertExists(selector); });
 
       loaded("nbpresent.min.css");
