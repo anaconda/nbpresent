@@ -8,6 +8,11 @@ import {FONTS, SYMB, PANGRAMS} from "./fonts";
 import {BackgroundPicker} from "./background";
 import {PaletteBuilder} from "./palette";
 
+import {loadFonts} from "./fonts";
+
+// pick a random pangram for this session. gotta catch'm all.
+const pangram = d3.shuffle(PANGRAMS)[0];
+
 
 export class ThemeOverlay{
   constructor(tree){
@@ -36,11 +41,10 @@ export class ThemeOverlay{
 
     this.$body = d3.select("body");
 
-    WebFont.load({
-      google: {
-        families: FONTS
-      }
-    });
+    loadFonts(FONTS);
+
+    this.textZoom = d3.behavior.zoom()
+      .on("zoom", (d, i) => this.textZoomed(d, i));
 
     this.init();
   }
@@ -189,10 +193,30 @@ export class ThemeOverlay{
         dropdown.append("a")
           .classed({"btn btn-default dropdown-toggle": 1})
           .attr({"data-toggle": "dropdown"})
+          .call((btn) => overlay.textZoom(btn));
+
         dropdown.append("ul")
           .classed({"dropdown-menu": 1});
-      });
+      })
 
+  }
+
+  textZoomed({key, value}){
+    let len = FONTS.length,
+      ff = !key ? this.textBase.get(["font-family"]) || "Lato" :
+        this.rules.get([key, "font-family"]),
+      scaled = parseInt(20 * ((d3.event.scale && Math.log(d3.event.scale)) || 0)),
+      nextFont = FONTS[Math.abs(scaled % len)];
+
+    if(ff == nextFont){
+      return;
+    }
+
+    if(!key){
+      this.textBase.set(["font-family"], nextFont);
+    }else{
+      this.rules.set([key, "font-family"], nextFont)
+    }
   }
 
   /** Draw all of the rules
@@ -200,19 +224,22 @@ export class ThemeOverlay{
   update(){
     let overlay = this,
       rules = this.rules.get() || {},
-      rule = this.$ruleWrap.selectAll(".theme-rule")
-        .data(SYMB.map((key)=> {
-          return {key, value: rules[key]};
-        }), ({key}) => key),
       palette = this.palette.get() || {},
-      exampleText = this.exampleText.get() || "",
+
       textBase = this.textBase.get() || {},
       baseColor = textBase.color && palette[textBase.color],
       baseBg = baseColor && `rgb(${baseColor.rgb})`,
+
+      rule = this.$ruleWrap.selectAll(".theme-rule")
+        .data(SYMB.map((key)=> {
+          return {key, value: rules[key], base: textBase};
+        }), ({key}) => key),
+
+      exampleText = this.exampleText.get() || "",
       focusContent = this.focusContent.get();
 
     this.$baseText
-      .datum({value: textBase})
+      .datum({key: null, value: textBase})
       .select(".selector-font-name")
       .call((dropdown) => this.updateFontMenu(dropdown))
       .select(".btn")
@@ -261,7 +288,7 @@ export class ThemeOverlay{
         }
       }
 
-      text = text || _.sample(PANGRAMS);
+      text = text || pangram;
 
       exemplar.selectAll(":not(" + d.key + ")").remove();
 
@@ -363,7 +390,7 @@ export class ThemeOverlay{
     li.enter()
       .append("li")
       .append("a")
-      .on("click", ({key, font})=> {
+      .on("mouseover", ({key, font})=> {
         if(key){
           this.rules.set([key, "font-family"], font);
         }else{
