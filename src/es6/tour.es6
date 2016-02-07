@@ -133,13 +133,13 @@ class NbpresentTour {
           content: "Your slide is still made up of your notebook"
         },
         {
-          element: ".nbpresent_present",
+          element: ".nbp-present",
           placement: "top",
           title: "Most Notebook Editing Functionality",
           content: "This is still an editable input area"
         },
         {
-          element: ".nbpresent_present",
+          element: ".nbp-present",
           placement: "bottom",
           title: "Part Execution",
           content: "Inputs can even be executed with keyboard shortcuts like ctrl+enter"

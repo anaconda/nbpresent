@@ -52,7 +52,7 @@ export class Presenter {
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({nbpresent_presenter: 1});
+      .classed({"nbp-presenter": 1});
 
     d3.select(window).on("mousemove", ()=> this.speaker.hint());
 
@@ -175,7 +175,7 @@ export class Presenter {
     let cells = this.getCells();
 
     d3.selectAll(this.allPartSelect())
-      .classed({nbpresent_unpresent: 1, nbpresent_present: 0});
+      .classed({"nbp-unpresent": 1, "nbp-present": 0});
 
     d3.entries(slide.value.regions)
       .filter(({value}) => value.content)
@@ -196,8 +196,8 @@ export class Presenter {
         part
           .classed(regionCls, 1)
           .classed({
-            nbpresent_unpresent: 0,
-            nbpresent_present: 1
+            "nbp-unpresent": 0,
+            "nbp-present": 1
           })
           .each(() => that.theme.update(region, part))
           .each(() => that.layout.update(region, part));
@@ -221,11 +221,11 @@ export class Presenter {
 
     if(force){
       d3.selectAll(this.allPartSelect())
-        .classed({nbpresent_unpresent: 1, nbpresent_present: 0});
+        .classed({"nbp-unpresent": 1, "nbp-present": 0});
     }
 
-    d3.selectAll(".nbpresent_unpresent")
+    d3.selectAll(".nbp-unpresent")
       .call(that.layout && this.layout.clean || (() => 0))
-      .classed({nbpresent_unpresent: 0, nbpresent_present: 0});
+      .classed({"nbp-unpresent": 0, "nbp-present": 0});
   }
 }

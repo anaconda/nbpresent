@@ -3,7 +3,7 @@ import {d3} from "nbpresent-deps";
 
 import {loadFonts} from "./fonts";
 
-const PRESENT_PREFIX = ".nbp-presenting .nbpresent_present";
+const PRESENT_PREFIX = ".nbp-presenting .nbp-present";
 
 export class ThemeBase{
   constructor(theme, slide, style){

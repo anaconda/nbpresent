@@ -37,7 +37,7 @@ function create_test(){
     .canSeeAndClick("output link button",
       ".region_toolbar .fa-image")
     .canSeeAndClick("the presenter button", "#nbpresent_present_btn")
-    .canSeeAndClick("the presenter", ".nbpresent_presenter")
+    .canSeeAndClick("the presenter", ".nbp-presenter")
     .then(function(){
       return this.mouse.move(1430, 890);
     })
@@ -60,5 +60,5 @@ function create_test(){
     .waitWhileVisible(".nbp-sorter")
     .waitWhileVisible(".nbp-regiontree")
     .canSeeAndClick("the presenter button", "#nbpresent_present_btn")
-    .canSeeAndClick("the presenter", ".nbpresent_presenter")
+    .canSeeAndClick("the presenter", ".nbp-presenter")
 }

@@ -50,8 +50,6 @@ export class ThemeManager {
       theme = this.$ui.selectAll(".nbp-theme-preview")
         .data(d3.entries(themes), ({key}) => key);
 
-    console.log(themes);
-
     this.$toolbar.call(this.toolbar.update);
 
     theme.enter().append("div")
