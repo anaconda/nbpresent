@@ -1,4 +1,4 @@
-body:not(.nbp-presenting) .nbpresent_presenter{
+body:not(.nbp-presenting) .nbp-presenter{
   display: none;
 }
 
@@ -10,7 +10,7 @@ body.nbp-presenting {
   }
 }
 
-.nbpresent_presenter {
+.nbp-presenter {
   .nbp-ui();
   z-index: @z-present;
   background-color: white;
@@ -26,12 +26,12 @@ body.nbp-presenting {
   }
 }
 
-#notebook .cell .nbpresent_present .text_cell_render {
+#notebook .cell .nbp-present .text_cell_render {
   border: none;
 }
 
-.cell.nbpresent_present,
-.cell div.nbpresent_present{
+.cell.nbp-present,
+.cell div.nbp-present{
   z-index: @z-presented;
   position: fixed;
   display: block;
@@ -53,6 +53,6 @@ body.nbp-presenting {
 }
 
 
-.cell div.nbpresent_unpresent{
+.cell div.nbp-unpresent{
   display: none;
 }
