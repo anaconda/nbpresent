@@ -1,8 +1,14 @@
 .nbpresent-app {
   opacity: 0;
+  display: block;
+  position: fixed;
   margin-right: -@app-bar-width;
   transition-property: margin-right opacity;
   transition-duration: 0.2s;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: @app-bar-width;
 }
 
 body.nbpresent-app-enabled {
@@ -44,13 +50,7 @@ body.nbpresent-app-enabled {
     .nbpresent-ui();
 
     opacity: 1;
-    display: block;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
     margin-right: 0;
-    width: @app-bar-width;
     z-index: @z-app-bar;
 
     box-shadow: @z-shadow;
