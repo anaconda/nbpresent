@@ -11,7 +11,7 @@ export class StandaloneMode extends BaseMode {
     this.presenter = new StandalonePresenter(this.tree);
 
     this.presenter.presenting.set(true);
-    
+
     return this;
   }
 
@@ -21,7 +21,7 @@ export class StandaloneMode extends BaseMode {
     // TODO: centralize serialized keys
     return {
       slides: tree.slides || {},
-      theme: tree.theme || {},
+      themes: tree.themes || {},
       root: this.root
     };
   }

@@ -1,14 +1,33 @@
 @theme-swatch-size: 24px;
 
+.nbp-theme-manager {
+  .nbp-ui();
+
+  position: fixed;
+  width: @theme-mgr-width;
+  z-index: @z-themer;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  background-color: @ui-bg-alpha;
+
+  .nbp-theme-preview {
+    width: @theme-mgr-width;
+    height: @theme-mgr-width;
+    background-color: white;
+    margin-bottom: 10px;
+  }
+}
+
 .nbp-theme-overlay {
   .nbp-ui();
 
   position: fixed;
   bottom: 0;
   right: @app-bar-width;
-  left: 0;
+  left: @theme-mgr-width;
   top: 0;
-  background-color: rgba(50, 50, 50, 0.95);
+  background-color: @ui-bg-alpha;
   padding: 20px;
   z-index: @z-themer;
   overflow-y: auto;

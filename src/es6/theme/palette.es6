@@ -1,9 +1,10 @@
 import {d3, uuid} from "nbpresent-deps";
 
 export class PaletteBuilder {
-  constructor(tree){
+  constructor(tree, theme){
     this.tree = tree;
-    this.theme = this.tree.select(["theme"]);
+    this.theme = theme;
+
     this.themer = this.tree.select(["app", "themer"]);
 
     this.palette = this.theme.select(["palette"]);

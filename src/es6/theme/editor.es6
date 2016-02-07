@@ -14,30 +14,26 @@ import {loadFonts} from "./fonts";
 const pangram = d3.shuffle(PANGRAMS)[0];
 
 
-export class ThemeOverlay{
-  constructor(tree){
+/** Handle the management of themes
+*/
+export class ThemeEditor {
+  constructor(tree, theme){
     this.tree = tree;
 
-    this.theme = tree.select(["theme"]);
+    this.theme = theme;
     this.rules = this.theme.select(["rules"]);
     this.textBase = this.theme.select(["text-base"]);
     this.palette = this.theme.select(["palette"]);
 
-    this.themer = tree.select(".").root().select(["themer"]);
+    this.themer = tree.select(["themer"]);
     this.focusContent = this.themer.select(["focuseContent"]);
     this.exampleText = this.themer.select("exampleText");
 
-    this.backgroundUI = new BackgroundPicker(tree);
-    this.paletteUI = new PaletteBuilder(tree);
+    this.backgroundUI = new BackgroundPicker(this.tree, this.theme);
+    this.paletteUI = new PaletteBuilder(this.tree, this.theme);
 
-    [
-      this.rules,
-      this.textBase,
-      this.focusContent,
-      this.exampleText,
-      this.palette
-    ]
-      .map(({on})=> on("update", (e)=> this.update(e)));
+    [this.theme, this.themer]
+      .map(({on})=> on("update", () => this.update()));
 
     this.$body = d3.select("body");
 

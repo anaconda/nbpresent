@@ -22,17 +22,22 @@ export class Presenter {
   constructor(tree) {
     this.tree = tree;
 
+    this.slides = tree.select(["sortedSlides"]);
+
     this.cellManager = this.makeCellManager();
     this.speaker = this.makeSpeaker(this.tree);
 
     this.initUI();
 
+    this.themes = this.tree.select(["themes"]);
     this.presenting = this.tree.select(["app", "presenting"]);
     this.current = this.tree.select(["app", "selectedSlide"]);
 
-    this.tree.on("update", () => this.update());
     this.presenting.on("update", () => this.present());
-    this.current.on("update", () => this.update());
+
+
+    [this.slides, this.current, this.themes]
+      .map(({on})=> on("update", () => this.update()));
   }
 
   makeCellManager() {
@@ -103,20 +108,30 @@ export class Presenter {
 
 
   themeClass(slide){
-    // TODO: refactor this into plugin mechanism
+    // TODO: refactor this into plugin mechanism?
     return ThemeBase;
   }
 
   updateTheme(slide){
-    let ThemeClass = this.themeClass(slide);
-    // this.theme.cleanup()
+    let ThemeClass = this.themeClass(slide),
+      themeId = slide.theme || this.themes.get(["default"]);
+
+    if(!themeId){
+      let themes = d3.values(this.themes.get(["theme"]) || {});
+
+      themeId = themes.length ? themes[0].id : null;
+    }
+
+    themeId = themeId || "<default>";
+
     this.theme = new ThemeClass(
-      this.tree,
-      this.cellManager,
+      this.themes.select(["theme", themeId]),
       slide,
       this.$style
     );
+
     this.theme.init();
+
     return this;
   }
 
@@ -134,19 +149,20 @@ export class Presenter {
   }
 
   update() {
-    let that = this;
     const presenting = this.presenting.get();
+
+    let that = this;
 
     d3.select("body").classed({"nbp-presenting": presenting});
 
     let current = this.current.get(),
-      slide = this.tree.get(["sortedSlides", (d) => d.key == current]);
+      slide = this.slides.get([{key: current}]);
 
     // TODO: handle cleanup
     // transition = this.layout && this.layout.destroy()
 
     if(!slide){
-      return this.current.set(this.tree.get(["sortedSlides", 0, "key"]));
+      return this.current.set(this.slides.get([0, "key"]));
     }
 
     this.updateLayout(slide)

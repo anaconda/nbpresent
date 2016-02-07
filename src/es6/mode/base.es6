@@ -12,13 +12,13 @@ export class BaseMode {
 
     this.tree = new Tree({
       slides: this.metadata().slides,
-      theme: this.metadata().theme,
+      themes: this.metadata().themes,
       root: this.root
     }).tree;
 
     this.slides = this.tree.select(["slides"]);
 
-    this.theme = this.tree.select(["theme"]);
+    this.themes = this.tree.select(["themes"]);
 
     this.init();
   }

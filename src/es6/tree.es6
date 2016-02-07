@@ -4,18 +4,8 @@ export class Tree {
   constructor(obj){
     this.tree = new Baobab($.extend({
       slides: {},
-      presenter: {presenting: false},
-      sorter: {},
-      editor: {},
       sortedSlides: Baobab.monkey(["slides"], this.sortedSlides),
-      themer: {
-        newBackground: {}
-      },
-      theme: {
-        backgrounds: {},
-        rules: {},
-        palette: {}
-      }
+      themes: {}
     }, obj));
   }
 
