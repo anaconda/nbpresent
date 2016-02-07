@@ -58,7 +58,7 @@ export class SpeakerBase {
   startDecay(){
     this.energy = 0.6;
     if(!this.decayInerval){
-      this.decayInerval = setInterval(()=>this.decay(), 50)
+      this.decayInerval = setInterval(()=>this.decay(), 100)
     }
   }
 

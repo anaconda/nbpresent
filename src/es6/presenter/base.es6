@@ -124,8 +124,6 @@ export class Presenter {
 
     themeId = themeId || "<default>";
 
-    console.log(themeId);
-
     this.theme = new ThemeClass(
       this.themes.select(["theme", themeId]),
       slide,

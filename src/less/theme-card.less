@@ -1,6 +1,31 @@
 .nbp-theme-card {
-  .nbp-theme-card-color {
-    width: @theme-swatch-size;
-    height: @theme-swatch-size;
+  .nbp-ui();
+
+  width: @theme-mgr-width - 20;
+  height: @theme-mgr-width - 20;
+  background-color: white;
+  box-shadow: z-shadow;
+  border-radius: 2px;
+  border: solid 1px @ui-bg;
+  margin: 10px;
+  position: relative;
+
+  .nbp-theme-card-palette {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 10px;
+    .nbp-theme-card-color {
+      width: 8px;
+      height: 8px;
+      border: solid 1px @ui-bg;
+      margin: 1px 1px 0 0;
+      float: right;
+    }
+  }
+
+  .nbp-theme-card-font {
+    font-size: 12px;
+    margin-left: 1px;
   }
 }
