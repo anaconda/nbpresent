@@ -61,7 +61,7 @@ export class ThemeEditor {
     this.$ui = this.$body
       .append("div")
       .classed({
-        "nbp-theme-overlay": 1,
+        "nbp-theme-editor": 1,
         "container-fluid": 1
       })
       .each(function(){ Jupyter.keyboard_manager.register_events(this); });
@@ -69,16 +69,15 @@ export class ThemeEditor {
     let row = this.$ui.append("div")
       .classed({row: 1});
 
-
     this.$background = row.append("div")
       .classed({
-        "nbp-theme-overlay-backgrounds col-md-2 col-xs-6": 1,
+        "nbp-theme-editor-backgrounds col-md-2 col-xs-6": 1,
       })
       .call((background) => this.backgroundUI.init(background));
 
     this.$palette = row.append("div")
       .classed({
-        "nbp-theme-overlay-palette col-md-2 col-xs-6": 1
+        "nbp-theme-editor-palette col-md-2 col-xs-6": 1
       })
       .call((palette) => this.paletteUI.init(palette));
 
@@ -86,7 +85,7 @@ export class ThemeEditor {
       .classed({"theme-rules col-md-8 col-xs-12": 1});
 
     this.$toolbar = this.$rules.append("div")
-      .classed({"nbp-theme-overlay-toolbar": 1});
+      .classed({"nbp-theme-editor-toolbar": 1});
 
     this.$ruleWrap = this.$rules.append("div")
       .classed({"theme-rule-wrap": 1});
@@ -442,6 +441,7 @@ export class ThemeEditor {
   destroy(){
     this.$body.classed({"nbp-theming": 0});
     this.backgroundUI.destroy();
+    console.log("removing", this.$ui);
     this.$ui.remove();
   }
 }

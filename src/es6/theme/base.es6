@@ -41,7 +41,6 @@ export class ThemeBase{
             case "color":
               let {rgb=[0, 0, 0], a=1.0} = palette[value] || {};
               value = `rgba(${rgb}, ${a})`;
-              console.log(value);
               break;
           }
 

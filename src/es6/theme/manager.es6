@@ -17,14 +17,19 @@ export class ThemeManager {
 
     this.card = new ThemeCard();
 
-    [this.themes, mgrCursor]
-      .map(({on})=> on("update", () => this.update()));
+    this.themes.on("update", () => this.update());
+    this.current.on("update", () => [this.update(), this.currentUpdated()]);
 
     this.initUI();
   }
 
   destroy(){
-    this.editor && this.editor.destroy();
+    if(this.editor){
+      this.editor.destroy();
+      delete this.editor;
+    }
+    // whatever
+    this.$body.selectAll(".nbp-theme-editor").remove();
     this.$ui.remove();
   }
 
@@ -65,9 +70,13 @@ export class ThemeManager {
       "nbp-theme-preview-current": ({key}) => key === current
     });
 
-    if(this.editor && this.editor.theme.get(["id"]) !== current){
-      this.editor.destroy();
-    }
+    return this;
+  }
+
+  currentUpdated(){
+    let current = this.current.get();
+
+    this.editor && this.editor.destroy();
 
     if(current){
       this.editor = new ThemeEditor(
@@ -75,8 +84,6 @@ export class ThemeManager {
         this.themes.select([current])
       );
     }
-
-    return this;
   }
 
   addTheme(){
