@@ -39,17 +39,12 @@ export class AriseTome extends BaseTome {
         case "slide":
           slides.push(this.fromSlideshowSlide(cell, prev ? prev.id : null));
           break;
-        case "subslide":
-          console.debug("subslide not implemented yet");
-          break;
-        case "fragment":
-          console.debug("fragment not implemented yet");
-          break;
-        case "note":
-          console.debug("note not implemented yet");
-          break;
         case "-":
           prev && this.fromSlideshowContinuation(cell, prev);
+          break;
+        default:
+          console.debug(slideType, "not implemented yet");
+          break;
       }
     });
 
