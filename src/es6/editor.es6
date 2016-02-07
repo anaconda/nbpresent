@@ -19,7 +19,7 @@ export class Editor {
   constructor(slide, selectedRegion) {
     /** whether this Editor has been killed.
       * @type {bool} */
-    this.killed = false;
+    this.destroyed = false;
 
     /** cursor pointed at a specific slide.
       * @type {baobab.Cursor} */
@@ -63,7 +63,7 @@ export class Editor {
     this.update();
 
     // subscribe to event when cursor changes
-    this.slide.on("update", ()=> { this.killed || this.update(); });
+    this.slide.on("update", () => { this.destroyed || this.update(); });
   }
 
   /** Destroy the editor and its children utterly. */
@@ -73,7 +73,7 @@ export class Editor {
       .style({opacity: 0})
       .remove();
 
-    this.killed = true;
+    this.destroyed = true;
   }
 
 
@@ -89,6 +89,8 @@ export class Editor {
   /** Create all UI chrome.
     * @return {Editor} */
   initUI(){
+    this.$body = d3.select("body");
+
     /** @type {d3.selection} */
     this.$ui = d3.select("body")
       .append("div")

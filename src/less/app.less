@@ -25,7 +25,14 @@ body.nbpresent-app-enabled {
       opacity: 0;
       transition-property: opacity;
       transition-duration: 0.2s;
-      &:hover{
+      &:hover {
+        opacity: 0.5;
+        transition-property: opacity;
+        transition-duration: 0.2s;
+      }
+    }
+    &.nbpresent-sorting, &.nbpresent-theming {
+      .nbpresent-app {
         opacity: 0.5;
         transition-property: opacity;
         transition-duration: 0.2s;
