@@ -71,7 +71,7 @@ export class NotebookMode extends BaseMode {
           tip: "Present"
         }],
         [{
-          icon: "th-large fa-2x",
+          icon: "film fa-2x",
           label: "Slides",
           click: () => this.mode.set(this.mode.get() === SORTER ? null : SORTER)
         }],
