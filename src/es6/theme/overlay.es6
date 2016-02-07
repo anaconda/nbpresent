@@ -34,6 +34,8 @@ export class ThemeOverlay{
     ]
       .map(({on})=> on("update", (e)=> this.update(e)));
 
+    this.$body = d3.select("body");
+
     WebFont.load({
       google: {
         families: FONTS
@@ -50,7 +52,9 @@ export class ThemeOverlay{
   init(){
     let text = this.exampleText.get();
 
-    this.$ui = d3.select("body")
+    this.$body.classed({"nbpresent-theming": 1});
+
+    this.$ui = this.$body
       .append("div")
       .classed({
         "nbpresent-theme-overlay": 1,
@@ -373,6 +377,7 @@ export class ThemeOverlay{
   }
 
   destroy(){
+    this.$body.classed({"nbpresent-theming": 0});
     this.backgroundUI.destroy();
     this.$ui.remove();
   }
