@@ -21,7 +21,7 @@ class NbpresentTour {
           element: "#nbp-app-btn",
           title: "Thanks for using nbpresent",
           placement: "bottom",
-          content: "You just activated the nbpresent Sorter! Click Next to take the tour"
+          content: "You just activated nbpresent! Click Next to take the tour"
         },
         {
           element: "#nbp-app-btn",
