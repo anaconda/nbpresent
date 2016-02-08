@@ -257,12 +257,6 @@ class Sorter {
 
     if(!slides.length){
       this.updateEmpty();
-      slides = [{value: {}}];
-    }else{
-      slides = [{value: {}}].concat(
-        slides,
-        [{value: {prev: slides.slice(-1)[0].key}}
-      ]);
     }
 
     this.scale.x.range([20, this.slideWidth() + 20]);

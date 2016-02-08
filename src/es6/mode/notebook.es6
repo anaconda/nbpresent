@@ -177,7 +177,14 @@ export class NotebookMode extends BaseMode {
   }
 
   show(){
-    this.enabled.set(!this.enabled.get());
+    const enabled = !this.enabled.get();
+
+    this.enabled.set(enabled);
+
+    if(!enabled){
+      this.mode.set(null);
+    }
+
     return this;
   }
 

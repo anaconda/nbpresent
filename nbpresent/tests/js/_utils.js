@@ -42,13 +42,29 @@
 
 
   root.canSeeAndClick = function(message, visible, click){
-    return this
-      .waitUntilVisible(visible)
-      .then(function(){
-        this.test.assertExists(click || visible, "I can see and click " + message);
-        this.screenshot(message);
-        this.click(click || visible);
-      });
+    var things = message;
+
+    if(arguments.length !== 1){
+      things = [[message, visible, click]];
+    }
+
+    var that = this;
+
+    things.map(function(thing){
+      var message = thing[0],
+        visible = thing[1],
+        click = thing[2];
+
+      that = that
+        .waitUntilVisible(visible)
+        .then(function(){
+          this.test.assertExists(click || visible, "I can see and click " + message);
+          this.screenshot(message);
+          this.click(click || visible);
+        });
+    });
+
+    return that;
   }
 
   root.hasMeta = function(path, tests){
@@ -84,7 +100,7 @@
       _.map(tests, function(test, message){
         this.test.assert(test(_.get(meta, path)),
           "I remember " + message + " in " + path);
-      }, this)
+      }, this);
     });
   }
 
