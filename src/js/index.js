@@ -12,8 +12,6 @@ function(require, $, Jupyter){
   ];
 
   function load_ipython_extension() {
-    initToolbar();
-    initMenu();
     initNbpresent();
   }
 
@@ -25,27 +23,51 @@ function(require, $, Jupyter){
       }
     });
 
+    var modulePath = requirejs.toUrl("nbpresent-notebook").split("?")[0]
+      .split("/")
+      .slice(0, -2)
+      .join("/");
+
+    console.log(modulePath);
+    initStylesheet(modulePath);
+
     requirejs(["nbpresent-deps"], function(deps){
       requirejs(["nbpresent-notebook"], function(mode){
         setTimeout(function(){
           nbpresent.mode = new mode.NotebookMode(
             require.toUrl(".").split("?")[0]
           );
+          initToolbar();
+          initMenu();
         }, 1000);
       });
     });
   }
 
   function show(){
-    nbpresent.mode && nbpresent.mode.show();
+    nbpresent.mode.show();
   }
 
   function present(){
-    nbpresent.mode && nbpresent.mode.present();
+    nbpresent.mode.present();
   }
 
   function nbconvert(key){
     Jupyter.menubar._nbconvert(key, true);
+  }
+
+  function initStylesheet(modulePath){
+    var id = "nbp-css",
+      $head = $("head"),
+      cssPath = modulePath + "/css/nbpresent.min.css";
+
+    console.log(cssPath);
+
+    $head.find("link#" + id).length || $("<link/>", {
+      id: id,
+      rel: "stylesheet",
+      href: cssPath,
+    }).appendTo($head);
   }
 
   // set up the UI before doing anything else to avoid UI delay

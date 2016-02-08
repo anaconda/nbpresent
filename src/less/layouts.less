@@ -1,12 +1,13 @@
-.nbpresent_template_library {
+.nbp-template-library {
   .nbp-ui();
 
   z-index: @z-layouts;
   position: fixed;
   bottom: @sorter-height;
   left: 0;
-  right: 0;
+  right: @app-bar-width;
   height: @sorter-height;
+  overflow-x: auto;
 
   background-color: @ui-bg;
 

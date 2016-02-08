@@ -49,7 +49,8 @@ export class ThemeManager {
         }]
       ]);
 
-    return this.update();
+    return this.update()
+      .currentUpdated();
   }
 
   update(){

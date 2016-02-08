@@ -2,8 +2,9 @@
   .nbp-ui();
 
   position: fixed;
-  width: @theme-mgr-width;
+  height: @theme-mgr-height;
   z-index: @z-themer;
+  right: @app-bar-width;
   left: 0;
   bottom: 0;
   top: 0;
@@ -24,8 +25,7 @@
   position: fixed;
   bottom: 0;
   right: @app-bar-width;
-  left: @theme-mgr-width;
-  top: 0;
+  top: @theme-mgr-height;
   background-color: @ui-bg-alpha;
   padding: 20px;
   z-index: @z-themer;
@@ -185,7 +185,7 @@
     }
 
     .theme-rule-wrap {
-      max-height: 90vh;
+      max-height: 70vh;
       overflow-y: auto;
     }
 
@@ -201,5 +201,5 @@
         }
       }
     }
-}
+  }
 }

@@ -1,6 +1,7 @@
 .nbp-app {
+  .nbp-ui();
+
   opacity: 0;
-  display: block;
   position: fixed;
   margin-right: -@app-bar-width;
   transition-property: margin-right opacity;
@@ -9,6 +10,7 @@
   bottom: 0;
   right: 0;
   width: @app-bar-width;
+  background-color: @ui-bg;
 }
 
 body.nbp-app-enabled {
@@ -47,14 +49,11 @@ body.nbp-app-enabled {
   }
 
   .nbp-app {
-    .nbp-ui();
-
     opacity: 1;
     margin-right: 0;
     z-index: @z-app-bar;
 
     box-shadow: @z-shadow;
-    background-color: @ui-bg;
     transition-property: margin-right opacity;
     transition-duration: 0.2s;
 
