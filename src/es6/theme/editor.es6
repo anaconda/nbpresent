@@ -26,8 +26,10 @@ export class ThemeEditor {
     this.palette = this.theme.select(["palette"]);
 
     this.themer = tree.select(["themer"]);
-    this.focusContent = this.themer.select(["focuseContent"]);
+    this.focusContent = this.themer.select(["focusContent"]);
     this.exampleText = this.themer.select("exampleText");
+
+    this.focusContent.exists() || this.focusContent.set(true);
 
     this.backgroundUI = new BackgroundPicker(this.tree, this.theme);
     this.paletteUI = new PaletteBuilder(this.tree, this.theme);
@@ -43,7 +45,7 @@ export class ThemeEditor {
       .on("zoom", this._zoomCycle("font-family", FONTS));
 
     this.sizeZoom = d3.behavior.zoom()
-      .on("zoom", this._zoomCycle("font-size", d3.range(2, 30, 0.125)));
+      .on("zoom", this._zoomCycle("font-size", d3.range(2, 30, 0.25)));
 
 
     this.init();

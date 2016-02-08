@@ -14,8 +14,8 @@ function create_test(){
     .canSeeAndClick("the add slide button",
       ".nbp-deck-toolbar .fa-plus-square-o")
     .canSeeAndClick("a slide template in the library",
-      ".nbpresent_template_library .slide")
-    .waitWhileVisible(".nbpresent_template_library")
+      ".nbp-template-library .slide")
+    .waitWhileVisible(".nbp-template-library")
     .hasMeta("nbpresent.slides", {
       "one slide": function(slides){
         return _(slides).toArray().value().length === 1;

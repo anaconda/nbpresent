@@ -55,12 +55,12 @@ class NbpresentTour {
           content: "Or copy an existing slide"
         },
         {
-          element: ".nbpresent_template_library .slide:nth-of-type(2)",
+          element: ".nbp-template-library .slide:nth-of-type(2)",
           title: "Simple Template",
           position: "top",
           content: "Let's use this one",
           onNext: () => this.mode.sorter.templatePicked(
-            d3.select(".nbpresent_template_library .slide:nth-of-type(2)")
+            d3.select(".nbp-template-library .slide:nth-of-type(2)")
               .datum()
           )
         },

@@ -28,8 +28,7 @@ const THEMER = "themer",
 export class NotebookMode extends BaseMode {
   init() {
     super.init()
-      .initActions()
-      .initStylesheet();
+      .initActions();
 
     this.enabled = this.tree.select(["app", "enabled"]);
     this.enabled.on("update", () => this.enabledChanged());
@@ -120,27 +119,6 @@ export class NotebookMode extends BaseMode {
     Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts({
       "esc": "nbpresent:show-presentation"
     });
-
-    return this;
-  }
-
-  initStylesheet(){
-    let css = d3.select("head")
-      .selectAll("link#nbp-css")
-      .data([1]);
-
-    if(css.node()){
-      console.warn("nbpresent extension already loaded!");
-      return;
-    }
-
-    css.enter()
-      .append("link")
-      .attr({id: "nbp-css"})
-      .attr({
-        rel: "stylesheet",
-        href: `${this.root}/../css/nbpresent.min.css`
-      });
 
     return this;
   }

@@ -72,7 +72,7 @@ class TemplateLibrary {
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({nbpresent_template_library: 1});
+      .classed({"nbp-template-library": 1});
 
     this.$ui.append("button")
       .classed({btn: 1, hide_library: 1, "btn-default": 1})
