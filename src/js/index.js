@@ -88,7 +88,7 @@ function(require, $, Jupyter){
         label: "Show Presentation",
         icon: "fa-youtube-play",
         callback: present,
-        id: "nbpresent_present_btn"
+        id: "nbp-present-btn"
       }
     ]);
   }

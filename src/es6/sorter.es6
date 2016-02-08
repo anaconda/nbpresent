@@ -97,7 +97,7 @@ class Sorter {
       .classed({"nbp-sorter": 1});
 
     this.$slides = this.$ui.append("div")
-      .classed({slides_wrap: 1});
+      .classed({"nbp-slides-wrap": 1});
 
     this.$empty = this.$ui.append("div")
       .classed({sorter_empty: 1});
@@ -402,7 +402,7 @@ class Sorter {
     this.regionToolbar = new Toolbar();
 
     this.$regionToolbar = this.$slides.append("div")
-      .classed({region_toolbar: 1})
+      .classed({"nbp-region-toolbar": 1})
       .datum([
         [{
           icon: "link",

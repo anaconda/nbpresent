@@ -232,9 +232,11 @@ export class Editor {
     $region
       .classed({
         active: (d) => selected && (d.key == selected.region),
-        content_source: this.hasContent(PART.source),
-        content_outputs: this.hasContent(PART.outputs),
-        content_widgets: this.hasContent(PART.widgets)
+        "nbp-content-source": this.hasContent(PART.source),
+        "nbp-content-outputs": this.hasContent(PART.outputs),
+        "nbp-content-widgets": this.hasContent(PART.widgets),
+        "nbp-content-whole": this.hasContent(PART.whole),
+        "nbp-content-null": this.hasContent(null)
       })
     .select(".region_bg")
       .transition()

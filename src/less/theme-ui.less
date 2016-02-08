@@ -10,7 +10,12 @@
   top: 0;
   background-color: @ui-bg-alpha;
 
+  .nbp-toolbar{
+    float: left;
+  }
+
   .nbp-theme-preview {
+    float: left;
     background-color: white;
 
     &.nbp-theme-preview-current{
@@ -24,12 +29,17 @@
 
   position: fixed;
   bottom: 0;
+  left: 0;
   right: @app-bar-width;
   top: @theme-mgr-height;
   background-color: @ui-bg-alpha;
   padding: 20px;
   z-index: @z-themer;
   overflow-y: auto;
+
+  .nbp-theme-editor-toolbar{
+    float: right;
+  }
 
   .btn {
     background: none;
@@ -176,7 +186,7 @@
   .theme-rules {
     padding-right: 20px;
 
-    .nbp-theme-editor-toolbar{
+    .nbp-theme-editor-tools{
       margin-bottom: 20px;
       .focus-content label{
         color: @jpy-brand;
