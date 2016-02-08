@@ -188,7 +188,7 @@ class NbpresentTour {
           )
         },
         {
-          element: ".nbpresent_editor .slide_bg",
+          element: ".nbp-editor .slide_bg",
           placement: "top",
           title: "Region Editor",
           content: "This is the Region editor. You can click and drag Regions around and resize them."

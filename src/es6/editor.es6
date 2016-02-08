@@ -92,7 +92,7 @@ export class Editor {
     /** @type {d3.selection} */
     this.$ui = d3.select("body")
       .append("div")
-      .classed({nbpresent_editor: 1});
+      .classed({"nbp-editor": 1});
 
     /** @type {d3.selection} */
     this.$bg = this.$ui.append("div")

@@ -48,8 +48,7 @@ class MiniSlide {
     let that = this;
 
     $slide.classed({
-      mini: 1,
-      no_id: (d) => !d.key
+      mini: 1
     });
 
     let $region = $slide
