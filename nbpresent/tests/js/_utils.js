@@ -102,7 +102,7 @@
           "I remember " + message + " in " + path);
       }, this);
     });
-  }
+  };
 
   root.dragRelease = function(message, selector, opts){
     var it, x, y, x1, y1;
@@ -131,19 +131,21 @@
 
   root.baseline_notebook = function(){
     // the actual test
-    this.set_cell_text(0, [
-      'from IPython.display import Markdown',
-      'Markdown("# Hello World!")'
-    ].join("\n"));
-    this.execute_cell_then(0);
 
     this.append_cell();
     this.set_cell_text(1, [
+      'from IPython.display import Markdown',
+      'Markdown("# Hello World!")'
+    ].join("\n"));
+    this.execute_cell_then(1);
+
+    this.append_cell();
+    this.set_cell_text(2, [
       'from ipywidgets import FloatSlider',
       'x = FloatSlider()',
       'x'
     ].join("\n"));
-    this.execute_cell_then(1);
+    this.execute_cell_then(2);
   }
 
 }).call(this);

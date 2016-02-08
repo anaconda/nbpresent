@@ -79,5 +79,5 @@
     "test": "nosetests nbpresent.tests",
     "watch": "watch 'npm run build:dev' src"
   },
-  "version": "0.5.1"
+  "version": "1.0.0-alpha"
 }
