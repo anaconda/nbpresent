@@ -32,27 +32,27 @@
     border: dashed 3px rgba(128,128,128,0.5);
     border-radius: 2px;
 
-    &.content_source,
-    &.content_outputs,
-    &.content_widgets,
-    &.content_whole {
+    &.nbp-content-source,
+    &.nbp-content-outputs,
+    &.nbp-content-widgets,
+    &.nbp-content-whole {
        border: solid 1px black;
     }
 
-    &.content_source {
-      background-color: rgba(0, 0, 128, 0.25);
+    &.nbp-content-source {
+      background-color: fadeOut(@part-source-color, 75%);
     }
 
-    &.content_outputs {
-      background-color: rgba(139, 0, 0, 0.25);
+    &.nbp-content-outputs {
+      background-color: fadeOut(@part-outputs-color, 75%);
     }
 
-    &.content_widgets {
-      background-color: rgba(139, 0, 128, 0.25);
+    &.nbp-content-widgets {
+      background-color: fadeOut(@part-widgets-color, 75%);
     }
 
-    &.content_whole {
-      background-color: fadeOut(@jpy-brand, 75%);
+    &.nbp-content-whole {
+      background-color: fadeOut(@part-whole-color, 75%);
     }
 
     &.active {

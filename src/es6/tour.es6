@@ -30,7 +30,7 @@ class NbpresentTour {
           content: "You can add, reorder and remix your slides into a great presentation"
         },
         {
-          element: "#nbpresent_present_btn",
+          element: "#nbp-present-btn",
           placement: "bottom",
           title: "Presenter",
           content: "With the Presenter, you can view that presentation, tweak the content in-place, and publish it to the world. But first..."
@@ -65,41 +65,41 @@ class NbpresentTour {
           )
         },
         {
-          element: ".slides_wrap .slide:last-child",
+          element: ".nbp-slides-wrap .slide:last-child",
           placement: "top",
           title: "Look at the slide, just look at it",
           content: "Here's our new slide"
         },
         {
-          element: ".slides_wrap .slide:last-child .region",
+          element: ".nbp-slides-wrap .slide:last-child .region",
           placement: "right",
           title: "Region",
           onShow: () => {
-            let el = d3.select(".slides_wrap .slide:last-child .region");
+            let el = d3.select(".nbp-slides-wrap .slide:last-child .region");
             el.on("click")(el.datum());
           },
           content: "It has one Region"
         },
         {
-          element: ".region_toolbar .fa-external-link-square",
+          element: ".nbp-region-toolbar .fa-external-link-square",
           placement: "top",
           title: "Cell Part",
           content: "You put a Part of a cell into a Region. The Parts are Inputs, like source code or Markdown..."
         },
         {
-          element: ".region_toolbar .fa-external-link",
+          element: ".nbp-region-toolbar .fa-external-link",
           placement: "top",
           title: "Cell Part: Outputs",
           content: "... the Outputs, such as calculations, tables and figures..."
         },
         {
-          element: ".region_toolbar .fa-sliders",
+          element: ".nbp-region-toolbar .fa-sliders",
           placement: "top",
           title: "Cell Part: Widgets",
           content: "...and interactive Widgets, including sliders and knobs."
         },
         {
-          element: ".region_toolbar .fa-unlink",
+          element: ".nbp-region-toolbar .fa-unlink",
           placement: "top",
           title: "Cell Part: Unlinking",
           content: "Since a Part can be linked to more than one Region, you might need to Unlink one."
@@ -111,7 +111,7 @@ class NbpresentTour {
           content: "Let's use this cell input"
         },
         {
-          element: ".slides_wrap .slide:last-child .region",
+          element: ".nbp-slides-wrap .slide:last-child .region",
           placement: "top",
           title: "Part Thumbnail",
           content: "A part thumbnail might look a little funny, but you should usually be able to get an idea of what you're seeing.",
@@ -122,7 +122,7 @@ class NbpresentTour {
           content: "We're ready to look at the presentation!"
         },
         {
-          element: "#nbpresent_present_btn",
+          element: "#nbp-present-btn",
           title: "Great, let's have a look",
           placement: "bottom",
           content: "Clicking this button brings up the Presenter",

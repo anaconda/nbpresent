@@ -8,6 +8,8 @@ import {FONTS, SYMB, PANGRAMS} from "./fonts";
 import {BackgroundPicker} from "./background";
 import {PaletteBuilder} from "./palette";
 
+import {Toolbar} from "../toolbar";
+
 import {loadFonts} from "./fonts";
 
 // pick a random pangram for this session. gotta catch'm all.
@@ -86,36 +88,34 @@ export class ThemeEditor {
     this.$rules = row.append("div")
       .classed({"theme-rules col-md-8 col-xs-12": 1});
 
-    this.$toolbar = this.$rules.append("div")
-      .classed({"nbp-theme-editor-toolbar": 1});
+    this.$tools = this.$rules.append("div")
+      .classed({"nbp-theme-editor-tools": 1});
 
     this.$ruleWrap = this.$rules.append("div")
       .classed({"theme-rule-wrap": 1});
 
-    this.$toolbar.append("div").classed({row: 1})
+    this.$tools.append("div").classed({row: 1})
       .call((row)=>{
         this.$baseText = row.append("div")
           .classed({"theme-base-font col-xs-6": 1})
           .datum({key: null, value: null})
           .call((font) => this.fontMenu(font));
 
-        this.$focusContent = row.append("div")
-          .classed({
-            "focus-content col-xs-2 col-xs-offset-3": 1
-          })
-          .call((focus)=>{
-            focus.append("input")
-              .attr({type: "checkbox"})
-              .on("change", ()=>{
-                this.focusContent.set(d3.event.target.checked);
-              });
-            focus.append("label")
-              .append("i")
-              .classed({"fa fa-compress fa-2x": 1});
-          });
+          this.toolbar = new Toolbar();
+
+          this.$toolbar = row.append("div")
+            .classed({"nbp-theme-editor-toolbar": 1})
+            .datum([
+              [{
+                icon: "compress",
+                click: () => this.focusContent.set(!this.focusContent.get()),
+                label: "Focus"
+              }]
+            ])
+            .call(this.toolbar.update);
       });
 
-    this.$toolbar.append("div").classed({row: 1})
+    this.$tools.append("div").classed({row: 1})
       .call((row)=>{
         this.$example = row.append("div")
           .classed({"col-xs-12": 1})
@@ -313,7 +313,6 @@ export class ThemeEditor {
       rule.filter(({key}) => !this.selectorUsed(key)).remove();
     }
 
-
     rule.select(".selector-exemplar").each(function(d){
       let exemplar = d3.select(this),
         text = exampleText;
@@ -443,7 +442,6 @@ export class ThemeEditor {
   destroy(){
     this.$body.classed({"nbp-theming": 0});
     this.backgroundUI.destroy();
-    console.log("removing", this.$ui);
     this.$ui.remove();
   }
 }

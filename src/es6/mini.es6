@@ -21,7 +21,7 @@ class MiniSlide {
   }
 
   hasContent(part){
-    return (d) => (d.region.value.content || {}).part === part;
+    return (d) => (d.region.value.content || {}).part == part;
   }
 
   clicked(d){
@@ -75,10 +75,11 @@ class MiniSlide {
         active: (d) => {
           return d.slide.key === slide && d.region.key === region
         },
-        content_source: this.hasContent(PART.source),
-        content_outputs: this.hasContent(PART.outputs),
-        content_widgets: this.hasContent(PART.widgets),
-        content_whole: this.hasContent(PART.whole)
+        "nbp-content-source": this.hasContent(PART.source),
+        "nbp-content-outputs": this.hasContent(PART.outputs),
+        "nbp-content-widgets": this.hasContent(PART.widgets),
+        "nbp-content-whole": this.hasContent(PART.whole),
+        "nbp-content-null": this.hasContent(null)
       })
       // TODO: scale
       .style({

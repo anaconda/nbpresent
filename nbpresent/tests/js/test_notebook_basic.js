@@ -13,10 +13,8 @@ function basic_test(){
       this.canSeeAndClick("the body", "body");
     })
     .then(function(){
-      ["#nbp-app-btn",
-        "#nbpresent_present_btn",
-        ".download_nbpresent"
-      ].map(function(selector){ t.assertExists(selector); });
+      ["#nbp-app-btn", "#nbp-present-btn", ".download_nbpresent"]
+        .map(function(selector){ t.assertExists(selector); });
 
       loaded("nbpresent.min.css");
     });

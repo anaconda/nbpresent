@@ -31,26 +31,27 @@ export class LinkOverlay{
         .filter(({bb}) => bb)
         .value();
 
-    let $part = this.$ui.selectAll(".part-overlay")
+    let $part = this.$ui.selectAll(".nbp-part-overlay")
       .data(parts);
 
     $part.enter()
-      .append("div").classed({"part-overlay": 1})
+      .append("button").classed({"btn nbp-part-overlay": 1})
       .on("click", ({part, cell}) => this.done({part, cell: cell.value}))
       .call(($part)=> {
         $part.append("i").classed({"fa fa-fw fa-2x fa-link": 1});
       });
 
+    $part.classed({
+      "nbp-part-overlay-source": ({part}) => part === PART.source,
+      "nbp-part-overlay-outputs": ({part}) => part === PART.outputs,
+      "nbp-part-overlay-widgets": ({part}) => part === PART.widgets,
+      "nbp-part-overlay-whole": ({part}) => part === PART.whole,
+    })
+
     let whole = (part) => part === PART.whole
 
     $part.style({
-      top: ({bb}) => `${bb.top - heightOffset}px`,
-      "margin-left": ({part}) => {
-        return whole(part) ? null : "55px";
-      },
-      "background-color": ({part, cell}) => {
-        return partColor(part)
-      }
+      top: ({bb}) => `${bb.top - heightOffset}px`
     });
 
     $part.exit().remove();

@@ -5,12 +5,14 @@ casper.notebook_test(function(){
 });
 
 function create_test(){
-  _ = this.vendor._;
+  var _ = this.vendor._,
+    freeRegion = ".nbp-slides-wrap .slide .region.nbp-content-null";
 
   this.baseline_notebook();
 
   this
     .canSeeAndClick("the sorter button", "#nbp-app-btn")
+    .canSeeAndClick("the slides button", ".nbp-app-bar .fa-film")
     .canSeeAndClick("the add slide button",
       ".nbp-deck-toolbar .fa-plus-square-o")
     .canSeeAndClick("a slide template in the library",
@@ -29,14 +31,19 @@ function create_test(){
         return regions.length === 3;
       },
     })
-    .canSeeAndClick("a region in the sorter", ".slides_wrap .slide .region")
-    .canSeeAndClick("input link button",
-      ".region_toolbar .fa-terminal")
-    .canSeeAndClick("a free region in the sorter",
-      ".slides_wrap .slide .region:not(.content_source)")
-    .canSeeAndClick("output link button",
-      ".region_toolbar .fa-image")
-    .canSeeAndClick("the presenter button", "#nbpresent_present_btn")
+    .canSeeAndClick("a region in the sorter", ".nbp-slides-wrap .slide .region")
+    .canSeeAndClick("the link mode button", ".nbp-region-toolbar .fa-link")
+    .canSeeAndClick("a linkable source", ".nbp-part-overlay-source")
+    .canSeeAndClick("a region in the sorter", freeRegion)
+    .canSeeAndClick("the link mode button", ".nbp-region-toolbar .fa-link")
+    .canSeeAndClick("a linkable output", ".nbp-part-overlay-outputs")
+    .canSeeAndClick("a region in the sorter", freeRegion)
+    .canSeeAndClick("the link mode button", ".nbp-region-toolbar .fa-link")
+    .canSeeAndClick("a linkable widget", ".nbp-part-overlay-widgets")
+    .canSeeAndClick("a region in the sorter", freeRegion)
+    .canSeeAndClick("the link mode button", ".nbp-region-toolbar .fa-link")
+    .canSeeAndClick("a linkable whole", ".nbp-part-overlay-whole")
+    .canSeeAndClick("the presenter button", "#nbp-present-btn")
     .canSeeAndClick("the presenter", ".nbp-presenter")
     .then(function(){
       return this.mouse.move(1430, 890);
@@ -59,6 +66,6 @@ function create_test(){
     .canSeeAndClick("the sorter button", "#nbp-app-btn")
     .waitWhileVisible(".nbp-sorter")
     .waitWhileVisible(".nbp-regiontree")
-    .canSeeAndClick("the presenter button", "#nbpresent_present_btn")
+    .canSeeAndClick("the presenter button", "#nbp-present-btn")
     .canSeeAndClick("the presenter", ".nbp-presenter")
 }

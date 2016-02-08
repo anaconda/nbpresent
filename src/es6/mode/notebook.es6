@@ -80,10 +80,6 @@ export class NotebookMode extends BaseMode {
           click: () => this.mode.set(this.mode.get() === THEMER ? null : THEMER)
         }],
         [{
-          icon: "gift fa-2x",
-          label: "About",
-          click: () => console.debug("open a window")
-        },{
           icon: "question-circle fa-2x",
           label: "Help",
           click: () => this.ensureTour().restart()

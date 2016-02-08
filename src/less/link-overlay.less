@@ -7,11 +7,31 @@
   width: 50px;
   margin-left: -72px;
 
-  .part-overlay {
+  .nbp-part-overlay {
     position: absolute;
     color: white;
     padding: 10px;
     text-align: right;
     border-radius: 2px;
+    margin-left: 55px;
+
+    &.nbp-part-overlay-source {
+      background-color: @part-source-color;
+    }
+
+    &.nbp-part-overlay-outputs {
+      background-color: @part-outputs-color;
+    }
+
+    &.nbp-part-overlay-widgets {
+      background-color: @part-widgets-color;
+    }
+
+    &.nbp-part-overlay-whole {
+      background-color: @part-whole-color;
+      margin-left: 0;
+      right: @app-bar-width + 10; 
+    }
+
   }
 }
