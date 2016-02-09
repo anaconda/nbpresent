@@ -100,7 +100,13 @@ export class NotebookMode extends BaseMode {
       "show-presentation": {
         icon: 'fa-youtube-play',
         help: 'show presentation',
-        handler: (env)=> this.present()
+        handler: (env)=> {
+          if(this.presenter.presenting.get() && this.mode.get()){
+            this.mode.set(null)
+          }else{
+            this.present();
+          }
+        }
       }
     };
 

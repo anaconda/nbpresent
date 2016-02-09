@@ -476,6 +476,12 @@ class Sorter {
           this.linkContentOverlay();
         }
       );
+
+      if(this.editor){
+        this.editor.destroy();
+        delete this.editor;
+      }
+      this.tree.set(["app", "presenting"], false);
     }
   }
 
