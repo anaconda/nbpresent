@@ -7,7 +7,19 @@ import {NotebookCellManager} from "./cells/notebook";
 
 import {bbox} from "./d3.bbox";
 
-
+const DIRS = ["left", "right", "up", "down"],
+  DIR_ATTR = {
+    left: "x",
+    right: "x",
+    up: "y",
+    down: "y"
+  },
+  DIR_DELTA = {
+    left: -1,
+    right: 1,
+    up: -1,
+    down: 1
+  };
 
 /** The visual editor overlay for drag-and-drop positioning of slide regions.
   */
@@ -71,6 +83,7 @@ export class Editor {
   destroy() {
     this.sidebar.destroy();
     this.$ui.remove();
+    this.deinitActions();
 
     this.destroyed = true;
   }
@@ -81,6 +94,7 @@ export class Editor {
   initBehavior(){
     /** @type {d3.bbox} */
     this.bbox = bbox();
+    this.initActions();
 
     return this;
   }
@@ -227,20 +241,6 @@ export class Editor {
         this.selectedRegion.set({slide: this.slide.get("id"), region: d.key});
       });
 
-    // $region
-    //   .select(".nbp-region-bg")
-    //   .each(function(d){
-    //     if(region === d.key){
-    //       console.log("infecting", d.key, d.value);
-    //       that.bbox.infect(d3.select(this))
-    //         .on("dragend", function(d){ that.bbEnd(this, d) })
-    //         .on("resizeend", function(d){ that.bbEnd(this, d) });
-    //     }else{
-    //       console.log("disinfecting", d.key, d.value);
-    //       that.bbox.disinfect(d3.select(this));
-    //     }
-    //   });
-
     $region
       .classed({
         active: ({key}) => key === region,
@@ -263,4 +263,93 @@ export class Editor {
       .select(".nbp-region-bg")
       .style({fill: null});
   }
+
+  cycleRegion(delta=1){
+    let {region} = this.selectedRegion.get(),
+      regions = d3.entries(this.regions.get()),
+      idx = regions.map(({key, value}, i) => key === region ? i : -1)
+        .filter((i) => i !== -1)[0];
+
+    idx = idx + delta;
+    if(idx === -1){
+      idx = regions.length - 1;
+    }
+
+    this.selectedRegion.set(["region"], regions[idx % regions.length].key);
+  }
+
+  moveRegion(env, direction, amount=0.1){
+    console.log(direction, amount);
+    let {region} = this.selectedRegion.get(),
+      attr = DIR_ATTR[direction],
+      delta = DIR_DELTA[direction];
+
+    this.regions.set(
+      [region, "attrs", attr],
+      this.regions.get([region, "attrs", attr]) + (delta * amount)
+    )
+    return this;
+  }
+
+  initActions(){
+
+    let _actions = {
+        "prev-region": {
+          icon: "caret-square-o-left",
+          help: "select previous region",
+          handler: (env) => this.cycleRegion()
+        },
+        "next-region": {
+          icon: "caret-square-o-right",
+          help: "select next region",
+          handler: (env) => this.cycleRegion(-1)
+        }
+      },
+      _keys = {
+        "shift-tab": "nbpresent:prev-region",
+        "tab": "nbpresent:next-region"
+      };
+
+    DIRS.map((dir) => {
+      _actions[`nudge-region-${dir}`] = {
+        icon: `arrow-circle-o-${dir}`,
+        help: `nudge current region ${dir}`,
+        handler: (env) => this.moveRegion(env, dir, 0.01)
+      };
+      _keys[dir] = `nbpresent:nudge-region-${dir}`;
+
+      _actions[`move-region-${dir}`] = {
+        icon: `arrow-circle-o-${dir}`,
+        help: `move current region ${dir}`,
+        handler: (env) => this.moveRegion(env, dir, 0.1)
+      };
+      _keys[`shift-${dir}`] = `nbpresent:move-region-${dir}`;
+    });
+
+
+    d3.entries(_actions).map(({key, value}) => {
+      Jupyter.notebook.keyboard_manager.actions.register(
+        value,
+        key,
+        "nbpresent"
+      );
+    });
+
+    Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts(_keys);
+  }
+
+  deinitActions(){
+    ["shift+tab", "tab"].concat(DIRS)
+      .map((shortcut) =>{
+        try{
+          Jupyter.notebook.keyboard_manager.command_shortcuts.remove_shortcut(
+            shortcut
+          );
+        } catch(err) {
+
+        }
+      });
+    return this;
+  }
+
 }
