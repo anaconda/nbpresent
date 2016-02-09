@@ -28,7 +28,6 @@ function(require, $, Jupyter){
       .slice(0, -2)
       .join("/");
 
-    console.log(modulePath);
     initStylesheet(modulePath);
 
     requirejs(["nbpresent-deps"], function(deps){
@@ -60,8 +59,6 @@ function(require, $, Jupyter){
     var id = "nbp-css",
       $head = $("head"),
       cssPath = modulePath + "/css/nbpresent.min.css";
-
-    console.log(cssPath);
 
     $head.find("link#" + id).length || $("<link/>", {
       id: id,

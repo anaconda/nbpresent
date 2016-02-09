@@ -27,8 +27,7 @@ const THEMER = "themer",
 
 export class NotebookMode extends BaseMode {
   init() {
-    super.init()
-      .initActions();
+    super.init();
 
     this.enabled = this.tree.select(["app", "enabled"]);
     this.enabled.on("update", () => this.enabledChanged());
@@ -90,6 +89,7 @@ export class NotebookMode extends BaseMode {
     return this;
   }
 
+
   initActions(){
     var _actions = {
       "show-sorter": {
@@ -117,6 +117,19 @@ export class NotebookMode extends BaseMode {
     });
 
     return this;
+  }
+
+  deinitActions(){
+    ["esc"]
+      .map((shortcut) =>{
+        try{
+          Jupyter.notebook.keyboard_manager.command_shortcuts.remove_shortcut(
+            shortcut
+          );
+        } catch(err) {
+
+        }
+      })
   }
 
   metadata(update){
@@ -149,6 +162,12 @@ export class NotebookMode extends BaseMode {
     }
 
     this.$body.classed({"nbp-app-enabled": enabled});
+
+    if(enabled){
+      this.initActions();
+    }else{
+      this.deinitActions();
+    }
   }
 
   modeClass(mode){
