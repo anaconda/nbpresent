@@ -102,7 +102,7 @@ export class NotebookMode extends BaseMode {
         help: 'show presentation',
         handler: (env)=> {
           if(this.presenter.presenting.get() && this.mode.get()){
-            this.mode.set(null)
+            this.mode.set(null);
           }else{
             this.present();
           }

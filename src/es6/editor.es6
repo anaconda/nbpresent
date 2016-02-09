@@ -27,8 +27,7 @@ export class Editor {
 
     /** the currently selected region
       * @type {object}
-      * @property {string} selectedRegion.region
-      * @property {string} selectedRegion.slide */
+      * @param {baobab.Cursor} the region/slide to edit */
     this.selectedRegion = selectedRegion;
 
     /** a sub-cursor for just region changes
@@ -63,7 +62,9 @@ export class Editor {
     this.update();
 
     // subscribe to event when cursor changes
-    this.slide.on("update", () => { this.destroyed || this.update(); });
+    [this.selectedRegion, this.slide].map(({on})=> on("update", ()=> {
+      this.destroyed || this.update();
+    }));
   }
 
   /** Destroy the editor and its children utterly. */
@@ -133,6 +134,7 @@ export class Editor {
    */
   bbEnd(el, d){
     let $el = d3.select(el),
+      {region} = this.selectedRegion.get(),
       scales = {
         x: this.x,
         y: this.y,
@@ -140,16 +142,14 @@ export class Editor {
         height: this.y
       };
 
-    let selected = this.selectedRegion.get();
-
-    if(!selected){
+    if(!region){
       return;
     }
 
-    this.slide.merge(["regions", selected.region, "attrs"],
+    this.slide.merge(["regions", region, "attrs"],
       d3.entries(scales)
-        .reduce((memo, attr) => {
-          memo[attr.key] = attr.value.invert($el.attr(attr.key));
+        .reduce((memo, {key, value}) => {
+          memo[key] = value.invert($el.attr(key));
           return memo;
         }, {}));
   }
@@ -175,7 +175,7 @@ export class Editor {
       height = width / this.aspectRatio(),
       regions = d3.entries(this.regions.get() || {}),
       {slide, region} = this.selectedRegion.get() || {},
-      selected = this.selectedRegion.get();
+      {x, y} = this;
 
     if(height > uibb.height + 2 * this.padding()){
       height = uibb.height - (2 * this.padding());
@@ -184,7 +184,6 @@ export class Editor {
 
     this.x.range([0, width]);
     this.y.range([0, height]);
-    let {x, y} = this;
 
     this.$bg.style({
       left: `${(((uibb.width) - width) / 2)}px`,
@@ -195,11 +194,10 @@ export class Editor {
 
     this.$svg.attr({width, height});
 
-    regions.sort((a, b) => {
-      return (selected && selected.region == a.key) ? -1 :
-        (selected && selected.region == b.key) ? 1 :
-          (a.value.attrs.z || 0) - (b.value.attrs.z || 0)
-    });
+    regions.sort((a, b) =>
+      (region === a.key) ? 1 :
+      (region === b.key) ? -1 :
+      (a.value.attrs.z || 0) - (b.value.attrs.z || 0));
 
     let $region = this.$svg.selectAll(".region")
       .data(regions, ({key}) => key)
@@ -218,7 +216,7 @@ export class Editor {
       .classed({"region": 1})
       .call(($region) => {
         $region.append("rect")
-          .classed({region_bg: 1})
+          .classed({"nbp-region-bg": 1})
           .each(function(d){
             that.bbox.infect(d3.select(this))
               .on("dragend", function(d){ that.bbEnd(this, d) })
@@ -229,16 +227,30 @@ export class Editor {
         this.selectedRegion.set({slide: this.slide.get("id"), region: d.key});
       });
 
+    // $region
+    //   .select(".nbp-region-bg")
+    //   .each(function(d){
+    //     if(region === d.key){
+    //       console.log("infecting", d.key, d.value);
+    //       that.bbox.infect(d3.select(this))
+    //         .on("dragend", function(d){ that.bbEnd(this, d) })
+    //         .on("resizeend", function(d){ that.bbEnd(this, d) });
+    //     }else{
+    //       console.log("disinfecting", d.key, d.value);
+    //       that.bbox.disinfect(d3.select(this));
+    //     }
+    //   });
+
     $region
       .classed({
-        active: (d) => selected && (d.key == selected.region),
+        active: ({key}) => key === region,
         "nbp-content-source": this.hasContent(PART.source),
         "nbp-content-outputs": this.hasContent(PART.outputs),
         "nbp-content-widgets": this.hasContent(PART.widgets),
         "nbp-content-whole": this.hasContent(PART.whole),
         "nbp-content-null": this.hasContent(null)
       })
-    .select(".region_bg")
+    .select(".nbp-region-bg")
       .transition()
       .attr({
         width: (d) => x(d.value.attrs.width),
@@ -248,7 +260,7 @@ export class Editor {
       });
 
     $region.filter(({value}) => !value.content)
-      .select(".region_bg")
+      .select(".nbp-region-bg")
       .style({fill: null});
   }
 }
