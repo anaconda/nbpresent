@@ -1,37 +1,10 @@
 import {d3, uuid, $} from "nbpresent-deps";
 
-import {MiniSlide} from "./mini";
+import {MiniSlide, SLIDE_WIDTH} from "../mini";
 
-// TODO: this needs to be an extensible, registerable thing
-let _templates = [
-  {
-    regions: [
-      {x: 0.1, y: 0.1, width: 0.8, height: 0.6},
-      {x: 0.1, y: 0.7, width: 0.4, height: 0.2},
-      {x: 0.5, y: 0.7, width: 0.4, height: 0.2}
-    ]
-  },
-  {
-    regions: [
-      {x: 0.1, y: 0.1, width: 0.8, height: 0.8}
-    ]
-  },
-  {
-    regions: [
-      {x: 0.1, y: 0.1, width: 0.2, height: 0.8},
-      {x: 0.4, y: 0.1, width: 0.2, height: 0.8},
-      {x: 0.7, y: 0.1, width: 0.2, height: 0.8}
-    ]
-  },
-  {
-    regions: [
-      {x: 0.1, y: 0.1, width: 0.4, height: 0.4},
-      {x: 0.5, y: 0.1, width: 0.4, height: 0.4},
-      {x: 0.1, y: 0.5, width: 0.4, height: 0.4},
-      {x: 0.5, y: 0.5, width: 0.4, height: 0.4},
-    ]
-  }
-];
+import {MANUAL_TEMPLATES} from "./manual";
+
+const _TEMPLATES = MANUAL_TEMPLATES;
 
 class TemplateLibrary {
   constructor(picked) {
@@ -43,6 +16,10 @@ class TemplateLibrary {
 
     this.fakeSlide = this.fakeSlide.bind(this);
     this.update = this.update.bind(this);
+
+    this.x = d3.scale.linear()
+      .domain([0, 1])
+      .range([0, SLIDE_WIDTH + 20]);
 
     this.update();
   }
@@ -87,18 +64,25 @@ class TemplateLibrary {
     this.$ui.append("h3")
       .classed({from_slide: 1})
       .text("Reuse slide as template");
+
+    this.$slides = this.$ui.append("div")
+      .classed({"npb-template-library-slides": 1});
   }
 
   update(){
-    let $slide = this.$ui.selectAll(".slide")
-      .data(_templates.map(this.fakeSlide));
+    let $slide = this.$slides.selectAll(".slide")
+      .data(_TEMPLATES.map(this.fakeSlide));
 
     $slide.enter()
       .append("div")
       .classed({slide: 1})
       .call(this.mini.update);
 
+    $slide.style({left: (d, i) => `${this.x(i)}px`});
+
     $slide.on("click", (d) => this.picked(d));
+
+    $slide.exit().remove();
   }
 }
 

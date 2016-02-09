@@ -3,7 +3,19 @@ import {d3} from "nbpresent-deps";
 import {NotebookCellManager} from "./cells/notebook";
 import {PART} from "./parts";
 
+// TODO: refactor this
+export const SLIDE_WIDTH = 160,
+  SLIDE_HEIGHT = 90;
+
 class MiniSlide {
+  width() {
+    return SLIDE_WIDTH;
+  }
+
+  height(){
+    return SLIDE_HEIGHT;
+  }
+
   constructor(selectedRegion) {
     this.selectedRegion = selectedRegion;
     this.cellManager = new NotebookCellManager();
@@ -82,10 +94,10 @@ class MiniSlide {
       })
       // TODO: scale
       .style({
-        width: (d) => `${d.region.value.attrs.width * 160}px`,
-        height: (d) => `${d.region.value.attrs.height * 90}px`,
-        left: (d) => `${d.region.value.attrs.x * 160}px`,
-        top: (d) => `${d.region.value.attrs.y * 90}px`
+        width: (d, i) => `${d.region.value.attrs.width * this.width(d, i)}px`,
+        height: (d, i) => `${d.region.value.attrs.height  * this.height(d, i)}px`,
+        left: (d, i) => `${d.region.value.attrs.x * this.width(d, i)}px`,
+        top: (d, i) => `${d.region.value.attrs.y * this.height(d, i)}px`
       });
   }
 }

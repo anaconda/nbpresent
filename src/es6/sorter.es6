@@ -6,7 +6,7 @@ import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
 import {PART, PART_SELECT} from "./parts";
 import {MiniSlide} from "./mini";
-import {TemplateLibrary} from "./templates";
+import {TemplateLibrary} from "./templates/library";
 import {NotebookCellManager} from "./cells/notebook";
 import {LinkOverlay} from "./cells/overlay";
 

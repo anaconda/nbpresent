@@ -46,6 +46,15 @@ export class ThemeBase{
 
           return `\t${key}: ${value};`;
         });
+
+        const BLOCKS = d3.range(1, 7).map((i) => `h${i}`)
+          .concat(["blockquote"]);
+
+        if(BLOCKS.indexOf(key) !== -1){
+          directives.push('margin: 0;')
+          directives.push('padding: 0;');
+        }
+
         return `${PRESENT_PREFIX} ${key}{
           line-height: 1.1;
           ${directives.join("\n")}
