@@ -60,7 +60,7 @@ function create_test(){
     .dragRelease("the weight attribute", ".attr_name", {right: 50})
     .canSeeAndClick("the manual layout button", ".nbp-regiontree .fa-arrows")
     .dragRelease("a draggable region",
-      ".nbp-editor .region.active .region_bg", {right: 50})
+      ".nbp-editor .region.active .nbp-region-bg", {right: 50})
     .canSeeAndClick([
       ["the exit edit mode button", ".fa-chevron-circle-down"],
       ["the sorter button", "#nbp-app-btn"],

@@ -565,7 +565,7 @@ class Sorter {
     if(id){
       this.focusMode(["editor"]);
       // TODO: do this with an id and big tree ref?
-      this.editor = new Editor(this.slides.select(id), this.selectedRegion);
+      this.editor = new Editor(this.slides.select([id]), this.selectedRegion);
     }
     this.draw();
   }
