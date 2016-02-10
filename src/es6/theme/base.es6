@@ -84,10 +84,11 @@ export class ThemeBase{
         let {rgb} = palette[value["background-color"]] || {};
         return rgb && `rgb(${rgb})`
       },
+      "background-position": ({value}) => `${value.x} ${value.y}`,
       left: 0,
       right: 0,
       bottom: 0,
-      top: 0
+      top: 0,
     });
     // .style({
     //   left: ({value})=> !["left", "center"].indexOf(value.x) ? 0 : null,

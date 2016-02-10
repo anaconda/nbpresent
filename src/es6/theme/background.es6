@@ -1,11 +1,12 @@
 import {d3, Vibrant, uuid} from "nbpresent-deps";
 
 import {JPY_BRAND, UI_BG} from "../less";
+import {SLIDE_WIDTH, SLIDE_HEIGHT} from "../mini";
 
 export const THUMBNAIL_MIN_DIM = 48;
 
-export const BG_POS_H = ["left", "right"],
-  BG_POS_V = ["top", "bottom"],
+export const BG_POS_H = ["left", "center", "right"],
+  BG_POS_V = ["top", "center", "bottom"],
   BG_POSITIONS = d3.merge(
     BG_POS_H.map((x) => BG_POS_V.map((y)=> { return {x, y}; }))
   ),
@@ -42,10 +43,10 @@ export class BackgroundPicker {
     this.boxScale = {
       x: d3.scale.ordinal()
         .domain(BG_POS_H)
-        .range([0, 160]),
+        .range([0, SLIDE_WIDTH / 2, SLIDE_WIDTH]),
       y: d3.scale.ordinal()
         .domain(BG_POS_V)
-        .range([0, 90])
+        .range([0, SLIDE_HEIGHT / 2, SLIDE_HEIGHT])
     }
   }
 
@@ -234,7 +235,7 @@ export class BackgroundPicker {
         this.backgrounds.set([id], {
           id,
           "background-image": uri,
-          x: BG_POS_H[0],
+          x: BG_POS_H[1],
           y: BG_POS_H[1],
         });
       });
