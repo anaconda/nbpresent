@@ -27,6 +27,8 @@
 .nbp-theme-editor {
   .nbp-ui();
 
+
+
   position: fixed;
   bottom: 0;
   left: 0;
@@ -78,7 +80,17 @@
 
   .nbp-theme-editor-backgrounds{
 
-    .nbp-background-picker {
+    .nbp-background-picker-image {
+      li a {
+        width: @sorter-slide-width;
+        height: @sorter-slide-height;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+    }
+
+    .nbp-background-picker-color {
       li a {
         width: @sorter-slide-width;
         height: @sorter-slide-height;
@@ -143,6 +155,8 @@
   .dropdown-menu{
     max-height: 50vh;
     overflow-y: scroll;
+    background-color: @ui-bg;
+    padding: 10px;
   }
 
   .selector-font-label{

@@ -227,5 +227,9 @@ export class Presenter {
     d3.selectAll(".nbp-unpresent")
       .call(that.layout && this.layout.clean || (() => 0))
       .classed({"nbp-unpresent": 0, "nbp-present": 0});
+
+    d3.entries(this.getCells()).map(({key, value}) => {
+      value.code_mirror.refresh();
+    });
   }
 }
