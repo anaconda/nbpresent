@@ -164,6 +164,7 @@
       height: 64px;
     }
     .palette-chip{
+      float: left;
       margin-bottom: 10px;
 
       .palette-chip-details{
@@ -177,6 +178,9 @@
     overflow-y: scroll;
     background-color: @ui-bg;
     padding: 10px;
+    & > li > a {
+      color: @jpy-brand;
+    }
   }
 
   .selector-font-label{

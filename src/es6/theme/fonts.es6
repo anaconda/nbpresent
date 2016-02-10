@@ -32,6 +32,23 @@ export const PANGRAMS = [
   "The glib czar junks my VW Fox PDQ."
 ];
 
+export const FONTS_MONO = [
+  "Inconsolata",
+  "Source Code Pro",
+  "Roboto Mono",
+  "Droid Sans Mono",
+  "Ubuntu Mono",
+  "VT323",
+  "PT Mono",
+  "Cousine",
+  "Oxygen Mono",
+  "Anonymous Pro",
+  "Fira Mono",
+  "Cutive Mono",
+  "Nova Mono",
+  "Share Tech Mono"
+];
+
 // http://fontpair.co
 export const FONTS = [
   "ABeeZee",
@@ -130,7 +147,7 @@ export const FONTS = [
   "Vollkorn",
   "Walter Turncoat",
   "Yeseva One"
-];
+].concat(FONTS_MONO);
 
 let _fontLoaded = {
   Lato: 1,
