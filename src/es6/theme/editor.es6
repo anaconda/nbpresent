@@ -12,6 +12,8 @@ import {Toolbar} from "../toolbar";
 
 import {loadFonts} from "./fonts";
 
+import {NotebookActions} from "../actions/notebook";
+
 // pick a random pangram for this session. gotta catch'm all.
 const pangram = d3.shuffle(PANGRAMS)[0];
 
@@ -26,10 +28,12 @@ export class ThemeEditor {
     this.rules = this.theme.select(["rules"]);
     this.textBase = this.theme.select(["text-base"]);
     this.palette = this.theme.select(["palette"]);
+    this.backgrounds = this.theme.select(["backgrounds"]);
 
     this.themer = tree.select(["themer"]);
     this.focusContent = this.themer.select(["focusContent"]);
     this.exampleText = this.themer.select("exampleText");
+    this.fade = this.themer.select(["themer", "fade"]);
 
     this.focusContent.exists() || this.focusContent.set(true);
 
@@ -49,12 +53,9 @@ export class ThemeEditor {
     this.sizeZoom = d3.behavior.zoom()
       .on("zoom", this._zoomCycle("font-size", d3.range(2, 30, 0.25)));
 
+    this.initActions();
 
     this.init();
-  }
-
-  selectorUsed(selector){
-    return d3.select(`#notebook .cell ${selector}`)[0][0];
   }
 
   init(){
@@ -113,6 +114,10 @@ export class ThemeEditor {
                 icon: "compress",
                 click: () => this.focusContent.set(!this.focusContent.get()),
                 label: "Focus"
+              }, {
+                icon: "file-text",
+                click: () => this.cycleFade(),
+                label: "Fade"
               }]
             ])
             .call(this.toolbar.update);
@@ -132,6 +137,48 @@ export class ThemeEditor {
       });
 
     this.update();
+  }
+
+  initActions(){
+    let _actions = [{
+        name: "fade-theme",
+        keys: ["shift-minus"],
+        value: {
+          icon: 'file-o',
+          help: 'fade theme editor',
+          handler: (env) => this.cycleFade()
+        }
+      }, {
+        name: "unfade-theme",
+        keys: ["shift-+"],
+        value: {
+          icon: 'file',
+          help: 'unfade theme editor',
+          handler: (env) => this.cycleFade(1.5)
+        }
+      }
+    ];
+
+    this.actions = new NotebookActions(_actions);
+    this.actions.push();
+    return this;
+  }
+
+  deinitActions(){
+    this.actions && this.actions.pop();
+  }
+
+  selectorUsed(selector){
+    return d3.select(`#notebook .cell ${selector}`)[0][0];
+  }
+
+  cycleFade(coefficient=0.75){
+    let fade = this.fade.get() || 1.0;
+    fade = fade * coefficient;
+    if(fade < 0.25){
+      fade = 1.0;
+    }
+    this.fade.set(Math.min(fade, 1.0));
   }
 
   getExemplar(here, tag){
@@ -269,6 +316,7 @@ export class ThemeEditor {
       textBase = this.textBase.get() || {},
       baseColor = textBase.color && palette[textBase.color],
       baseBg = baseColor && `rgb(${baseColor.rgb})`,
+      fade = this.fade.get() || 1.0,
 
       exampleText = this.exampleText.get() || "",
       focusContent = this.focusContent.get(),
@@ -277,6 +325,8 @@ export class ThemeEditor {
         .data(SYMB.map((key) => {
           return {key, value: rules[key], base: textBase};
         }), ({key}) => key);
+
+    this.$ui.style({opacity: fade});
 
     this.$baseText
       .datum({key: null, value: textBase})
@@ -320,49 +370,63 @@ export class ThemeEditor {
       rule.filter(({key}) => !this.selectorUsed(key)).remove();
     }
 
-    rule.select(".selector-exemplar").each(function(d){
-      let exemplar = d3.select(this),
-        text = exampleText;
+    let bg = d3.entries(this.backgrounds.get())
+        .filter(({value}) => value["background-color"])[0];
 
-      if(!text && focusContent){
-        let exEl = overlay.selectorUsed(d.key);
-        if(exEl){
-          text = d3.select(exEl).text();
-        }
+    if(bg){
+      let color = palette[bg.value["background-color"]];
+      if(color){
+        bg = `rgb(${color.rgb})`;
       }
+    }
 
-      text = text || pangram;
+    bg = bg ? bg : "white";
 
-      exemplar.selectAll(":not(" + d.key + ")").remove();
+    rule.select(".selector-exemplar")
+      .style({"background-color": bg})
+      .each(function(d){
+        let exemplar = d3.select(this),
+          text = exampleText;
 
-      let el = exemplar.selectAll(d.key)
-        .data([d]);
-
-      el.enter()
-        .append(d.key)
-        .attr({"contentEditable": "true"});
-
-      el.text(text)
-        .style({
-          "font-family": ({value={}}) => {
-            return value["font-family"] || textBase["font-family"];
-          },
-          "font-size": ({value={}}) => {
-            let txt = value["font-size"] || textBase["font-size"];
-            txt = txt ? `${txt}rem` : null;
-            return txt;
-          },
-          "color": ({value={}}) => {
-            let color = value.color && palette[value.color];
-            if(color){
-              return `rgba(${color.rgb}, ${color.a || 1.0})`;
-            }
-            return baseBg;
+        if(!text && focusContent){
+          let exEl = overlay.selectorUsed(d.key);
+          if(exEl){
+            text = d3.select(exEl).text();
           }
-        });
+        }
 
-      el.exit().remove();
-    });
+        text = text || pangram;
+
+        exemplar.selectAll(":not(" + d.key + ")").remove();
+
+        let el = exemplar.selectAll(d.key)
+          .data([d]);
+
+        el.enter()
+          .append(d.key)
+          .attr({"contentEditable": "true"});
+
+        el.text(text)
+          .style({
+            "font-family": ({value={}}) => {
+              return value["font-family"] || textBase["font-family"];
+            },
+            "font-size": ({value={}}) => {
+              let txt = value["font-size"] || textBase["font-size"];
+              txt = txt ? `${txt}rem` : null;
+              return txt;
+            },
+            "color": ({value={}}) => {
+              let color = value.color && palette[value.color];
+              if(color){
+                return `rgba(${color.rgb}, ${color.a || 1.0})`;
+              }
+              return baseBg;
+            }
+          });
+
+        el.exit().remove();
+      });
 
     rule.select(".selector-label").text(({key}) => key);
 
@@ -449,6 +513,7 @@ export class ThemeEditor {
   destroy(){
     this.$body.classed({"nbp-theming": 0});
     this.backgroundUI.destroy();
+    this.deinitActions();
     this.$ui.remove();
   }
 }
