@@ -88,6 +88,9 @@ export class ThemeEditor {
     this.$rules = row.append("div")
       .classed({"theme-rules col-md-8 col-xs-12": 1});
 
+    this.$rules.append("h2")
+      .text("Type");
+
     this.$tools = this.$rules.append("div")
       .classed({"nbp-theme-editor-tools": 1});
 

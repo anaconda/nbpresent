@@ -18,6 +18,8 @@ export class PaletteBuilder {
   init(panel){
     this.$ui = panel;
 
+    this.$ui.append("h2").text("Color");
+
     this.$confirm = this.$ui.append("button")
       .classed({"btn btn-default": 1})
       .text("Colors...")

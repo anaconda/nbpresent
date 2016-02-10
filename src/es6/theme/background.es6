@@ -57,9 +57,10 @@ export class BackgroundPicker {
   init(panel){
     this.$ui = panel;
 
-    this.$ui.append("h2").text("Backgrounds");
+    this.$ui.append("h2").text("Background");
 
-    this.$makeNew = this.$ui.append("div");
+    this.$makeNew = this.$ui.append("div")
+      .classed({"nbp-theme-background-new": 1});
 
     this.$backgrounds = this.$ui.append("div")
       .classed({"theme-background-thumbnails": 1})
@@ -144,7 +145,9 @@ export class BackgroundPicker {
     background.enter().append("div")
       .classed({"theme-background-thumbnail row": 1})
       .call((thumb)=>{
-        thumb.append("svg")
+        thumb.append("div")
+          .classed({"theme-background-thumbnail-preview": 1})
+          .append("svg")
           .call((svg) => this.initHandles(svg))
           .append("g").classed({handles: 1});
 
@@ -174,18 +177,21 @@ export class BackgroundPicker {
         this.backgrounds.unset([key]);
       });
 
-    console.log(background.data());
-
-    background.style({
-      "background-image": ({value}) => {
-        let img = value["background-image"];
-        return img ? `url(${img})` : null;
-      },
-      "background-color": ({value}) => {
-        let {rgb} = palette[value["background-color"]] || {};
-        return rgb ? `rgb(${rgb})` : null;
-      }
-    });
+    background.select(".theme-background-thumbnail-preview")
+      .classed({
+        "nbp-theme-has-image": ({value}) => value["background-image"],
+        "nbp-theme-has-color": ({value}) => value["background-color"]
+      })
+      .style({
+        "background-image": ({value}) => {
+          let img = value["background-image"];
+          return img ? `url(${img})` : null;
+        },
+        "background-color": ({value}) => {
+          let {rgb} = palette[value["background-color"]] || {};
+          return rgb ? `rgb(${rgb})` : null;
+        }
+      });
 
     let swatch = background.select(".theme-background-palette")
       .selectAll(".background-palette-swatch")
@@ -275,17 +281,12 @@ export class BackgroundPicker {
 
   initHandles(svg){
     svg.attr({
-        width: this.boxScale.x("right") + 2,
-        height: this.boxScale.y("bottom") + 2
+        width: this.boxScale.x("right"),
+        height: this.boxScale.y("bottom")
       })
       .append("g").classed({root: 1})
       .attr({transform: "translate(1 1)"})
       .call((grid)=>{
-        grid.append("rect").classed({bg: 1})
-          .attr({
-            width: this.boxScale.x("right"),
-            height: this.boxScale.y("bottom")
-          });
         grid.append("g").classed({handles: 1});
       });
   }
