@@ -4,6 +4,7 @@ import {PART} from "./parts";
 
 import {RegionTree} from "./regiontree";
 import {NotebookCellManager} from "./cells/notebook";
+import {NotebookActions} from "./actions/notebook";
 
 import {bbox} from "./d3.bbox";
 
@@ -68,7 +69,8 @@ export class Editor {
     this.sidebar = new RegionTree(this.slide, this.selectedRegion);
 
     // ready to behave
-    this.initBehavior();
+    this.initBehavior()
+      .initActions();
 
     // fake data event
     this.update();
@@ -81,9 +83,9 @@ export class Editor {
 
   /** Destroy the editor and its children utterly. */
   destroy() {
+    this.deinitActions();
     this.sidebar.destroy();
     this.$ui.remove();
-    this.deinitActions();
 
     this.destroyed = true;
   }
@@ -94,7 +96,6 @@ export class Editor {
   initBehavior(){
     /** @type {d3.bbox} */
     this.bbox = bbox();
-    this.initActions();
 
     return this;
   }
@@ -148,7 +149,7 @@ export class Editor {
    */
   bbEnd(el, d){
     let $el = d3.select(el),
-      {region} = this.selectedRegion.get(),
+      {region} = this.selectedRegion.get() || {},
       scales = {
         x: this.x,
         y: this.y,
@@ -265,8 +266,8 @@ export class Editor {
   }
 
   cycleRegion(delta=1){
-    let {region} = this.selectedRegion.get(),
-      regions = d3.entries(this.regions.get()),
+    let {region} = this.selectedRegion.get() || {},
+      regions = d3.entries(this.regions.get() || {}),
       idx = regions.map(({key, value}, i) => key === region ? i : -1)
         .filter((i) => i !== -1)[0];
 
@@ -280,7 +281,7 @@ export class Editor {
 
   moveRegion(env, direction, amount=0.1){
     console.log(direction, amount);
-    let {region} = this.selectedRegion.get(),
+    let {region} = this.selectedRegion.get() || {},
       attr = DIR_ATTR[direction],
       delta = DIR_DELTA[direction];
 
@@ -292,63 +293,56 @@ export class Editor {
   }
 
   initActions(){
-
-    let _actions = {
-        "prev-region": {
-          icon: "caret-square-o-left",
-          help: "select previous region",
-          handler: (env) => this.cycleRegion()
+    let _actions = [{
+          keys: ["shift-tab"],
+          name: "prev-region",
+          value: {
+            icon: "caret-square-o-left",
+            help: "select previous region",
+            handler: (env) => this.cycleRegion()
+          },
         },
-        "next-region": {
-          icon: "caret-square-o-right",
-          help: "select next region",
-          handler: (env) => this.cycleRegion(-1)
+        {
+          name: "next-region",
+          keys: ["tab"],
+          value: {
+            icon: "caret-square-o-right",
+            help: "select next region",
+            handler: (env) => this.cycleRegion(-1)
+          }
         }
-      },
-      _keys = {
-        "shift-tab": "nbpresent:prev-region",
-        "tab": "nbpresent:next-region"
-      };
+      ];
 
     DIRS.map((dir) => {
-      _actions[`nudge-region-${dir}`] = {
-        icon: `arrow-circle-o-${dir}`,
-        help: `nudge current region ${dir}`,
-        handler: (env) => this.moveRegion(env, dir, 0.01)
-      };
-      _keys[dir] = `nbpresent:nudge-region-${dir}`;
+      _actions.push({
+        name: `nudge-region-${dir}`,
+        keys: [dir],
+        value: {
+          icon: `arrow-circle-o-${dir}`,
+          help: `nudge current region ${dir}`,
+          handler: (env) => this.moveRegion(env, dir, 0.01)
+        }
+      });
 
-      _actions[`move-region-${dir}`] = {
-        icon: `arrow-circle-o-${dir}`,
-        help: `move current region ${dir}`,
-        handler: (env) => this.moveRegion(env, dir, 0.1)
-      };
-      _keys[`shift-${dir}`] = `nbpresent:move-region-${dir}`;
+      _actions.push({
+        name: `move-region-${dir}`,
+        keys: [`shift-${dir}`],
+        value: {
+          icon: `arrow-circle-o-${dir}`,
+          help: `move current region ${dir}`,
+          handler: (env) => this.moveRegion(env, dir, 0.1)
+        }
+      });
     });
 
+    this.actions = new NotebookActions(_actions);
+    this.actions.push();
 
-    d3.entries(_actions).map(({key, value}) => {
-      Jupyter.notebook.keyboard_manager.actions.register(
-        value,
-        key,
-        "nbpresent"
-      );
-    });
-
-    Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts(_keys);
+    return this;
   }
 
   deinitActions(){
-    ["shift+tab", "tab"].concat(DIRS)
-      .map((shortcut) =>{
-        try{
-          Jupyter.notebook.keyboard_manager.command_shortcuts.remove_shortcut(
-            shortcut
-          );
-        } catch(err) {
-
-        }
-      });
+    this.actions && this.actions.pop();
     return this;
   }
 

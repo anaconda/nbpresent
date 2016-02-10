@@ -17,6 +17,8 @@ import {NbpresentTour} from "../tour";
 
 import {BaseMode} from "./base";
 
+import {NotebookActions} from "../actions/notebook";
+
 
 const THEMER = "themer",
   SORTER = "sorter",
@@ -43,6 +45,8 @@ export class NotebookMode extends BaseMode {
     [this.slides, this.themes].map((cursor)=>{
       cursor.on("update", debouncedSave);
     });
+
+    this.initActions();
 
     this.$body = d3.select("body");
 
@@ -91,51 +95,35 @@ export class NotebookMode extends BaseMode {
 
 
   initActions(){
-    var _actions = {
-      "show-sorter": {
-        icon: 'fa-gift',
-        help: 'enable nbpresent',
-        handler: (env) => this.show()
-      },
-      "show-presentation": {
-        icon: 'fa-youtube-play',
-        help: 'show presentation',
-        handler: (env)=> {
-          if(this.presenter.presenting.get() && this.mode.get()){
-            this.mode.set(null);
-          }else{
-            this.present();
+    this.actions = new NotebookActions([{
+        name: "show-sorter",
+        value: {
+          icon: 'fa-gift',
+          help: 'enable nbpresent',
+          handler: (env) => this.show()
+        },
+      }, {
+        name: "show-presentation",
+        keys: ["esc"],
+        value: {
+          icon: 'fa-youtube-play',
+          help: 'show presentation',
+          handler: (env)=> {
+            if(this.presenter.presenting.get() && this.mode.get()){
+              this.mode.set(null);
+            }else{
+              this.present();
+            }
           }
         }
       }
-    };
-
-    d3.entries(_actions).map(({key, value}) => {
-      Jupyter.notebook.keyboard_manager.actions.register(
-        value,
-        key,
-        "nbpresent"
-      );
-    });
-
-    Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts({
-      "esc": "nbpresent:show-presentation"
-    });
+    ]);
 
     return this;
   }
 
   deinitActions(){
-    ["esc"]
-      .map((shortcut) =>{
-        try{
-          Jupyter.notebook.keyboard_manager.command_shortcuts.remove_shortcut(
-            shortcut
-          );
-        } catch(err) {
-
-        }
-      })
+    this.actions && this.actions.pop();
   }
 
   metadata(update){
@@ -170,9 +158,9 @@ export class NotebookMode extends BaseMode {
     this.$body.classed({"nbp-app-enabled": enabled});
 
     if(enabled){
-      this.initActions();
+      this.actions.push();
     }else{
-      this.deinitActions();
+      this.actions && this.actions.pop();
     }
   }
 

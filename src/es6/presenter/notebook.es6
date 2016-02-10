@@ -8,6 +8,7 @@ import {NotebookSpeaker} from "../speaker/notebook";
 
 import {Presenter} from "./base";
 
+import {NotebookActions} from "../actions/notebook";
 
 export class NotebookPresenter extends Presenter {
   makeCellManager() {
@@ -18,45 +19,30 @@ export class NotebookPresenter extends Presenter {
   }
 
   initActions(){
-    let _actions = {
-      "prev-slide": {
-        icon: 'fa-step-backward',
-        help: 'previous slide',
-        handler: (env) => this.speaker.retreat()
-      },
-      "next-slide": {
-        icon: 'fa-step-forward',
-        help: 'next slide',
-        handler: (env) => this.speaker.advance()
+    let _actions = [{
+        name: "prev-slide",
+        keys: ["left"],
+        value: {
+          icon: 'fa-step-backward',
+          help: 'previous slide',
+          handler: (env) => this.speaker.retreat()
+        }
+      }, {
+        name: "next-slide",
+        keys: ["right", "space"],
+        value: {
+          icon: 'fa-step-forward',
+          help: 'next slide',
+          handler: (env) => this.speaker.advance()
+        }
       }
-    };
+    ];
 
-    d3.entries(_actions).map(({key, value}) => {
-      Jupyter.notebook.keyboard_manager.actions.register(
-        value,
-        key,
-        "nbpresent"
-      );
-    });
-
-
-    Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts({
-      "left": "nbpresent:prev-slide",
-      "right": "nbpresent:next-slide",
-      "space": "nbpresent:next-slide",
-    });
+    this.actions = new NotebookActions(_actions);
+    this.actions.push();
   }
 
   deinitActions(){
-    ["left", "right", "space"]
-      .map((shortcut) =>{
-        try{
-          Jupyter.notebook.keyboard_manager.command_shortcuts.remove_shortcut(
-            shortcut
-          );
-        } catch(err) {
-
-        }
-      })
+    this.actions && this.actions.pop();
   }
 }
