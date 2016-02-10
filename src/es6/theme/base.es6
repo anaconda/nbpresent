@@ -76,7 +76,10 @@ export class ThemeBase{
     });
 
     background.style({
-      "background-image": ({value}) => value["background-image"],
+      "background-image": ({value}) => {
+        let img = value["background-image"];
+        return img && `url(${img})`;
+      },
       "background-color": ({value}) => {
         let {rgb} = palette[value["background-color"]] || {};
         return rgb && `rgb(${rgb})`

@@ -97,10 +97,6 @@ export class BackgroundPicker {
 
     this.$grid = this.$makeNew.append("div");
 
-    this.$grid.append("svg")
-      .call((svg)=>this.initHandles(svg));
-
-
     this.$scratch = this.$makeNew.append("canvas")
       .classed({"theme-scratch": 1});
 
@@ -177,8 +173,13 @@ export class BackgroundPicker {
         this.backgrounds.unset([key]);
       });
 
+    console.log(background.data());
+
     background.style({
-      "background-image": ({value}) => value["background-image"],
+      "background-image": ({value}) => {
+        let img = value["background-image"];
+        return img ? `url(${img})` : null;
+      },
       "background-color": ({value}) => {
         let {rgb} = palette[value["background-color"]] || {};
         return rgb ? `rgb(${rgb})` : null;
@@ -266,10 +267,6 @@ export class BackgroundPicker {
     });
 
     this.$grid
-      .style({
-        display: () => {
-        return this.newBackground.get(["background-image"]) ? "block" : "none"
-      }})
       .call((container) => this.drawHandles(container, this.newBackground));
 
     return this;
