@@ -39,7 +39,7 @@
   z-index: @z-themer;
   overflow-y: auto;
 
-  h2 {
+  & > .row > div > h2 {
     margin: 0;
     padding: 0;
     color: @jpy-brand;
@@ -193,6 +193,13 @@
     border: none;
     background: none;
     color: @jpy-brand;
+  }
+
+  .selector-font-name {
+    .btn {
+      width: 100%;
+      text-align: right;
+    }
   }
 
   .selector-color {
