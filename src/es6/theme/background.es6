@@ -33,6 +33,10 @@ export class BackgroundPicker {
     this.backgrounds.on("update", () => this.updateBackgrounds());
 
     this.palette = this.theme.select(["palette"]);
+    this.palette.on("update", () => [
+      this.updateBackgrounds(),
+      this.updateNewBackground()
+    ]);
 
     try{
       this.serializer = new window.XMLSerializer();
