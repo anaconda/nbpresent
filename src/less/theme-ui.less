@@ -39,6 +39,12 @@
   z-index: @z-themer;
   overflow-y: auto;
 
+  h2 {
+    margin: 0;
+    padding: 0;
+    color: @jpy-brand;
+  }
+
   .nbp-theme-editor-toolbar{
     float: right;
   }
@@ -62,6 +68,20 @@
     font-size: 18px;
   }
 
+  .nbp-theme-background-new .dropdown{
+    float: left;
+  }
+
+  .nbp-theme-has-color svg {
+    display: none;
+  }
+
+  .theme-background-thumbnail-preview {
+    width: @sorter-slide-width;
+    height: @sorter-slide-height;
+    border: solid 1px @jpy-brand;
+    margin: 5px 0;
+  }
 
   .background-palette-swatch{
     width: @theme-swatch-size;
