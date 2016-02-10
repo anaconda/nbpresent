@@ -280,7 +280,6 @@ export class Editor {
   }
 
   moveRegion(env, direction, amount=0.1){
-    console.log(direction, amount);
     let {region} = this.selectedRegion.get() || {},
       attr = DIR_ATTR[direction],
       delta = DIR_DELTA[direction];

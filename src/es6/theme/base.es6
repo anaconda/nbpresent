@@ -75,10 +75,12 @@ export class ThemeBase{
       "nbp-presenter-background": 1
     });
 
-
     background.style({
       "background-image": ({value}) => value["background-image"],
-      "background-color": ({value}) => value["color"],
+      "background-color": ({value}) => {
+        let {rgb} = palette[value["background-color"]] || {};
+        return rgb && `rgb(${rgb})`
+      },
       left: 0,
       right: 0,
       bottom: 0,
