@@ -71,20 +71,25 @@ export class ThemeBase{
 
     background.exit().remove();
 
-    background.enter().append("img").classed({
+    background.enter().append("div").classed({
       "nbp-presenter-background": 1
     });
 
 
-    background.attr({
-      src: ({value}) => value.src
-    })
-    .style({
-      left: ({value})=> !["left", "center"].indexOf(value.x) ? 0 : null,
-      right: ({value})=> !["right", "center"].indexOf(value.x) ? 0 : null,
-      top: ({value})=> value.y === "top" ? 0 : null,
-      bottom: ({value})=> value.y === "bottom" ? 0 : null,
+    background.style({
+      "background-image": ({value}) => value["background-image"],
+      "background-color": ({value}) => value["color"],
+      left: 0,
+      right: 0,
+      bottom: 0,
+      top: 0
     });
+    // .style({
+    //   left: ({value})=> !["left", "center"].indexOf(value.x) ? 0 : null,
+    //   right: ({value})=> !["right", "center"].indexOf(value.x) ? 0 : null,
+    //   top: ({value})=> value.y === "top" ? 0 : null,
+    //   bottom: ({value})=> value.y === "bottom" ? 0 : null,
+    // });
   }
 
 
