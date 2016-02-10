@@ -140,7 +140,7 @@ export class BackgroundPicker {
       backgrounds = this.backgrounds.get() || {},
       background = this.$backgrounds.selectAll(".theme-background-thumbnail")
         .data(d3.entries(backgrounds, ({key}) => key)),
-      palette = this.palette.get();
+      palette = this.palette.get() || {};
 
     background.enter().append("div")
       .classed({"theme-background-thumbnail row": 1})
@@ -232,7 +232,7 @@ export class BackgroundPicker {
     let picker = this,
       img = this.$imageDropdown.selectAll("li")
         .data(d3.merge(this.findImages()).map((el)=> picker.dataUri(el))),
-      palette = this.palette.get();
+      palette = this.palette.get() || {};
 
     img.enter().append("li")
       .append("a")

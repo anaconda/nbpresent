@@ -270,13 +270,13 @@ export class ThemeEditor {
       baseColor = textBase.color && palette[textBase.color],
       baseBg = baseColor && `rgb(${baseColor.rgb})`,
 
-      rule = this.$ruleWrap.selectAll(".theme-rule")
-        .data(SYMB.map((key)=> {
-          return {key, value: rules[key], base: textBase};
-        }), ({key}) => key),
-
       exampleText = this.exampleText.get() || "",
-      focusContent = this.focusContent.get();
+      focusContent = this.focusContent.get(),
+
+      rule = this.$ruleWrap.selectAll(".theme-rule")
+        .data(SYMB.map((key) => {
+          return {key, value: rules[key], base: textBase};
+        }), ({key}) => key);
 
     this.$baseText
       .datum({key: null, value: textBase})
@@ -311,6 +311,10 @@ export class ThemeEditor {
           });
 
       });
+
+    rule.sort((a, b) => {
+      return a.key.localeCompare(b.key);
+    });
 
     if(focusContent){
       rule.filter(({key}) => !this.selectorUsed(key)).remove();

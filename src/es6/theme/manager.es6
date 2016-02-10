@@ -1,9 +1,17 @@
+import _ from "underscore";
+
 import {d3, uuid} from "nbpresent-deps";
 
 import {Toolbar} from "../toolbar";
 
 import {ThemeEditor} from "./editor";
 import {ThemeCard} from "./card";
+
+import {PLAIN_THEMES} from "./theme/plain";
+
+
+// TODO: make this configurable
+const BASE_THEMES = PLAIN_THEMES;
 
 export class ThemeManager {
   constructor(tree){
@@ -46,6 +54,11 @@ export class ThemeManager {
           icon: "plus-square-o",
           click: () => this.addTheme(),
           label: "+ Theme"
+        },{
+          icon: "trash",
+          visible: () => this.current.get(),
+          click: () => this.destroyTheme(this.current.get()),
+          label: "- Theme"
         }]
       ]);
 
@@ -57,7 +70,9 @@ export class ThemeManager {
     let themes = this.themes.get() || {},
       current = this.current.get(),
       theme = this.$ui.selectAll(".nbp-theme-preview")
-        .data(d3.entries(themes), ({key}) => key);
+        .data(d3.entries(themes), ({key}) => key),
+      canned = this.$ui.selectAll(".nbp-theme-preview-canned")
+        .data(d3.entries(BASE_THEMES), ({key}) => key);
 
     this.$toolbar.call(this.toolbar.update);
 
@@ -65,11 +80,25 @@ export class ThemeManager {
       .classed({"nbp-theme-preview": 1})
       .on("click", ({key}) => this.current.set(key));
 
+    theme.exit().remove();
+
     this.card.update(theme);
 
     theme.classed({
       "nbp-theme-preview-current": ({key}) => key === current
     });
+
+    canned.enter().append("div")
+      .classed({"nbp-theme-preview-canned": 1})
+      .on("click", ({key, value}) => {
+        let id = uuid.v4();
+        this.themes.set([id], _.extend({}, value, {id}));
+        this.current.set(id);
+      });
+
+    canned.exit().remove();
+
+    this.card.update(canned);
 
     return this;
   }
@@ -95,5 +124,13 @@ export class ThemeManager {
     });
 
     this.current.set(id);
+  }
+
+  destroyTheme(theme){
+    theme = theme || this.current.get();
+    if(theme){
+      this.themes.unset([theme]);
+    }
+    this.current.set(null);
   }
 }
