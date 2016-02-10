@@ -22,12 +22,12 @@ export class ThemeBase{
   }
 
   init(){
-    let palette = this.palette.get();
+    let palette = this.palette.get() || {};
 
     let rules = [{
       key: "",
-      value: this.textBase.get()
-    }].concat(d3.entries(this.rules.get()))
+      value: this.textBase.get() || {}
+    }].concat(d3.entries(this.rules.get() || {}))
       .map(({key, value})=>{
         let directives = d3.entries(value).map(({key, value})=>{
           switch(key){

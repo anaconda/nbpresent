@@ -16,10 +16,16 @@
 
   .nbp-theme-preview {
     float: left;
-    background-color: white;
-
     &.nbp-theme-preview-current{
       border: solid 3px @jpy-brand;
+    }
+  }
+
+  .nbp-theme-preview-canned {
+    float: right;
+    opacity: 0.5;
+    &:hover {
+      opacity: 1.0;
     }
   }
 }
