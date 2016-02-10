@@ -10,6 +10,8 @@ import {TemplateLibrary} from "./templates/library";
 import {NotebookCellManager} from "./cells/notebook";
 import {LinkOverlay} from "./cells/overlay";
 
+import {NotebookActions} from "./actions/notebook";
+
 import {AriseTome} from "./tome/arise";
 
 import {ThemeCard} from "./theme/card";
@@ -55,7 +57,19 @@ class Sorter {
     this.initUI()
       .initToolbar()
       .initDrag()
+      .initActions()
       .draw();
+  }
+
+  initActions(){
+    this.actions = new NotebookActions();
+    this.actions.push();
+    return this;
+  }
+
+  deinitActions(){
+    this.actions && this.actions.pop();
+    return this;
   }
 
   cleanup(){
@@ -67,6 +81,7 @@ class Sorter {
       .classed({"nbp-sorting": 0});
 
     this.cleanup();
+    this.deinitActions();
     this.$ui.remove();
     this.$deckToolbar.remove();
     d3.selectAll(".ui-tooltip").remove();
