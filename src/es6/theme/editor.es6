@@ -175,7 +175,7 @@ export class ThemeEditor {
   cycleFade(coefficient=0.75){
     let fade = this.fade.get() || 1.0;
     fade = fade * coefficient;
-    if(fade < 0.25){
+    if(fade < 0.1){
       fade = 1.0;
     }
     this.fade.set(Math.min(fade, 1.0));
@@ -315,7 +315,13 @@ export class ThemeEditor {
 
       textBase = this.textBase.get() || {},
       baseColor = textBase.color && palette[textBase.color],
-      baseBg = baseColor && `rgb(${baseColor.rgb})`,
+      baseColorStr = baseColor && `rgb(${baseColor.rgb})`,
+
+      baseBg = d3.entries(this.backgrounds.get())
+          .filter(({value}) => value["background-color"])[0],
+      baseBgStr = !baseBg ? "white" :
+        `rgb(${(palette[baseBg.value["background-color"]] || {}).rgb})`,
+
       fade = this.fade.get() || 1.0,
 
       exampleText = this.exampleText.get() || "",
@@ -337,7 +343,7 @@ export class ThemeEditor {
 
     this.$baseText.select(".selector-color")
       .call((dropdown) => this.updateColorMenu(dropdown))
-      .style({"background-color": baseBg});
+      .style({"background-color": baseColorStr});
 
     this.$baseText.select(".selector-font-size")
       .attr({placeholder: "14px"})
@@ -370,20 +376,8 @@ export class ThemeEditor {
       rule.filter(({key}) => !this.selectorUsed(key)).remove();
     }
 
-    let bg = d3.entries(this.backgrounds.get())
-        .filter(({value}) => value["background-color"])[0];
-
-    if(bg){
-      let color = palette[bg.value["background-color"]];
-      if(color){
-        bg = `rgb(${color.rgb})`;
-      }
-    }
-
-    bg = bg ? bg : "white";
-
     rule.select(".selector-exemplar")
-      .style({"background-color": bg})
+      .style({"background-color": baseBgStr})
       .each(function(d){
         let exemplar = d3.select(this),
           text = exampleText;
@@ -421,7 +415,7 @@ export class ThemeEditor {
               if(color){
                 return `rgba(${color.rgb}, ${color.a || 1.0})`;
               }
-              return baseBg;
+              return baseColorStr;
             }
           });
 
