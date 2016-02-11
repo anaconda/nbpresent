@@ -48,7 +48,6 @@ export class NotebookPresenter extends Presenter {
 
   clean(force){
     super.clean(force);
-    console.log("cleaning", this, force);
 
     d3.entries(this.getCells()).map(({key, value}) => {
       value.code_mirror.refresh();
