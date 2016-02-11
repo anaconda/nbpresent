@@ -151,8 +151,6 @@ export class Presenter {
   update() {
     const presenting = this.presenting.get();
 
-    console.log("PRESENTING", presenting);
-
     let that = this;
 
     d3.select("body").classed({"nbp-presenting": presenting});
@@ -202,8 +200,6 @@ export class Presenter {
           .each(() => that.theme.update(region, part))
           .each(() => that.layout.update(region, part));
       });
-
-
 
     this.clean();
   }
