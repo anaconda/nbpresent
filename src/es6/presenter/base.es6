@@ -136,7 +136,7 @@ export class Presenter {
   }
 
   present() {
-    if(!this.presenting.get()){
+    if(!(this.presenting.get())){
       this.deinitActions();
     }else{
       this.initActions();

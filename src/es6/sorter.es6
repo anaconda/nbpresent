@@ -229,7 +229,7 @@ class Sorter {
   }
 
   slideClicked(d){
-    if(!d.key && !this.templates){
+    if(!(d.key) && !(this.templates)){
       this.templates = new TemplateLibrary(this.templatePicked);
       return;
     }
@@ -261,7 +261,7 @@ class Sorter {
   }
 
   draw(){
-    if(!this.$slides){
+    if(!(this.$slides)){
       return;
     }
     let that = this;
@@ -391,7 +391,7 @@ class Sorter {
           icon: "edit fa-2x fa-fw",
           click: () => this.editSlide(this.selectedSlide.get()),
           label: "Edit",
-          visible: () => this.selectedSlide.get() && !this.editor
+          visible: () => this.selectedSlide.get() && !(this.editor)
         }],
         [{
           icon: [
@@ -540,7 +540,7 @@ class Sorter {
   }
 
   addSlide(){
-    if(!this.templates || this.templates.killed){
+    if(!(this.templates) || this.templates.killed){
       this.templates = new TemplateLibrary(this.templatePicked);
     }else{
       this.focusMode();
@@ -552,7 +552,7 @@ class Sorter {
     * @param {String} [prev] - where to insert the slide, or after selected
   */
   templatePicked(slide, prev=null){
-    if(slide && this.templates && !this.templates.killed){
+    if(slide && this.templates && !(this.templates).killed){
       let last = this.tree.get("sortedSlides").slice(-1),
         selected = this.selectedSlide.get();
 
