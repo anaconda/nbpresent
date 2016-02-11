@@ -45,4 +45,11 @@ export class NotebookPresenter extends Presenter {
   deinitActions(){
     this.actions && this.actions.pop();
   }
+
+  clean(){
+    super.clean();
+    d3.entries(this.getCells()).map(({key, value}) => {
+      value.code_mirror.refresh();
+    });
+  }
 }
