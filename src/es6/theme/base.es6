@@ -90,12 +90,6 @@ export class ThemeBase{
       bottom: 0,
       top: 0,
     });
-    // .style({
-    //   left: ({value})=> !["left", "center"].indexOf(value.x) ? 0 : null,
-    //   right: ({value})=> !["right", "center"].indexOf(value.x) ? 0 : null,
-    //   top: ({value})=> value.y === "top" ? 0 : null,
-    //   bottom: ({value})=> value.y === "bottom" ? 0 : null,
-    // });
   }
 
 

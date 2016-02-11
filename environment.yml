@@ -4,6 +4,8 @@ channels:
   - cpcloud
   - javascript
   - mutirri
+  - auto
+  - bokeh
 dependencies:
   - anaconda-client
   - coverage
