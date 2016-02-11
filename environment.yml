@@ -1,11 +1,10 @@
 name: nbpresent
 channels:
   - anaconda-nb-extensions
+  - bokeh
   - cpcloud
   - javascript
   - mutirri
-  - auto
-  - bokeh
 dependencies:
   - anaconda-client
   - coverage

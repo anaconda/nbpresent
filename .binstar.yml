@@ -2,10 +2,10 @@ package: nbpresent
 
 platform:
   - linux-64
-  - linux-32
   - osx-64
   - win-64
-#  - win-32
+  # - win-32 # waiting for build slave fixess
+  # - linux-32 # waiting for availability of phantomjs
 
 engine:
   - python=3.5
@@ -13,6 +13,12 @@ engine:
   - python=2.7
 
 script:
-  - conda build conda.recipe -c javascript -c mutirri -c cpcloud -c anaconda-nb-extensions -c auto -c bokeh
+  - >
+    conda build conda.recipe
+    -c anaconda-nb-extensions
+    -c bokeh
+    -c cpcloud
+    -c javascript
+    -c mutirri
 
 build_targets: conda
