@@ -79,7 +79,7 @@ class RegionTree {
   toggleStyle(style){
     let {slide, region} = this.selectedRegion.get() || {},
       path = ["regions", region, "style", style];
-    this.slide.set(path, !this.slide.get(path));
+    this.slide.set(path, !(this.slide.get(path)));
   }
 
   addRegion(){

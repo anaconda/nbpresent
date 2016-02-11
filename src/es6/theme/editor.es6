@@ -112,7 +112,7 @@ export class ThemeEditor {
             .datum([
               [{
                 icon: "compress",
-                click: () => this.focusContent.set(!this.focusContent.get()),
+                click: () => this.focusContent.set(!(this.focusContent.get())),
                 label: "Focus"
               }, {
                 icon: "file-text",
@@ -373,7 +373,7 @@ export class ThemeEditor {
     });
 
     if(focusContent){
-      rule.filter(({key}) => !this.selectorUsed(key)).remove();
+      rule.filter(({key}) => !(this.selectorUsed(key))).remove();
     }
 
     rule.select(".selector-exemplar")

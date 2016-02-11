@@ -144,7 +144,7 @@ export class NotebookMode extends BaseMode {
   }
 
   ensureTour(){
-    if(!this.tour){
+    if(!(this.tour)){
       this.tour = new NbpresentTour(this);
     }
     return this.tour;
@@ -207,7 +207,7 @@ export class NotebookMode extends BaseMode {
 
 
   ensurePresenter(){
-    if(!this.presenter){
+    if(!(this.presenter)){
       this.presenter = new NotebookPresenter(this.tree);
     }
     return this;
