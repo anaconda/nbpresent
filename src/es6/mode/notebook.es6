@@ -28,6 +28,7 @@ const THEMER = "themer",
   ];
 
 export class NotebookMode extends BaseMode {
+
   init() {
     super.init();
 
@@ -52,7 +53,6 @@ export class NotebookMode extends BaseMode {
 
     return this.initUI();
   }
-
 
   initUI(){
     this.$ui = this.$body.append("div")
@@ -94,6 +94,7 @@ export class NotebookMode extends BaseMode {
   }
 
 
+
   initActions(){
     this.actions = new NotebookActions([{
         name: "show-sorter",
@@ -122,6 +123,7 @@ export class NotebookMode extends BaseMode {
     return this;
   }
 
+
   deinitActions(){
     this.actions && this.actions.pop();
   }
@@ -149,7 +151,7 @@ export class NotebookMode extends BaseMode {
   }
 
   enabledChanged(){
-    const enabled = this.enabled.get();
+    let enabled = this.enabled.get();
 
     if(enabled){
       this.ensurePresenter();
@@ -163,6 +165,7 @@ export class NotebookMode extends BaseMode {
       this.actions && this.actions.pop();
     }
   }
+
 
   modeClass(mode){
     return {
@@ -189,12 +192,13 @@ export class NotebookMode extends BaseMode {
     current && (this[current] = new ModeClass(this.tree));
   }
 
+
   show(){
-    const enabled = !this.enabled.get();
+    let newEnabled = !(this.enabled.get());
 
-    this.enabled.set(enabled);
+    this.enabled.set(newEnabled);
 
-    if(!enabled){
+    if(!newEnabled){
       this.mode.set(null);
     }
 
