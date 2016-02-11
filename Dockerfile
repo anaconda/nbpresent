@@ -12,4 +12,6 @@ RUN conda build conda.recipe \
     -c auto \
     -c cpcloud \
     -c javascript \
-    -c mutirri
+    -c mutirri \
+    -c bokeh \
+    -c wakari
