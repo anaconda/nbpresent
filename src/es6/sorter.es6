@@ -552,7 +552,7 @@ class Sorter {
     * @param {String} [prev] - where to insert the slide, or after selected
   */
   templatePicked(slide, prev=null){
-    if(slide && this.templates && !(this.templates).killed){
+    if(slide && this.templates && !(this.templates.killed)){
       let last = this.tree.get("sortedSlides").slice(-1),
         selected = this.selectedSlide.get();
 

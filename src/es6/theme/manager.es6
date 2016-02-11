@@ -8,10 +8,10 @@ import {ThemeEditor} from "./editor";
 import {ThemeCard} from "./card";
 
 import {PLAIN_THEMES} from "./theme/plain";
-
-
-// TODO: make this configurable
-const BASE_THEMES = PLAIN_THEMES;
+//
+//
+// // TODO: make this configurable
+// const BASE_THEMES = PLAIN_THEMES;
 
 export class ThemeManager {
   constructor(tree){
