@@ -151,6 +151,8 @@ export class Presenter {
   update() {
     const presenting = this.presenting.get();
 
+    console.log("PRESENTING", presenting);
+
     let that = this;
 
     d3.select("body").classed({"nbp-presenting": presenting});
@@ -190,11 +192,9 @@ export class Presenter {
         let $el = d3.select(cell.element[0]),
           part = content.part === PART.whole ?
             $el :
-            $el.select(PART_SELECT[content.part]),
-          regionCls = `nbp-region-${region.key}`;
+            $el.select(PART_SELECT[content.part]);
 
         part
-          .classed(regionCls, 1)
           .classed({
             "nbp-unpresent": 0,
             "nbp-present": 1
@@ -217,7 +217,8 @@ export class Presenter {
   }
 
   clean(force){
-    let that = this;
+    let that = this,
+      clean = (that.layout && this.layout.clean) || (() => 0);
 
     if(force){
       d3.selectAll(this.allPartSelect())
@@ -225,7 +226,9 @@ export class Presenter {
     }
 
     d3.selectAll(".nbp-unpresent")
-      .call(that.layout && this.layout.clean || (() => 0))
+      .call(clean)
       .classed({"nbp-unpresent": 0, "nbp-present": 0});
+
+    return this;
   }
 }

@@ -77,7 +77,8 @@
     "lint:flake8": "flake8 nbpresent setup.py sphinx",
     "less": "python -m nbpresent.tasks.less",
     "test": "nosetests nbpresent.tests",
-    "watch": "watch 'npm run build:dev' src"
+    "watch": "watch 'npm run build:dev' src",
+    "watch:test": "watch 'npm run test' ./nbpresent/static/nbpresent/js"
   },
   "version": "1.0.0-alpha"
 }
