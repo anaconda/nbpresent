@@ -38,8 +38,8 @@ test:
     - notebook
     - python
     - requests
-    - fontconfig # [not win]
-    - freetype # [not win]
+    - fontconfig # [linux]
+    - freetype # [linux]
     - mock # [py2k]
     - funcsigs # [py2k]
     - npm # [win]
