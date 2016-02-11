@@ -64,7 +64,7 @@
     "build:less": "python -m nbpresent.tasks.less",
     "build:requirejs": "python -m nbpresent.tasks.requirejs",
     "clean": "python -m nbpresent.tasks.clean",
-    "pkg:conda": "conda build conda.recipe -c javascript -c mutirri -c cpcloud -c anaconda-nb-extensions -c auto",
+    "pkg:conda": "conda build conda.recipe -c javascript -c mutirri -c cpcloud -c anaconda-nb-extensions -c auto -c bokeh -c wakari",
     "pkg:pypi": "python setup.py register -r pypi && python setup.py sdist && python setup.py bdist_wheel && python setup.py sdist bdist_wheel upload -r pypi",
     "docs": "npm run docs:clean && npm run docs:esdoc && npm run docs:sphinx && npm run docs:notebooks",
     "docs:clean": "rm -rf nbpresent/static/docs",
