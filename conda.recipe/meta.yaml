@@ -31,8 +31,6 @@ test:
   requires:
     - coverage
     - flake8
-    - freetype
-    - fontconfig
     - ipywidgets
     - nb_config_manager
     - nodejs
@@ -40,6 +38,8 @@ test:
     - notebook
     - python
     - requests
+    - fontconfig # [not win]
+    - freetype # [not win]
     - mock # [py2k]
     - funcsigs # [py2k]
     - npm # [win]
