@@ -5,7 +5,7 @@ platform:
   - linux-32
   - osx-64
   - win-64
-  - win-32
+#  - win-32
 
 engine:
   - python=3.5
@@ -16,9 +16,3 @@ script:
   - conda build conda.recipe -c javascript -c mutirri -c cpcloud -c anaconda-nb-extensions -c auto -c bokeh
 
 build_targets: conda
-
----
-
-platform: win-32
-engine: python=2.7
-exclude: true
