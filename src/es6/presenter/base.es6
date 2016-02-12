@@ -54,7 +54,9 @@ export class Presenter {
       .append("div")
       .classed({"nbp-presenter": 1});
 
-    d3.select(window).on("mousemove", ()=> this.speaker.hint());
+    d3.select(window).on("mousemove", ()=> {
+      this.presenting.get() && this.speaker.hint();
+    });
 
     this.$style = d3.select("head")
       .append("style")

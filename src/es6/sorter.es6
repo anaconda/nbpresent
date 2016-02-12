@@ -1,3 +1,4 @@
+import {_} from "underscore";
 import {d3, uuid} from "nbpresent-deps";
 
 import Jupyter from "base/js/namespace";
@@ -59,6 +60,8 @@ class Sorter {
       .initDrag()
       .initActions()
       .draw();
+
+    _.delay(() => this.$body.classed({"nbp-sorting": 1}), 200);
   }
 
   initActions(){
@@ -82,10 +85,11 @@ class Sorter {
 
     this.cleanup();
     this.deinitActions();
-    this.$ui.remove();
     this.$deckToolbar.remove();
     d3.selectAll(".ui-tooltip").remove();
     this.destroyed = true;
+
+    _.delay(() => this.$drawer.remove(), 200);
   }
 
   focusMode(except=[]){
@@ -102,13 +106,14 @@ class Sorter {
   }
 
   initUI(){
-    this.$body = d3.select("body")
-      .classed({"nbp-sorting": 1});
+    this.$body = d3.select("body");
 
     this.$app = this.$body.select(".nbp-app");
 
-    this.$ui = this.$body
-      .append("div")
+    this.$drawer = this.$body.append("div")
+      .classed({"nbp-sorter-drawer": 1});
+
+    this.$ui = this.$drawer.append("div")
       .classed({"nbp-sorter": 1});
 
     this.$slides = this.$ui.append("div")

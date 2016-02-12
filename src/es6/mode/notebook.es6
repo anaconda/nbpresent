@@ -64,8 +64,7 @@ export class NotebookMode extends BaseMode {
         [{
           icon: "youtube-play fa-2x",
           label: "Present",
-          click: () => this.present(),
-          tip: "Present"
+          click: () => this.present()
         }],
         [{
           icon: "film fa-2x",
