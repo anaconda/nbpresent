@@ -1,70 +1,82 @@
 .nbp-app {
   .nbp-ui();
 
-  opacity: 0;
+  z-index: @z-app-bar;
   position: fixed;
-  margin-right: -@app-bar-width;
-  transition-property: margin-right opacity;
-  transition-duration: 0.2s;
   top: 0;
   bottom: 0;
   right: 0;
   width: @app-bar-width;
+
   background-color: @ui-bg;
+
+  margin-right: -@app-bar-width;
+  transition: margin-right @tx-dur @tx-fn;
+
+  .nbp-deck-toolbar {
+    position: absolute;
+    bottom: 0;
+  }
+
+  .btn-toolbar {
+    margin: 0;
+    right: 0;
+  }
 }
 
+body:not(.nbp-app-enabled) {
+  #site {
+    transition: width @tx-dur @tx-fn;
+  }
+
+  #maintoolbar{
+    padding-right: 0;
+    transition: padding-right @tx-dur @tx-fn;
+  }
+}
+
+
 body.nbp-app-enabled {
-  #notebook_panel {
+  #site {
     margin-right: @app-bar-width;
+    width: auto;
+    transition: margin-right @tx-dur @tx-fn;
   }
 
   #maintoolbar{
     padding-right: @app-bar-width;
+    transition: padding-right @tx-dur @tx-fn;
   }
 
   #nbp-app-btn{
     color: @jpy-brand;
     box-shadow: @z-shadow;
     background-color: @ui-bg;
-  }
-
-  &.nbp-presenting{
-    .nbp-app {
-      opacity: 0;
-      transition-property: opacity;
-      transition-duration: 0.2s;
-    }
-    &.nbp-sorting, &.nbp-theming {
-      .nbp-app {
-        opacity: 0.5;
-        transition-property: opacity;
-        transition-duration: 0.2s;
-      }
-    }
-    .nbp-app:hover {
-      opacity: 1.0;
-      transition-property: opacity;
-      transition-duration: 0.2s;
-    }
+    transition: margin-right @tx-dur @tx-fn, box-shadow @tx-dur @tx-fn;
   }
 
   .nbp-app {
     opacity: 1;
     margin-right: 0;
-    z-index: @z-app-bar;
+    transition: margin-right @tx-dur @tx-fn, opacity @tx-dur @tx-fn;
 
     box-shadow: @z-shadow;
-    transition-property: margin-right opacity;
-    transition-duration: 0.2s;
+  }
 
-    .nbp-deck-toolbar {
-      position: absolute;
-      bottom: 0;
+  &.nbp-presenting{
+    .nbp-app {
+      opacity: 0;
+      transition: opacity @tx-dur @tx-fn;
     }
-
-    .btn-toolbar {
-      margin: 0;
-      right: 0;
+    &.nbp-sorting, &.nbp-theming {
+      .nbp-app {
+        opacity: 0.5;
+        transition: opacity @tx-dur @tx-fn;
+      }
+    }
+    .nbp-app:hover {
+      opacity: 1.0;
+      transition: opacity @tx-dur @tx-fn;
     }
   }
 }
