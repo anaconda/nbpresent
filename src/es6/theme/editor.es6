@@ -24,6 +24,8 @@ export class ThemeEditor {
   constructor(tree, theme){
     this.tree = tree;
 
+    this.getExemplar = _.memoize(this._getExemplar, (here, tag) => tag);
+
     this.theme = theme;
     this.rules = this.theme.select(["rules"]);
     this.textBase = this.theme.select(["text-base"]);
@@ -179,7 +181,8 @@ export class ThemeEditor {
     this.fade.set(Math.min(fade, 1.0));
   }
 
-  getExemplar(here, tag){
+  _getExemplar(here, tag){
+    console.log(here, tag);
     let parent = d3.select(here.parentNode),
       found = null;
 
