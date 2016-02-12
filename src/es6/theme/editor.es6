@@ -182,7 +182,6 @@ export class ThemeEditor {
   }
 
   _getExemplar(here, tag){
-    console.log(here, tag);
     let parent = d3.select(here.parentNode),
       found = null;
 
@@ -359,8 +358,18 @@ export class ThemeEditor {
           .classed({row: 1});
 
         settingsRow.append("div")
-          .classed({"col-md-6 col-xs-12": 1})
+          .classed({"col-md-6 col-xs-10": 1})
           .call((font) => this.fontMenu(font));
+
+        settingsRow.append("div")
+          .classed({
+            "col-md-2 col-md-offset-4 col-xs-2 nbp-theme-rule-delete": 1
+          })
+          .append("a")
+          .classed({"btn": 1})
+          .append("i")
+          .classed({"fa fa-trash": 1})
+          .on("click", ({key}) => this.rules.unset(key));
 
         rule.append("div")
           .classed({
@@ -376,6 +385,9 @@ export class ThemeEditor {
     if(focusContent){
       rule.filter(({key}) => !(this.selectorUsed(key))).remove();
     }
+
+    rule.select(".nbp-theme-rule-delete")
+      .style({display: ({value}) => value ? "block" : "none" });
 
     rule.select(".selector-exemplar")
       .style({"background-color": baseBgStr})
@@ -433,7 +445,7 @@ export class ThemeEditor {
         }
       })
       .property({
-        value: ({value={}}) => value["font-size"],
+        value: ({value={}}) => value["font-size"] || "",
       });
 
     rule.select(".selector-color")
