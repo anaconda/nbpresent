@@ -30,7 +30,9 @@ function(require, $, Jupyter){
 
     initStylesheet(modulePath);
 
+
     requirejs(["nbpresent-deps"], function(deps){
+      Jupyter.page.show_site();
       requirejs(["nbpresent-notebook"], function(mode){
         setTimeout(function(){
           nbpresent.mode = new mode.NotebookMode(

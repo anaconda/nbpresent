@@ -38,14 +38,9 @@ export class NotebookMode extends BaseMode {
     this.mode = this.tree.select(["app", "mode"]);
     this.mode.on("update", () => this.modeUpdated());
 
-    let debouncedSave = _.debounce(()=>{
-      console.info("saving metadata");
-      this.metadata(true);
-    }, 1e3);
+    let debouncedSave = _.debounce(() => this.metadata(true), 1e3);
 
-    [this.slides, this.themes].map((cursor)=>{
-      cursor.on("update", debouncedSave);
-    });
+    [this.slides, this.themes].map(({on}) => on("update", debouncedSave))
 
     this.initActions();
 
@@ -158,6 +153,7 @@ export class NotebookMode extends BaseMode {
     }
 
     this.$body.classed({"nbp-app-enabled": enabled});
+    Jupyter.page.show_site();
 
     if(enabled){
       this.actions.push();
