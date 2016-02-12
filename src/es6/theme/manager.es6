@@ -29,16 +29,22 @@ export class ThemeManager {
     this.current.on("update", () => [this.update(), this.currentUpdated()]);
 
     this.initUI();
+
+    _.defer(() => this.$body.classed({"nbp-theming": 1}));
   }
 
   destroy(){
+    this.$body.classed({"nbp-theming": 0});
     if(this.editor){
       this.editor.destroy();
       delete this.editor;
     }
-    // whatever
-    this.$body.selectAll(".nbp-theme-editor").remove();
-    this.$ui.remove();
+
+    _.delay(() => {
+      // whatever
+      this.$body.selectAll(".nbp-theme-editor").remove();
+      this.$ui.remove();
+    }, 200);
   }
 
   initUI(){

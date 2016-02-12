@@ -61,7 +61,7 @@ class Sorter {
       .initActions()
       .draw();
 
-    _.delay(() => this.$body.classed({"nbp-sorting": 1}), 200);
+    _.defer(() => this.$body.classed({"nbp-sorting": 1}));
   }
 
   initActions(){

@@ -61,8 +61,6 @@ export class ThemeEditor {
   init(){
     let text = this.exampleText.get();
 
-    this.$body.classed({"nbp-theming": 1});
-
     this.$ui = this.$body
       .append("div")
       .classed({
@@ -505,7 +503,6 @@ export class ThemeEditor {
   }
 
   destroy(){
-    this.$body.classed({"nbp-theming": 0});
     this.backgroundUI.destroy();
     this.deinitActions();
     this.$ui.remove();
