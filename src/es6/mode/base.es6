@@ -2,6 +2,8 @@ import {d3} from "nbpresent-deps";
 
 import {Tree} from "../tree";
 
+import {NBP_VERSION} from "../version";
+
 
 /** Make a new Editor. The base app, as created in `index.html` */
 export class BaseMode {

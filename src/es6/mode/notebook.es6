@@ -12,8 +12,7 @@ import {NotebookPresenter} from "../presenter/notebook";
 
 import {Sorter} from "../sorter";
 import {ThemeManager} from "../theme/manager";
-
-import {NbpresentTour} from "../tour";
+import {Helper} from "../help/helper";
 
 import {BaseMode} from "./base";
 
@@ -22,9 +21,11 @@ import {NotebookActions} from "../actions/notebook";
 
 const THEMER = "themer",
   SORTER = "sorter",
+  HELPER = "helper",
   MODES = [
     THEMER,
-    SORTER
+    SORTER,
+    HELPER,
   ];
 
 export class NotebookMode extends BaseMode {
@@ -79,7 +80,7 @@ export class NotebookMode extends BaseMode {
         [{
           icon: "question-circle fa-2x",
           label: "Help",
-          click: () => this.ensureTour().restart()
+          click: () => this.mode.set(this.mode.get() === HELPER ? null : HELPER)
         }]
       ])
       .call(this.appBar.update);
@@ -137,13 +138,6 @@ export class NotebookMode extends BaseMode {
     }
   }
 
-  ensureTour(){
-    if(!(this.tour)){
-      this.tour = new NbpresentTour(this);
-    }
-    return this.tour;
-  }
-
   enabledChanged(){
     let enabled = this.enabled.get();
 
@@ -165,7 +159,8 @@ export class NotebookMode extends BaseMode {
   modeClass(mode){
     return {
       themer: ThemeManager,
-      sorter: Sorter
+      sorter: Sorter,
+      helper: Helper,
     }[mode];
   }
 
@@ -184,7 +179,7 @@ export class NotebookMode extends BaseMode {
 
     let ModeClass = this.modeClass(current);
 
-    current && (this[current] = new ModeClass(this.tree));
+    current && (this[current] = new ModeClass(this.tree, {mode: this}));
   }
 
 

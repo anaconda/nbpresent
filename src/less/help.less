@@ -1,0 +1,39 @@
+body.nbp-helping {
+  .nbp-helper{
+    margin-right: 0;
+    transition: margin-right @tx-dur @tx-fn;
+  }
+}
+
+.nbp-helper {
+  .nbp-ui();
+
+  z-index: @z-help;
+
+  position: fixed;
+
+  right: @app-bar-width;
+  width: @sorter-slide-width;
+  top: 0;
+  bottom: 0;
+
+  margin-right: -@sorter-slide-width;
+  transition: margin-right @tx-dur @tx-fn;
+
+  background-color: @ui-bg;
+
+  h1, h2 {
+    color: @jpy-brand;
+    text-align: center;
+  }
+
+  h2{
+    font-size: 18px;
+  }
+
+  a {
+    color: @jpy-brand;
+    text-decoration: none;
+    border-bottom: dotted 1px @jpy-brand;
+  }
+}
