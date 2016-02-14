@@ -1,4 +1,4 @@
-import {d3} from "nbpresent-deps";
+import {d3, _} from "nbpresent-deps";
 
 import {NotebookCellManager} from "./cells/notebook";
 import {PART} from "./parts";
@@ -57,18 +57,30 @@ class MiniSlide {
   }
 
   update($slide) {
-    $slide.classed({mini: 1});
+    let cellManager = this.cellManager;
+
+    $slide.classed({"nbp-mini": 1});
 
     let $region = $slide
-      .selectAll(".region")
+      .selectAll(".nbp-region")
       .data((d) => d3.entries(this._regions(d)).map((region) => {
         return {slide: d, region};
       }));
 
     $region.enter()
       .append("div")
-      .classed({region: 1})
-      .on("click", this.clicked);
+      .classed({"nbp-region": 1})
+      .on("click", this.clicked)
+      .on("mouseover", function({region}){
+        if(region.value.content){
+          cellManager.thumbnail(region.value.content)
+            .then(({uri}) => {
+              d3.select(this).style({"background-image": `url(${uri})`})
+            });
+        }else{
+          d3.select(this).style({"background-image": null});
+        }
+      });
 
     $region.exit()
       .remove();

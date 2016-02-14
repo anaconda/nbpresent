@@ -278,10 +278,12 @@ export class Editor {
       attr = DIR_ATTR[direction],
       delta = DIR_DELTA[direction];
 
-    this.regions.set(
-      [region, "attrs", attr],
-      this.regions.get([region, "attrs", attr]) + (delta * amount)
-    )
+    if(region){
+      this.regions.set(
+        [region, "attrs", attr],
+        this.regions.get([region, "attrs", attr]) + (delta * amount)
+      )
+    }
     return this;
   }
 

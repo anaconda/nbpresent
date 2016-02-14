@@ -1,7 +1,7 @@
 {
   "author": {
-    "name" : "Nicholas Bollweg",
-    "url" : "https://github.com/bollwyvl"
+    "name": "Nicholas Bollweg",
+    "url": "https://github.com/bollwyvl"
   },
   "bugs": {
     "url": "https://github.com/Anaconda-Server/nbpresent/issues"
@@ -10,7 +10,7 @@
   "dependencies": {
     "baobab": "^2.2.1",
     "d3": "~3.5.12",
-    "html2canvas": "0.5.0-alpha2",
+    "html2canvas": "^0.5.0-beta4",
     "node-vibrant": "^2.0.2",
     "phantomjs-polyfill": "0.0.1",
     "underscore": "^1.8.3",

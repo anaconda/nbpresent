@@ -35,6 +35,8 @@ class Sorter {
     this.tree = tree;
     this.cellManager = new NotebookCellManager();
 
+    this.cellManager.clearThumbnails();
+
     this.templatePicked = this.templatePicked.bind(this);
 
     this.slides = this.tree.select(["slides"]);
@@ -313,7 +315,6 @@ class Sorter {
         }
       });
 
-
     $slide.call(this.mini.update);
 
     this.$regionToolbar
@@ -337,6 +338,7 @@ class Sorter {
         [slide, "regions", region, "content"]);
       if(content){
         this.selectCell(content.cell);
+        this.cellManager.clearThumbnails([content]);
       }
     }
     return this.draw();

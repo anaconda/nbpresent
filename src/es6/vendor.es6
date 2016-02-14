@@ -7,13 +7,14 @@ import $ from "jquery";
 import _ from "underscore";
 import WebFont from "webfontloader";
 import Vibrant from "node-vibrant";
-
+import html2canvas from "html2canvas/dist/html2canvas.min";
 
 export {
   _,
   $,
   Baobab,
   d3,
+  html2canvas,
   uuid,
   Vibrant,
   WebFont
