@@ -1,4 +1,4 @@
-import {d3, _} from "nbpresent-deps";
+import {d3} from "nbpresent-deps";
 
 import {NotebookCellManager} from "./cells/notebook";
 import {PART} from "./parts";
