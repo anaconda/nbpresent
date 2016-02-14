@@ -41,11 +41,14 @@ export class NotebookCellManager extends BaseCellManager {
 
       let parts = d3.entries(PART_SELECT).map((part)=>{
         return mgr.getPart({cell: key, part: part.key}, cell.element[0])
-          .map(function(data){
+          .reduce(function(memo, data){
             let el = data[0],
               bb = el && el.getBoundingClientRect();
-            return {cell: {key, value: cell}, part: part.key, bb};
-          });
+            if(bb && bb.height){
+              memo.push({cell: {key, value: cell}, part: part.key, bb});
+            }
+            return memo;
+          }, []);
       });
       return parts;
     });

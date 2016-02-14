@@ -10,16 +10,20 @@ export class LinkOverlay{
   }
 
   init(){
-    this.$header = d3.select("#header");
-    this.$site = d3.select("#site");
-    this.$ui = d3.select("#notebook-container")
+    this.$body = d3.select("body");
+    this.$header = this.$body.select("#header");
+    this.$site = this.$body.select("#site");
+    this.$ui = this.$body.select("#notebook-container")
       .append("div")
       .classed({"nbp-link-overlay": 1});
     this.update();
+
+    _.defer(() => this.$body.classed({"nbp-linking": 1}));
   }
 
   destroy(){
-    this.$ui.remove();
+    this.$body.classed({"nbp-linking": 0});
+    _.delay(() => this.$ui.remove(), 300);
   }
 
   update(){
@@ -36,9 +40,7 @@ export class LinkOverlay{
     $part.enter()
       .append("button").classed({"btn nbp-part-overlay": 1})
       .on("click", ({part, cell}) => this.done({part, cell: cell.value}))
-      .call(($part)=> {
-        $part.append("i").classed({"fa fa-fw fa-2x fa-link": 1});
-      });
+      .text(({part}) => part);
 
     $part.classed({
       "nbp-part-overlay-source": ({part}) => part === PART.source,
@@ -48,7 +50,8 @@ export class LinkOverlay{
     });
 
     $part.style({
-      top: ({bb}) => `${bb.top - heightOffset}px`
+      top: ({bb}) => `${bb.top - heightOffset}px`,
+      height: ({bb}) => `${bb.height - 1}px`
     });
 
     $part.exit().remove();

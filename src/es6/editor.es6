@@ -214,7 +214,7 @@ export class Editor {
       (region === b.key) ? -1 :
       (a.value.attrs.z || 0) - (b.value.attrs.z || 0));
 
-    let $region = this.$svg.selectAll(".region")
+    let $region = this.$svg.selectAll(".nbp-region")
       .data(regions, ({key}) => key)
       .order();
 
@@ -222,7 +222,7 @@ export class Editor {
 
     $region.enter()
       .append("g")
-      .classed({"region": 1})
+      .classed({"nbp-region": 1})
       .call(($region) => {
         $region.append("rect")
           .classed({"nbp-region-bg": 1})

@@ -58,11 +58,11 @@ export class IntroTour extends TourBase {
         title: "Look at the slide, just look at it",
         content: "Here's our new slide"
       }, {
-        element: ".nbp-slides-wrap .slide:last-child .region",
+        element: ".nbp-slides-wrap .slide:last-child .nbp-region",
         placement: "right",
         title: "Region",
         onShow: () => {
-          let el = d3.select(".nbp-slides-wrap .slide:last-child .region");
+          let el = d3.select(".nbp-slides-wrap .slide:last-child .nbp-region");
           el.on("click")(el.datum());
         },
         content: "It has one Region"
@@ -92,7 +92,7 @@ export class IntroTour extends TourBase {
         title: "Linking an Input Part",
         content: "Let's use this cell input"
       }, {
-        element: ".nbp-slides-wrap .slide:last-child .region",
+        element: ".nbp-slides-wrap .slide:last-child .nbp-region",
         placement: "top",
         title: "Part Thumbnail",
         content: "A part thumbnail might look a little funny, but you should usually be able to get an idea of what you're seeing.",
