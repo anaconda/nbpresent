@@ -1,4 +1,3 @@
-import {PART} from "../../parts";
 import {ICON} from "../../icons";
 
 

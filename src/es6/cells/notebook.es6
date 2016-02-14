@@ -1,7 +1,7 @@
 import {d3} from "nbpresent-deps";
 import Jupyter from "base/js/namespace";
 
-import {PART, PART_SELECT} from "../parts";
+import {PART_SELECT} from "../parts";
 
 import {BaseCellManager} from "./base";
 
@@ -21,7 +21,7 @@ export class NotebookCellManager extends BaseCellManager {
     }, {});
   }
 
-  cellId(){
+  cellId(cell){
     try {
       return cell.metadata.nbpresent.id;
     }catch(err){

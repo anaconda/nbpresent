@@ -1,4 +1,3 @@
-import _ from "underscore";
 import {d3} from "nbpresent-deps";
 
 import {loadFonts} from "./fonts";
@@ -17,7 +16,7 @@ export class ThemeBase{
     this.$style = style;
   }
 
-  update(region, part){
+  update(region, part){ // eslint-disable-line no-unused-vars
     // TODO: allow per-region (heh, and per-slide) theme customization
   }
 
@@ -88,7 +87,7 @@ export class ThemeBase{
       left: 0,
       right: 0,
       bottom: 0,
-      top: 0,
+      top: 0
     });
   }
 

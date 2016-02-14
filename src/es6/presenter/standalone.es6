@@ -6,7 +6,7 @@ const KEYS = {
   ESC: 27,
   LEFT: 37,
   RIGHT: 39,
-  SPACE: 32,
+  SPACE: 32
 };
 
 export class StandalonePresenter extends Presenter {

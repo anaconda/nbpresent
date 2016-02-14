@@ -1,5 +1,3 @@
-import {d3} from "nbpresent-deps";
-
 import Jupyter from "base/js/namespace";
 import {BaseActions, NS} from "./base";
 

@@ -1,8 +1,12 @@
 {
-  "author": "nicholas bollweg",
+  "author": {
+    "name" : "Nicholas Bollweg",
+    "url" : "https://github.com/bollwyvl"
+  },
   "bugs": {
     "url": "https://github.com/Anaconda-Server/nbpresent/issues"
   },
+  "chat": "https://gitter.im/Anaconda-Server/nbpresent",
   "dependencies": {
     "baobab": "^2.2.1",
     "d3": "~3.5.12",
@@ -35,16 +39,19 @@
     "uglifyify": "~3.0.1",
     "watch": "~0.16.0"
   },
+  "discussion": "https://groups.google.com/forum/#!forum/nbpresent",
   "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "extends": "eslint:recommended",
     "parser": "babel-eslint",
     "rules": {
-      "strict": 1
-    },
-    "env": {
-      "es6": true,
-      "browser": true
+      "strict": 0
     }
   },
+  "homepage": "https://github.com/Anaconda-Server/nbpresent",
   "license": "BSD-3-Clause",
   "main": "index.js",
   "name": "nbpresent",
@@ -55,27 +62,27 @@
   "scripts": {
     "all": "npm run dist && npm run lint && npm run test && npm run docs",
     "build": "python -m nbpresent.tasks.build",
-    "build:dev": "python -m nbpresent.tasks.build dev",
-    "build:release": "python -m nbpresent.tasks.build release",
     "build:deps": "python -m nbpresent.tasks.deps",
-    "build:notebook": "python -m nbpresent.tasks.notebook",
-    "build:standalone": "python -m nbpresent.tasks.standalone",
+    "build:dev": "python -m nbpresent.tasks.build dev",
     "build:index": "python -m nbpresent.tasks.index",
     "build:less": "python -m nbpresent.tasks.less",
+    "build:notebook": "python -m nbpresent.tasks.notebook",
+    "build:release": "python -m nbpresent.tasks.build release",
     "build:requirejs": "python -m nbpresent.tasks.requirejs",
+    "build:standalone": "python -m nbpresent.tasks.standalone",
     "clean": "python -m nbpresent.tasks.clean",
-    "pkg:conda": "conda build conda.recipe -c javascript -c mutirri -c cpcloud -c anaconda-nb-extensions -c bokeh -c wakari",
-    "pkg:pypi": "python setup.py register -r pypi && python setup.py sdist && python setup.py bdist_wheel && python setup.py sdist bdist_wheel upload -r pypi",
     "docs": "npm run docs:clean && npm run docs:esdoc && npm run docs:sphinx && npm run docs:notebooks",
     "docs:clean": "rm -rf nbpresent/static/docs",
     "docs:esdoc": "esdoc -c .esdoc",
-    "docs:sphinx": "sphinx-apidoc -f -o ./sphinx/source/auto nbpresent && cd sphinx && make html && mv -f build/html ../nbpresent/static/docs/sphinx",
     "docs:notebooks": "nbpresent -i notebooks/index.ipynb -o nbpresent/static/index.html",
-    "readme": "jupyter nbconvert notebooks/README.ipynb --to=rst --stdout > README.rst && jupyter nbconvert notebooks/README.ipynb --to=markdown --stdout > README.md",
+    "docs:sphinx": "sphinx-apidoc -f -o ./sphinx/source/auto nbpresent && cd sphinx && make html && mv -f build/html ../nbpresent/static/docs/sphinx",
+    "less": "python -m nbpresent.tasks.less",
     "lint": "npm run lint:eslint && npm run lint:flake8",
     "lint:eslint": "eslint --ext es6 ./src",
     "lint:flake8": "flake8 nbpresent setup.py sphinx",
-    "less": "python -m nbpresent.tasks.less",
+    "pkg:conda": "conda build conda.recipe -c javascript -c mutirri -c cpcloud -c anaconda-nb-extensions -c bokeh -c wakari",
+    "pkg:pypi": "python setup.py register -r pypi && python setup.py sdist && python setup.py bdist_wheel && python setup.py sdist bdist_wheel upload -r pypi",
+    "readme": "jupyter nbconvert notebooks/README.ipynb --to=rst --stdout > README.rst && jupyter nbconvert notebooks/README.ipynb --to=markdown --stdout > README.md",
     "test": "nosetests nbpresent.tests",
     "watch": "watch 'npm run build:dev' src",
     "watch:test": "watch 'npm run test' ./nbpresent/static/nbpresent/js"

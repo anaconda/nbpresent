@@ -7,7 +7,6 @@ import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
 import {ICON} from "./icons";
 
-import {PART, PART_SELECT} from "./parts";
 import {MiniSlide} from "./mini";
 import {TemplateLibrary} from "./templates/library";
 import {NotebookCellManager} from "./cells/notebook";
@@ -148,11 +147,10 @@ class Sorter {
   initDrag(){
     let that = this,
       origX,
-      origY,
       startY,
       startX,
       dx,
-      dy,
+      dy, // eslint-disable-line no-unused-vars
       newX,
       m,
       it,
@@ -169,7 +167,7 @@ class Sorter {
     }
 
     this.drag = d3.behavior.drag()
-      .on("dragstart", function(d){
+      .on("dragstart", function(){
         it = d3.select(this);
         origX = parseFloat(it.style("left"));
         m = mouse();
@@ -226,7 +224,7 @@ class Sorter {
     newSlide.regions = d3.entries(newSlide.regions).reduce((memo, d)=>{
       let id = this.nextId();
       // TODO: keep part?
-      memo[id] = $.extend(true, {}, d.value, {id},
+      memo[id] = _.extend(true, {}, d.value, {id},
         stripContent ? {content: null} : {}
       );
       return memo;
@@ -271,7 +269,6 @@ class Sorter {
     if(!(this.$slides)){
       return;
     }
-    let that = this;
 
     let slides = this.tree.get("sortedSlides");
 
@@ -347,11 +344,11 @@ class Sorter {
 
   // TODO: move this to the cell manager?
   selectCell(id){
-    let cell = Jupyter.notebook.get_cells().filter(function(cell, idx){
+    Jupyter.notebook.get_cells().filter(function(cell, idx){
       if(cell.metadata.nbpresent && cell.metadata.nbpresent.id == id){
         Jupyter.notebook.select(idx);
         Jupyter.notebook.scroll_to_cell(idx);
-      };
+      }
     });
   }
 
@@ -556,9 +553,8 @@ class Sorter {
 
   /** Handle a slide template click (either from library or sorter)
     * @param {Object} slide - the slide key, value to use
-    * @param {String} [prev] - where to insert the slide, or after selected
   */
-  templatePicked(slide, prev=null){
+  templatePicked(slide){
     if(slide && this.templates && !(this.templates.killed)){
       let last = this.tree.get("sortedSlides").slice(-1),
         selected = this.selectedSlide.get();

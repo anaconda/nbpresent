@@ -1,13 +1,8 @@
-import _ from "underscore";
-
 import Jupyter from "base/js/namespace";
 
-import {d3, $} from "nbpresent-deps";
+import {d3, _} from "nbpresent-deps";
 
-import {PART} from "../parts";
 import {ICON} from "../icons";
-
-import {Tree} from "../tree";
 
 import {Toolbar} from "../toolbar";
 import {NotebookPresenter} from "../presenter/notebook";
@@ -27,7 +22,7 @@ const THEMER = "themer",
   MODES = [
     THEMER,
     SORTER,
-    HELPER,
+    HELPER
   ];
 
 export class NotebookMode extends BaseMode {
@@ -98,15 +93,15 @@ export class NotebookMode extends BaseMode {
         value: {
           icon: 'fa-gift',
           help: 'enable nbpresent',
-          handler: (env) => this.show()
-        },
+          handler: () => this.show()
+        }
       }, {
         name: "show-presentation",
         keys: ["esc"],
         value: {
           icon: 'fa-youtube-play',
           help: 'show presentation',
-          handler: (env)=> {
+          handler: ()=> {
             if(this.presenter.presenting.get() && this.mode.get()){
               this.mode.set(null);
             }else{
@@ -130,7 +125,7 @@ export class NotebookMode extends BaseMode {
     if(update){
       md.nbpresent = {
         slides: this.slides.serialize(),
-        themes: this.themes.serialize(),
+        themes: this.themes.serialize()
       };
     }else{
       return md.nbpresent || {
@@ -162,7 +157,7 @@ export class NotebookMode extends BaseMode {
     return {
       themer: ThemeManager,
       sorter: Sorter,
-      helper: Helper,
+      helper: Helper
     }[mode];
   }
 

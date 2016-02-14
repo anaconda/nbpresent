@@ -1,19 +1,20 @@
+/* eslint no-unused-vars: 0 */
 import _bind_polyfill from "phantomjs-polyfill";
 import d3 from "d3";
-import html2canvas from "html2canvas";
 import uuid from "uuid";
 import Baobab from "baobab";
 import $ from "jquery";
+import _ from "underscore";
 import WebFont from "webfontloader";
 import Vibrant from "node-vibrant";
 
 
 export {
-  d3,
-  html2canvas,
-  uuid,
-  Baobab,
+  _,
   $,
-  WebFont,
-  Vibrant
+  Baobab,
+  d3,
+  uuid,
+  Vibrant,
+  WebFont
 };

@@ -1,3 +1,5 @@
+import {d3} from "nbpresent-deps";
+
 import {PART} from "../../parts";
 import {ICON} from "../../icons";
 
@@ -185,7 +187,7 @@ export class IntroTour extends TourBase {
       }, {
         title: "FIN",
         content: "Thank you for using nbpresent!"
-      },
+      }
     ];
   }
 }

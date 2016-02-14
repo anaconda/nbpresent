@@ -1,7 +1,6 @@
-import {d3} from "nbpresent-deps";
-import _ from "underscore";
+import {d3, _} from "nbpresent-deps";
 
-import {PART, PART_SELECT, partColor} from "../parts";
+import {PART} from "../parts";
 
 export class LinkOverlay{
   constructor(manager, done){
@@ -25,7 +24,7 @@ export class LinkOverlay{
 
   update(){
     let heightOffset = this.$header.property("clientHeight") -
-      this.$site.property("scrollTop"),
+        this.$site.property("scrollTop"),
       parts = _.chain(this.manager.cellPartGeometry())
         .flatten()
         .filter(({bb}) => bb)
@@ -45,10 +44,8 @@ export class LinkOverlay{
       "nbp-part-overlay-source": ({part}) => part === PART.source,
       "nbp-part-overlay-outputs": ({part}) => part === PART.outputs,
       "nbp-part-overlay-widgets": ({part}) => part === PART.widgets,
-      "nbp-part-overlay-whole": ({part}) => part === PART.whole,
-    })
-
-    let whole = (part) => part === PART.whole
+      "nbp-part-overlay-whole": ({part}) => part === PART.whole
+    });
 
     $part.style({
       top: ({bb}) => `${bb.top - heightOffset}px`

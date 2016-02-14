@@ -1,5 +1,7 @@
 import Tour from "bootstraptour";
 
+import {d3} from "nbpresent-deps";
+
 
 export class TourBase {
   constructor(mode) {
@@ -38,7 +40,7 @@ export class TourBase {
       name: "nbpresent",
       reflex: true,
       duration: 5000,
-      orphan: true,
+      orphan: true
     };
   }
 

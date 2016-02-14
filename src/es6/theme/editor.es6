@@ -1,5 +1,4 @@
-import {d3, uuid, Baobab, WebFont} from "nbpresent-deps";
-import _ from "underscore";
+import {d3, _} from "nbpresent-deps";
 
 import Jupyter from "base/js/namespace";
 
@@ -75,7 +74,7 @@ export class ThemeEditor {
 
     this.$background = row.append("div")
       .classed({
-        "nbp-theme-editor-backgrounds col-md-2 col-xs-6": 1,
+        "nbp-theme-editor-backgrounds col-md-2 col-xs-6": 1
       })
       .call((background) => this.backgroundUI.init(background));
 
@@ -145,7 +144,7 @@ export class ThemeEditor {
         value: {
           icon: 'file-o',
           help: 'fade theme editor',
-          handler: (env) => this.cycleFade()
+          handler: () => this.cycleFade()
         }
       }, {
         name: "unfade-theme",
@@ -153,7 +152,7 @@ export class ThemeEditor {
         value: {
           icon: 'file',
           help: 'unfade theme editor',
-          handler: (env) => this.cycleFade(1.5)
+          handler: () => this.cycleFade(1.5)
         }
       }
     ];
@@ -182,9 +181,10 @@ export class ThemeEditor {
 
   _getExemplar(here, tag){
     let parent = d3.select(here.parentNode),
-      found = null;
+      found = null,
+      timeout = 10;
 
-    while(true){
+    while(timeout--){
       found = parent.select(tag);
       if(found[0][0]){
         return found;
@@ -219,7 +219,7 @@ export class ThemeEditor {
         type: "number"
       })
       .call(this.sizeZoom)
-      .on("input", function({key, value}){
+      .on("input", function({key}){
         var val = parseFloat(this.value);
         val = !isNaN(val) ? val : null;
         if(key){
@@ -252,47 +252,12 @@ export class ThemeEditor {
 
   }
 
-  fontZoomed({key, value}){
-    let attr = "font-family",
-      len = FONTS.length,
-      val = !key ? this.textBase.get([attr]) || "Lato" :
-        this.rules.get([key, attr]),
-      scaled = parseInt(20 * ((d3.event.scale && Math.log(d3.event.scale)) || 0)),
-      newVal = FONTS[Math.abs(scaled % len)];
-
-    if(val === newVal){
-      return;
-    }
-
-    if(!key){
-      this.textBase.set([attr], nextFont);
-    }else{
-      this.rules.set([key, attr], nextFont);
-    }
-  }
-
-  sizeZoomed({key, value}){
-    let attr = "font-size",
-      val = !key ? this.textBase.get([attr]) || "Lato" :
-        this.rules.get([key, attr]);
-
-    if(val === newVal){
-      return;
-    }
-
-    if(!key){
-      this.textBase.set([attr], nextFont);
-    }else{
-      this.rules.set([key, attr], nextFont)
-    }
-  }
-
   /** factory for d3.behavior.zoom
   */
   _zoomCycle(attr, choices, scale=20){
     const len = choices.length;
 
-    return ({key, value}) => {
+    return ({key}) => {
       let cursor = key ? this.rules : this.textBase,
         path = key ? [key, attr] : [attr],
         val = cursor.get(path),
@@ -346,9 +311,7 @@ export class ThemeEditor {
 
     this.$baseText.select(".selector-font-size")
       .attr({placeholder: "14px"})
-      .property({
-        value: ({value={}}) => value["font-size"],
-      });
+      .property({value: ({value={}}) => value["font-size"]});
 
     rule.enter().append("div")
       .classed({"theme-rule": 1})
@@ -439,19 +402,18 @@ export class ThemeEditor {
     rule.select(".selector-font-size")
       .attr({
         placeholder: function({key}){
-          return key ? overlay.getExemplar(this, key).style("font-size") :
-            "14px";
+          let ex = overlay.getExemplar(this, key);
+          return key && ex ? ex.style("font-size") : "14px";
         }
       })
-      .property({
-        value: ({value={}}) => value["font-size"] || "",
-      });
+      .property({value: ({value={}}) => value["font-size"] || ""});
 
     rule.select(".selector-color")
       .call((dropdown) => this.updateColorMenu(dropdown))
       .style({
         "background-color": function({key}){
-          return overlay.getExemplar(this, key).style("color");
+          let ex = overlay.getExemplar(this, key);
+          return ex && ex.style("color");
         }
       });
 
@@ -459,8 +421,8 @@ export class ThemeEditor {
       .call((dropdown) => this.updateFontMenu(dropdown))
       .select(".btn")
       .text(function({key}){
-        return key ? overlay.getExemplar(this, key).style("font-family") :
-          "sans-serif";
+        let ex = overlay.getExemplar(this, key);
+        return key && ex ? ex.style("font-family") : "sans-serif";
       });
   }
 
@@ -468,7 +430,7 @@ export class ThemeEditor {
     let colors = d3.entries(this.palette.get() || {}),
       li = dropdown.select(".dropdown-menu")
         .selectAll("li")
-        .data(({key, value})=> {
+        .data(({key, value}) => {
           return colors.map((color) => {
             return {key, value, color: color.value};
           });

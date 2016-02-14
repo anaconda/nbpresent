@@ -147,7 +147,7 @@ export class Editor {
    * @param {Element} el - the DOM element (usually `this` in d3 callbacks)
    * @param {Object} d - the datum for the element
    */
-  bbEnd(el, d){
+  bbEnd(el){
     let $el = d3.select(el),
       {region} = this.selectedRegion.get() || {},
       scales = {
@@ -189,7 +189,7 @@ export class Editor {
       width = uibb.width - ((2 * this.padding())),
       height = width / this.aspectRatio(),
       regions = d3.entries(this.regions.get() || {}),
-      {slide, region} = this.selectedRegion.get() || {},
+      {region} = this.selectedRegion.get() || {},
       {x, y} = this;
 
     if(height > uibb.height + 2 * this.padding()){
@@ -220,19 +220,13 @@ export class Editor {
 
     $region.exit().remove();
 
-    let regionData = (region) => {
-      return directions.map((dir) => {
-        return {region, dir};
-      })
-    };
-
     $region.enter()
       .append("g")
       .classed({"region": 1})
       .call(($region) => {
         $region.append("rect")
           .classed({"nbp-region-bg": 1})
-          .each(function(d){
+          .each(function(){
             that.bbox.infect(d3.select(this))
               .on("dragend", function(d){ that.bbEnd(this, d) })
               .on("resizeend", function(d){ that.bbEnd(this, d) });
@@ -298,8 +292,8 @@ export class Editor {
           value: {
             icon: "caret-square-o-left",
             help: "select previous region",
-            handler: (env) => this.cycleRegion()
-          },
+            handler: () => this.cycleRegion()
+          }
         },
         {
           name: "next-region",
@@ -307,7 +301,7 @@ export class Editor {
           value: {
             icon: "caret-square-o-right",
             help: "select next region",
-            handler: (env) => this.cycleRegion(-1)
+            handler: () => this.cycleRegion(-1)
           }
         }
       ];

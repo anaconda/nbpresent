@@ -10,13 +10,6 @@ import {GridLayout} from "../layout/grid";
 
 import {PART, PART_SELECT} from "../parts";
 
-let PREFIX = [
-  "-webkit-",
-  "-moz-",
-  "-ms-",
-  "-o-",
-  ""
-];
 
 export class Presenter {
   constructor(tree) {
@@ -109,7 +102,7 @@ export class Presenter {
   }
 
 
-  themeClass(slide){
+  themeClass(slide){ // eslint-disable-line no-unused-vars
     // TODO: refactor this into plugin mechanism?
     return ThemeBase;
   }

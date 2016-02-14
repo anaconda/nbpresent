@@ -20,7 +20,7 @@ class MiniSlide {
     this.selectedRegion = selectedRegion;
     this.cellManager = new NotebookCellManager();
 
-    this._regions = (d, i) => d.value.regions;
+    this._regions = ({value}) => value.regions;
 
     this.update = this.update.bind(this);
     this.clicked = this.clicked.bind(this);
@@ -57,11 +57,7 @@ class MiniSlide {
   }
 
   update($slide) {
-    let that = this;
-
-    $slide.classed({
-      mini: 1
-    });
+    $slide.classed({mini: 1});
 
     let $region = $slide
       .selectAll(".region")

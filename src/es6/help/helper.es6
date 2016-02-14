@@ -1,7 +1,6 @@
-import _ from "underscore";
-import {d3} from "nbpresent-deps";
+import {d3, _} from "nbpresent-deps";
 
-import {NBP_VERSION} from "../version";
+import {PKG} from "../package";
 
 import {IntroTour} from "./tours/intro";
 import {SlideEditorTour} from "./tours/slide-editor";
@@ -10,10 +9,18 @@ import {ThemingTour} from "./tours/theming";
 
 
 const TOURS = {
-  "Intro": IntroTour,
-  "Slides": SorterTour,
-  "Editor": SlideEditorTour,
-  "Theming": ThemingTour,
+  Intro: IntroTour,
+  Slides: SorterTour,
+  Editor: SlideEditorTour,
+  Theming: ThemingTour
+};
+
+
+const COMMUNITY = {
+  Discuss: ["envelope", PKG.discussion],
+  Chat: ["comment", PKG.chat],
+  Contribute: ["code-fork", PKG.homepage],
+  Bugs: ["bug", PKG.bugs.url]
 };
 
 
@@ -34,59 +41,68 @@ export class Helper {
       .text("nbpresent ")
       .append("a")
       .attr({
-        href: `https://github.com/anaconda-server/nbpresent#${NBP_VERSION}`
+        href: `${PKG.homepage}#${PKG.version}`
       })
-      .text(NBP_VERSION);
+      .text(PKG.version);
 
     this.$h1 = this.$ui.append("h1")
       .append("i").classed({"fa fa-gift fa-4x": 1});
 
-    return this.initTours()
+    this.initTours()
+      .initCommunity()
       .update();
   }
 
-  initTours(){
-    let helper = this;
+  initCommunity(){
+    this.$ui.append("h2").text("Community");
 
-    this.$tours = this.$ui.append("div")
-      .classed({"nbp-tours": 1});
-
-    let tour = this.$tours.selectAll(".nbp-tour-launcher")
-      .data(d3.entries(TOURS));
-
-    tour.enter()
-      .append("div")
-      .classed({"nbp-tour-launcher": 1})
-      .call((tour)=> {
-        tour.append("a")
-          .classed({"btn btn-default": 1})
-          .call((a) => {
-            a.append("i").classed({"fa fa-2x": 1});
-            a.append("span");
-          })
-          .on("click", ({value}) => this.startTour(value));
-      });
-
-    tour.select("a")
-      .call((a) => {
-        a.select("span").text(({key}) => ` ${key}`);
-        a.select("i")
-          .each(function({value}){
-            d3.select(this).attr("class", `fa fa-2x fa-fw fa-${value.icon()}`);
-          });
+    this.$ui.selectAll(".nbp-community")
+      .data(d3.entries(COMMUNITY))
+      .enter()
+      .append("a")
+      .classed({"btn btn-default nbp-community": 1})
+      .attr({
+        href: ({value}) => value[1],
+        target: "_blank"
+      })
+      .call((btn) => {
+        btn.append("i")
+          .attr({"class": ({value}) => `fa fa-${value[0]} fa-2x`});
+        btn.append("label").text(({key}) => key);
       });
 
     return this;
   }
 
-  startTour(Tour){
-    if(this.tour){
-      this.tour.destroy();
-    }
+  initTours(){
+    this.$tours = this.$ui.append("div")
+      .classed({"nbp-tours": 1});
 
-    this.tour = new Tour(this.mode);
-    this.tour.init();
-    this.tour.restart();
+    this.$tours.append("h2")
+      .text("Guided Tours");
+
+    let tour = this.$tours.selectAll(".nbp-tour-launcher")
+      .data(d3.entries(TOURS));
+
+    tour.enter()
+      .append("a")
+      .classed({"btn btn-default nbp-tour-launcher": 1})
+      .call((btn) => ["i", "label"].map((el) => btn.append(el)))
+      .on("click", ({value}) => this.startTour(value));
+
+    tour.select("i")
+      .attr("class", ({value}) => `fa fa-2x fa-${value.icon()}`);
+    tour.select("label").text(({key}) => ` ${key}`);
+
+    return this;
+  }
+
+  startTour(Tour){
+    let tour = new Tour(this.mode);
+    tour.init();
+    tour.restart();
+
+    this.mode.mode.set(null);
   }
 
   update(){
@@ -94,7 +110,6 @@ export class Helper {
   }
 
   destroy(){
-    // this.watcher.release();
     this.$body.classed({"nbp-helping": 0});
     _.delay(() => this.$ui.remove(), 500);
   }

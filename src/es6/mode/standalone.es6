@@ -1,4 +1,4 @@
-import {d3, $} from "nbpresent-deps";
+import {d3} from "nbpresent-deps";
 
 import {StandalonePresenter} from "../presenter/standalone";
 

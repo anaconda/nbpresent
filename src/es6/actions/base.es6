@@ -1,5 +1,3 @@
-import {d3} from "nbpresent-deps";
-
 export const NS = "nbpresent";
 
 export class BaseActions {

@@ -1,7 +1,10 @@
 import {d3, uuid} from "nbpresent-deps";
 
+import Jupyter from "base/js/namespace";
+
 import {Toolbar} from "./toolbar";
 import {MiniSlide} from "./mini";
+
 
 class RegionTree {
   constructor(slide, region){
@@ -77,7 +80,7 @@ class RegionTree {
   }
 
   toggleStyle(style){
-    let {slide, region} = this.selectedRegion.get() || {},
+    let {region} = this.selectedRegion.get() || {},
       path = ["regions", region, "style", style];
     this.slide.set(path, !(this.slide.get(path)));
   }
@@ -217,15 +220,18 @@ class RegionTree {
     });
   }
 
-  makeSlider(element, d) {
-    let that = this;
-    let [x, y] = d3.mouse(element);
-    let el = d3.select(element);
+  makeSlider(element) {
+    let that = this,
+      x = d3.mouse(element)[0],
+      el = d3.select(element);
+
     el.on("mousemove", function(d){
-      let [x1, y1] = d3.mouse(this);
-      let dx = (x1 - x) / 20;
+      let x1 = d3.mouse(this)[0],
+        dx = (x1 - x) / 20,
+        path = ["regions", d.region.key, "attrs", d.attr.key];
+
       x = x1;
-      let path = ["regions", d.region.key, "attrs", d.attr.key];
+
       that.slide.set(path, that.slide.get(path) + dx)
     })
     .on("mouseup", function(){

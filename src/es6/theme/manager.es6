@@ -1,6 +1,4 @@
-import _ from "underscore";
-
-import {d3, uuid} from "nbpresent-deps";
+import {d3, uuid, _} from "nbpresent-deps";
 
 import {ICON} from "../icons";
 import {Toolbar} from "../toolbar";
@@ -62,7 +60,7 @@ export class ThemeManager {
           click: () => this.addTheme(),
           label: "+ Theme"
         },{
-          icon: "trash",
+          icon: ICON.trash,
           visible: () => this.current.get(),
           click: () => this.destroyTheme(this.current.get()),
           label: "- Theme"
@@ -97,7 +95,7 @@ export class ThemeManager {
 
     canned.enter().append("div")
       .classed({"nbp-theme-preview-canned": 1})
-      .on("click", ({key, value}) => {
+      .on("click", ({value}) => {
         let id = uuid.v4();
         this.themes.set([id], _.extend({}, value, {id}));
         this.current.set(id);

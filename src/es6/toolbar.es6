@@ -1,6 +1,4 @@
-import _ from "underscore";
-
-import {d3} from "nbpresent-deps";
+import {d3, $, _} from "nbpresent-deps";
 
 let fn = d3.functor;
 
@@ -75,7 +73,7 @@ export class Toolbar {
     $btn.select("i")
       .filter(({icon}) => _.isString(icon))
       .attr({
-        "class": ({icon}) => `fa fa-fw fa-2x fa-${icon}`,
+        "class": ({icon}) => `fa fa-fw fa-2x fa-${icon}`
       })
       .selectAll("i").remove();
 

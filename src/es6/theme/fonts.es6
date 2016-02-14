@@ -1,5 +1,4 @@
-import _ from "underscore";
-import {d3, WebFont} from "nbpresent-deps";
+import {WebFont, _} from "nbpresent-deps";
 
 
 export const SYMB = `h1 h2 h3 h4 h5 h6 h7

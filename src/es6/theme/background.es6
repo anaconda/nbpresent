@@ -4,6 +4,8 @@ import {ICON} from "../icons";
 import {JPY_BRAND, UI_BG} from "../less";
 import {SLIDE_WIDTH, SLIDE_HEIGHT} from "../mini";
 
+import log from "../log";
+
 export const THUMBNAIL_MIN_DIM = 48;
 
 export const BG_POS_H = ["left", "center", "right"],
@@ -42,7 +44,7 @@ export class BackgroundPicker {
     try{
       this.serializer = new window.XMLSerializer();
     }catch(err){
-      console.info("Might have some issues serializing SVG");
+      log.info("Might have some issues serializing SVG");
     }
 
     this.boxScale = {
@@ -122,7 +124,7 @@ export class BackgroundPicker {
           Vibrant.from(key)
             .getPalette((err, patches) => {
               if(err){
-                return console.error("palette error", {key, value}, err);
+                return log.error("palette error", {key, value}, err);
               }
               patches = JSON.parse(JSON.stringify(patches));
 
@@ -200,7 +202,7 @@ export class BackgroundPicker {
 
     let swatch = background.select(".theme-background-palette")
       .selectAll(".background-palette-swatch")
-      .data(({key, value}) => {
+      .data(({value}) => {
         let bg = value["background-image"];
         if(!bg){
           return [];
@@ -218,7 +220,7 @@ export class BackgroundPicker {
 
     swatch.enter().append("div")
       .classed({"background-palette-swatch": 1})
-      .on("click", ({key, value}) => {
+      .on("click", ({value}) => {
         let id = uuid.v4();
         this.palette.set([id], {
           id,
@@ -247,7 +249,7 @@ export class BackgroundPicker {
           id,
           "background-image": uri,
           x: BG_POS_H[1],
-          y: BG_POS_H[1],
+          y: BG_POS_H[1]
         });
       });
 
@@ -264,7 +266,7 @@ export class BackgroundPicker {
 
     color.enter().append("li")
       .append("a")
-      .on("click", ({key, value}) => {
+      .on("click", ({key}) => {
         let id = uuid.v4();
         this.backgrounds.set([id], {
           id,
@@ -344,7 +346,7 @@ export class BackgroundPicker {
         uri = this.$scratch.node().toDataURL();
         break;
       default:
-        console.debug("Data URI for ", el.tagName, "not implemented.");
+        log.debug("Data URI for ", el.tagName, "not implemented.");
         break;
     }
 

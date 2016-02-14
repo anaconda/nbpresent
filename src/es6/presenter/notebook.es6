@@ -1,7 +1,5 @@
 import {d3} from "nbpresent-deps";
 
-import Jupyter from "base/js/namespace";
-
 import {NotebookCellManager} from "../cells/notebook";
 
 import {NotebookSpeaker} from "../speaker/notebook";
@@ -25,7 +23,7 @@ export class NotebookPresenter extends Presenter {
         value: {
           icon: 'fa-step-backward',
           help: 'previous slide',
-          handler: (env) => this.speaker.retreat()
+          handler: () => this.speaker.retreat()
         }
       }, {
         name: "next-slide",
@@ -33,7 +31,7 @@ export class NotebookPresenter extends Presenter {
         value: {
           icon: 'fa-step-forward',
           help: 'next slide',
-          handler: (env) => this.speaker.advance()
+          handler: () => this.speaker.advance()
         }
       }
     ];
@@ -49,7 +47,7 @@ export class NotebookPresenter extends Presenter {
   clean(force){
     super.clean(force);
 
-    d3.entries(this.getCells()).map(({key, value}) => {
+    d3.entries(this.getCells()).map(({value}) => {
       value.code_mirror.refresh();
     });
   }

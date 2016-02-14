@@ -1,10 +1,8 @@
-import {d3} from "nbpresent-deps";
-import _ from "underscore";
+import {d3, _} from "nbpresent-deps";
 
 import {ManualLayout} from "./manual";
 
 let KEY = "grid",
-  LEFT = "grid:left",
   PAD = "pad",
   TOLERANCE = 0.001;
 
@@ -24,10 +22,9 @@ export class GridLayout extends ManualLayout {
   }
 
   nice(memo, opts){
-    let [base, _min, _max] = opts,
+    let [base] = opts,
       d = memo._d,
       rounded = Math.round(d[base] * 12),
-      bounded = Math.max(Math.min(rounded, _max), _min),
       normalized = rounded / 12;
 
     if(Math.abs(normalized - d[base]) > TOLERANCE){
@@ -48,7 +45,7 @@ export class GridLayout extends ManualLayout {
         ["x", 0, 10],
         ["y", 0, 10],
         ["width", 1, 11],
-        ["height", 1, 11],
+        ["height", 1, 11]
       ], this.nice, {_d: d.value.attrs}, this);
 
       delete attrs._d;

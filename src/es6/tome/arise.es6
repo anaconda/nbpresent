@@ -1,5 +1,6 @@
 import Jupyter from "base/js/namespace";
 
+import log from "../log";
 import {PART} from "../parts";
 import {BaseTome} from "./base";
 
@@ -43,7 +44,7 @@ export class AriseTome extends BaseTome {
           prev && this.fromSlideshowContinuation(cell, prev);
           break;
         default:
-          console.debug(slideType, "not implemented yet");
+          log.debug(slideType, "not implemented yet");
           break;
       }
     });
