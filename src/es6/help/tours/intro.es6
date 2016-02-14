@@ -1,9 +1,14 @@
 import {PART} from "../../parts";
+import {ICON} from "../../icons";
 
 import {TourBase} from "./base";
 
 
 export class IntroTour extends TourBase {
+  static icon(){
+    return ICON.intro;
+  }
+
   steps(){
     return [{
         element: "#nbp-app-btn",

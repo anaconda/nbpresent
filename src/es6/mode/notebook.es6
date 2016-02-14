@@ -5,6 +5,8 @@ import Jupyter from "base/js/namespace";
 import {d3, $} from "nbpresent-deps";
 
 import {PART} from "../parts";
+import {ICON} from "../icons";
+
 import {Tree} from "../tree";
 
 import {Toolbar} from "../toolbar";
@@ -68,12 +70,12 @@ export class NotebookMode extends BaseMode {
           click: () => this.present()
         }],
         [{
-          icon: "film fa-2x",
+          icon: `${ICON.slides} fa-2x`,
           label: "Slides",
           click: () => this.mode.set(this.mode.get() === SORTER ? null : SORTER)
         }],
         [{
-          icon: "paint-brush fa-2x",
+          icon: `${ICON.themer} fa-2x`,
           label: "Themes",
           click: () => this.mode.set(this.mode.get() === THEMER ? null : THEMER)
         }],

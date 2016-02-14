@@ -1,5 +1,6 @@
 import {d3, Vibrant, uuid} from "nbpresent-deps";
 
+import {ICON} from "../icons";
 import {JPY_BRAND, UI_BG} from "../less";
 import {SLIDE_WIDTH, SLIDE_HEIGHT} from "../mini";
 
@@ -162,7 +163,7 @@ export class BackgroundPicker {
           .classed({"btn btn-default pull-right": 1})
           .call((btn)=>{
             btn.append("i")
-              .classed({"fa fa-trash": 1});
+              .classed(`fa fa-${ICON.trash}`, 1);
           })
       });
 

@@ -3,14 +3,13 @@ import _ from "underscore";
 
 import Jupyter from "base/js/namespace";
 
-import {FONTS, SYMB, PANGRAMS} from "./fonts";
+import {ICON} from "../icons";
+import {FONTS, SYMB, PANGRAMS, loadFonts} from "./fonts";
 
 import {BackgroundPicker} from "./background";
 import {PaletteBuilder} from "./palette";
 
 import {Toolbar} from "../toolbar";
-
-import {loadFonts} from "./fonts";
 
 import {NotebookActions} from "../actions/notebook";
 
@@ -368,7 +367,7 @@ export class ThemeEditor {
           .append("a")
           .classed({"btn": 1})
           .append("i")
-          .classed({"fa fa-trash": 1})
+          .classed(`fa fa-${ICON.trash}`, 1)
           .on("click", ({key}) => this.rules.unset(key));
 
         rule.append("div")

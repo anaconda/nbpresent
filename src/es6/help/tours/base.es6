@@ -14,6 +14,10 @@ export class TourBase {
     return this;
   }
 
+  static icon(){
+    return "question-circle";
+  }
+
   start(){
     this.tour.start();
     return this;

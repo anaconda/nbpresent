@@ -2,6 +2,7 @@ import _ from "underscore";
 
 import {d3, uuid} from "nbpresent-deps";
 
+import {ICON} from "../icons";
 import {Toolbar} from "../toolbar";
 
 import {ThemeEditor} from "./editor";

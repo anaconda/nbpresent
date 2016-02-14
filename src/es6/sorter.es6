@@ -5,6 +5,8 @@ import Jupyter from "base/js/namespace";
 
 import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
+import {ICON} from "./icons";
+
 import {PART, PART_SELECT} from "./parts";
 import {MiniSlide} from "./mini";
 import {TemplateLibrary} from "./templates/library";
@@ -382,7 +384,7 @@ class Sorter {
         }], [{
           icon: [
             "square-o fa-stack-2x",
-            "paint-brush fa-stack-1x"
+            `${ICON.themer} fa-stack-1x`
           ],
           click: () => this.pickTheme(),
           label: "Theme",
@@ -393,7 +395,7 @@ class Sorter {
           label: "Leave",
           visible: () => this.editor
         }, {
-          icon: "edit fa-2x fa-fw",
+          icon: `${ICON.editor} fa-2x fa-fw`,
           click: () => this.editSlide(this.selectedSlide.get()),
           label: "Edit",
           visible: () => this.selectedSlide.get() && !(this.editor)
@@ -401,7 +403,7 @@ class Sorter {
         [{
           icon: [
             "square-o fa-stack-2x",
-            "trash fa-stack-1x"
+            `${ICON.trash} fa-stack-1x`
           ],
           click: () => {
             this.removeSlide(this.selectedSlide.get());
@@ -436,7 +438,7 @@ class Sorter {
           }
         }],
         [{
-          icon: "trash",
+          icon: ICON.trash,
           click: () => this.destroyRegion(),
           label: "- Region"
         }]

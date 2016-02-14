@@ -1,5 +1,8 @@
 import {d3, uuid} from "nbpresent-deps";
 
+import {ICON} from "../icons";
+
+
 export class PaletteBuilder {
   constructor(tree, theme){
     this.tree = tree;
@@ -56,9 +59,9 @@ export class PaletteBuilder {
           .call((details)=>{
             details.append("button")
               .classed({"btn btn-default pull-right": 1})
-              .call((btn)=>{
+              .call((btn) => {
                 btn.append("i")
-                  .classed({"fa fa-trash": 1});
+                  .classed(`fa fa-${ICON.trash}`, 1);
               })
               .on("click", ({key}) => {
                 this.palette.unset([key]);
