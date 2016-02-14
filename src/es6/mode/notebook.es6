@@ -38,7 +38,9 @@ export class NotebookMode extends BaseMode {
 
     let debouncedSave = _.debounce(() => this.metadata(true), 1e3);
 
-    [this.slides, this.themes].map(({on}) => on("update", debouncedSave))
+    [this.slides, this.themes].map(({on}) => on("update", debouncedSave));
+
+    this.slides.on("update", () => this.update());
 
     this.initActions();
 
@@ -82,7 +84,7 @@ export class NotebookMode extends BaseMode {
       ])
       .call(this.appBar.update);
 
-    return this;
+    return this.update();
   }
 
 
@@ -118,6 +120,16 @@ export class NotebookMode extends BaseMode {
 
   deinitActions(){
     this.actions && this.actions.pop();
+
+    return this;
+  }
+
+  update(){
+    this.$body.classed({
+      "nbp-no-slides": !(Object.keys(this.slides.get() || {}).length)
+    });
+
+    return this;
   }
 
   metadata(update){
@@ -142,7 +154,9 @@ export class NotebookMode extends BaseMode {
       this.ensurePresenter();
     }
 
-    this.$body.classed({"nbp-app-enabled": enabled});
+    this.$body.classed({
+      "nbp-app-enabled": enabled
+    });
     Jupyter.page.show_site();
 
     if(enabled){

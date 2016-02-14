@@ -13,14 +13,25 @@
   margin-right: -@app-bar-width;
   transition: margin-right @tx-dur @tx-fn;
 
+  .btn-toolbar {
+    margin: 0;
+    right: 0;
+  }
+
   .nbp-deck-toolbar {
     position: absolute;
     bottom: 0;
   }
+}
 
-  .btn-toolbar {
-    margin: 0;
-    right: 0;
+body.nbp-no-slides {
+  .nbp-app-bar {
+    .btn[title="Present"] {
+      opacity: 0.33;
+      &:hover {
+        opacity: 1.0;
+      }
+    }
   }
 }
 
