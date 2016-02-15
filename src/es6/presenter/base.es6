@@ -109,10 +109,10 @@ export class Presenter {
 
   updateTheme(slide){
     let ThemeClass = this.themeClass(slide),
-      themes = this.themes.get() || {theme: {}},
+      themes = this.themes.get(),
       themeId = slide.value.theme || themes.default;
 
-    if(!themes.theme[themeId]){
+    if(themes.theme && !themes.theme[themeId]){
       themeId = Object.keys(themes.theme)[0];
     }
 
