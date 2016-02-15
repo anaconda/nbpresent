@@ -22,9 +22,20 @@ body.nbp-helping {
 
   background-color: @ui-bg;
 
-  h1, h2 {
+  hr {
+    margin: 0;
+    padding: 0;
+    width: 75%;
+    border-top: solid 1px fade(@jpy-brand, 50%);
+  }
+
+  h1, h2, h3 {
     color: @jpy-brand;
     text-align: center;
+  }
+
+  .nbp-version {
+    font-size: 12px;
   }
 
   h2{
@@ -34,10 +45,19 @@ body.nbp-helping {
   a {
     color: @jpy-brand;
     text-decoration: none;
-    border-bottom: dotted 1px @jpy-brand;
+    border-bottom: solid 3px fade(@jpy-brand, 20%);
   }
 
   .nbp-community, .nbp-tour-launcher {
     width: 50%;
+  }
+
+  .nbp-legal {
+    bottom: 0;
+    position: absolute;
+    padding: 10px;
+    color: @jpy-brand;
+    font-size: 11px;
+    text-align: center;
   }
 }

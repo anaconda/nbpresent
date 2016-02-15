@@ -24,27 +24,49 @@ body:not(.nbp-theming) {
     float: left;
   }
 
-  .nbp-theme-preview {
-    float: left;
+  h2 {
+    margin: 0;
+    padding: 0;
+    color: @jpy-brand;
+    text-align: center;
+    font-size: 18px;
+  }
 
-    .nbp-default-theme {
+  .nbp-theme-previews {
+    position: absolute;
+    left: @app-bar-width;
+    height: @theme-mgr-height;
+    right: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .nbp-theme-preview {
       float: left;
-    }
+      position: relative;
 
-    .nbp-theme-preview-card {
-      margin-bottom: 0;
-    }
+      .nbp-default-theme {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+      }
 
-    &.nbp-theme-preview-current .nbp-theme-preview-card{
-      border: solid 3px @jpy-brand;
+      &.nbp-theme-preview-current .nbp-theme-preview-card{
+        border: solid 3px @jpy-brand;
+      }
     }
   }
 
-  .nbp-theme-preview-canned {
-    float: right;
-    opacity: 0.5;
-    &:hover {
-      opacity: 1.0;
+  .nbp-theme-previews-canned{
+    position: absolute;
+    right: 0;
+    width: 200px;
+
+    .nbp-theme-preview-canned {
+      float: right;
+      opacity: 0.5;
+      &:hover {
+        opacity: 1.0;
+      }
     }
   }
 }
@@ -143,6 +165,7 @@ body:not(.nbp-theme-editing){
 
 
   .nbp-theme-editor-backgrounds{
+    padding: 0 20px;
 
     .nbp-background-picker-image {
       li a {
@@ -203,6 +226,8 @@ body:not(.nbp-theme-editing){
   }
 
   .nbp-theme-editor-palette{
+    padding: 0 40px;
+
     input[type="color"] {
       width: 64px;
       height: 64px;
@@ -278,7 +303,7 @@ body:not(.nbp-theme-editing){
   }
 
   .theme-rules {
-    padding-right: 20px;
+    padding: 0 10px 0 50px;
 
     .nbp-theme-editor-tools{
       margin-bottom: 20px;

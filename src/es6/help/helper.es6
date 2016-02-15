@@ -39,7 +39,12 @@ export class Helper {
 
     this.$h2 = this.$ui.append("h2")
       .text("nbpresent ")
+
+    this.$h2.append("hr");
+
+    this.$h2
       .append("a")
+      .classed({"nbp-version": 1})
       .attr({
         href: `${PKG.homepage}#${PKG.version}`
       })
@@ -47,6 +52,24 @@ export class Helper {
 
     this.$h1 = this.$ui.append("h1")
       .append("i").classed({"fa fa-gift fa-4x": 1});
+
+    this.$ui.append("footer")
+      .classed({"nbp-legal": 1})
+      .call((legal) => {
+        legal.append("span").text("©2016 ");
+
+        legal.append("a")
+          .attr({href: "https://continuum.io"})
+          .text("Continuum Analytics");
+
+        legal.append("p")
+          .call((license) => {
+            license.append("span").text("nbpresent is ");
+            license.append("a")
+              .attr({href: `https://spdx.org/licenses/${PKG.license}`})
+              .text("free software");
+          });
+      });
 
     this.initTours()
       .initCommunity()

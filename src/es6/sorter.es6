@@ -236,6 +236,9 @@ class Sorter {
   }
 
   slideClicked(d){
+    if(d.key){
+      this.selectedSlide.set(d.key);
+    }
     if(!(d.key) && !(this.templates)){
       this.templates = new TemplateLibrary(this.templatePicked);
       return;

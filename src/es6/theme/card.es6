@@ -5,21 +5,61 @@ import {loadFonts} from "./fonts";
 export class ThemeCard{
   // accepts a d3 selector bound to {key, value} of themes
   update(theme){
-    if(!theme.select(".nbp-theme-card-palette").node()){
-      theme.append("div")
-        .classed({"nbp-theme-card-palette": 1});
-    }
+    theme.classed({"nbp-theme-card": 1});
 
-    this.updateColor(theme)
+    theme.each(function(){
+      let el = d3.select(this);
+      ["palette", "backgrounds", "fonts"].map((bit) => {
+        if(!el.select(`.nbp-theme-card-${bit}`).node()){
+          el.append("div")
+            .attr("class", `nbp-theme-card-${bit}`);
+        }
+      });
+    });
+
+    this.updateBackground(theme)
+      .updateColor(theme)
       .updateFont(theme);
   }
 
-  updateColor(theme){
-    theme.classed({"nbp-theme-card": 1});
+  updateBackground(theme){
+    let background = theme.select(".nbp-theme-card-backgrounds")
+      .selectAll(".nbp-theme-card-background")
+      .data((theme) => {
+        let backgrounds = d3.entries(theme.value.backgrounds || {});
 
+        return backgrounds.map(({value}) => {
+          return {
+            theme: theme.value,
+            background: value,
+            height: 100 / backgrounds.length
+          };
+        });
+      });
+
+    background.enter().append("div")
+      .classed({"nbp-theme-card-background": 1});
+
+    background.exit().remove();
+
+    background.style({
+      height: ({height}) => `${height}%`,
+      "background-color": ({theme, background}) => {
+        let color = background["background-color"];
+        color = color && theme.palette[color];
+        if(color){
+          return `rgb(${color.rgb})`;
+        }
+      }
+    });
+
+    return this;
+  }
+
+  updateColor(theme){
     let color = theme.select(".nbp-theme-card-palette")
       .selectAll(".nbp-theme-card-color")
-      .data(({value}) => d3.entries(value.palette))
+      .data(({value}) => d3.entries(value.palette));
 
     color.enter().append("div")
       .classed({"nbp-theme-card-color": 1});
@@ -28,7 +68,7 @@ export class ThemeCard{
 
     color.style({
       "background-color": ({value}) => {
-        return `rgba(${value.rgb || [0,0,0]}, ${value.a || 1})`
+        return `rgba(${value.rgb || [0,0,0]}, ${value.a || 1})`;
       }
     });
 
@@ -36,7 +76,8 @@ export class ThemeCard{
   }
 
   updateFont(theme){
-    let rule = theme.selectAll(".nbp-theme-card-font")
+    let rule = theme.select(".nbp-theme-card-fonts")
+      .selectAll(".nbp-theme-card-font")
       .data(({value}) => {
         let rules = d3.entries(value.rules),
           base = value["text-base"];

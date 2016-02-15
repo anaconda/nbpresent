@@ -29,6 +29,7 @@ body.nbp-linking {
     position: absolute;
     width: @sorter-slide-height;
 
+    background-color: @ui-bg;
     color: white;
     text-align: left;
 
@@ -36,19 +37,19 @@ body.nbp-linking {
     transition: opacity @tx-dur @tx-fn, width @tx-dur @tx-fn;
 
     &.nbp-part-overlay-source {
-      background-color: @part-source-color;
+      border-right: solid 3px @part-source-color;
     }
 
     &.nbp-part-overlay-outputs {
-      background-color: @part-outputs-color;
+      border-right: solid 3px @part-outputs-color;
     }
 
     &.nbp-part-overlay-widgets {
-      background-color: @part-widgets-color;
+      border-right: solid 3px @part-widgets-color;
     }
 
     &.nbp-part-overlay-whole {
-      background-color: @part-whole-color;
+      border-left: solid 3px @part-whole-color;
       right: 0;
       text-align: right;
     }

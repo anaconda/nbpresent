@@ -3,29 +3,48 @@
 
   width: @theme-card-height;
   height: @theme-card-height;
-  background-color: white;
+  background-color: rgba(255,255,255, 0.5);
   box-shadow: z-shadow;
   border-radius: 2px;
   border: solid 1px @ui-bg;
-  margin: 10px;
+  margin: 5px 5px 0 0;
   position: relative;
-  overflow-y: auto;
+
+  .nbp-theme-card-backgrounds {
+    position:absolute;
+    height: @theme-card-height - @theme-card-swatch-size;
+    right: 0;
+    bottom: 0;
+
+    .nbp-theme-card-background{
+      width: @theme-card-swatch-size;
+    }
+  }
+
+  .nbp-theme-card-fonts {
+    position: absolute;
+    top: @theme-card-swatch-size + 2;
+    bottom: 0;
+    left: 4px;
+    right: @theme-card-swatch-size;
+    overflow-y: auto;
+    padding-bottom: 4px;
+  }
 
   .nbp-theme-card-palette {
     position: absolute;
     top: 0;
-    width: 10px;
+    left: 0;
+    right: 0;
+    overflow-x: auto;
     .nbp-theme-card-color {
-      width: 8px;
-      height: 8px;
-      border: solid 1px @ui-bg;
-      margin: 1px 1px 0 0;
-      float: right;
+      width: @theme-card-swatch-size;
+      height: @theme-card-swatch-size;
+      float: left;
     }
   }
 
   .nbp-theme-card-font {
     font-size: 12px;
-    margin-left: 10px;
   }
 }

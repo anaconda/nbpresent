@@ -70,6 +70,14 @@ export class ThemeManager {
         }]
       ]);
 
+    this.$ui.append("div")
+      .classed({"nbp-theme-previews": 1})
+      .append("h2").text("Your Themes");
+
+    this.$ui.append("div")
+      .classed({"nbp-theme-previews-canned": 1})
+      .append("h2").text("Community Themes");
+
     return this.update()
       .currentUpdated();
   }
@@ -77,9 +85,11 @@ export class ThemeManager {
   update(){
     let themes = this.themes.get() || {},
       current = this.current.get(),
-      theme = this.$ui.selectAll(".nbp-theme-preview")
+      theme = this.$ui.select(".nbp-theme-previews")
+        .selectAll(".nbp-theme-preview")
         .data(d3.entries(themes), ({key}) => key),
-      canned = this.$ui.selectAll(".nbp-theme-preview-canned")
+      canned = this.$ui.select(".nbp-theme-previews-canned")
+        .selectAll(".nbp-theme-preview-canned")
         .data(d3.entries(BASE_THEMES), ({key}) => key),
       defaultTheme = this.defaultTheme.get();
 
@@ -88,15 +98,15 @@ export class ThemeManager {
     theme.enter().append("div")
       .classed({"nbp-theme-preview": 1})
       .call((theme) => {
+        theme.append("div")
+          .classed({"nbp-theme-preview-card": 1})
+          .on("click", ({key}) => this.current.set(key));
+
         theme.append("a")
           .classed({"nbp-default-theme btn": 1})
           .on("click", ({key}) => this.defaultTheme.set(key))
           .append("i")
-          .classed({"fa": 1});
-
-        theme.append("div")
-          .classed({"nbp-theme-preview-card": 1})
-          .on("click", ({key}) => this.current.set(key));
+          .classed({"fa fa-2x": 1});
       });
 
     theme.exit().remove();
