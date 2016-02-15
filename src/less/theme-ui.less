@@ -10,7 +10,7 @@ body:not(.nbp-theming) {
 
   position: fixed;
   height: @theme-mgr-height;
-  z-index: @z-themer;
+  z-index: @z-theme-mgr;
   right: @app-bar-width;
   left: 0;
   bottom: 0;
@@ -22,12 +22,20 @@ body:not(.nbp-theming) {
 
   .nbp-toolbar{
     float: left;
-    min-width: 33.33%;
   }
 
   .nbp-theme-preview {
     float: left;
-    &.nbp-theme-preview-current{
+
+    .nbp-default-theme {
+      float: left;
+    }
+
+    .nbp-theme-preview-card {
+      margin-bottom: 0;
+    }
+
+    &.nbp-theme-preview-current .nbp-theme-preview-card{
       border: solid 3px @jpy-brand;
     }
   }
@@ -41,23 +49,40 @@ body:not(.nbp-theming) {
   }
 }
 
+
+body.nbp-theme-editing {
+  .nbp-theme-editor {
+    top: 0;
+    transition: top @tx-dur @tx-fn;
+  }
+}
+
+body:not(.nbp-theme-editing){
+  .nbp-theme-editor {
+    top: -100%;
+    transition: top @tx-dur @tx-fn;
+  }
+}
+
+
 .nbp-theme-editor {
   .nbp-ui();
 
   position: fixed;
-  bottom: 0;
+  height: 100vh;
   left: 0;
   right: @app-bar-width;
-  top: @theme-mgr-height;
+  top: 0;
   background-color: @ui-bg-alpha;
-  padding: 20px;
-  z-index: @z-themer;
+  padding: @theme-mgr-height + 20 20px 20px 20px;
+  z-index: @z-theme-editor;
   overflow-y: auto;
 
   & > .row > div > h2 {
     margin: 0;
     padding: 0;
     color: @jpy-brand;
+    text-align: center;
   }
 
   .nbp-theme-editor-toolbar{
@@ -224,8 +249,13 @@ body:not(.nbp-theming) {
   .selector-color {
     border: solid 1px @jpy-brand;
 
-    & > a {
-      opacity: 0;
+    .btn {
+      padding: 0;
+      text-align: center;
+      i {
+        color: @ui-bg;
+        width: @theme-swatch-size;
+      }
     }
 
     .dropdown-menu {

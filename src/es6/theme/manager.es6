@@ -17,6 +17,7 @@ export class ThemeManager {
     this.tree = tree;
 
     this.themes = tree.select(["themes", "theme"]);
+    this.defaultTheme = tree.select(["themes", "default"]);
 
     let mgrCursor = tree.select(["app", "theme-manager"]);
 
@@ -24,7 +25,8 @@ export class ThemeManager {
 
     this.card = new ThemeCard();
 
-    this.themes.on("update", () => this.update());
+    [this.defaultTheme, this.themes]
+      .map(({on}) => on("update", ()=> this.update()));
     this.current.on("update", () => [this.update(), this.currentUpdated()]);
 
     this.initUI();
@@ -51,7 +53,8 @@ export class ThemeManager {
     this.$ui = this.$body.append("div")
       .classed({"nbp-theme-manager": 1});
 
-    this.toolbar = new Toolbar();
+    this.toolbar = new Toolbar()
+      .btnGroupClass("btn-group-vertical");
 
     this.$toolbar = this.$ui.append("div")
       .datum([
@@ -77,21 +80,38 @@ export class ThemeManager {
       theme = this.$ui.selectAll(".nbp-theme-preview")
         .data(d3.entries(themes), ({key}) => key),
       canned = this.$ui.selectAll(".nbp-theme-preview-canned")
-        .data(d3.entries(BASE_THEMES), ({key}) => key);
+        .data(d3.entries(BASE_THEMES), ({key}) => key),
+      defaultTheme = this.defaultTheme.get();
 
     this.$toolbar.call(this.toolbar.update);
 
     theme.enter().append("div")
       .classed({"nbp-theme-preview": 1})
-      .on("click", ({key}) => this.current.set(key));
+      .call((theme) => {
+        theme.append("a")
+          .classed({"nbp-default-theme btn": 1})
+          .on("click", ({key}) => this.defaultTheme.set(key))
+          .append("i")
+          .classed({"fa": 1});
+
+        theme.append("div")
+          .classed({"nbp-theme-preview-card": 1})
+          .on("click", ({key}) => this.current.set(key));
+      });
 
     theme.exit().remove();
-
-    this.card.update(theme);
 
     theme.classed({
       "nbp-theme-preview-current": ({key}) => key === current
     });
+
+    theme.select(".nbp-default-theme i")
+      .classed({
+        "fa-star-o": ({key}) => key !== defaultTheme,
+        "fa-star": ({key}) => key === defaultTheme
+      });
+
+    this.card.update(theme.select(".nbp-theme-preview-card"));
 
     canned.enter().append("div")
       .classed({"nbp-theme-preview-canned": 1})
@@ -109,11 +129,16 @@ export class ThemeManager {
   }
 
   currentUpdated(){
-    let current = this.current.get();
+    let current = this.current.get(),
+      defaultTheme = this.defaultTheme.get(),
+      themes = this.themes.get();
 
     this.editor && this.editor.destroy();
 
     if(current){
+      if(!defaultTheme || !themes[defaultTheme]){
+        this.defaultTheme.set(current);
+      }
       this.editor = new ThemeEditor(
         this.tree,
         this.themes.select([current])

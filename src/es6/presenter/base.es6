@@ -109,18 +109,15 @@ export class Presenter {
 
   updateTheme(slide){
     let ThemeClass = this.themeClass(slide),
-      themeId = slide.value.theme || this.themes.get(["default"]);
+      themes = this.themes.get() || {theme: {}},
+      themeId = slide.value.theme || themes.default;
 
-    if(!themeId){
-      let themes = d3.values(this.themes.get(["theme"]) || {});
-
-      themeId = themes.length ? themes[0].id : null;
+    if(!themes.theme[themeId]){
+      themeId = Object.keys(themes.theme)[0];
     }
 
-    themeId = themeId || "<default>";
-
     this.theme = new ThemeClass(
-      this.themes.select(["theme", themeId]),
+      this.themes.select(["theme", themeId || "<default>"]),
       slide,
       this.$style
     );

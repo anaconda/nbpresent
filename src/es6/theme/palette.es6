@@ -25,13 +25,13 @@ export class PaletteBuilder {
 
     this.$confirm = this.$ui.append("button")
       .classed({"btn btn-default": 1})
-      .text("Colors...")
-      .on("click", ()=>{
+      .on("click", () => {
         let id = uuid.v4();
-        this.palette.set([id], {
-          id,
-          rgb: [255, 255, 255]
-        });
+        this.palette.set([id], {id, rgb: [255, 255, 255]});
+      })
+      .call((btn) => {
+        btn.append("i").classed({"fa fa-eyedropper fa-2x": 1});
+        btn.append("label").text("+ Color");
       });
 
     this.$chips = this.$ui.append("div")

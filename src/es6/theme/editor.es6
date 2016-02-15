@@ -56,6 +56,8 @@ export class ThemeEditor {
     this.initActions();
 
     this.init();
+
+    _.defer(() => this.$body.classed({"nbp-theme-editing": 1}));
   }
 
   init(){
@@ -109,13 +111,13 @@ export class ThemeEditor {
             .classed({"nbp-theme-editor-toolbar": 1})
             .datum([
               [{
-                icon: "compress",
+                icon: "adjust",
                 click: () => this.focusContent.set(!(this.focusContent.get())),
-                label: "Focus"
+                label: "All/Active"
               }, {
-                icon: "file-text",
+                icon: "eye-slash",
                 click: () => this.cycleFade(),
-                label: "Fade"
+                label: "Preview"
               }]
             ])
             .call(this.toolbar.update);
@@ -208,6 +210,8 @@ export class ThemeEditor {
         dropdown.append("a")
           .classed({"btn btn-default dropdown-toggle": 1})
           .attr({"data-toggle": "dropdown"})
+          .append("i")
+            .classed({"fa fa-eyedropper": 1});
         dropdown.append("ul")
           .classed({"dropdown-menu": 1});
       });
@@ -479,8 +483,12 @@ export class ThemeEditor {
   }
 
   destroy(){
-    this.backgroundUI.destroy();
+    this.$body.classed({"nbp-theme-editing": 0});
     this.deinitActions();
-    this.$ui.remove();
+
+    _.delay(() => {
+      this.$ui.remove();
+      this.backgroundUI.destroy();
+    }, 200);
   }
 }
