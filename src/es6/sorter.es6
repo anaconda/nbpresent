@@ -15,6 +15,7 @@ import {LinkOverlay} from "./cells/overlay";
 import {NotebookActions} from "./actions/notebook";
 
 import {AriseTome} from "./tome/arise";
+import {BasicTome} from "./tome/basic";
 
 import {ThemeCard} from "./theme/card";
 
@@ -56,7 +57,10 @@ class Sorter {
 
     this.drawn = false;
 
-    this.tomes = [new AriseTome(this)];
+    this.tomes = [
+      new BasicTome(this),
+      new AriseTome(this)
+    ];
 
     this.initUI()
       .initToolbar()
@@ -89,6 +93,7 @@ class Sorter {
     this.cleanup();
     this.deinitActions();
     this.$deckToolbar.remove();
+    this.$themePicker && this.$themePicker.remove();
     d3.selectAll(".ui-tooltip").remove();
     this.destroyed = true;
 
@@ -119,29 +124,36 @@ class Sorter {
     this.$ui = this.$drawer.append("div")
       .classed({"nbp-sorter": 1});
 
+    this.$ui.append("h2")
+      .classed({"nbp-sorter-label": 1})
+      .text("Your Slides");
+
     this.$slides = this.$ui.append("div")
       .classed({"nbp-slides-wrap": 1});
 
     this.$empty = this.$ui.append("div")
-      .classed({sorter_empty: 1});
-
-    this.$empty.append("h1")
-      .text("no slides yet");
-
-    this.$empty.append("p")
-      .call((p)=>{
-        p.append("span")
-          .text("You can create an empty slide by pressing ");
-        p.append("a")
-          .on("click", () => this.addSlide())
-          .append("i").classed({"fa fa-plus-square-o fa-2x": 1});
-        p.append("span")
-          .text(" or by importing slides:");
-      });
-
+      .classed({"nbp-sorter-empty": 1});
 
     this.$empty.append("div")
-      .classed({tomes: 1});
+      .classed({"nbp-empty-intro": 1})
+      .call((empty) => {
+        empty.append("h2")
+          .text("No Slides… yet!");
+
+        empty.append("p")
+          .call((p)=>{
+            p.append("span")
+              .text("You can create an empty slide by pressing ");
+            p.append("a")
+              .on("click", () => this.addSlide())
+              .append("i").classed({"fa fa-plus-square-o fa-2x": 1});
+            p.append("span")
+              .text(" or by importing slides:");
+          });
+      });
+
+    this.$empty.append("div")
+      .classed({"nbp-tomes": 1});
 
     return this;
   }
@@ -217,7 +229,7 @@ class Sorter {
   }
 
   slideWidth(){
-    return 200;
+    return 180;
   }
 
   copySlide(slide, stripContent=true){
@@ -253,18 +265,23 @@ class Sorter {
   }
 
   updateEmpty(){
-    var tome = this.$empty.select(".tomes").selectAll(".tome")
-      .data(this.tomes);
+    var tome = this.$empty.select(".nbp-tomes").selectAll(".nbp-tome")
+      .data(this.tomes.filter((d) => d.relevant()))
 
     tome.enter()
       .append("div")
-      .classed({tome: 1})
+      .classed({"nbp-tome": 1})
       .call((tome) => {
-        tome.append("h3");
+        tome.append("h3")
+          .text((d) => d.title());
         tome.append("button")
           .classed({btn: 1})
-          .text((d) => d.name())
-          .on("click", (d)=> d.execute());
+          .on("click", (d)=> d.execute())
+          .call((btn)=>{
+            btn.append("i")
+              .attr("class", (d) => `fa fa-2x fa-${d.icon()}`);
+            btn.append("span").text((d) => ` ${d.label()}`);
+          });
       });
 
     tome.exit().remove();
@@ -283,7 +300,7 @@ class Sorter {
       this.updateEmpty();
     }
 
-    this.scale.x.range([20, this.slideWidth() + 20]);
+    this.scale.x.range([10, this.slideWidth()]);
 
     let $slide = this.$slides.selectAll(".slide")
       .data(slides, (d) => `${d.key}:${d.value.prev}`);
