@@ -123,7 +123,7 @@ export class Helper {
   startTour(Tour){
     let tour = new Tour(this.mode);
     tour.init();
-    tour.restart();
+    tour.start(true);
 
     this.mode.mode.set(null);
   }

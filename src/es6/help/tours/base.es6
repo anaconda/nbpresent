@@ -38,9 +38,9 @@ export class TourBase {
   options(){
     return {
       name: "nbpresent",
-      reflex: true,
       duration: 5000,
-      orphan: true
+      storage: false,
+      debug: true
     };
   }
 

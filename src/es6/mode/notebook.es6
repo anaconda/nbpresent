@@ -16,7 +16,7 @@ import {BaseMode} from "./base";
 import {NotebookActions} from "../actions/notebook";
 
 
-const THEMER = "themer",
+export const THEMER = "themer",
   SORTER = "sorter",
   HELPER = "helper",
   MODES = [
@@ -62,7 +62,7 @@ export class NotebookMode extends BaseMode {
       .classed({"nbp-app-bar": 1})
       .datum([
         [{
-          icon: "youtube-play fa-2x",
+          icon: `${ICON.presenter} fa-2x`,
           label: "Present",
           click: () => this.present()
         }],
@@ -77,7 +77,7 @@ export class NotebookMode extends BaseMode {
           click: () => this.mode.set(this.mode.get() === THEMER ? null : THEMER)
         }],
         [{
-          icon: "question-circle fa-2x",
+          icon: `${ICON.help} fa-2x`,
           label: "Help",
           click: () => this.mode.set(this.mode.get() === HELPER ? null : HELPER)
         }]
@@ -93,7 +93,7 @@ export class NotebookMode extends BaseMode {
     this.actions = new NotebookActions([{
         name: "show-sorter",
         value: {
-          icon: 'fa-gift',
+          icon: `fa-${ICON.nbpresent}`,
           help: 'enable nbpresent',
           handler: () => this.show()
         }
@@ -101,7 +101,7 @@ export class NotebookMode extends BaseMode {
         name: "show-presentation",
         keys: ["esc"],
         value: {
-          icon: 'fa-youtube-play',
+          icon: `fa-${ICON.presenter}`,
           help: 'show presentation',
           handler: ()=> {
             if(this.presenter.presenting.get() && this.mode.get()){

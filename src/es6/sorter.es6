@@ -440,11 +440,11 @@ class Sorter {
       .classed({"nbp-region-toolbar": 1})
       .datum([
         [{
-          icon: "link",
+          icon: ICON.link,
           click: () => this.linkContentOverlay(),
           label: "Link"
         },{
-          icon: "unlink",
+          icon: ICON.unlink,
           click: () => this.linkContent(null),
           label: "Unlink",
           visible: () => {
