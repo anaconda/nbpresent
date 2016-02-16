@@ -15,6 +15,20 @@ body.nbp-presenting{
   }
 }
 
+body.nbp-presenting.nbp-sorting{
+  .nbp-present {
+    box-shadow: @z-shadow;
+    transition: box-shadow @tx-dur @tx-fn;
+  }
+}
+
+body.nbp-presenting:not(.nbp-sorting){
+  .nbp-present {
+    box-shadow: none;
+    transition: box-shadow @tx-dur @tx-fn;
+  }
+}
+
 .nbp-sorter-drawer {
   position: fixed;
   left: 0;
