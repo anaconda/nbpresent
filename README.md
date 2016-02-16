@@ -1,5 +1,7 @@
 
 # nbpresent
+
+[![Join the chat at https://gitter.im/Anaconda-Server/nbpresent](https://badges.gitter.im/Anaconda-Server/nbpresent.svg)](https://gitter.im/Anaconda-Server/nbpresent?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 > remix your Jupyter Notebooks as interactive slideshows
 
 ## Usage
