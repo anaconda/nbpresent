@@ -29,7 +29,7 @@ export class TreemapLayout extends ManualLayout {
       .size([100, 100])
       .sticky(true)
       .value((d) => {
-        return d._value.attrs[WEIGHT] || 1;
+        return (d._value || {}).attrs[WEIGHT] || 1;
       });
 
     let regions = d3.entries(this.slide.value.regions)

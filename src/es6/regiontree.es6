@@ -2,6 +2,7 @@ import {d3, uuid} from "nbpresent-deps";
 
 import Jupyter from "base/js/namespace";
 
+import {ICON} from "./icons";
 import {Toolbar} from "./toolbar";
 import {MiniSlide} from "./mini";
 
@@ -57,21 +58,21 @@ class RegionTree {
     this.$toolbar = this.$ui.append("div")
       .datum([
         [{
-          icon: "plus-square-o",
+          icon: ICON.addRegion,
           click: () => this.addRegion(),
           label: "+ Region"
         }],
         // TODO: make this extensible
         [{
-          icon: "arrows",
+          icon: ICON.manual,
           click: () => this.layout("manual"),
-          label: "Manual"
+          label: "Free"
         }, {
-          icon: "tree",
+          icon: ICON.treemap,
           click: () => this.layout("treemap"),
           label: "Treemap"
         }, {
-          icon: "calculator",
+          icon: ICON.grid,
           click: () => this.layout("grid"),
           label: "Grid"
         }]

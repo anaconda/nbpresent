@@ -116,7 +116,7 @@ export class SpeakerBase {
 
     // TODO: Make this overlay (Jupyter-branded Reveal Compass)
     this.$toolbar = this.$ui.append("div")
-      .classed({presenter_toolbar: 1})
+      .classed({"nbp-presenter-toolbar": 1})
       .datum(this.toolbarIcons())
       .call(toolbar.update);
 

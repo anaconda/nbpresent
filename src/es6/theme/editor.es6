@@ -87,10 +87,10 @@ export class ThemeEditor {
       .call((palette) => this.paletteUI.init(palette));
 
     this.$rules = row.append("div")
-      .classed({"theme-rules col-md-8 col-xs-12": 1});
+      .classed({"nbp-theme-rules col-md-8 col-xs-12": 1});
 
     this.$rules.append("h2")
-      .text("Type");
+      .text("Typography");
 
     this.$tools = this.$rules.append("div")
       .classed({"nbp-theme-editor-tools": 1});
@@ -101,7 +101,7 @@ export class ThemeEditor {
     this.$tools.append("div").classed({row: 1})
       .call((row)=>{
         this.$baseText = row.append("div")
-          .classed({"theme-base-font col-xs-6": 1})
+          .classed({"nbp-theme-base-font col-xs-6": 1})
           .datum({key: null, value: null})
           .call((font) => this.fontMenu(font));
 
@@ -111,11 +111,11 @@ export class ThemeEditor {
             .classed({"nbp-theme-editor-toolbar": 1})
             .datum([
               [{
-                icon: "adjust",
+                icon: ICON.showRules,
                 click: () => this.focusContent.set(!(this.focusContent.get())),
                 label: "All/Active"
               }, {
-                icon: "eye-slash",
+                icon: ICON.preview,
                 click: () => this.cycleFade(),
                 label: "Preview"
               }]
@@ -201,11 +201,11 @@ export class ThemeEditor {
       row = font.append("div").classed({row: 1});
 
     row.append("div")
-      .classed({"selector-label col-xs-3": 1})
+      .classed({"nbp-selector-label col-xs-3": 1})
       .text("∅");
 
     row.append("div")
-      .classed({"selector-color dropdown col-xs-1": 1})
+      .classed({"nbp-selector-color dropdown col-xs-1": 1})
       .call(function(dropdown){
         dropdown.append("a")
           .classed({"btn btn-default dropdown-toggle": 1})
@@ -218,7 +218,7 @@ export class ThemeEditor {
 
     row.append("div").classed({"col-xs-4": 1})
       .append("input")
-      .classed({"selector-font-size form-control": 1})
+      .classed({"nbp-selector-font-size form-control": 1})
       .attr({
         type: "number"
       })
@@ -242,7 +242,7 @@ export class ThemeEditor {
       });
 
     row.append("div").classed({
-        "selector-font-name dropdown col-xs-4": 1
+        "nbp-selector-font-name dropdown col-xs-4": 1
       })
       .call(function(dropdown){
         dropdown.append("a")
@@ -304,16 +304,16 @@ export class ThemeEditor {
 
     this.$baseText
       .datum({key: null, value: textBase})
-      .select(".selector-font-name")
+      .select(".nbp-selector-font-name")
       .call((dropdown) => this.updateFontMenu(dropdown))
       .select(".btn")
       .text(textBase["font-family"] || "sans-serif");
 
-    this.$baseText.select(".selector-color")
+    this.$baseText.select(".nbp-selector-color")
       .call((dropdown) => this.updateColorMenu(dropdown))
       .style({"background-color": baseColorStr});
 
-    this.$baseText.select(".selector-font-size")
+    this.$baseText.select(".nbp-selector-font-size")
       .attr({placeholder: "14px"})
       .property({value: ({value={}}) => value["font-size"]});
 
@@ -401,9 +401,9 @@ export class ThemeEditor {
         el.exit().remove();
       });
 
-    rule.select(".selector-label").text(({key}) => key);
+    rule.select(".nbp-selector-label").text(({key}) => key);
 
-    rule.select(".selector-font-size")
+    rule.select(".nbp-selector-font-size")
       .attr({
         placeholder: function({key}){
           let ex = overlay.getExemplar(this, key);
@@ -412,7 +412,7 @@ export class ThemeEditor {
       })
       .property({value: ({value={}}) => value["font-size"] || ""});
 
-    rule.select(".selector-color")
+    rule.select(".nbp-selector-color")
       .call((dropdown) => this.updateColorMenu(dropdown))
       .style({
         "background-color": function({key}){
@@ -421,7 +421,7 @@ export class ThemeEditor {
         }
       });
 
-    rule.select(".selector-font-name")
+    rule.select(".nbp-selector-font-name")
       .call((dropdown) => this.updateFontMenu(dropdown))
       .select(".btn")
       .text(function({key}){

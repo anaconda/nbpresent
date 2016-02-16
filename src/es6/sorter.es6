@@ -410,12 +410,12 @@ class Sorter {
           visible: () => this.selectedSlide.get()
         }], [{
           icon: "chevron-circle-down fa-2x fa-fw",
-          click: () => this.editSlide(this.selectedSlide.get()),
+          click: () => this.editSlide(),
           label: "Leave",
           visible: () => this.editor
         }, {
           icon: `${ICON.editor} fa-2x fa-fw`,
-          click: () => this.editSlide(this.selectedSlide.get()),
+          click: () => this.editSlide(),
           label: "Edit",
           visible: () => this.selectedSlide.get() && !(this.editor)
         }],
@@ -531,6 +531,8 @@ class Sorter {
     * @param {Cell} cell - a Jupyter notebook cell
     * @return {Sorter} */
   linkContent(part, cell){
+    this.linkOverlay && this.linkContentOverlay();
+
     let {slide, region} = this.selectedRegion.get() || {},
       cellId;
 
@@ -595,6 +597,8 @@ class Sorter {
   }
 
   editSlide(id){
+    id = id ? id : this.selectedSlide.get();
+
     if(this.editor){
       if(this.editor.slide.get("id") === id){
         id = null;

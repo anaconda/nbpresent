@@ -214,12 +214,13 @@ export class NotebookMode extends BaseMode {
     return this;
   }
 
-  present(){
+  present(force){
     this.ensurePresenter();
 
-    const presenting = this.presenter.presenting.get();
+    let presenting = arguments.length ? force :
+      !this.presenter.presenting.get();
 
-    this.presenter.presenting.set(!presenting);
+    this.presenter.presenting.set(presenting);
 
     return this;
   }

@@ -59,7 +59,7 @@ export class ThemeManager {
     this.$toolbar = this.$ui.append("div")
       .datum([
         [{
-          icon: "plus-square-o",
+          icon: ICON.addTheme,
           click: () => this.addTheme(),
           label: "+ Theme"
         },{
@@ -115,11 +115,13 @@ export class ThemeManager {
       "nbp-theme-preview-current": ({key}) => key === current
     });
 
+    let _cls = [];
+
+    _cls[`fa-${ICON.defaultTheme}`] = ({key}) => key !== defaultTheme
+    _cls[`fa-${ICON.defaultThemeActive}`] = ({key}) => key === defaultTheme;
+
     theme.select(".nbp-default-theme i")
-      .classed({
-        "fa-star-o": ({key}) => key !== defaultTheme,
-        "fa-star": ({key}) => key === defaultTheme
-      });
+      .classed(_cls);
 
     this.card.update(theme.select(".nbp-theme-preview-card"));
 

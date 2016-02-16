@@ -40,11 +40,13 @@ export class TourBase {
       name: "nbpresent",
       duration: 5000,
       storage: false,
-      debug: true
+      debug: true,
+      orphan: true
     };
   }
 
   fakeHover(selector, value){
+    this.mode.presenter.speaker.hint();
     d3.selectAll(selector).classed({"nbp-fake-hover": value});
   }
 }

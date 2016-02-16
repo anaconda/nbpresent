@@ -1,5 +1,7 @@
 import {d3, $} from "nbpresent-deps";
 
+import Jupyter from "base/js/namespace";
+
 import {PART} from "../../parts";
 import {ICON} from "../../icons";
 import {SORTER} from "../../mode/notebook";
@@ -28,7 +30,7 @@ export class SorterTour extends TourBase {
       element: `.nbp-deck-toolbar .fa-${ICON.addSlide}`,
       title: "Deck Toolbar",
       content: "Let's create a new slide",
-      placement: "top",
+      placement: "left",
       onHide: () => $(`.nbp-deck-toolbar .fa-${ICON.addSlide}`).click()
     }, {
       element: ".from_template",
@@ -41,7 +43,18 @@ export class SorterTour extends TourBase {
       position: "top",
       content: "Or copy an existing slide"
     }, {
-      element: ".nbp-template-library .slide:nth-of-type(2)",
+      title: "Cells",
+      position: "top",
+      content: "Here's are some new cells the Tour will play with",
+      onShow: () => {
+        let code = Jupyter.notebook.insert_cell_at_index("code", 0),
+          markdown = Jupyter.notebook.insert_cell_at_index("markdown", 0);
+
+        markdown.code_mirror.setValue('# Hello, _nbpresent_!');
+        code.code_mirror.setValue('import nbpresent\nnbpresent.__version__');
+      }
+    }, {
+      element: ".nbp-template-library .slide:nth-of-type(1)",
       title: "Simple Template",
       position: "top",
       content: "Let's use this one",
@@ -55,7 +68,7 @@ export class SorterTour extends TourBase {
       content: "Here's our new slide"
     }, {
       element: ".nbp-slides-wrap .slide:last-child .nbp-region",
-      placement: "right",
+      placement: "top",
       title: "Region",
       onShow: () => {
         let el = d3.select(".nbp-slides-wrap .slide:last-child .nbp-region");
@@ -65,25 +78,45 @@ export class SorterTour extends TourBase {
     }, {
       element: `.nbp-region-toolbar .fa-${ICON.link}`,
       placement: "top",
-      title: "Cell Part: Linking",
-      content: "You put a Part of a cell into a Region. The Parts are Inputs, like source code or Markdown, the Outputs, such as calculations, tables and figures, and interactive Widgets, including sliders and knobs.",
+      title: "Linking a Region to a Cell Part",
+      content: "Each Region can be linked to a single Cell Part",
       onHide: () => this.mode.sorter.linkContentOverlay()
     }, {
       element: `.nbp-region-toolbar .fa-${ICON.link}`,
       placement: "top",
       title: "Link Overlay",
-      content: "The linkable Cell Parts are shown in the Link Overlay"
+      content: "The Link Overlay shows all of the parts available"
+    }, {
+      element: `.nbp-link-overlay .nbp-part-overlay-source:first-of-type`,
+      placement: "right",
+      title: "Cell Part: Source",
+      content: "Source, such as code and Markdown text"
+    }, {
+      element: `.nbp-link-overlay .nbp-part-overlay-outputs:first-of-type`,
+      placement: "right",
+      title: "Cell Part: Outputs",
+      content: "Outputs, such as rich figures and script results"
+    }, {
+      element: `.nbp-link-overlay .nbp-part-overlay-widgets:first-of-type`,
+      placement: "bottom",
+      title: "Cell Part: Widgets",
+      content: "If you use them, all the Widgets of a cell can be shown together"
+    }, {
+      element: `.nbp-link-overlay .nbp-part-overlay-whole:first-of-type`,
+      placement: "left",
+      title: "Cell Part: Whole",
+      content: "Finally, a Whole Cell (including its Source, Widgets, and Outputs) can be linked to a single region"
     }, {
       element: ".cell.selected",
       placement: "left",
       title: "Linking an Input Part",
-      content: "Let's use this cell input"
+      content: "Let's use this cell input",
+      onHide: () => this.mode.sorter.linkContent(PART.source)
     }, {
       element: ".nbp-slides-wrap .slide:last-child .nbp-region",
       placement: "top",
       title: "Part Thumbnail",
-      content: "A part thumbnail might look a little funny, as it can only be reliably updated when a linked Cell Part is on-screen, but you should usually be able to get an idea of what you're seeing.",
-      onShow: () => this.mode.sorter.linkContent(PART.source)
+      content: "A part thumbnail might look a little funny, as it can only be reliably updated when a linked Cell Part is on-screen when you mouse over it, but you should usually be able to get an idea of what you're seeing."
     }, {
       element: `.nbp-region-toolbar .fa-${ICON.unlink}`,
       placement: "top",
@@ -97,19 +130,22 @@ export class SorterTour extends TourBase {
     }, {
       title: "Achievement Unlocked: Presentation",
       content: "We're ready to look at the presentation!"
-    }/*, {
+    }, {
       element: "#nbp-present-btn",
       title: "Great, let's have a look",
       placement: "bottom",
       content: "Clicking this button brings up the Presenter",
-      onNext: () => this.mode.present()
+      onNext: () => {
+        this.mode.present();
+        this.mode.mode.set(null);
+      }
     }, {
       title: "Looks great!",
       content: "Your slide is still made up of your notebook"
     }, {
       element: ".nbp-present",
       placement: "top",
-      title: "Most Notebook Editing Functionality",
+      title: "It's still a Notebook",
       content: "This is still an editable input area"
     }, {
       element: ".nbp-present",
@@ -117,34 +153,36 @@ export class SorterTour extends TourBase {
       title: "Part Execution",
       content: "Inputs can even be executed with keyboard shortcuts like ctrl+enter"
     }, {
-      element: ".presenter_toolbar .fa-step-forward",
+      element: ".nbp-presenter-toolbar .fa-step-forward",
       title: "Go forward",
       content: "Click here to go to the next Slide",
       placement: "top",
-      onShown: () => this.fakeHover(".presenter_toolbar", true),
-      onHidden: () => this.fakeHover(".presenter_toolbar", 0)
+      onShown: () => this.fakeHover(".nbp-presenter-toolbar", 1),
+      onHidden: () => this.fakeHover(".nbp-presenter-toolbar", 0)
     }, {
-      element: ".presenter_toolbar .fa-step-backward",
+      element: ".nbp-presenter-toolbar .fa-step-backward",
       title: "Go back",
       content: "Clicking here to go back to the previous slide",
       placement: "top",
-      onShown: () => this.fakeHover(".presenter_toolbar", true),
-      onHidden: () => this.fakeHover(".presenter_toolbar", 0)
+      onShown: () => this.fakeHover(".nbp-presenter-toolbar", 1),
+      onHidden: () => this.fakeHover(".nbp-presenter-toolbar", 0)
     }, {
-      element: ".presenter_toolbar .fa-fast-backward",
+      element: ".nbp-presenter-toolbar .fa-fast-backward",
       title: "Go back to the beginning",
       content: "Clicking here to go back to the first Slide",
       placement: "top",
-      onShown: () => this.fakeHover(".presenter_toolbar", true),
-      onHidden: () => this.fakeHover(".presenter_toolbar", 0)
+      onShown: () => this.fakeHover(".nbp-presenter-toolbar", 1),
+      onHidden: () => this.fakeHover(".nbp-presenter-toolbar", 0)
     }, {
-      element: ".presenter_toolbar .fa-book",
+      element: ".nbp-presenter-toolbar .fa-book",
       title: "My work is done here",
       content: "Click here to go back to the Notebook",
       placement: "top",
-      onShown: () => this.fakeHover(".presenter_toolbar", true),
-      onHidden: () => this.fakeHover(".presenter_toolbar", 0) &&
-        this.mode.present()
-    }*/]
+      onShown: () => this.fakeHover(".nbp-presenter-toolbar", 1),
+      onHidden: () => [
+        this.fakeHover(".nbp-presenter-toolbar", 0),
+        this.mode.present(false)
+      ]
+    }]
   }
 }
