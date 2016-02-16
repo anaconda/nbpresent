@@ -50,6 +50,12 @@ export class ThemeCard{
         if(color){
           return `rgb(${color.rgb})`;
         }
+      },
+      "background-image": ({background}) => {
+        let bg = background["background-image"];
+        if(bg){
+          return `url(${bg})`;
+        }
       }
     });
 

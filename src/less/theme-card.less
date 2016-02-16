@@ -3,7 +3,7 @@
 
   width: @theme-card-height;
   height: @theme-card-height;
-  background-color: rgba(255,255,255, 0.5);
+  background-color: white;
   box-shadow: z-shadow;
   border-radius: 2px;
   border: solid 1px @ui-bg;
@@ -12,12 +12,14 @@
 
   .nbp-theme-card-backgrounds {
     position:absolute;
-    height: @theme-card-height - @theme-card-swatch-size;
+    top: @theme-card-swatch-size;
     right: 0;
     bottom: 0;
 
     .nbp-theme-card-background{
       width: @theme-card-swatch-size;
+      background-size: cover;
+      background-position: center;
     }
   }
 
