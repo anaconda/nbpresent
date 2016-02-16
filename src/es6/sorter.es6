@@ -531,8 +531,6 @@ class Sorter {
     * @param {Cell} cell - a Jupyter notebook cell
     * @return {Sorter} */
   linkContent(part, cell){
-    this.linkOverlay && this.linkContentOverlay();
-
     let {slide, region} = this.selectedRegion.get() || {},
       cellId;
 
