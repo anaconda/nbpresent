@@ -1,10 +1,28 @@
 
 # nbpresent
-> remix your Jupyter Notebooks as interactive slideshows
 
-## Usage
-After [installing](#install) (and potentially enabling) as appropriate for your environment, after launching the Jupyter Notebook, all Notebooks will show two new buttons that show/hide the _slide sorter_ and the _presenter view_. Launching the sorter will trigger an interactive tour, which can be relaunched by clicking the _question mark_ in the top right corner of the sorter.
+[![](https://anaconda.org/anaconda-nb-extensions/nbpresent/badges/build.svg)](https://anaconda.org/anaconda-nb-extensions/nbpresent/builds) [![](https://anaconda.org/anaconda-nb-extensions/nbpresent/badges/installer/conda.svg
+)](https://anaconda.org/anaconda-nb-extensions/nbpresent) [![](https://img.shields.io/pypi/v/nbpresent.svg)](https://pypi.python.org/pypi/nbpresent)
 
+> remix your [Jupyter Notebooks](http://jupyter.org) as interactive slideshows
+
+![](./screenshot.png)
+
+## Using
+After [installing](#install) (and potentially enabling) as appropriate for your environment, relaunch the Jupyter Notebook: in the main toolbar, you will get two new buttons that toggle the _Authoring_ and _Presenting_ modes.
+
+## User Documentation and Community
+When _Authoring_, you can click on the `(?)` icon to see a number of in-Notebook guided tours that show all the features, as well as see links to community pages:
+
+- [mailing list](https://groups.google.com/forum/#!forum/nbpresent) for general or long-term discussion and announcements
+- [issues](https://github.com/Anaconda-Server/nbpresent/issues) for technical issues, as well as feature requests
+- [chat](https://gitter.im/Anaconda-Server/nbpresent) for quickly connecting with other users
+
+## Related Projects
+- [live_reveal/RISE](https://github.com/damianavila/RISE), the original inspiration for this work, based on [reveal.js](https://github.com/hakimel/reveal.js/).
+- [RMarkdown](http://rmarkdown.rstudio.com/ioslides_presentation_format.html) presentations
+
+## Publishing
 When you are happy with your presentation, you can download the standalone HTML file from the _File -> Download as -> Presentation (.html)_ menu item.
 
 ## Install
@@ -31,7 +49,7 @@ python -m nbpresent.install --enable --user
 
 ### `conda`
 ```shell
-conda install -c anaconda-nb-extensions/label/dev nbpresent
+conda install -c anaconda-nb-extensions nbpresent
 ```
 
 This will enable `nbpresent` by default.
