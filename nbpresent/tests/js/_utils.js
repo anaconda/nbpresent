@@ -42,13 +42,29 @@
 
 
   root.canSeeAndClick = function(message, visible, click){
-    return this
-      .waitUntilVisible(visible)
-      .then(function(){
-        this.test.assertExists(click || visible, "I can see and click " + message);
-        this.screenshot(message);
-        this.click(click || visible);
-      });
+    var things = message;
+
+    if(arguments.length !== 1){
+      things = [[message, visible, click]];
+    }
+
+    var that = this;
+
+    things.map(function(thing){
+      var message = thing[0],
+        visible = thing[1],
+        click = thing[2];
+
+      that = that
+        .waitUntilVisible(visible)
+        .then(function(){
+          this.test.assertExists(click || visible, "I can see and click " + message);
+          this.screenshot(message);
+          this.click(click || visible);
+        });
+    });
+
+    return that;
   }
 
   root.hasMeta = function(path, tests){
@@ -84,9 +100,9 @@
       _.map(tests, function(test, message){
         this.test.assert(test(_.get(meta, path)),
           "I remember " + message + " in " + path);
-      }, this)
+      }, this);
     });
-  }
+  };
 
   root.dragRelease = function(message, selector, opts){
     var it, x, y, x1, y1;
@@ -115,19 +131,21 @@
 
   root.baseline_notebook = function(){
     // the actual test
-    this.set_cell_text(0, [
-      'from IPython.display import Markdown',
-      'Markdown("# Hello World!")'
-    ].join("\n"));
-    this.execute_cell_then(0);
 
     this.append_cell();
     this.set_cell_text(1, [
+      'from IPython.display import Markdown',
+      'Markdown("# Hello World!")'
+    ].join("\n"));
+    this.execute_cell_then(1);
+
+    this.append_cell();
+    this.set_cell_text(2, [
       'from ipywidgets import FloatSlider',
       'x = FloatSlider()',
       'x'
     ].join("\n"));
-    this.execute_cell_then(1);
+    this.execute_cell_then(2);
   }
 
 }).call(this);

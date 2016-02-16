@@ -1,0 +1,67 @@
+body.nbp-helping {
+  .nbp-helper{
+    margin-right: 0;
+    transition: margin-right @tx-dur @tx-fn;
+  }
+}
+
+.nbp-helper {
+  .nbp-ui();
+
+  z-index: @z-help;
+
+  position: fixed;
+
+  right: @app-bar-width;
+  width: @sorter-slide-width;
+  top: 0;
+  bottom: 0;
+
+  margin-right: -@sorter-slide-width;
+  transition: margin-right @tx-dur @tx-fn;
+
+  background-color: @ui-bg;
+
+  hr {
+    margin: 0 20px;
+    padding: 0;
+    border-top: solid 1px fade(@jpy-brand, 50%);
+  }
+
+  h1, h2, h3 {
+    color: @jpy-brand;
+    text-align: center;
+  }
+
+  .nbp-version {
+    font-size: 12px;
+  }
+
+  h2{
+    font-size: 18px;
+  }
+
+  a:not(.btn) {
+    color: @jpy-brand;
+    text-decoration: none;
+    border-bottom: solid 3px fade(@jpy-brand, 20%);
+    transition: border-bottom @tx-dur @tx-fn;
+    &:hover {
+      border-bottom: solid 1px fade(@jpy-brand, 75%);
+      transition: border-bottom @tx-dur @tx-fn;
+    }
+  }
+
+  .nbp-community, .nbp-tour-launcher {
+    width: 50%;
+  }
+
+  .nbp-legal {
+    bottom: 0;
+    position: absolute;
+    padding: 10px;
+    color: @jpy-brand;
+    font-size: 11px;
+    text-align: center;
+  }
+}

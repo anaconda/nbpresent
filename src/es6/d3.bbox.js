@@ -4,6 +4,7 @@
 // https://github.com/lucasb-eyer/d3-boundingbox
 
 // ES6 "translation" by (c) 2015 Nick Bollweg
+/* eslint-disable */
 
 import {d3} from "nbpresent-deps";
 

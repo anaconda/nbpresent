@@ -1,22 +1,29 @@
-.nbpresent_speaker{
-  z-index: @z-speaker;
-  display: block;
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
+body.nbp-presenting {
+  .nbpresent_speaker{
+    .nbp-ui();
 
-  .presenter_toolbar {
-    opacity: 0;
-    transition: all 0.2s;
-    float: right;
+    z-index: @z-speaker;
+    display: block;
+    position: fixed;
+    bottom: 10px;
+    right: @app-bar-width;
 
-    &:hover, &.fake_hover{
-      opacity: 1;
+    .nbp-presenter-toolbar {
       transition: all 0.2s;
-    }
+      float: right;
 
-    a {
-      color: @jpy-brand;
+      &:hover, &.fake_hover{
+        opacity: 1;
+        transition: all 0.2s;
+      }
+
+      a {
+        color: @jpy-brand;
+      }
     }
   }
+}
+
+body:not(.nbp-presenting) .nbpresent_speaker{
+  display: none;
 }

@@ -1,4 +1,4 @@
-.slide.mini {
+.slide.nbp-mini {
   position: relative;
   width: @sorter-slide-width;
   height: @sorter-slide-height;
@@ -6,43 +6,50 @@
   border-radius: 2px;
   background-color: #fff;
   overflow: hidden;
+  box-shadow: @z-shadow;
 
   &.active {
-    transition: border 0.2s;
-    border-color: @jpy-brand;
-    border-top-width: 5px;
+    border: solid 3px @jpy-brand;
   }
 
   &.dragging {
-    box-shadow: @nbpresent-z-shadow;
+    box-shadow: @z-shadow;
     z-index: 9999;
     opacity: 0.9;
   }
 
-  .region {
+  .nbp-region {
     position: absolute;
 
     background-color: rgba(255,255,255,0.5);
     background-repeat: no-repeat;
     border: dashed 3px rgba(128,128,128,0.5);
-    border-radius: 3px;
+    border-radius: 2px;
 
-    transition: border 0.2s;
-
-    &.content_source{
-      border: solid 3px rgba(0, 0, 128, 0.25);
+    &.nbp-content-source,
+    &.nbp-content-outputs,
+    &.nbp-content-widgets,
+    &.nbp-content-whole {
+       border: solid 1px black;
     }
 
-    &.content_outputs{
-      border: solid 3px rgba(139, 0, 0, 0.25);
+    &.nbp-content-source {
+      background-color: fadeOut(@part-source-color, 75%);
     }
 
-    &.content_widgets{
-      border: solid 3px rgba(139, 0, 128, 0.25);
+    &.nbp-content-outputs {
+      background-color: fadeOut(@part-outputs-color, 75%);
     }
 
-    &.active{
-      transition: border 0.2s;
+    &.nbp-content-widgets {
+      background-color: fadeOut(@part-widgets-color, 75%);
+    }
+
+    &.nbp-content-whole {
+      background-color: fadeOut(@part-whole-color, 75%);
+    }
+
+    &.active {
       border: solid 3px @jpy-brand;
     }
   }

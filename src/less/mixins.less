@@ -1,8 +1,27 @@
-.gradient (@startColor: #eee, @endColor: white) {
-	background-color: @startColor;
-	background: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
-	background: -webkit-linear-gradient(top, @startColor, @endColor);
-	background: -moz-linear-gradient(top, @startColor, @endColor);
-	background: -ms-linear-gradient(top, @startColor, @endColor);
-	background: -o-linear-gradient(top, @startColor, @endColor);
+.nbp-ui {
+  font-family: Lato, sans-serif;
+
+  .btn {
+    color: @jpy-brand;
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    opacity: 0.75;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:active:focus, &:active:hover{
+      background-color: @jpy-brand;
+      color: @ui-bg;
+    }
+
+    label {
+      font-size: 12px;
+      text-align: center;
+      display: block;
+      break: both;
+    }
+  }
 }

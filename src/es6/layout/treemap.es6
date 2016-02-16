@@ -2,11 +2,18 @@ import {d3} from "nbpresent-deps";
 
 import {ManualLayout} from "./manual";
 
-let KEY = "treemap";
+let KEY = "treemap",
+  WEIGHT = "treemap:weight";
 
 export class TreemapLayout extends ManualLayout {
   static clsKey(){
     return KEY;
+  }
+
+  attrDefaults() {
+    var attrs = {};
+    attrs[WEIGHT] = 1.0;
+    return attrs;
   }
 
   key(){
@@ -22,22 +29,13 @@ export class TreemapLayout extends ManualLayout {
       .size([100, 100])
       .sticky(true)
       .value((d) => {
-        return d._value.attrs["treemap:weight"] || 1;
+        return (d._value || {}).attrs[WEIGHT] || 1;
       });
 
     let regions = d3.entries(this.slide.value.regions)
       .map((d)=> {
         d._value = d.value;
         return d;
-      })
-
-    // initialize missing values
-    regions
-      .filter((d) => d.value.attrs["treemap:weight"] == null)
-      .map((d) => {
-        that.tree.merge(["slides", that.slide.key, "regions", d.key, "attrs"], {
-          "treemap:weight": d.value["treemap:weight"] || 1
-        });
       });
 
     this.treemap({

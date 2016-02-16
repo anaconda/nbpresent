@@ -7,15 +7,17 @@ casper.notebook_test(function(){
 function basic_test(){
   var t = casper.test;
 
-  casper.notebook_test(function(){
-    ["#nbpresent_sorter_btn",
-      "#nbpresent_present_btn",
-      ".download_nbpresent_html",
-      ".download_nbpresent_pdf"
-    ].map(function(selector){ t.assertExists(selector); });
+  this.baseline_notebook();
 
-    loaded("nbpresent.min.css");
-  });
+  this.then(function(){
+      this.canSeeAndClick("the body", "body");
+    })
+    .then(function(){
+      ["#nbp-app-btn", "#nbp-present-btn", ".download_nbpresent"]
+        .map(function(selector){ t.assertExists(selector); });
+
+      loaded("nbpresent.min.css");
+    });
 
   // TODO: move to utils?
   function loaded(pattern){

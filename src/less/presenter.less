@@ -1,51 +1,76 @@
-body.nbpresent_presenting {
+body:not(.nbp-presenting) .nbp-presenter{
+  display: none;
+}
+
+body.nbp-presenting {
   overflow: hidden;
+
   #notebook-container {
     position:absolute;
     left: -9999px
   }
-}
 
+  .nbp-presenter {
+    .nbp-ui();
+    z-index: @z-present;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 
-
-.nbpresent_presenter {
-  opacity: 0;
-  display: none;
-  z-index: @z-present;
-  background-color: white;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
-
-#notebook .cell .nbpresent_present .text_cell_render {
-  border: none;
-}
-
-.cell div.nbpresent_present{
-  z-index: @z-presented;
-  position: fixed;
-  display: block;
-
-  .prompt, .ctb_hideshow {
-    display: none;
+    .nbp-presenter-background {
+      position: fixed;
+      max-width: 100vw;
+    }
   }
 
-  .output {
-    height: 100%;
-    .output_area {
+  #notebook .cell .nbp-present .text_cell_render {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+
+  .cell.nbp-present.selected{
+    border: none;
+    background: none;
+  }
+
+  .cell.nbp-present,
+  .cell .nbp-present{
+    z-index: @z-presented;
+    position: fixed;
+    display: block;
+
+    .prompt, .ctb_hideshow {
+      display: none;
+    }
+
+    .input_area, &.input_area {
       height: 100%;
-      .output_subarea {
+
+      .CodeMirror {
+        max-height: 100%;
         height: 100%;
-        max-width: auto;
+      }
+    }
+
+    .output {
+      height: 100%;
+      .output_area {
+        height: 100%;
+        .output_subarea {
+          height: 100%;
+          max-width: 100%;
+        }
       }
     }
   }
-}
 
 
-.cell div.nbpresent_unpresent{
-  display: none;
+  .cell div.nbp-unpresent{
+    display: none;
+  }
 }

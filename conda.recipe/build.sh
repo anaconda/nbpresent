@@ -1,5 +1,5 @@
-SRC_DIR=$RECIPE_DIR/..
-cd $SRC_DIR
+cd "${RECIPE_DIR}/.."
+npm install -g npm@latest
 npm install .
-npm run dist
-python setup.py install
+npm run build:release
+"${PYTHON}" setup.py install

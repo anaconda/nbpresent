@@ -1,70 +1,155 @@
-.nbpresent_sorter{
-  z-index: @z-sorter;
+body.nbp-sorting {
+  #notebook_panel {
+    margin-bottom: @sorter-height;
+  }
+
+  .nbp-sorter-drawer {
+    padding-top: 0;
+    transition: padding-top @tx-dur @tx-fn;
+  }
+}
+
+body.nbp-presenting{
+  .nbp-sorter-drawer {
+    opacity: 0.75;
+  }
+}
+
+body.nbp-presenting.nbp-sorting{
+  .nbp-present {
+    box-shadow: @z-shadow;
+    transition: box-shadow @tx-dur @tx-fn;
+  }
+}
+
+body.nbp-presenting:not(.nbp-sorting){
+  .nbp-present {
+    box-shadow: none;
+    transition: box-shadow @tx-dur @tx-fn;
+  }
+}
+
+.nbp-sorter-drawer {
   position: fixed;
-  right: 0;
   left: 0;
   bottom: 0;
+  right: @app-bar-width;
   height: @sorter-height;
-  color: @jpy-brand;
-  box-shadow: @nbpresent-z-shadow;
-  transition: bottom 0.2s;
-  background-color: @ui-bg;
 
-  .nbpresent_brand, .nbpresent_help {
+  z-index: @z-sorter;
+  padding-top: @sorter-height;
+  transition: padding-top @tx-dur @tx-fn;
+
+  .nbp-sorter{
+    .nbp-ui();
+
     position: absolute;
-    right: 0;
-    bottom: 0;
-    margin: 5px 10px;
-    padding: 0;
-
-    a {
-      color: @jpy-brand;
-    }
-  }
-
-  .nbpresent_help {
-    bottom: inherit;
-    top: 0;
-  }
-
-  &.offscreen {
-    transition: bottom 0.2s;
-    bottom: -1 * (@sorter-height + 5);
-  }
-
-  .slide_toolbar {
-    position: absolute;
-    top: @sorter-slide-height + 30;
-  }
-  .deck_toolbar{
-    position: absolute;
-    left: 50%;
-    top: -40px;
-  }
-
-  .region_toolbar{
-    position: absolute;
-    opacity: 0;
-    display: none;
-    top: -2px;
-  }
-
-  .slides_wrap {
-    padding-top: 30px;
-    padding-bottom: 30px;
+    width: 100%;
     height: @sorter-height;
-    overflow-x: auto;
-    overflow-y: hidden;
-    position: relative;
-    margin: 0;
-    right: 0;
 
-    .empty {
-      position: absolute;
+    color: @jpy-brand;
+    box-shadow: @z-shadow;
+    background-color: @ui-bg;
+    opacity: 0.9;
+
+    h2 {
+      font-size: 18px;
+      margin: 0;
+      padding: 10px;
     }
 
-    .slide.mini {
+    .nbp-sorter-label {
       position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+
+    .nbp-sorter-empty {
+      display: none;
+
+      a, .btn {
+        color: @jpy-brand;
+        background-color: transparent;
+      }
+
+      .btn {
+        border: solid 1px @jpy-brand;
+      }
+    }
+
+    &.empty .nbp-sorter-empty {
+      display: block;
+      position: absolute;
+      top: 0;
+      text-align: center;
+      padding: 10px;
+
+      .nbp-empty-intro {
+        width: @sorter-slide-width * 1.6;
+        padding: 0px 30px 0 0;
+      }
+
+      i {
+        vertical-align: middle;
+      }
+
+      .nbp-tomes {
+        position: absolute;
+        left: @sorter-slide-width * 1.6;
+        top: 0;
+        right: 0;
+        display: flex;
+
+        .nbp-tome {
+          flex: 1;
+          text-align: center;
+          padding: 5px;
+        }
+      }
+    }
+
+    .nbp-region-toolbar{
+      position: absolute;
+      display: none;
+      top: 0;
+      left: 50%;
+
+      opacity: 0;
+
+      text-align: center;
+    }
+
+    .nbp-slides-wrap {
+      overflow-x: auto;
+      overflow-y: hidden;
+      position: relative;
+      width: 100%;
+      padding-top: @btn-titled-height;
+      height: @sorter-height;
+
+      .empty {
+        position: absolute;
+      }
+
+      .slide.nbp-mini {
+        position: absolute;
+        .nbp-region {
+          background-size: cover;
+        }
+      }
     }
   }
+}
+
+.nbp-slide-theme-picker{
+  .nbp-ui();
+
+  background-color: @ui-bg;
+  position: fixed;
+  bottom: @sorter-height;
+  right: @app-bar-width;
+  z-index: @z-sorter;
+  top: 0;
+  overflow-y: auto;
+  padding-left: 5px;
 }

@@ -1,0 +1,23 @@
+export const ICON = {
+  showRules: "adjust",
+  addRegion: "plus-square",
+  addSlide: "plus-square-o",
+  addTheme: "plus-circle",
+  defaultThemeActive: "star",
+  defaultTheme: "star-o",
+  editor: "edit",
+  editRegion: "edit",
+  grid: "th",
+  help: "question-circle",
+  intro: "home",
+  link: "link",
+  manual: "arrows",
+  nbpresent: "gift",
+  presenter: "youtube-play",
+  preview: "eye-slash",
+  slides: "film",
+  themer: "paint-brush",
+  trash: "trash",
+  treemap: "tree",
+  unlink: "unlink"
+};

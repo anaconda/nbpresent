@@ -1,0 +1,52 @@
+.nbp-theme-card {
+  .nbp-ui();
+
+  width: @theme-card-height;
+  height: @theme-card-height;
+  background-color: white;
+  box-shadow: z-shadow;
+  border-radius: 2px;
+  border: solid 1px @ui-bg;
+  margin: 5px 5px 0 0;
+  position: relative;
+
+  .nbp-theme-card-backgrounds {
+    position:absolute;
+    top: @theme-card-swatch-size;
+    right: 0;
+    bottom: 0;
+
+    .nbp-theme-card-background{
+      width: @theme-card-swatch-size;
+      background-size: cover;
+      background-position: center;
+    }
+  }
+
+  .nbp-theme-card-fonts {
+    position: absolute;
+    top: @theme-card-swatch-size + 2;
+    bottom: 0;
+    left: 4px;
+    right: @theme-card-swatch-size;
+    overflow-y: auto;
+    padding-bottom: 4px;
+  }
+
+  .nbp-theme-card-palette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    overflow-x: auto;
+    .nbp-theme-card-color {
+      width: @theme-card-swatch-size;
+      height: @theme-card-swatch-size;
+      float: left;
+    }
+  }
+
+  .nbp-theme-card-font {
+    font-size: 12px;
+  }
+}

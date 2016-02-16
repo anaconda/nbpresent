@@ -1,23 +1,28 @@
-import {d3, $} from "nbpresent-deps";
+import {d3} from "nbpresent-deps";
 
-import {Tree} from "../tree";
 import {StandalonePresenter} from "../presenter/standalone";
 
-import {Mode as BaseMode} from "./base";
+import {BaseMode} from "./base";
 
-export class Mode extends BaseMode {
+export class StandaloneMode extends BaseMode {
   init() {
-    let slides = JSON.parse(d3.select("#nbpresent_tree").text());
-
-    let tree = new Tree({
-      slides: slides.slides,
-      root: this.root
-    });
-
-    this.tree = tree.tree;
+    super.init();
 
     this.presenter = new StandalonePresenter(this.tree);
 
     this.presenter.presenting.set(true);
+
+    return this;
+  }
+
+  metadata() {
+    let tree = JSON.parse(d3.select("#nbpresent_tree").text());
+
+    // TODO: centralize serialized keys
+    return {
+      slides: tree.slides || {},
+      themes: tree.themes || {},
+      root: this.root
+    };
   }
 }

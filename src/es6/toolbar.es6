@@ -1,8 +1,8 @@
-import {d3} from "nbpresent-deps";
+import {d3, $, _} from "nbpresent-deps";
 
 let fn = d3.functor;
 
-class Toolbar {
+export class Toolbar {
   constructor(){
     this._btnClass = fn("btn-default");
     this._btnGroupClass = fn("btn-group");
@@ -31,7 +31,7 @@ class Toolbar {
 
   update($selection){
     let that = this;
-    $selection.classed({"btn-toolbar": 1, nbpresent_toolbar: 1});
+    $selection.classed({"btn-toolbar nbp-toolbar": 1});
 
     let $group = $selection.selectAll(".btn-toolbar-group")
       .data((d) => d)
@@ -42,44 +42,63 @@ class Toolbar {
       .classed(this._btnGroupClass(), 1);
 
     let $btn = $group.selectAll(".btn")
-      .data((d) => d, (d) => d.tip);
+      .data((d) => d);
 
     $btn.enter()
       .append("a")
-      .attr("class", (d) => {
-        return `btn ${this._btnClass(d)}`
-      })
-      .attr({
-        title: (d) => d.tip
+      .classed({btn: 1})
+      .call(($btn)=>{
+        $btn.append("i");
+        $btn.append("label");
+      });
+
+    $btn.attr({
+        "class": (d) => `btn ${this._btnClass(d)}`,
+        title: (d) => d.tip || d.label
       })
       .each(function(d){
         if(!$.fn.tooltip){
           return;
         }
-        $(this).tooltip(that._tipOptions(d));
+        try {
+          $(this).tooltip("destroy");
+        } catch(err) {
+          // whatever, jquery
+        }
+        d.tip && $(this).tooltip(that._tipOptions(d));
       })
-      .append("i");
+      .on("click", (d) => d.click());
 
-    $btn
-      .on("click", (d) => d.click() )
-      .select("i")
+    // regular icons
+    $btn.select("i")
+      .filter(({icon}) => _.isString(icon))
       .attr({
-        "class": (d) => `fa fa-fw fa-2x fa-${d.icon}`,
-      });
+        "class": ({icon}) => `fa fa-fw fa-2x fa-${icon}`
+      })
+      .selectAll("i").remove();
 
-    let clean = function(){
-      $(this).tooltip("destroy");
-    }
+    // handle stacked icons
+    let stacked = $btn.select("i")
+      .filter(({icon}) => !_.isString(icon))
+      .attr({"class": "fa-stack"})
+      .selectAll("i")
+      .data((d) => d.icon.map(() => d));
+
+    stacked.exit().remove();
+
+    stacked.enter().append("i");
+
+    stacked.attr({"class": ({icon}, i) => `fa fa-${icon[i]}`});
+
+    $btn.select("label")
+      .text(({label}) => label);
 
     $btn.filter((d) => d.visible && !d.visible())
-      .each(clean)
       .remove();
 
     $btn.exit()
-      .each(clean)
       .remove();
+
     $group.exit().remove();
   }
 }
-
-export {Toolbar};

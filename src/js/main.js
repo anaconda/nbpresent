@@ -4,6 +4,6 @@ require(
 
 function(jquery, deps, mode){
   $(function(){
-    window.nbpresent = new mode.Mode("./");
+    window.nbpresent = new mode.StandaloneMode("./");
   });
 });

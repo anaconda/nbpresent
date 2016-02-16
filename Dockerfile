@@ -1,29 +1,27 @@
-FROM andrewosh/binder-base
+FROM continuumio/miniconda
 
-USER main
+RUN apt-get install -y libfreetype6-dev libfontconfig1-dev
 
-RUN git clone https://github.com/Anaconda-Server/nbpresent.git
+RUN conda install -yq \
+  conda-build==1.19 \
+  conda==3.19.1
 
-WORKDIR nbpresent
+COPY ./environment.yml /tmp/environment.yml
+RUN conda env update --file /tmp/environment.yml
 
-# conda packages (preferred)
-RUN conda install \
-    -y \
+RUN mkdir -p /opt/conda/conda-bld/linux-64/
+
+COPY . /src/nbpresent
+
+WORKDIR /src/nbpresent
+
+RUN conda build \
+    conda.recipe \
+    -c anaconda-nb-extensions \
+    -c bokeh \
+    -c cpcloud \
     -c javascript \
-    -c nbcio \
-    bokeh \
-    nodejs \
-  && conda env export
+    -c mutirri \
+    -c wakari
 
-RUN pip install \
-    --no-cache-dir \
-    bqplot \
-    qgrid \
-  && pip freeze
-
-RUN npm install && npm run dist
-RUN python setup.py develop
-RUN jupyter nbextension install \
-  --prefix="${CONDA_ENV_PATH}" \
-  nbpresent/static/nbpresent
-RUN jupyter nbextension enable nbpresent/nbpresent.min --user
+CMD ["/usr/bin/bash"]

@@ -1,19 +1,21 @@
-.nbpresent_editor {
+.nbp-editor {
+  .nbp-ui();
   position: fixed;
-  top: @HACK-header-height;
-  right: 0;
-  left: 0;
   bottom: @sorter-height;
+  right: @app-bar-width;
+  left: @editor-sidebar-width;
+  top: 0;
   background-color: rgba(50, 50, 50, 0.5);
   z-index: @z-editor;
+  opacity: 0.9;
 
   .slide_bg {
     background-color: #fff;
     position: absolute;
   }
 
-  .region {
-    .region_bg {
+  .nbp-region {
+    .nbp-region-bg {
       fill: transparent;
       opacity: 0.50;
       stroke: grey;
@@ -21,23 +23,28 @@
       stroke-dasharray: 5,5;
     }
 
-    &.content_source .region_bg{
-      stroke: rgba(0, 0, 128, 0.25);
+    &.nbp-content-source .nbp-region-bg{
+      stroke: @part-source-color;
       stroke-dasharray: none;
     }
 
-    &.content_outputs .region_bg{
-      stroke: rgba(139, 0, 0, 0.25);
+    &.nbp-content-outputs .nbp-region-bg{
+      stroke: @part-outputs-color;
       stroke-dasharray: none;
     }
 
-    &.content_widgets .region_bg{
-      stroke: rgba(139, 0, 128, 0.25);
+    &.nbp-content-widgets .nbp-region-bg{
+      stroke: @part-widgets-color;
+      stroke-dasharray: none;
+    }
+
+    &.nbp-content-whole .nbp-region-bg{
+      stroke: @part-whole-color;
       stroke-dasharray: none;
     }
 
 
-    &.active .region_bg{
+    &.active .nbp-region-bg{
       stroke: @jpy-brand;
       opacity: 0.9;
       stroke-width: 10px;
@@ -49,25 +56,28 @@
 }
 
 // TODO: move this?
-.nbpresent_regiontree {
+.nbp-regiontree {
+  .nbp-ui();
+
   z-index: @z-regiontree;
   position: absolute;
   width: @editor-sidebar-width;
-  top: @HACK-header-height;
-  left: 0;
   bottom: @sorter-height;
+  left: 0;
+  top: 0;
   background-color: @ui-bg;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 30px;
+  padding-top: @btn-titled-height;
+  opacity: 0.9;
 
-  .nbpresent_toolbar {
+  .nbp-toolbar {
     position: fixed;
-    top: @HACK-header-height;
+    top: 0;
     z-index: @z-regiontree + 1;
     width: @editor-sidebar-width - 10;
     background-color: @ui-bg;
-    box-shadow: @nbpresent-z-shadow;
+    box-shadow: @z-shadow;
   }
 
   .region_info {

@@ -1,6 +1,7 @@
 import os
 import sys
 import glob
+import subprocess
 
 try:
     from unittest.mock import patch
@@ -14,6 +15,9 @@ from notebook import jstest
 from ipython_genutils.tempdir import TemporaryDirectory
 
 from nbpresent.install import install
+import platform
+
+IS_WIN = "Windows" in platform.system()
 
 here = os.path.dirname(__file__)
 
@@ -47,6 +51,33 @@ class NBPresentTestController(jstest.JSController):
 
         if extra_args is not None:
             self.cmd = self.cmd + extra_args
+
+        if IS_WIN:
+            self.cmd[0] = "{}.cmd".format(self.cmd[0])
+
+    def launch(self, buffer_output=False, capture_output=False):
+        # print('*** ENV:', self.env)  # dbg
+        # print('*** CMD:', self.cmd)  # dbg
+        env = os.environ.copy()
+        env.update(self.env)
+        if buffer_output:
+            capture_output = True
+        self.stdout_capturer = c = jstest.StreamCapturer(
+            echo=not buffer_output)
+        c.start()
+        stdout = c.writefd if capture_output else None
+        # stderr = subprocess.STDOUT if capture_output else None
+        self.process = subprocess.Popen(
+            self.cmd,
+            stderr=subprocess.PIPE,
+            stdout=stdout,
+            env=env)
+
+    def wait(self):
+        self.process.communicate()
+        self.stdout_capturer.halt()
+        self.stdout = self.stdout_capturer.get_buffer()
+        return self.process.returncode
 
     def setup(self):
         # call the hacked setup

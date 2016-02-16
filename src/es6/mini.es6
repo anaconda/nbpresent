@@ -1,14 +1,26 @@
 import {d3} from "nbpresent-deps";
 
-import {CellManager} from "./cells/notebook";
+import {NotebookCellManager} from "./cells/notebook";
 import {PART} from "./parts";
 
+// TODO: refactor this
+export const SLIDE_WIDTH = 160,
+  SLIDE_HEIGHT = 90;
+
 class MiniSlide {
+  width() {
+    return SLIDE_WIDTH;
+  }
+
+  height(){
+    return SLIDE_HEIGHT;
+  }
+
   constructor(selectedRegion) {
     this.selectedRegion = selectedRegion;
-    this.cellManager = new CellManager();
+    this.cellManager = new NotebookCellManager();
 
-    this._regions = (d, i) => d.value.regions;
+    this._regions = ({value}) => value.regions;
 
     this.update = this.update.bind(this);
     this.clicked = this.clicked.bind(this);
@@ -21,14 +33,14 @@ class MiniSlide {
   }
 
   hasContent(part){
-    return (d) => (d.region.value.content || {}).part === part;
+    return (d) => (d.region.value.content || {}).part == part;
   }
 
   clicked(d){
     // if called outside the d3 context...
     d = d || d3.select(this).datum();
 
-    if(!this.selectedRegion){
+    if(!(this.selectedRegion)){
       return;
     }
 
@@ -45,20 +57,30 @@ class MiniSlide {
   }
 
   update($slide) {
-    let that = this;
+    let cellManager = this.cellManager;
 
-    $slide.classed({mini: 1});
+    $slide.classed({"nbp-mini": 1});
 
     let $region = $slide
-      .selectAll(".region")
+      .selectAll(".nbp-region")
       .data((d) => d3.entries(this._regions(d)).map((region) => {
         return {slide: d, region};
       }));
 
     $region.enter()
       .append("div")
-      .classed({region: 1})
-      .on("click", this.clicked);
+      .classed({"nbp-region": 1})
+      .on("click", this.clicked)
+      .on("mouseover", function({region}){
+        if(region.value.content){
+          cellManager.thumbnail(region.value.content)
+            .then(({uri}) => {
+              d3.select(this).style({"background-image": `url(${uri})`})
+            });
+        }else{
+          d3.select(this).style({"background-image": null});
+        }
+      });
 
     $region.exit()
       .remove();
@@ -72,42 +94,18 @@ class MiniSlide {
         active: (d) => {
           return d.slide.key === slide && d.region.key === region
         },
-        content_source: this.hasContent(PART.source),
-        content_outputs: this.hasContent(PART.outputs),
-        content_widgets: this.hasContent(PART.widgets)
+        "nbp-content-source": this.hasContent(PART.source),
+        "nbp-content-outputs": this.hasContent(PART.outputs),
+        "nbp-content-widgets": this.hasContent(PART.widgets),
+        "nbp-content-whole": this.hasContent(PART.whole),
+        "nbp-content-null": this.hasContent(null)
       })
       // TODO: scale
       .style({
-        width: (d) => `${d.region.value.attrs.width * 160}px`,
-        height: (d) => `${d.region.value.attrs.height * 90}px`,
-        left: (d) => `${d.region.value.attrs.x * 160}px`,
-        top: (d) => `${d.region.value.attrs.y * 90}px`
-      });
-
-    // TODO: this needs to be much better/faster
-    $region
-      .filter((d) => d.region.value.content)
-      .filter(function(d){
-        let el = d3.select(this);
-        return el.classed("active") || el.style("background-image") === "none";
-      })
-      .each(function(d){
-        var $region = d3.select(this);
-        that.cellManager.thumbnail(d.region.value.content)
-          .catch(function(err){
-            $region
-              .style({
-                "background": "#333",
-                "background-image": null
-              });
-          })
-          .then(function({uri, width, height}){
-            $region
-              .style({
-                background: null,
-                "background-image": `url("${uri}")`
-              });
-          });
+        width: (d, i) => `${d.region.value.attrs.width * this.width(d, i)}px`,
+        height: (d, i) => `${d.region.value.attrs.height  * this.height(d, i)}px`,
+        left: (d, i) => `${d.region.value.attrs.x * this.width(d, i)}px`,
+        top: (d, i) => `${d.region.value.attrs.y * this.height(d, i)}px`
       });
   }
 }

@@ -3,7 +3,7 @@
 
 {% macro nbpresent_id(cell) -%}
   {% if cell.metadata.nbpresent %}
-    data-nbpresent-id="{{ cell.metadata.nbpresent.id }}"
+    data-nbp-id="{{ cell.metadata.nbpresent.id }}"
   {% endif %}
 {%- endmacro %}
 
@@ -56,6 +56,8 @@
       {{ css }}
     </style>
   {% endfor %}
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 
   <!-- Loading mathjax macro -->
   {{ mathjax() }}

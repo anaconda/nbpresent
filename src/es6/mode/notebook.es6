@@ -1,151 +1,227 @@
 import Jupyter from "base/js/namespace";
-import {CellToolbar} from "notebook/js/celltoolbar";
 
-import {d3, $} from "nbpresent-deps";
+import {d3, _} from "nbpresent-deps";
 
+import {ICON} from "../icons";
+
+import {Toolbar} from "../toolbar";
 import {NotebookPresenter} from "../presenter/notebook";
+
 import {Sorter} from "../sorter";
-import {PART} from "../parts";
-import {NbpresentTour} from "../tour";
-import {Tree} from "../tree";
+import {ThemeManager} from "../theme/manager";
+import {Helper} from "../help/helper";
 
-import {Mode as BaseMode} from "./base";
+import {BaseMode} from "./base";
 
-export class Mode extends BaseMode {
+import {NotebookActions} from "../actions/notebook";
+
+
+export const THEMER = "themer",
+  SORTER = "sorter",
+  HELPER = "helper",
+  MODES = [
+    THEMER,
+    SORTER,
+    HELPER
+  ];
+
+export class NotebookMode extends BaseMode {
+
   init() {
-    this.initStylesheet();
+    super.init();
 
-    let tree = new Tree({
-      slides: this.metadata().slides,
-      root: this.root
-    });
+    this.enabled = this.tree.select(["app", "enabled"]);
+    this.enabled.on("update", () => this.enabledChanged());
 
-    this.tree = tree.tree;
+    this.mode = this.tree.select(["app", "mode"]);
+    this.mode.on("update", () => this.modeUpdated());
 
-    this.slides = this.tree.select(["slides"]);
-    this.slides.on("update", () => this.metadata(true))
+    let debouncedSave = _.debounce(() => this.metadata(true), 1e3);
 
-    this.tour = new NbpresentTour(this);
-    this.tour.init();
+    [this.slides, this.themes].map(({on}) => on("update", debouncedSave));
 
-    this.presenter = new NotebookPresenter(this.tree, this.tour);
-    this.sorter = new Sorter(this.tree, this.tour);
+    this.slides.on("update", () => this.update());
 
-    this.initToolbar();
+    this.initActions();
+
+    this.$body = d3.select("body");
+
+    return this.initUI();
   }
 
-  initStylesheet(){
-    let css = d3.select("head")
-      .selectAll("link#nbpresent-css")
-      .data([1]);
+  initUI(){
+    this.$ui = this.$body.append("div")
+      .classed({"nbp-app": 1});
 
-    if(css.node()){
-      console.warn("nbpresent extension already loaded!");
-      return;
-    }
+    this.appBar = new Toolbar()
+      .btnClass("btn-default btn-lg")
+      .btnGroupClass("btn-group-vertical")
+      .tipOptions({container: "body", placement: "top"});
 
-    css.enter()
-      .append("link")
-      .attr({id: "nbpresent-css"})
-      .attr({
-        rel: "stylesheet",
-        href: `${this.root}/nbpresent.min.css`
-      });
+    this.$appBar = this.$ui.append("div")
+      .classed({"nbp-app-bar": 1})
+      .datum([
+        [{
+          icon: `${ICON.presenter} fa-2x`,
+          label: "Present",
+          click: () => this.present()
+        }],
+        [{
+          icon: `${ICON.slides} fa-2x`,
+          label: "Slides",
+          click: () => this.mode.set(this.mode.get() === SORTER ? null : SORTER)
+        }],
+        [{
+          icon: `${ICON.themer} fa-2x`,
+          label: "Themes",
+          click: () => this.mode.set(this.mode.get() === THEMER ? null : THEMER)
+        }],
+        [{
+          icon: `${ICON.help} fa-2x`,
+          label: "Help",
+          click: () => this.mode.set(this.mode.get() === HELPER ? null : HELPER)
+        }]
+      ])
+      .call(this.appBar.update);
+
+    return this.update();
+  }
+
+
+
+  initActions(){
+    this.actions = new NotebookActions([{
+        name: "show-sorter",
+        value: {
+          icon: `fa-${ICON.nbpresent}`,
+          help: 'enable nbpresent',
+          handler: () => this.show()
+        }
+      }, {
+        name: "show-presentation",
+        keys: ["esc"],
+        value: {
+          icon: `fa-${ICON.presenter}`,
+          help: 'show presentation',
+          handler: ()=> {
+            if(this.presenter.presenting.get() && this.mode.get()){
+              this.mode.set(null);
+            }else{
+              this.present();
+            }
+          }
+        }
+      }
+    ]);
+
+    return this;
+  }
+
+
+  deinitActions(){
+    this.actions && this.actions.pop();
+
+    return this;
+  }
+
+  update(){
+    this.$body.classed({
+      "nbp-no-slides": !(Object.keys(this.slides.get() || {}).length)
+    });
+
+    return this;
   }
 
   metadata(update){
     let md = Jupyter.notebook.metadata;
     if(update){
       md.nbpresent = {
-        slides: this.slides.serialize()
+        slides: this.slides.serialize(),
+        themes: this.themes.serialize()
       };
     }else{
       return md.nbpresent || {
-        slides: {}
+        slides: {},
+        themes: {}
       }
     }
   }
 
+  enabledChanged(){
+    let enabled = this.enabled.get();
+
+    if(enabled){
+      this.ensurePresenter();
+    }
+
+    this.$body.classed({
+      "nbp-app-enabled": enabled
+    });
+    Jupyter.page.show_site();
+
+    if(enabled){
+      this.actions.push();
+    }else{
+      this.actions && this.actions.pop();
+    }
+  }
+
+
+  modeClass(mode){
+    return {
+      themer: ThemeManager,
+      sorter: Sorter,
+      helper: Helper
+    }[mode];
+  }
+
+  modeUpdated(){
+    const current = this.mode.get();
+
+    MODES.filter((mode) => (mode !== current) && this[mode])
+      .map((mode) => {
+        this[mode].destroy();
+        delete this[mode];
+      });
+
+    if(current && this[current]){
+      return;
+    }
+
+    let ModeClass = this.modeClass(current);
+
+    current && (this[current] = new ModeClass(this.tree, {mode: this}));
+  }
+
+
   show(){
-    this.sorter.show();
-    this.tour.start();
-    $('#header-container').toggle();
-    $('.header-bar').toggle();
+    let newEnabled = !(this.enabled.get());
+
+    this.enabled.set(newEnabled);
+
+    if(!newEnabled){
+      this.mode.set(null);
+    }
+
+    return this;
   }
 
-  present(){
-    this.presenter.presenting.set(true);
+
+  ensurePresenter(){
+    if(!(this.presenter)){
+      this.presenter = new NotebookPresenter(this.tree);
+    }
+    return this;
   }
 
-  unpresent(){
-    this.presenter.presenting.set(false);
-  }
+  present(force){
+    this.ensurePresenter();
 
-  initToolbar() {
-    $("#view_menu").append($("<li/>").append($("<a/>")
-      .text("Toggle Present")
-      .on("click", ()=>{
-        this.show();
-      })));
+    let presenting = arguments.length ? force :
+      !this.presenter.presenting.get();
 
-    // TODO: make this one button!
-    Jupyter.toolbar.add_buttons_group([
-      {
-        label: "Slide Sorter",
-        icon: "fa-th-large",
-        callback: () => this.show(),
-        id: "nbpresent_sorter_btn"
-      },
-      {
-        label: "Present",
-        icon: "fa-youtube-play",
-        callback: () => this.present(),
-        id: "nbpresent_present_btn"
-      }
-    ]);
-    let that = this;
+    this.presenter.presenting.set(presenting);
 
-    var nbpresent_preset = [];
-
-    let add_to_region = (div, cell) => {
-      let $div = d3.select(div[0]);
-
-      $div.append("i").attr("class", "fa fa-link");
-
-      $div.append("span").text(" Region ");
-
-      let $btn = $div.selectAll(".btn")
-        .data([PART.source, PART.outputs, PART.widgets])
-        .enter()
-        .append("button")
-        .classed({btn: 1, "btn-default": 1, "btn-xs": 1})
-        .text((d) => d)
-        .on("click", (d) => that.sorter.linkContent(d));
-    };
-
-    CellToolbar.register_callback("nbpresent.add_to_region", add_to_region);
-    nbpresent_preset.push("nbpresent.add_to_region");
-
-    CellToolbar.register_preset("nbpresent", nbpresent_preset, Jupyter.notebook);
-
-    // update the download chrome
-    let dlMenu = d3.select(d3.select("#download_html").node().parentNode);
-
-    dlMenu.insert("li", ":nth-child(4)")
-      .append("a")
-      .classed({download_nbpresent_html: 1})
-      .text("Presentation (.html)")
-      .on("click", () => this.nbconvert("nbpresent"));
-
-    dlMenu.insert("li", ":nth-child(5)")
-      .append("a")
-      .classed({download_nbpresent_pdf: 1})
-      .text("Presentation (.pdf)")
-      .on("click", () => this.nbconvert("nbpresent_pdf"));
-
-  }
-
-  nbconvert(key){
-    Jupyter.menubar._nbconvert(key, true);
+    return this;
   }
 }

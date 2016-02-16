@@ -1,0 +1,97 @@
+.nbp-app {
+  .nbp-ui();
+
+  z-index: @z-app-bar;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: @app-bar-width;
+
+  background-color: @ui-bg;
+
+  margin-right: -@app-bar-width;
+  transition: margin-right @tx-dur @tx-fn;
+
+  .btn-toolbar {
+    margin: 0;
+    right: 0;
+  }
+
+  .nbp-deck-toolbar {
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+body.nbp-no-slides {
+  .nbp-app-bar {
+    .btn[title="Present"] {
+      opacity: 0.33;
+      &:hover {
+        opacity: 1.0;
+      }
+    }
+  }
+}
+
+body:not(.nbp-app-enabled) {
+  #site {
+    transition: width @tx-dur @tx-fn;
+  }
+
+  #maintoolbar{
+    padding-right: 0;
+    transition: padding-right @tx-dur @tx-fn;
+  }
+}
+
+
+body.nbp-app-enabled {
+  #site {
+    margin-right: @app-bar-width;
+    width: auto;
+    transition: margin-right @tx-dur @tx-fn;
+  }
+
+  #maintoolbar{
+    padding-right: @app-bar-width;
+    transition: padding-right @tx-dur @tx-fn;
+  }
+
+  #nbp-app-btn{
+    color: @jpy-brand;
+    box-shadow: @z-shadow;
+    background-color: @ui-bg;
+    transition: margin-right @tx-dur @tx-fn, box-shadow @tx-dur @tx-fn;
+  }
+
+  .nbp-app {
+    opacity: 1;
+    margin-right: 0;
+    transition: margin-right @tx-dur @tx-fn, opacity @tx-dur @tx-fn;
+
+    box-shadow: @z-shadow;
+  }
+
+  .tour-nbpresent {
+    z-index: @z-tour;
+  }
+
+  &.nbp-presenting{
+    .nbp-app {
+      opacity: 0;
+      transition: opacity @tx-dur @tx-fn;
+    }
+    &.nbp-sorting, &.nbp-theming {
+      .nbp-app {
+        opacity: 0.5;
+        transition: opacity @tx-dur @tx-fn;
+      }
+    }
+    .nbp-app:hover {
+      opacity: 1.0;
+      transition: opacity @tx-dur @tx-fn;
+    }
+  }
+}

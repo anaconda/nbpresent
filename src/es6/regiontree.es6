@@ -1,7 +1,11 @@
 import {d3, uuid} from "nbpresent-deps";
 
+import Jupyter from "base/js/namespace";
+
+import {ICON} from "./icons";
 import {Toolbar} from "./toolbar";
 import {MiniSlide} from "./mini";
+
 
 class RegionTree {
   constructor(slide, region){
@@ -35,48 +39,51 @@ class RegionTree {
     return 300;
   }
 
+
+  /** Set the layout to the given key
+    * @param {String} layout - the layout to use
+    * @return {RegionTree} */
   layout(layout){
     this.slide.set("layout", layout);
+    return this;
   }
 
   initUI(){
     this.$ui = d3.select("body")
       .append("div")
-      .classed({nbpresent_regiontree: 1});
+      .classed({"nbp-regiontree": 1});
 
     let toolbar = new Toolbar();
 
     this.$toolbar = this.$ui.append("div")
       .datum([
         [{
-          icon: "plus-square-o",
+          icon: ICON.addRegion,
           click: () => this.addRegion(),
-          tip: "Add Region"
+          label: "+ Region"
         }],
         // TODO: make this extensible
         [{
-          icon: "arrows",
+          icon: ICON.manual,
           click: () => this.layout("manual"),
-          tip: "Manual Layout"
-        },{
-          icon: "tree",
+          label: "Free"
+        }, {
+          icon: ICON.treemap,
           click: () => this.layout("treemap"),
-          tip: "Treemap Layout"
-        }],
-        // TODO: fix this
-        // [{
-        //   icon: "header",
-        //   click: () => this.toggleStyle("slab"),
-        //   tip: "Toggle Slab Effect"
-        // }],
+          label: "Treemap"
+        }, {
+          icon: ICON.grid,
+          click: () => this.layout("grid"),
+          label: "Grid"
+        }]
       ])
       .call(toolbar.update);
   }
 
   toggleStyle(style){
-    let {slide, region} = this.selectedRegion.get() || {},
+    let {region} = this.selectedRegion.get() || {},
       path = ["regions", region, "style", style];
-    this.slide.set(path, !this.slide.get(path));
+    this.slide.set(path, !(this.slide.get(path)));
   }
 
   addRegion(){
@@ -99,9 +106,9 @@ class RegionTree {
 
     let that = this;
 
-    let regions = d3.entries(this.slide.get("regions")),
+    let regions = d3.entries(this.slide.get("regions") || {}),
       $region = this.$ui.selectAll(".region_info")
-        .data(regions, (d) => d.key),
+        .data(regions, ({key}) => key),
       slide = this.slide.get();
 
     $region
@@ -195,7 +202,8 @@ class RegionTree {
 
       // TODO: put this in layout
       let icon = {
-        treemap: "tree"
+        treemap: "tree",
+        grid: "calculator"
       }[d.attr.key.split(":")[0]];
 
       el.select(".fa")
@@ -213,15 +221,18 @@ class RegionTree {
     });
   }
 
-  makeSlider(element, d) {
-    let that = this;
-    let [x, y] = d3.mouse(element);
-    let el = d3.select(element);
+  makeSlider(element) {
+    let that = this,
+      x = d3.mouse(element)[0],
+      el = d3.select(element);
+
     el.on("mousemove", function(d){
-      let [x1, y1] = d3.mouse(this);
-      let dx = (x1 - x) / 20;
+      let x1 = d3.mouse(this)[0],
+        dx = (x1 - x) / 20,
+        path = ["regions", d.region.key, "attrs", d.attr.key];
+
       x = x1;
-      let path = ["regions", d.region.key, "attrs", d.attr.key];
+
       that.slide.set(path, that.slide.get(path) + dx)
     })
     .on("mouseup", function(){

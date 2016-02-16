@@ -18,11 +18,15 @@ setup(
     license="BSD-3-Clause",
     url="https://github.com/Anaconda-Server/nbpresent",
     keywords="ipython jupyter inkscape markdown presentation revealjs d3",
-    classifiers=["Development Status :: 4 - Beta",
-                 "Framework :: IPython",
-                 "Programming Language :: Python",
-                 "License :: OSI Approved :: BSD License"],
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Framework :: IPython",
+        "Programming Language :: Python",
+        "License :: OSI Approved :: BSD License"
+    ],
     packages=["nbpresent"],
+    setup_requires=["notebook"],
+    tests_require=["nose", "requests", "coverage"],
     include_package_data=True,
     entry_points={
         'console_scripts': ['nbpresent=nbpresent.export:main'],

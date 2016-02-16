@@ -1,33 +1,53 @@
+import {_} from "underscore";
 import {d3, uuid} from "nbpresent-deps";
 
 import Jupyter from "base/js/namespace";
 
 import {Editor} from "./editor";
 import {Toolbar} from "./toolbar";
-import {PART} from "./parts";
+import {ICON} from "./icons";
+
 import {MiniSlide} from "./mini";
-import {TemplateLibrary} from "./templates";
+import {TemplateLibrary} from "./templates/library";
+import {NotebookCellManager} from "./cells/notebook";
+import {LinkOverlay} from "./cells/overlay";
+
+import {NotebookActions} from "./actions/notebook";
+
+import {AriseTome} from "./tome/arise";
+import {BasicTome} from "./tome/basic";
+
+import {ThemeCard} from "./theme/card";
 
 let REMOVED = "<removed>";
 
+const MODE_NAMES = [
+  "editor",
+  "templates",
+  "linkOverlay"
+];
+
+
+/** The main user experience for creating and reordering slides, as well as
+  * defining the relationship between notebook cells {@link PART}s and slide
+  * regions. Not available in {@link StandaloneMode} */
 class Sorter {
-  constructor(tree, tour) {
+  constructor(tree) {
     this.tree = tree;
-    this.tour = tour;
+    this.cellManager = new NotebookCellManager();
+
+    this.cellManager.clearThumbnails();
 
     this.templatePicked = this.templatePicked.bind(this);
 
-    this.visible = this.tree.select(["sorting"]);
-    this.visible.set(false);
-
     this.slides = this.tree.select(["slides"]);
-    this.selectedSlide = this.tree.select(["selectedSlide"]);
-    this.selectedRegion = this.tree.select(["sorter", "selectedRegion"]);
+    this.themes = this.tree.select(["themes", "theme"]);
+    this.selectedSlide = this.tree.select(["app", "selectedSlide"]);
+    this.selectedRegion = this.tree.select(["app", "selectedRegion"]);
 
     this.selectedSlide.on("update", () => this.updateSelectedSlide());
     this.selectedRegion.on("update", () => this.updateSelectedRegion());
     this.slides.on("update", () => this.draw());
-    this.visible.on("update", () => this.visibleUpdated());
 
     this.scale = {
       x: d3.scale.linear()
@@ -36,136 +56,171 @@ class Sorter {
     this.mini = new MiniSlide(this.selectedRegion);
 
     this.drawn = false;
+
+    this.tomes = [
+      new BasicTome(this),
+      new AriseTome(this)
+    ];
+
+    this.initUI()
+      .initToolbar()
+      .initDrag()
+      .initActions()
+      .draw();
+
+    _.defer(() => this.$body.classed({"nbp-sorting": 1}));
   }
 
-  visibleUpdated(){
-    let visible = this.visible.get();
+  initActions(){
+    this.actions = new NotebookActions();
+    this.actions.push();
+    return this;
+  }
 
-    if(!this.drawn){
-      this.initUI();
-      this.drawn = true;
-    }
+  deinitActions(){
+    this.actions && this.actions.pop();
+    return this;
+  }
 
-    if(visible) {
-      this.draw();
-    }else {
-      if(this.editor){
-        this.editor.destroy();
-        this.editor = null;
+  cleanup(){
+    this.focusMode();
+  }
+
+  destroy(){
+    d3.select("body")
+      .classed({"nbp-sorting": 0});
+
+    this.cleanup();
+    this.deinitActions();
+    this.$deckToolbar.remove();
+    this.$themePicker && this.$themePicker.remove();
+    d3.selectAll(".ui-tooltip").remove();
+    this.destroyed = true;
+
+    _.delay(() => this.$drawer.remove(), 200);
+  }
+
+  focusMode(except=[]){
+    let mode;
+    MODE_NAMES.map((name) => {
+      mode = this[name];
+      if(!mode || except.indexOf(name) !== -1){
+        return;
       }
-      if(this.templates){
-        this.templates.destroy();
-        this.templates = null;
-      }
-    }
-
-    this.update();
-  }
-
-  show(){
-    this.visible.set(!this.visible.get());
-  }
-
-  update(){
-    let visible = this.visible.get();
-    this.$view
-      .classed({offscreen: !visible})
-      .style({
-        // necessary for FOUC
-        "display": visible ? "block" : "none"
-      });
-
-    d3.select("#notebook")
-      .style({
-        "margin-bottom": visible ? "100px" : null
-      });
+      mode.destroy();
+      this[name] = null;
+    });
+    return this;
   }
 
   initUI(){
-    this.$view = d3.select("body")
-      .append("div")
-      .classed({
-        nbpresent_sorter: 1,
-        offscreen: 1
-      })
-      .style({
-        display: "none"
+    this.$body = d3.select("body");
+
+    this.$app = this.$body.select(".nbp-app");
+
+    this.$drawer = this.$body.append("div")
+      .classed({"nbp-sorter-drawer": 1});
+
+    this.$ui = this.$drawer.append("div")
+      .classed({"nbp-sorter": 1});
+
+    this.$ui.append("h2")
+      .classed({"nbp-sorter-label": 1})
+      .text("Your Slides");
+
+    this.$slides = this.$ui.append("div")
+      .classed({"nbp-slides-wrap": 1});
+
+    this.$empty = this.$ui.append("div")
+      .classed({"nbp-sorter-empty": 1});
+
+    this.$empty.append("div")
+      .classed({"nbp-empty-intro": 1})
+      .call((empty) => {
+        empty.append("h2")
+          .text("No Slides… yet!");
+
+        empty.append("p")
+          .call((p)=>{
+            p.append("span")
+              .text("You can create an empty slide by pressing ");
+            p.append("a")
+              .on("click", () => this.addSlide())
+              .append("i").classed({"fa fa-plus-square-o fa-2x": 1});
+            p.append("span")
+              .text(" or by importing slides:");
+          });
       });
 
-    this.$slides = this.$view.append("div")
-      .classed({slides_wrap: 1});
+    this.$empty.append("div")
+      .classed({"nbp-tomes": 1});
 
-    let $brand = this.$view.append("h4")
-      .classed({nbpresent_brand: 1})
-      .append("a")
-      .attr({
-        href: "https://anaconda-server.github.io/nbpresent/",
-        target: "_blank"
-      })
-
-    $brand.append("i")
-      .attr("class", "fa fa-fw fa-gift");
-
-    $brand.append("span")
-      .text("nbpresent");
-
-    this.$empty = this.$slides.append("h3")
-      .classed({empty: 1})
-      .text("No slides yet.");
-
-    let $help = this.$view.append("div")
-      .classed({nbpresent_help: 1})
-      .append("a")
-      .attr({href: "#"})
-    .on("click", () => this.tour.restart())
-      .append("i")
-      .attr("class", "fa fa-question-circle");
-
-    this.initToolbar();
-    this.initDrag();
+    return this;
   }
 
   initDrag(){
     let that = this,
-      dragOrigin;
+      origX,
+      startY,
+      startX,
+      dx,
+      dy, // eslint-disable-line no-unused-vars
+      newX,
+      m,
+      it,
+      bb,
+      threshold = 10,
+      body = d3.select("body").node(),
+      mouse = () => d3.mouse(body);
+
+    function updateD(){
+      m = mouse();
+      dx = m[0] - startX;
+      dy = m[1] - startY;
+      newX = origX + dx;
+    }
 
     this.drag = d3.behavior.drag()
-      .on("dragstart", function(d){
-        let slide = d3.select(this)
-          .classed({dragging: 1});
-
-        dragOrigin = parseFloat(slide.style("left"));
+      .on("dragstart", function(){
+        it = d3.select(this);
+        origX = parseFloat(it.style("left"));
+        m = mouse();
+        startX = m[0];
+        startY = m[1];
       })
-      .on("drag", function(d){
-        d3.select(this)
-          .style({
-            left: `${dragOrigin += d3.event.dx}px`,
+      .on("drag", (d) => {
+        updateD();
+        if(!d.key || Math.abs(dx) < threshold){
+          it.classed({dragging: 0})
+          return;
+        }
+        it.classed({dragging: 1})
+          .style({left: `${newX}px`});
+      })
+      .on("dragend", (d) => {
+        updateD();
+        it.classed({dragging: 0});
+        if(!d.key || Math.abs(dx) < threshold){
+          return;
+        }
+
+        let replaced = false;
+        this.$slides.selectAll(".slide")
+          .each(function(other){
+            if(replaced || other.key == d.key){
+              return;
+            }
+            bb = this.getBoundingClientRect();
+            m = d3.mouse(this);
+            if(m[0] > 0 && m[0] < bb.width && m[1] > 0 && m[1] < bb.height){
+              that.unlinkSlide(d.key);
+              that.selectedSlide.set(that.appendSlide(other.key, d.key));
+              replaced = true;
+            }
           });
-      })
-      .on("dragend", function(d, i){
-        let $slide = d3.select(this)
-          .classed({dragging: 0});
-
-        let left = parseFloat($slide.style("left")),
-          slides = that.tree.get("sortedSlides"),
-          slideN = Math.floor(left / that.slideWidth()),
-          after;
-
-        if(left < that.slideWidth() || slideN < 0){
-          after = null;
-        }else if(slideN > slides.length || !slides[slideN]){
-          after = slides.slice(-1)[0].key;
-        }else{
-          after = slides[slideN].key;
-        }
-
-        if(d.key !== after){
-          that.unlinkSlide(d.key);
-          that.selectedSlide.set(that.appendSlide(after, d.key));
-        }else{
-          that.draw();
-        }
       });
+
+    return this;
   }
 
   // TODO: make these d3 scales!
@@ -174,16 +229,18 @@ class Sorter {
   }
 
   slideWidth(){
-    return 200;
+    return 180;
   }
 
-  copySlide(slide){
+  copySlide(slide, stripContent=true){
     let newSlide = JSON.parse(JSON.stringify(slide));
     newSlide.id = this.nextId();
     newSlide.regions = d3.entries(newSlide.regions).reduce((memo, d)=>{
       let id = this.nextId();
       // TODO: keep part?
-      memo[id] = $.extend(true, {}, d.value, {id, content: null});
+      memo[id] = _.extend(true, {}, d.value, {id},
+        stripContent ? {content: null} : {}
+      );
       return memo;
     }, {});
 
@@ -191,43 +248,70 @@ class Sorter {
   }
 
   slideClicked(d){
+    if(d.key){
+      this.selectedSlide.set(d.key);
+    }
+    if(!(d.key) && !(this.templates)){
+      this.templates = new TemplateLibrary(this.templatePicked);
+      return;
+    }
+
     if(this.templates){
       let newSlide = this.copySlide(d.value);
       this.templatePicked({key: newSlide.id, value: newSlide});
-      this.templates && this.templates.destroy();
-      this.templates = null;
+      this.focusMode();
       return;
     }
-    this.selectedSlide.set(d.key);
+  }
+
+  updateEmpty(){
+    var tome = this.$empty.select(".nbp-tomes").selectAll(".nbp-tome")
+      .data(this.tomes.filter((d) => d.relevant()))
+
+    tome.enter()
+      .append("div")
+      .classed({"nbp-tome": 1})
+      .call((tome) => {
+        tome.append("h3")
+          .text((d) => d.title());
+        tome.append("button")
+          .classed({btn: 1})
+          .on("click", (d)=> d.execute())
+          .call((btn)=>{
+            btn.append("i")
+              .attr("class", (d) => `fa fa-2x fa-${d.icon()}`);
+            btn.append("span").text((d) => ` ${d.label()}`);
+          });
+      });
+
+    tome.exit().remove();
   }
 
   draw(){
-    if(!this.$slides){
+    if(!(this.$slides)){
       return;
     }
-    let that = this;
 
     let slides = this.tree.get("sortedSlides");
 
-    this.scale.x.range([20, this.slideWidth() + 20]);
+    this.$ui.classed({empty: !slides.length});
+
+    if(!slides.length){
+      this.updateEmpty();
+    }
+
+    this.scale.x.range([10, this.slideWidth()]);
 
     let $slide = this.$slides.selectAll(".slide")
-      .data(slides, (d) => d.key);
+      .data(slides, (d) => `${d.key}:${d.value.prev}`);
 
     $slide.enter().append("div")
       .classed({slide: 1})
       .call(this.drag)
-      .on("click", (d) =>{
-        this.slideClicked(d)
-      })
+      .on("click", (d) => this.slideClicked(d))
       .on("dblclick", (d) => this.editSlide(d.key));
 
-    $slide.exit()
-      .transition()
-      .style({
-        top: "200px"
-      })
-      .remove();
+    $slide.exit().remove();
 
     let selectedSlide = this.selectedSlide.get(),
       selectedRegion = this.selectedRegion.get(),
@@ -241,7 +325,6 @@ class Sorter {
         active: (d) => d.key === selectedSlide
       })
       .transition()
-      .delay((d, i) => i * 10)
       .style({
         left: (d, i) => {
           let left = this.scale.x(i);
@@ -255,20 +338,16 @@ class Sorter {
     $slide.call(this.mini.update);
 
     this.$regionToolbar
-      .transition()
       .style({
-        opacity: selectedRegion ? 1 : 0,
-        display: selectedRegion ? "block" : "none",
-        left: `${selectedSlideLeft - 30}px`
-      });
-
-    this.$empty
-      .transition()
-      .style({opacity: 1 * !$slide[0].length })
-      .transition()
-      .style({display: $slide[0].length ? "none": "block"});
+          opacity: selectedRegion ? 1 : 0,
+          display: selectedRegion ? "block" : "none",
+          left: `${selectedSlideLeft}px`
+        })
+        .call(this.regionToolbar.update);
 
     this.$deckToolbar.call(this.deckToolbar.update);
+
+    return this;
   }
 
   updateSelectedRegion(){
@@ -279,22 +358,19 @@ class Sorter {
         [slide, "regions", region, "content"]);
       if(content){
         this.selectCell(content.cell);
+        this.cellManager.clearThumbnails([content]);
       }
-    }else if(this.$regionToolbar){
-      this.$regionToolbar.transition()
-        .style({opacity: 0})
-        .transition()
-        .style({display: "none"});
     }
-    this.draw();
+    return this.draw();
   }
 
   // TODO: move this to the cell manager?
   selectCell(id){
-    let cell = Jupyter.notebook.get_cells().filter(function(cell, idx){
+    Jupyter.notebook.get_cells().filter(function(cell, idx){
       if(cell.metadata.nbpresent && cell.metadata.nbpresent.id == id){
         Jupyter.notebook.select(idx);
-      };
+        Jupyter.notebook.scroll_to_cell(idx);
+      }
     });
   }
 
@@ -312,83 +388,162 @@ class Sorter {
     }
   }
 
-
   initToolbar(){
     this.deckToolbar = new Toolbar()
-      .btnClass("btn-default btn-lg");
-    this.$deckToolbar = this.$view.append("div")
-      .classed({deck_toolbar: 1})
+      .btnClass("btn-default btn-lg")
+      .tipOptions({container: "body", placement: "top"});
+
+    this.$deckToolbar = this.$app.append("div")
+      .classed({"nbp-deck-toolbar": 1})
       .datum([
         [{
-          icon: "plus-square-o fa-2x",
+          icon: "plus-square-o fa-2x fa-fw",
           click: () => this.addSlide(),
-          tip: "Add Slide"
+          label: "+ Slide"
         }], [{
-          icon: "edit fa-2x",
-          click: () => this.editSlide(this.selectedSlide.get()),
-          tip: "Edit Slide",
-          visible: () => this.selectedSlide.get() && !this.editor
-        }, {
-          icon: "chevron-circle-down fa-2x",
-          click: () => this.editSlide(this.selectedSlide.get()),
-          tip: "Back to Sorter",
+          icon: [
+            "square-o fa-stack-2x",
+            `${ICON.themer} fa-stack-1x`
+          ],
+          click: () => this.pickTheme(),
+          label: "Theme",
+          visible: () => this.selectedSlide.get()
+        }], [{
+          icon: "chevron-circle-down fa-2x fa-fw",
+          click: () => this.editSlide(),
+          label: "Leave",
           visible: () => this.editor
+        }, {
+          icon: `${ICON.editor} fa-2x fa-fw`,
+          click: () => this.editSlide(),
+          label: "Edit",
+          visible: () => this.selectedSlide.get() && !(this.editor)
         }],
         [{
-          icon: "trash fa-2x",
+          icon: [
+            "square-o fa-stack-2x",
+            `${ICON.trash} fa-stack-1x`
+          ],
           click: () => {
             this.removeSlide(this.selectedSlide.get());
             this.selectedSlide.set(null);
           },
-          tip: "Delete Slide",
+          label: "- Slide",
           visible: () => this.selectedSlide.get()
         }]
       ])
       .call(this.deckToolbar.update);
 
     this.regionToolbar = new Toolbar();
+
     this.$regionToolbar = this.$slides.append("div")
-      .classed({region_toolbar: 1})
+      .classed({"nbp-region-toolbar": 1})
       .datum([
         [{
-          icon: "terminal",
-          click: () => this.linkContent(PART.source),
-          tip: "Link Region to Cell Input"
-        },
-        {
-          icon: "image",
-          click: () => this.linkContent(PART.outputs),
-          tip: "Link Region to Cell Output"
-        },
-        {
-          icon: "sliders",
-          click: () => this.linkContent(PART.widgets),
-          tip: "Link Region to Cell Widgets"
-        },
-        {
-          icon: "unlink",
+          icon: ICON.link,
+          click: () => this.linkContentOverlay(),
+          label: "Link"
+        },{
+          icon: ICON.unlink,
           click: () => this.linkContent(null),
-          tip: "Unlink Region"
+          label: "Unlink",
+          visible: () => {
+            let selected = this.selectedRegion.get();
+            if(!selected){
+              return;
+            }
+            return this.slides.get([
+              selected.slide, "regions", selected.region, "content"]);
+          }
+        }],
+        [{
+          icon: ICON.trash,
+          click: () => this.destroyRegion(),
+          label: "- Region"
         }]
       ])
       .call(this.regionToolbar.update);
+
+    return this;
   }
 
-  linkContent(part){
-    let {slide, region} = this.selectedRegion.get() || {},
-      cell = Jupyter.notebook.get_selected_cell(),
-      cellId;
-
-    if(!(region && cell)){
+  pickTheme(){
+    if(this.$themePicker){
+      this.$themePicker.remove();
+      delete this.$themePicker;
       return;
     }
 
-    if(part){
-      if(!cell.metadata.nbpresent){
-        cell.metadata.nbpresent = {id: this.nextId()};
-      }
+    // TODO: options
+    this.themeCard = new ThemeCard();
 
-      cellId = cell.metadata.nbpresent.id;
+    this.$themePicker = this.$body.append("div")
+      .classed({"nbp-slide-theme-picker": 1});
+
+    let themes = this.themes.get() || {},
+      theme = this.$themePicker.selectAll(".nbp-slide-theme-picker-theme")
+        .data(d3.entries(themes));
+
+    theme.enter().append("div")
+      .classed({"nbp-slide-theme-picker-theme": 1})
+      .on("click", () => this.$themePicker.remove())
+      .on("mouseover", ({key}) => {
+        this.slides.set([this.selectedSlide.get(), "theme"], key);
+      });
+
+    theme.exit().remove();
+
+    this.themeCard.update(theme);
+  }
+
+  cellId(cell){
+    if(!cell.metadata.nbpresent){
+      cell.metadata.nbpresent = {id: this.nextId()};
+    }
+
+    return cell.metadata.nbpresent.id;
+  }
+
+  linkContentOverlay(){
+    if(this.linkOverlay){
+      this.linkOverlay.destroy();
+      this.linkOverlay = null;
+    }else{
+      this.focusMode(["linkOverlay"]);
+      this.linkOverlay = new LinkOverlay(
+        this.cellManager,
+        ({part, cell}) => {
+          this.linkContent(part, cell);
+          this.linkContentOverlay();
+        }
+      );
+
+      if(this.editor){
+        this.editor.destroy();
+        delete this.editor;
+      }
+      this.tree.set(["app", "presenting"], false);
+    }
+  }
+
+  /** Link the currently selected region to a cell part
+    * @param {String} part - one of {@link PART}
+    * @param {Cell} cell - a Jupyter notebook cell
+    * @return {Sorter} */
+  linkContent(part, cell){
+    this.linkOverlay && this.linkContentOverlay();
+
+    let {slide, region} = this.selectedRegion.get() || {},
+      cellId;
+
+    cell = cell || Jupyter.notebook.get_selected_cell();
+
+    if(!(region && cell)){
+      return this;
+    }
+
+    if(part){
+      cellId = this.cellId(cell);
 
       this.slides.set([slide, "regions", region, "content"], {
         cell: cellId,
@@ -397,22 +552,38 @@ class Sorter {
     }else{
       this.slides.unset([slide, "regions", region, "content"]);
     }
+    return this;
+  }
+
+  /** Destroy the currently selected region utterly
+    * @return {Sorter} */
+  destroyRegion(){
+    let {slide, region} = this.selectedRegion.get() || {};
+    if(!region){
+      return;
+    }
+    this.slides.unset([slide, "regions", region]);
+    this.selectedRegion.unset();
+    return this;
   }
 
   addSlide(){
-    if(!this.templates || this.templates.killed){
+    if(!(this.templates) || this.templates.killed){
       this.templates = new TemplateLibrary(this.templatePicked);
     }else{
-      this.templates.destroy();
-      this.templates = null;
+      this.focusMode();
     }
   }
 
+  /** Handle a slide template click (either from library or sorter)
+    * @param {Object} slide - the slide key, value to use
+  */
   templatePicked(slide){
-    if(slide && this.templates && !this.templates.killed){
+    if(slide && this.templates && !(this.templates.killed)){
       let last = this.tree.get("sortedSlides").slice(-1),
         selected = this.selectedSlide.get();
 
+      // actually updates the Baobab cursor.
       this.slides.set([slide.key], slide.value);
 
       let appended = this.appendSlide(
@@ -422,24 +593,23 @@ class Sorter {
 
       this.selectedSlide.set(appended);
     }
-    if(this.templates){
-      this.templates.destroy();
-      this.templates = null;
-    }
+    this.focusMode();
   }
 
   editSlide(id){
+    id = id ? id : this.selectedSlide.get();
+
     if(this.editor){
       if(this.editor.slide.get("id") === id){
         id = null;
       }
-      this.editor.destroy();
-      this.editor = null;
+      this.focusMode();
     }
 
     if(id){
+      this.focusMode(["editor"]);
       // TODO: do this with an id and big tree ref?
-      this.editor = new Editor(this.slides.select(id), this.selectedRegion);
+      this.editor = new Editor(this.slides.select([id]), this.selectedRegion);
     }
     this.draw();
   }
@@ -479,7 +649,12 @@ class Sorter {
     }
   }
 
-  appendSlide(prev, id=null){
+  /** Fix up the order of the slides linked list
+    * @param {String} [prev] - after what slide to insert the slide, or
+    *        or the beginning
+    * @param {String} [id] - the new id value to use, or create a slide
+    */
+  appendSlide(prev=null, id=null){
     let next = this.nextSlide(prev);
 
     if(!id){
