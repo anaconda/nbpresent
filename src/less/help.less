@@ -23,9 +23,8 @@ body.nbp-helping {
   background-color: @ui-bg;
 
   hr {
-    margin: 0;
+    margin: 0 20px;
     padding: 0;
-    width: 75%;
     border-top: solid 1px fade(@jpy-brand, 50%);
   }
 
@@ -42,10 +41,15 @@ body.nbp-helping {
     font-size: 18px;
   }
 
-  a {
+  a:not(.btn) {
     color: @jpy-brand;
     text-decoration: none;
     border-bottom: solid 3px fade(@jpy-brand, 20%);
+    transition: border-bottom @tx-dur @tx-fn;
+    &:hover {
+      border-bottom: solid 1px fade(@jpy-brand, 75%);
+      transition: border-bottom @tx-dur @tx-fn;
+    }
   }
 
   .nbp-community, .nbp-tour-launcher {

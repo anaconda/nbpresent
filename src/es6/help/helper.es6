@@ -51,7 +51,7 @@ export class Helper {
       .text(PKG.version);
 
     this.$h1 = this.$ui.append("h1")
-      .append("i").classed({"fa fa-gift fa-4x": 1});
+      .append("i").classed({"fa fa-gift fa-3x": 1});
 
     this.$ui.append("footer")
       .classed({"nbp-legal": 1})
