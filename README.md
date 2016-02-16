@@ -140,3 +140,10 @@ You may also want to pass in `--prefix` instead of user.
 | Build the conda package | `npm run pkg:conda` |
 | Build and upload the pypi package | `npm run pkg:pypi` |
 | Build the ESDoc and Sphinx documentation | `npm run docs` |
+
+## Changelog
+
+### 1.0.0
+- [Theme editor](https://github.com/Anaconda-Server/nbpresent/pull/41)
+- Much more consistent UI
+- Mnay bug fixes and more testing
