@@ -1,4 +1,4 @@
-import log from "../log";
+import {log} from "../logger";
 import {PART} from "../parts";
 import {BaseTome} from "./base";
 

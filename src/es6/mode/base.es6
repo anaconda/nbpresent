@@ -1,5 +1,5 @@
 import {Tree} from "../tree";
-
+import {log} from "../logger";
 
 /** Make a new Editor. The base app, as created in `index.html` */
 export class BaseMode {
@@ -17,6 +17,8 @@ export class BaseMode {
     this.slides = this.tree.select(["slides"]);
 
     this.themes = this.tree.select(["themes"]);
+
+    this.log = log;
 
     this.init();
   }

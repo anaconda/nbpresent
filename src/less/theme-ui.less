@@ -59,7 +59,10 @@ body:not(.nbp-theming) {
   .nbp-theme-previews-canned{
     position: absolute;
     right: 0;
-    width: 200px;
+    height: @theme-mgr-height;
+    width: 220px;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     .nbp-theme-preview-canned {
       float: right;

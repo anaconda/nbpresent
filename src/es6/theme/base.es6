@@ -50,12 +50,12 @@ export class ThemeBase{
           .concat(["blockquote"]);
 
         if(BLOCKS.indexOf(key) !== -1){
-          directives.push('margin: 0;')
+          directives.push('margin: 0 0 1.3em 0;')
           directives.push('padding: 0;');
         }
 
         return `${PRESENT_PREFIX} ${key}{
-          line-height: 1.1;
+          line-height: 1.25;
           ${directives.join("\n")}
         }`;
       })

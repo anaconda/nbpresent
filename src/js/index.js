@@ -1,8 +1,14 @@
+/* global requirejs define */
 define(
 ["require", "jquery", "base/js/namespace"],
 function(require, $, Jupyter){
   // here's your namespace global
   var nbpresent = window.nbpresent = {loading: true};
+
+  var initializedResolver,
+    initializedPromise = new Promise(function(resolve, reject){
+      initializedResolver = resolve;
+    });
 
   var $dlMenu = $("#download_html").parent();
 
@@ -13,6 +19,10 @@ function(require, $, Jupyter){
 
   function load_ipython_extension() {
     initNbpresent();
+  }
+
+  function initialized(){
+    return initializedPromise;
   }
 
   function initNbpresent(){
@@ -31,13 +41,16 @@ function(require, $, Jupyter){
     initStylesheet(modulePath);
 
 
-    requirejs(["nbpresent-deps"], function(deps){
+    requirejs(["nbpresent-deps"], function(){
       Jupyter.page.show_site();
       requirejs(["nbpresent-notebook"], function(mode){
         setTimeout(function(){
           nbpresent.mode = new mode.NotebookMode(
             require.toUrl(".").split("?")[0]
           );
+
+          initializedResolver(nbpresent.mode);
+
           initToolbar();
           initMenu();
         }, 1000);
@@ -104,7 +117,7 @@ function(require, $, Jupyter){
           .on("click", function(){ nbconvert(format.key); })
       )
       .appendTo($dlMenu)
-  };
+  }
 
   function formatsLoaded(available){
     // update the download chrome
@@ -114,6 +127,7 @@ function(require, $, Jupyter){
   }
 
   return {
-    load_ipython_extension: load_ipython_extension
+    load_ipython_extension: load_ipython_extension,
+    initialized: initialized
   };
 });

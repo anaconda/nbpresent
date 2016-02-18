@@ -238,7 +238,7 @@ class Sorter {
     newSlide.regions = d3.entries(newSlide.regions).reduce((memo, d)=>{
       let id = this.nextId();
       // TODO: keep part?
-      memo[id] = _.extend(true, {}, d.value, {id},
+      memo[id] = _.extend({}, d.value, {id},
         stripContent ? {content: null} : {}
       );
       return memo;
@@ -482,7 +482,7 @@ class Sorter {
 
     let themes = this.themes.get() || {},
       theme = this.$themePicker.selectAll(".nbp-slide-theme-picker-theme")
-        .data(d3.entries(themes));
+        .data([{key: null, value: {}}].concat(d3.entries(themes)));
 
     theme.enter().append("div")
       .classed({"nbp-slide-theme-picker-theme": 1})
