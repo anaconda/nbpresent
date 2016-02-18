@@ -27,7 +27,10 @@ export class ThemeManager {
 
     [this.defaultTheme, this.themes, this.stockThemes]
       .map(({on}) => on("update", ()=> this.update()));
-    mgrCursor.on("update", () => [this.update(), this.currentUpdated()]);
+    this.current.on("update", () => [
+      this.currentUpdated(),
+      _.defer(()=> this.update())
+    ]);
 
     this.initUI();
 
