@@ -1,3 +1,4 @@
+/* global casper */
 casper.notebook_test(function(){
   casper.screenshot.init("basic");
   casper.viewport(1440, 900)

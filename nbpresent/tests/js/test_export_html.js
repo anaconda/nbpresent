@@ -1,3 +1,5 @@
+/* global casper require */
+
 var system = require('system'),
   host = system.env.NBPRESENT_TEST_HTTP_HOST || "localhost",
   port = system.env.NBPRESENT_TEST_HTTP_PORT || 8000,

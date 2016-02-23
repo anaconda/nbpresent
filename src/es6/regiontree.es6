@@ -26,6 +26,11 @@ class RegionTree {
 
     this.slide.on("update", this.update);
     this.selectedRegion.on("update", this.update);
+
+    this.watcher = this.slide.tree.watch({
+      slide: this.slide,
+      selectedRegion: this.selectedRegion
+    });
   }
 
   destroy() {
@@ -116,9 +121,18 @@ class RegionTree {
       .append("div")
       .classed({region_info: 1});
 
+    $region.exit()
+      .transition()
+      .style({opacity: 0})
+      .remove();
+
     let $mini = $region
       .selectAll(".slide")
-      .data((d) => [{value: slide, key: slide.id, region: d.value}]);
+      .data((d) => [{
+        value: slide,
+        key: slide.id,
+        region: d.value
+      }]);
 
     $mini.enter()
       .append("div")

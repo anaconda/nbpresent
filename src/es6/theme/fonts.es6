@@ -106,6 +106,7 @@ export const FONTS = [
   "Muli",
   "Neuton",
   "Nixie One",
+  "Noto Sans",
   "Nunito",
   "Old Standard TT",
   "Open Sans",

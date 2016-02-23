@@ -1,4 +1,5 @@
 /* global casper */
+
 casper.notebook_test(function(){
   casper.screenshot.init("create");
   casper.viewport(1440, 900)
@@ -19,16 +20,16 @@ function create_test(){
         ".nbp-template-library .slide:last-of-type"]
     ])
     .waitWhileVisible(".nbp-template-library")
-    .thenEvaluate(function(){ window.nbpresent.mode.metadata(true); })
+    .saveNbpresent()
     .hasMeta("nbpresent.slides", {
       "one slide": function(slides){
-        return _(slides).toArray().value().length === 1;
+        return [_(slides).toArray().value().length, 1];
       },
       "four regions": function(slides){
         var regions = _(_(slides).toArray().first().regions)
           .toArray()
           .value();
-        return regions.length === 4;
+        return [regions.length, 4];
       }
     })
     .canSeeAndClick([
