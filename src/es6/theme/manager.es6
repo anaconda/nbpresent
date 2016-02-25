@@ -20,14 +20,17 @@ export class ThemeManager {
     this.defaultTheme = tree.select(["themes", "default"]);
 
     let mgrCursor = tree.select(["app", "theme-manager"]);
-
+    this.stockThemes = mgrCursor.select(["themes"]);
     this.current = mgrCursor.select(["current"]);
 
     this.card = new ThemeCard();
 
-    [this.defaultTheme, this.themes]
+    [this.defaultTheme, this.themes, this.stockThemes]
       .map(({on}) => on("update", ()=> this.update()));
-    this.current.on("update", () => [this.update(), this.currentUpdated()]);
+    this.current.on("update", () => [
+      this.currentUpdated(),
+      _.defer(()=> this.update())
+    ]);
 
     this.initUI();
 
@@ -85,12 +88,13 @@ export class ThemeManager {
   update(){
     let themes = this.themes.get() || {},
       current = this.current.get(),
+      stock = _.extend({}, this.stockThemes.get(), BASE_THEMES),
       theme = this.$ui.select(".nbp-theme-previews")
         .selectAll(".nbp-theme-preview")
         .data(d3.entries(themes), ({key}) => key),
       canned = this.$ui.select(".nbp-theme-previews-canned")
         .selectAll(".nbp-theme-preview-canned")
-        .data(d3.entries(BASE_THEMES), ({key}) => key),
+        .data(d3.entries(stock), ({key}) => key),
       defaultTheme = this.defaultTheme.get();
 
     this.$toolbar.call(this.toolbar.update);

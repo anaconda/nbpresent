@@ -2,7 +2,7 @@
 
 import {d3, html2canvas} from "nbpresent-deps";
 
-import log from "../log";
+import {log} from "../logger";
 import {PART, PART_SELECT} from "../parts";
 
 let _THUMBS = {};

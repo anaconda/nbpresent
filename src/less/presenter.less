@@ -23,6 +23,7 @@ body.nbp-presenting {
     .nbp-presenter-background {
       position: fixed;
       max-width: 100vw;
+      background-repeat: no-repeat;
     }
   }
 
@@ -64,6 +65,11 @@ body.nbp-presenting {
         .output_subarea {
           height: 100%;
           max-width: 100%;
+
+          &.rendered_html.output_result{
+            margin: 0;
+            padding: 0;
+          }
         }
       }
     }

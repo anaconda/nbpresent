@@ -75,10 +75,14 @@ export class Editor {
     // fake data event
     this.update();
 
+    this.watcher = this.slide.tree.watch({
+      slide: this.slide,
+      selectedRegion: this.selectedRegion,
+      regions: this.regions
+    });
+
     // subscribe to event when cursor changes
-    [this.selectedRegion, this.slide].map(({on})=> on("update", ()=> {
-      this.destroyed || this.update();
-    }));
+    this.watcher.on("update", () => this.destroyed || this.update());
   }
 
   /** Destroy the editor and its children utterly. */
@@ -86,6 +90,7 @@ export class Editor {
     this.deinitActions();
     this.sidebar.destroy();
     this.$ui.remove();
+    this.watcher.release();
 
     this.destroyed = true;
   }
@@ -218,8 +223,6 @@ export class Editor {
       .data(regions, ({key}) => key)
       .order();
 
-    $region.exit().remove();
-
     $region.enter()
       .append("g")
       .classed({"nbp-region": 1})
@@ -257,6 +260,11 @@ export class Editor {
     $region.filter(({value}) => !value.content)
       .select(".nbp-region-bg")
       .style({fill: null});
+
+    $region.exit()
+      .transition()
+      .style({opacity: 0})
+      .remove();
   }
 
   cycleRegion(delta=1){

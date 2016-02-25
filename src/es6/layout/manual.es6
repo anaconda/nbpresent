@@ -63,10 +63,10 @@ export class ManualLayout {
     pad = pad || 0;
 
     part.style({
-      height: `${this.y(height - (2 * pad))}px`,
-      left: `${this.x(x + pad)}px`,
-      top: `${this.y(y + pad)}px`,
-      width: `${this.x(width + (2 * pad))}px`
+      height: `${parseInt(this.y(height - (2 * pad)))}px`,
+      left: `${parseInt(this.x(x + pad))}px`,
+      top: `${parseInt(this.y(y + pad))}px`,
+      width: `${parseInt(this.x(width + (2 * pad)))}px`
     });
   }
 

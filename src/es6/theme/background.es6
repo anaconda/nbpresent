@@ -4,7 +4,7 @@ import {ICON} from "../icons";
 import {JPY_BRAND, UI_BG} from "../less";
 import {SLIDE_WIDTH, SLIDE_HEIGHT} from "../mini";
 
-import log from "../log";
+import {log} from "../logger";
 
 export const THUMBNAIL_MIN_DIM = 48;
 
@@ -237,8 +237,11 @@ export class BackgroundPicker {
 
   updateNewBackground(){
     let picker = this,
+      images = d3.merge(this.findImages())
+        .map((el) => picker.dataUri(el))
+        .filter((uri) => uri),
       img = this.$imageDropdown.selectAll("li")
-        .data(d3.merge(this.findImages()).map((el)=> picker.dataUri(el))),
+        .data(images),
       palette = this.palette.get() || {};
 
     img.enter().append("li")
@@ -327,27 +330,32 @@ export class BackgroundPicker {
   dataUri(el){
     let uri;
 
-    switch(el.tagName.toLowerCase()){
-      case 'svg':
-        uri = `data:image/svg+xml;base64,${btoa(this.serialize(el))}`;
-        break;
-      case 'canvas':
-        uri = el.toDataURL();
-        break;
-      case 'img':
-        if(el.src.indexOf("data:") === 0){
-          uri = el.src;
+    try{
+      switch(el.tagName.toLowerCase()){
+        case 'svg':
+          let xml = this.serialize(el);
+          uri = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(xml)))}`;
           break;
-        }
-        let ctx = this.$scratch.node().getContext('2d');
-        ctx.canvas.width = window.clientWidth;
-        ctx.canvas.height = window.clientHeight;
-        ctx.drawImage(el, 0, 0);
-        uri = this.$scratch.node().toDataURL();
-        break;
-      default:
-        log.debug("Data URI for ", el.tagName, "not implemented.");
-        break;
+        case 'canvas':
+          uri = el.toDataURL();
+          break;
+        case 'img':
+          if(el.src.indexOf("data:") === 0){
+            uri = el.src;
+            break;
+          }
+          let ctx = this.$scratch.node().getContext('2d');
+          ctx.canvas.width = window.clientWidth;
+          ctx.canvas.height = window.clientHeight;
+          ctx.drawImage(el, 0, 0);
+          uri = this.$scratch.node().toDataURL();
+          break;
+        default:
+          log.debug("Data URI for ", el.tagName, "not implemented.");
+          break;
+      }
+    } catch(err) {
+      log.info("Couldn't serialize", el, err);
     }
 
     return uri;
