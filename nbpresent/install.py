@@ -80,6 +80,8 @@ def install(enable=False, **kwargs):
                 },
             }
         )
+        print("New config...")
+        pprint(cm.get("notebook"))
 
 
 if __name__ == '__main__':
