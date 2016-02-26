@@ -8,7 +8,6 @@ __pycache__
 .coverage
 screenshots/
 sphinx/source/auto
-README.rst
 \.ipynb_checkpoints
 build/
 dist/
