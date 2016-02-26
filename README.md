@@ -119,7 +119,7 @@ source activate nbpresent
 We _still_ use `npm` for a lot of dependencies, so then run:
 ```shell
 npm install
-npm run build:all
+npm run build
 ```
 
 ### Ensure development asset loading
@@ -127,7 +127,8 @@ To ensure that you always get the right assets, install the nbextension with the
 ```shell
 python -m nbpresent.install --overwrite --symlink --enable --user
 ```
-You may also want to pass in `--prefix` instead of user.
+
+If developing in a [conda](http://conda.pydata.org/docs/) environment, you would want to pass in `--prefix` instead of `--user`.
 
 ### Chore Automation
 | Task | Command |
@@ -138,10 +139,15 @@ You may also want to pass in `--prefix` instead of user.
 | Run the CasperJS and `nose` tests  | `npm run test` |
 | Check code style |  `npm run lint` |
 | Build the conda package | `npm run pkg:conda` |
-| Build and upload the pypi package | `npm run pkg:pypi` |
+| Build **and upload** the pypi package | `npm run pkg:pypi` |
 | Build the ESDoc and Sphinx documentation | `npm run docs` |
 
 ## Changelog
+
+### 1.1.0
+- fixing issue with slides without regions and some layouts crashing editor [#58](https://github.com/Anaconda-Server/nbpresent/issues/58)
+- adding JS extensibility of themes (partial [#44](https://github.com/Anaconda-Server/nbpresent/issues/44))
+  - see [Extending nbpresent](https://github.com/Anaconda-Server/nbpresent/blob/master/notebooks/Extending%20nbpresent.ipynb)
 
 ### 1.0.0
 - [Theme editor](https://github.com/Anaconda-Server/nbpresent/pull/41)

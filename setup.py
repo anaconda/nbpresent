@@ -9,15 +9,19 @@ __version__ = None
 with open('nbpresent/_version.py') as version:
     exec(version.read())
 
+with open('./README.rst') as readme:
+    README = readme.read()
+
 setup(
     name="nbpresent",
     version=__version__,
     description="Next generation slides from Jupyter Notebooks",
+    long_description=README,
     author="Nicholas Bollweg",
     author_email="nbollweg@continuum.io",
     license="BSD-3-Clause",
     url="https://github.com/Anaconda-Server/nbpresent",
-    keywords="ipython jupyter inkscape markdown presentation revealjs d3",
+    keywords="ipython jupyter markdown presentation slides revealjs d3",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: IPython",

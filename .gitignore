@@ -15,6 +15,5 @@ dist/
 nbpresent/static/nbpresent/
 node_modules
 npm-debug.log*
-README.rst
 screenshots/
 sphinx/source/auto
