@@ -165,3 +165,5 @@ export function loadFonts(fonts){
   _.extend(_fontLoaded, _.object(fonts, fonts));
   return fonts;
 }
+
+loadFonts(["Lato"]);
