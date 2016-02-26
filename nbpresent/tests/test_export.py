@@ -67,13 +67,14 @@ def test_export():
         args = [
             "casperjs{}".format(".cmd" if IS_WIN else ""),
             "test",
+            "--fail-fast",
             "--includes={}".format(
                 ",".join(glob(join(here, 'js', '_*.js')))),
         ] + glob(join(here, 'js', 'test_export_*.js'))
 
         proc = subprocess.Popen(
             args,
-            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             env=env
         )
         proc.communicate()
