@@ -16,6 +16,7 @@ requirements:
     - nodejs
     - notebook
     - python
+    - nb_config_manager
     - setuptools
     - funcsigs # [py2k]
     - npm # [win]
