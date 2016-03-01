@@ -272,8 +272,15 @@ Chore Automation
 Changelog
 ---------
 
-1.1.0
+1.1.1
 ~~~~~
+
+-  fixing enabling on windows with ``nb_config_manager`` 0.1.3
+-  trimming down conda packages
+-  more reproducible builds
+
+1.1.0 (Unreleased)
+~~~~~~~~~~~~~~~~~~
 
 -  fixing issue with slides without regions and some layouts crashing
    editor

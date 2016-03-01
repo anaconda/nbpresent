@@ -144,7 +144,12 @@ If developing in a [conda](http://conda.pydata.org/docs/) environment, you would
 
 ## Changelog
 
-### 1.1.0
+### 1.1.1
+- fixing enabling on windows with `nb_config_manager` 0.1.3
+- trimming down conda packages
+- more reproducible builds
+
+### 1.1.0 (Unreleased)
 - fixing issue with slides without regions and some layouts crashing editor [#58](https://github.com/Anaconda-Server/nbpresent/issues/58)
 - adding JS extensibility of themes (partial [#44](https://github.com/Anaconda-Server/nbpresent/issues/44))
   - see [Extending nbpresent](https://github.com/Anaconda-Server/nbpresent/blob/master/notebooks/Extending%20nbpresent.ipynb)
