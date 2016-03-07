@@ -58,8 +58,8 @@ standalone HTML file from the *File -> Download as -> Presentation
 Install
 -------
 
-    Note: installing directly off this repo won't work, as we don't ship
-    the built JavaScript and CSS assets. See more about
+    Note: installing directly off the ``git`` repo won't work, as we
+    don't ship the built JavaScript and CSS assets. See more about
     `developing <#develop>`__ below.
 
 ``pip``
@@ -68,23 +68,9 @@ Install
 .. code:: shell
 
     pip install nbpresent
-    python -m nbpresent.install
-
-Then either run
-
-.. code:: python
-
-    %reload_ext nbpresent
-
-*every time you start the notebook* or *enable* the extension for every
-notebook launch:
-
-.. code:: shell
-
-    python -m nbpresent.install --enable --user
-
-    ``nbpresent.install`` accepts all of the same arguments as
-    ``jupyter nbextension install``.
+    jupyter nbextension install --py=nbpresent --overwrite --user
+    jupyter nbextension enable --py=nbpresent --user
+    jupyter serverextension enable --py=nbpresent --user
 
 ``conda``
 ~~~~~~~~~
@@ -93,7 +79,8 @@ notebook launch:
 
     conda install -c anaconda-nb-extensions nbpresent
 
-This will enable ``nbpresent`` by default.
+This will enable the ``nbpresent`` server extension and nbextension by
+default, putting everything in your current conda environment.
 
 Export
 ------
@@ -158,12 +145,12 @@ This assumes you have cloned this repository locally:
 Repo Architecture
 ~~~~~~~~~~~~~~~~~
 
-The ``nbpresent`` nbextension is built from ``./src`` into
-``./nbpresent/static/nbresent`` with: - ``less`` for style - ``es6``
-(via ``babel``) for javascript - ``browserify`` for packaging
+The ``nbpresent`` Jupyter server extension lives in ``./nbpresent``.
 
-The ``nbpresent`` python module (server component) is stored in the
-``/nbpresent`` folder
+The ``nbpresent`` Jupyter nbextension is build from ``./src`` into
+``./nbpresent/static/nbresent`` with the following build chain: -
+``less`` for style - ``es6`` (via ``babel``) for javascript -
+``browserify`` for packaging - ``requirejs``
 
 Getting Started
 ~~~~~~~~~~~~~~~
@@ -194,10 +181,11 @@ with the ``symlink``, ``force`` and ``enable`` options:
 
 .. code:: shell
 
-    python -m nbpresent.install --overwrite --symlink --enable --user
+    jupyter nbextension install --py=nbpresent --overwrite --symlink --user
 
-If developing in a `conda <http://conda.pydata.org/docs/>`__
-environment, you would want to pass in ``--prefix`` instead of
+If developing in an isolated `conda <http://conda.pydata.org/docs/>`__
+or `virtualenv <https://virtualenv.readthedocs.org/en/latest/>`__
+environment, you would want to pass in ``--sys-prefix`` instead of
 ``--user``.
 
 Chore Automation

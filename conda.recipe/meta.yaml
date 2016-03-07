@@ -16,16 +16,12 @@ requirements:
     - nodejs
     - notebook
     - python
-    - nb_config_manager
     - setuptools
-    - funcsigs # [py2k]
     - npm # [win]
     - npm # [linux32]
   run:
     - notebook
     - python
-    - nb_config_manager
-    - funcsigs # [py2k]
 
 test:
   files:
@@ -34,7 +30,6 @@ test:
     - coverage
     - flake8
     - ipywidgets
-    - nb_config_manager
     - nodejs
     - nose
     - notebook
@@ -43,7 +38,6 @@ test:
     - fontconfig # [linux]
     - freetype # [linux]
     - mock # [py2k]
-    - funcsigs # [py2k]
     - npm # [win]
     - npm # [linux32]
 

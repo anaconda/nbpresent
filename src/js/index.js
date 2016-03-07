@@ -26,10 +26,16 @@ function(require, $, Jupyter){
   }
 
   function initNbpresent(){
+    var here = require.toUrl(".");
+
+    here = /\/$/.exec(here) ? here : `${here}/`;
+
     requirejs.config({
       paths: {
-        "nbpresent-deps": require.toUrl("./nbpresent.deps.min.js"),
-        "nbpresent-notebook": require.toUrl("./nbpresent.notebook.min.js")
+        "nbpresent-deps": `${here}nbpresent.deps.min`,
+        "nbpresent-notebook": `${here}nbpresent.notebook.min`,
+        "bootstraptour": "components/bootstrap-tour/build/js/bootstrap-tour.min",
+        "bootstrap": "components/bootstrap/js/bootstrap.min"
       }
     });
 
@@ -41,7 +47,7 @@ function(require, $, Jupyter){
     initStylesheet(modulePath);
 
 
-    requirejs(["nbpresent-deps"], function(){
+    requirejs(["nbpresent-deps", "bootstrap", "bootstraptour"], function(){
       Jupyter.page.show_site();
       requirejs(["nbpresent-notebook"], function(mode){
         setTimeout(function(){
