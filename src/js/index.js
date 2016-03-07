@@ -6,7 +6,7 @@ function(require, $, Jupyter){
   var nbpresent = window.nbpresent = {loading: true};
 
   var initializedResolver,
-    initializedPromise = new Promise(function(resolve, reject){
+    initializedPromise = new Promise(function(resolve){
       initializedResolver = resolve;
     });
 
@@ -28,12 +28,12 @@ function(require, $, Jupyter){
   function initNbpresent(){
     var here = require.toUrl(".");
 
-    here = /\/$/.exec(here) ? here : `${here}/`;
+    here = /\/$/.exec(here) ? here : (here + "/");
 
     requirejs.config({
       paths: {
-        "nbpresent-deps": `${here}nbpresent.deps.min`,
-        "nbpresent-notebook": `${here}nbpresent.notebook.min`,
+        "nbpresent-deps": here + "nbpresent.deps.min",
+        "nbpresent-notebook": here + "nbpresent.notebook.min",
         "bootstraptour": "components/bootstrap-tour/build/js/bootstrap-tour.min",
         "bootstrap": "components/bootstrap/js/bootstrap.min"
       }
