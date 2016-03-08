@@ -91,7 +91,7 @@ class NBPresentTestController(jstest.JSController):
 
         # ensure the system-of-interest is installed and enabled!
         with patch.dict(os.environ, self.env):
-            args = ["--py", "nbpresent"]
+            args = ["--py=nbpresent"]
 
             if "CONDA_ENV_PATH" in os.environ:
                 args.append("--sys-prefix")
