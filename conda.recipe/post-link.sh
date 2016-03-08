@@ -4,4 +4,4 @@
 "${PREFIX}/bin/jupyter" nbextension enable --py="${PKG_NAME}" --sys-prefix
 "${PREFIX}/bin/jupyter" serverextension enable --py="${PKG_NAME}" --sys-prefix
 
-"${PREFIX}/bin/pip" uninstall notebook
+"${PREFIX}/bin/pip" uninstall notebook -y
