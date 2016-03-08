@@ -80,7 +80,7 @@
     "lint": "npm run lint:eslint && npm run lint:flake8",
     "lint:eslint": "eslint --ext es6 ./src",
     "lint:flake8": "flake8 nbpresent setup.py sphinx",
-    "pkg:conda": "conda build conda.recipe -c javascript -c mutirri -c cpcloud -c anaconda-nb-extensions -c bokeh -c wakari --use-local",
+    "pkg:conda": "conda build conda.recipe -c javascript -c mutirri -c cpcloud -c anaconda-nb-extensions -c bokeh -c wakari",
     "pkg:pypi": "python setup.py register -r pypi && python setup.py sdist && python setup.py bdist_wheel && python setup.py sdist bdist_wheel upload -r pypi",
     "readme": "jupyter nbconvert notebooks/README.ipynb --to=rst --stdout > README.rst && jupyter nbconvert notebooks/README.ipynb --to=markdown --stdout > README.md",
     "test": "nosetests nbpresent.tests",
