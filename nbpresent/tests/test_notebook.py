@@ -100,7 +100,8 @@ class NBPresentTestController(jstest.JSController):
 
             for cmd in cmds:
                 final_cmd = ["jupyter"] + cmd + args
-                proc = subprocess.Popen(final_cmd, stdout=subprocess.PIPE)
+                proc = subprocess.Popen(final_cmd, stdout=subprocess.PIPE,
+                                        shell=True)
                 out, err = proc.communicate()
                 if proc.returncode:
                     raise Exception([proc.returncode, final_cmd, out, err])
