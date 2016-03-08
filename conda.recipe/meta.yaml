@@ -14,13 +14,13 @@ build:
 requirements:
   build:
     - nodejs
-    - notebook=4.2.0.dev
+    - notebook
     - python
     - setuptools
     - npm # [win]
     - npm # [linux32]
   run:
-    - notebook=4.2.0.dev
+    - notebook
     - python
 
 test:
@@ -32,7 +32,7 @@ test:
     - ipywidgets
     - nodejs
     - nose
-    - notebook=4.2.0.dev
+    - notebook
     - python
     - requests
     - fontconfig # [linux]
