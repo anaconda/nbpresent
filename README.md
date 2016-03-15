@@ -27,32 +27,22 @@ When you are happy with your presentation, you can download the standalone HTML 
 
 ## Install
 
-> Note: installing directly off this repo won't work, as we don't ship the built JavaScript and CSS assets. See more about [developing](#develop) below.
+> Note: installing directly off the `git` repo won't work, as we don't ship the built JavaScript and CSS assets. See more about [developing](#develop) below.
 
 ### `pip`
 ```shell
 pip install nbpresent
-python -m nbpresent.install
+jupyter nbextension install --py=nbpresent --overwrite --user
+jupyter nbextension enable --py=nbpresent --user
+jupyter serverextension enable --py=nbpresent --user
 ```
-
-Then either run 
-```python
-%reload_ext nbpresent
-```
-
-_every time you start the notebook_ or _enable_ the extension for every notebook launch:
-```shell
-python -m nbpresent.install --enable --user
-```
-
-> `nbpresent.install` accepts all of the same arguments as `jupyter nbextension install`.
 
 ### `conda`
 ```shell
 conda install -c anaconda-nb-extensions nbpresent
 ```
 
-This will enable `nbpresent` by default.
+This will enable the `nbpresent` server extension and nbextension by default, putting everything in your current conda environment.
 
 ## Export
 Stock `nbconvert` doesn't store quite enough information, so you'll need to do something like this:
@@ -101,12 +91,13 @@ cd nbpresent
 
 ### Repo Architecture
 
-The `nbpresent` nbextension is built from `./src` into `./nbpresent/static/nbresent` with:
+The `nbpresent` Jupyter server extension lives in `./nbpresent`.
+
+The `nbpresent` Jupyter nbextension is build from `./src` into `./nbpresent/static/nbresent` with the following build chain:
 - `less` for style
 - `es6` (via `babel`) for javascript
 - `browserify` for packaging
-
-The `nbpresent` python module (server component) is stored in the `/nbpresent` folder
+- `requirejs`
 
 ### Getting Started
 You'll need conda installed, either from [Anaconda](https://www.continuum.io/downloads) or [miniconda](http://conda.pydata.org/miniconda.html). You can import a Python 3.5 development environment named `nbpresent` from `./environment.yml`.
@@ -125,10 +116,10 @@ npm run build
 ### Ensure development asset loading
 To ensure that you always get the right assets, install the nbextension with the `symlink`, `force` and `enable` options:
 ```shell
-python -m nbpresent.install --overwrite --symlink --enable --user
+jupyter nbextension install --py=nbpresent --overwrite --symlink --user
 ```
 
-If developing in a [conda](http://conda.pydata.org/docs/) environment, you would want to pass in `--prefix` instead of `--user`.
+If developing in an isolated [conda](http://conda.pydata.org/docs/) or [virtualenv](https://virtualenv.readthedocs.org/en/latest/) environment, you would want to pass in `--sys-prefix` instead of `--user`.
 
 ### Chore Automation
 | Task | Command |

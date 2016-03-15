@@ -14,7 +14,6 @@ import requests
 from notebook import jstest
 from ipython_genutils.tempdir import TemporaryDirectory
 
-from nbpresent.install import install
 import platform
 
 IS_WIN = "Windows" in platform.system()
@@ -83,13 +82,29 @@ class NBPresentTestController(jstest.JSController):
         # call the hacked setup
         self._setup()
 
-        # patch
+        # commands to run to enable the system-of-interest
+        cmds = [
+            ["nbextension", "install"],
+            ["nbextension", "enable"],
+            ["serverextension", "enable"]
+        ]
+
+        # ensure the system-of-interest is installed and enabled!
         with patch.dict(os.environ, self.env):
-            install_kwargs = dict(enable=True, user=True)
+            args = ["--py=nbpresent"]
+
             if "CONDA_ENV_PATH" in os.environ:
-                install_kwargs.pop("user")
-                install_kwargs.update(prefix=os.environ["CONDA_ENV_PATH"])
-            install(**install_kwargs)
+                args.append("--sys-prefix")
+            else:
+                args.append("--user")
+
+            for cmd in cmds:
+                final_cmd = ["jupyter"] + cmd + args
+                proc = subprocess.Popen(final_cmd, stdout=subprocess.PIPE,
+                                        shell=True)
+                out, err = proc.communicate()
+                if proc.returncode:
+                    raise Exception([proc.returncode, final_cmd, out, err])
 
     def _setup(self):
         """ copy pasta from

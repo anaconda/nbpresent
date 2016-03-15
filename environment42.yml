@@ -1,0 +1,19 @@
+name: nbpresent42
+channels:
+  - anaconda-nb-extensions
+  - bokeh
+  - cpcloud
+  - javascript
+  - mutirri
+dependencies:
+  - anaconda-client
+  - coverage
+  - flake8
+  - ipywidgets
+  - mock
+  - nb_config_manager
+  - nodejs
+  - nose
+  - requests
+  - pip:
+    - https://github.com/ellisonbg/notebook/archive/nbext-pain.tar.gz

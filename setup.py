@@ -1,26 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from setuptools import setup
+import json
 
-
-# should be loaded below
-__version__ = None
-
-with open('nbpresent/_version.py') as version:
-    exec(version.read())
+with open("package.json") as fp:
+    pkg = json.load(fp)
 
 with open('./README.rst') as readme:
     README = readme.read()
 
 setup(
-    name="nbpresent",
-    version=__version__,
-    description="Next generation slides from Jupyter Notebooks",
+    name=pkg["name"],
+    version=pkg["version"],
+    description=pkg["description"],
     long_description=README,
-    author="Nicholas Bollweg",
+    author=pkg["author"]["name"],
     author_email="nbollweg@continuum.io",
-    license="BSD-3-Clause",
-    url="https://github.com/Anaconda-Server/nbpresent",
+    license=pkg["license"],
+    url=pkg["homepage"],
     keywords="ipython jupyter markdown presentation slides revealjs d3",
     classifiers=[
         "Development Status :: 4 - Beta",

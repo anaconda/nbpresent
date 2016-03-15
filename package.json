@@ -18,7 +18,7 @@
     "vibrant": "0.0.1",
     "webfontloader": "^1.6.21"
   },
-  "description": "This will be the home of the next generation of slide authoring presentation for [Jupyter Notebooks](https://github.com/jupyter/notebook).",
+  "description": "Next generation slides from Jupyter Notebooks",
   "devDependencies": {
     "babel": "^6.1.18",
     "babel-eslint": "^4.1.8",
