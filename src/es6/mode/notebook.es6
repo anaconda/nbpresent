@@ -1,6 +1,6 @@
 import Jupyter from "base/js/namespace";
 
-import {d3, _} from "nbpresent-deps";
+import {d3, _, $} from "nbpresent-deps";
 
 import {ICON} from "../icons";
 
@@ -43,6 +43,7 @@ export class NotebookMode extends BaseMode {
     this.slides.on("update", () => this.update());
 
     this.initActions();
+    this.initEvents();
 
     this.$body = d3.select("body");
 
@@ -87,7 +88,22 @@ export class NotebookMode extends BaseMode {
     return this.update();
   }
 
+  initEvents(){
+    $(Jupyter.notebook.events).on(
+      "create.Cell",
+      (evt, {cell}) => this.cellCreated(cell));
+  }
 
+  /** Clear cell metadata (specifically on paste) of nbpresent stuff
+      TODO: revisit when copy and paste might mean something
+   */
+  cellCreated(cell){
+    _.defer(() => {
+      console.log(cell.metadata.nbpresent);
+      delete cell.metadata.nbpresent;
+      console.log(cell.metadata.nbpresent);
+    });
+  }
 
   initActions(){
     this.actions = new NotebookActions([{
