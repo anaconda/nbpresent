@@ -8,29 +8,6 @@ export const SYMB = `h1 h2 h3 h4 h5 h6 h7
     table thead tbody tfoot th td`
   .split(/\s+/);
 
-// http://clagnut.com/blog/2380/#Perfect_pangrams_in_English_.2826_letters.29
-export const PANGRAMS = [
-  "A zenith of Xvurj’s cwm KL Gybdq",
-  "Zombies play crwth, quj FDG xvnk",
-  "Blowzy night-frumps vex’d Jack Q.",
-  "Dwarf mobs quiz lynx.jpg, kvetch!",
-  "Frowzy things plumb vex’d Jack Q.",
-  "G.B. fjords vex quick waltz nymph.",
-  "Glum Schwartzkopf vex’d by NJ IQ.",
-  "Gym DJ Beck vows phiz tranq flux.",
-  "Jerk gawps foxy Qum Blvd. chintz.",
-  "JFK got my VHS, PC and XLR web quiz.",
-  "Jocks find quartz glyph, vex BMW.",
-  "J.Q. Vandz struck my big fox whelp.",
-  "J.Q. Schwartz flung D.V. Pike my box.",
-  "Jump dogs, why vex Fritz Blank QC?",
-  "Mr. Jock, TV quiz PhD, bags few lynx.",
-  "New job: fix Mr. Gluck’s hazy TV, PDQ!",
-  "Quartz glyph job vex’d cwm finks.",
-  "Quartz jock vends BMW glyph fix.",
-  "The glib czar junks my VW Fox PDQ."
-];
-
 export const FONTS_MONO = [
   "Inconsolata",
   "Source Code Pro",

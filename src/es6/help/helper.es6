@@ -5,14 +5,12 @@ import {PKG} from "../package";
 import {IntroTour} from "./tours/intro";
 import {SlideEditorTour} from "./tours/slide-editor";
 import {SorterTour} from "./tours/sorter";
-import {ThemingTour} from "./tours/theming";
 
 
 const TOURS = {
   Intro: IntroTour,
   Slides: SorterTour,
-  Editor: SlideEditorTour,
-  Theming: ThemingTour
+  Editor: SlideEditorTour
 };
 
 

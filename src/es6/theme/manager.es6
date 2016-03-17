@@ -3,7 +3,6 @@ import {d3, uuid, _} from "nbpresent-deps";
 import {ICON} from "../icons";
 import {Toolbar} from "../toolbar";
 
-import {ThemeEditor} from "./editor";
 import {ThemeCard} from "./card";
 
 import {PLAIN_THEMES} from "./theme/plain";
@@ -39,14 +38,8 @@ export class ThemeManager {
 
   destroy(){
     this.$body.classed({"nbp-theming": 0});
-    if(this.editor){
-      this.editor.destroy();
-      delete this.editor;
-    }
 
     _.delay(() => {
-      // whatever
-      this.$body.selectAll(".nbp-theme-editor").remove();
       this.$ui.remove();
     }, 200);
   }
@@ -149,16 +142,10 @@ export class ThemeManager {
       defaultTheme = this.defaultTheme.get(),
       themes = this.themes.get();
 
-    this.editor && this.editor.destroy();
-
     if(current){
       if(!defaultTheme || !themes[defaultTheme]){
         this.defaultTheme.set(current);
       }
-      this.editor = new ThemeEditor(
-        this.tree,
-        this.themes.select([current])
-      );
     }
   }
 
