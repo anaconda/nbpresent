@@ -13,18 +13,20 @@ build:
 
 requirements:
   build:
+    - mistune !=0.7.2
+    - nb_config_manager
     - nodejs
     - notebook < 5
     - python
-    - nb_config_manager
     - setuptools
     - funcsigs # [py2k]
     - npm # [win]
     - npm # [linux32]
   run:
-    - notebook
-    - notebook < 5
+    - mistune !=0.7.2
     - nb_config_manager
+    - notebook <5
+    - python
     - funcsigs # [py2k]
 
 test:
