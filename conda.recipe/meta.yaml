@@ -16,7 +16,7 @@ requirements:
     - mistune !=0.7.2
     - nb_config_manager
     - nodejs
-    - notebook < 5
+    - notebook <5
     - python
     - setuptools
     - funcsigs # [py2k]
