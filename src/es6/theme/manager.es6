@@ -6,10 +6,14 @@ import {Toolbar} from "../toolbar";
 import {ThemeCard} from "./card";
 
 import {PLAIN_THEMES} from "./theme/plain";
+import {REVEAL_THEMES} from "./theme/reveal";
 
 
 // TODO: make this configurable
-const BASE_THEMES = PLAIN_THEMES;
+const BASE_THEMES = _.extend({},
+  PLAIN_THEMES,
+  REVEAL_THEMES
+);
 
 export class ThemeManager {
   constructor(tree){
@@ -55,10 +59,6 @@ export class ThemeManager {
     this.$toolbar = this.$ui.append("div")
       .datum([
         [{
-          icon: ICON.addTheme,
-          click: () => this.addTheme(),
-          label: "+ Theme"
-        },{
           icon: ICON.trash,
           visible: () => this.current.get(),
           click: () => this.destroyTheme(this.current.get()),
@@ -147,16 +147,6 @@ export class ThemeManager {
         this.defaultTheme.set(current);
       }
     }
-  }
-
-  addTheme(){
-    let id = uuid.v4();
-
-    this.themes.set([id], {
-      id
-    });
-
-    this.current.set(id);
   }
 
   destroyTheme(theme){
