@@ -39,7 +39,7 @@ test:
     - nb_config_manager
     - nodejs
     - nose
-    - notebook < 5
+    - notebook <5
     - python
     - requests
     - fontconfig # [linux]
