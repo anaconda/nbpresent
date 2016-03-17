@@ -272,6 +272,13 @@ Chore Automation
 Changelog
 ---------
 
+2.0.0
+~~~~~
+
+-  Theme editor removed. Significant work required to stabilize to
+   public release quality.
+-  Adding some themes extracted from reveal.js
+
 1.1.1
 ~~~~~
 
