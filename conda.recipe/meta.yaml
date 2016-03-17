@@ -14,7 +14,7 @@ build:
 requirements:
   build:
     - nodejs
-    - notebook
+    - notebook < 5
     - python
     - nb_config_manager
     - setuptools
@@ -23,7 +23,7 @@ requirements:
     - npm # [linux32]
   run:
     - notebook
-    - python
+    - notebook < 5
     - nb_config_manager
     - funcsigs # [py2k]
 
@@ -37,7 +37,7 @@ test:
     - nb_config_manager
     - nodejs
     - nose
-    - notebook
+    - notebook < 5
     - python
     - requests
     - fontconfig # [linux]
