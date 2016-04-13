@@ -1,5 +1,4 @@
 import os
-import sys
 import glob
 import subprocess
 
@@ -9,12 +8,8 @@ except ImportError:
     # py2
     from mock import patch
 
-import requests
-
 from notebook import jstest
-from ipython_genutils.tempdir import TemporaryDirectory
 
-from nbpresent.install import install
 import platform
 
 IS_WIN = "Windows" in platform.system()
@@ -27,6 +22,8 @@ os.environ["PATH"] = os.pathsep.join([
     os.path.abspath(os.path.join(here, "node_modules", ".bin"))
 ])
 
+TEST_LOG = ".jupyter.jstest.log"
+
 
 class NBPresentTestController(jstest.JSController):
     """ Javascript test subclass that installs widget nbextension in test
@@ -35,6 +32,7 @@ class NBPresentTestController(jstest.JSController):
     def __init__(self, section, *args, **kwargs):
         extra_args = kwargs.pop('extra_args', None)
         super(NBPresentTestController, self).__init__(section, *args, **kwargs)
+        self.xunit = True
 
         test_cases = glob.glob(os.path.join(here, 'js', 'test_notebook_*.js'))
         js_test_dir = jstest.get_js_test_dir()
@@ -79,63 +77,44 @@ class NBPresentTestController(jstest.JSController):
         self.stdout = self.stdout_capturer.get_buffer()
         return self.process.returncode
 
-    def setup(self):
-        # call the hacked setup
-        self._setup()
-
-        # patch
-        with patch.dict(os.environ, self.env):
-            install_kwargs = dict(enable=True, user=True)
-            if "CONDA_ENV_PATH" in os.environ:
-                install_kwargs.pop("user")
-                install_kwargs.update(prefix=os.environ["CONDA_ENV_PATH"])
-            install(**install_kwargs)
-
-    def _setup(self):
-        """ copy pasta from
-            https://github.com/jupyter/notebook/blob/4.0.6/notebook/jstest.py
-            master has some changes that will ship with 4.1...
+    def add_xunit(self):
+        """ Hack the setup in the middle (after paths, before server)
         """
-        self.ipydir = TemporaryDirectory()
-        self.config_dir = TemporaryDirectory()
-        self.nbdir = TemporaryDirectory()
-        self.home = TemporaryDirectory()
-        self.env = {
-            'HOME': self.home.name,
-            'JUPYTER_CONFIG_DIR': self.config_dir.name,
-            'IPYTHONDIR': self.ipydir.name,
-        }
-        self.dirs.append(self.ipydir)
-        self.dirs.append(self.home)
-        self.dirs.append(self.config_dir)
-        self.dirs.append(self.nbdir)
-        os.makedirs(os.path.join(self.nbdir.name, 'sub dir1', 'sub dir 1a'))
-        os.makedirs(os.path.join(self.nbdir.name, 'sub dir2', 'sub dir 1b'))
+        super(NBPresentTestController, self).add_xunit()
 
-        if self.xunit:
-            self.add_xunit()
+        # commands to run to enable the system-of-interest
+        cmds = [
+            ["nbextension", "install"],
+            ["nbextension", "enable"],
+            ["serverextension", "enable"]
+        ]
 
-        # If a url was specified, use that for the testing.
-        if self.url:
-            try:
-                alive = requests.get(self.url).status_code == 200
-            except:
-                alive = False
+        # ensure the system-of-interest is installed and enabled!
+        with patch.dict(os.environ, self.env):
+            args = ["--py", "nbpresent"]
+            prefix = (["--sys-prefix"] if ("CONDA_ENV_PATH" in os.environ) or
+                      ("CONDA_DEFAULT_ENV" in os.environ) else ["--user"])
 
-            if alive:
-                self.cmd.append("--url=%s" % self.url)
-            else:
-                raise Exception('Could not reach "%s".' % self.url)
-        else:
-            # start the ipython notebook, so we get the port number
-            self.server_port = 0
-            self._init_server()
-            if self.server_port:
-                self.cmd.append('--url=http://localhost:%i%s' % (
-                    self.server_port, self.base_url))
-            else:
-                # don't launch tests if the server didn't start
-                self.cmd = [sys.executable, '-c', 'raise SystemExit(1)']
+            for cmd in cmds:
+                final_cmd = ["jupyter"] + cmd + prefix + args
+                proc = subprocess.Popen(final_cmd,
+                                        stdout=subprocess.PIPE,
+                                        env=os.environ)
+                out, err = proc.communicate()
+                if proc.returncode:
+                    raise Exception([proc.returncode, final_cmd, out, err])
+
+    def cleanup(self):
+        if hasattr(self, "stream_capturer"):
+            captured = self.stream_capturer.get_buffer().decode(
+                'utf-8', 'replace')
+            with open(TEST_LOG, "a+") as fp:
+                fp.write("-----------------------\n{} results:\n{}\n".format(
+                    self.section,
+                    self.server_command))
+                fp.write(captured)
+
+        super(NBPresentTestController, self).cleanup()
 
 
 def prepare_controllers(options):
