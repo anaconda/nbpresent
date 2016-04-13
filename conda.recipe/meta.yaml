@@ -30,7 +30,7 @@ test:
     - ipywidgets
     - nodejs
     - nose
-    - notebook <5
+    - notebook ==4.2.0b1
     - python
     - requests
     - fontconfig # [linux]
