@@ -1,5 +1,7 @@
 # coding: utf-8
 # flake8: noqa
+from os.path import join
+
 from nbconvert.exporters.export import exporter_map
 
 from .exporters.html import PresentExporter
@@ -19,7 +21,7 @@ except Exception as err:
 def _jupyter_nbextension_paths():
     return [dict(
         section="notebook",
-        src=os.path.join("static", "nbpresent"),
+        src=join("static", "nbpresent"),
         dest="nbpresent",
         require="nbpresent/js/nbpresent.min")]
 
