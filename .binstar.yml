@@ -19,5 +19,6 @@ script:
     -c cpcloud
     -c javascript
     -c mutirri
+    -c anaconda-nb-extensions/label/dev
 
 build_targets: conda
