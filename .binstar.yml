@@ -4,8 +4,8 @@ platform:
   - linux-64
   - osx-64
   - win-64
-  # - win-32 # waiting for build slave fixess
-  # - linux-32 # waiting for availability of phantomjs
+  - win-32 # waiting for build slave fixess
+  - linux-32 # waiting for availability of phantomjs
 
 engine:
   - python=3.5
@@ -15,7 +15,6 @@ engine:
 script:
   - >
     conda build conda.recipe
-    -c anaconda-nb-extensions
     -c bokeh
     -c cpcloud
     -c javascript

@@ -13,21 +13,13 @@ build:
 
 requirements:
   build:
-    - mistune !=0.7.2
-    - nb_config_manager
     - nodejs
-    - notebook <5
+    - notebook ==4.2.0b1
     - python
     - setuptools
-    - funcsigs # [py2k]
-    - npm # [win]
-    - npm # [linux32]
   run:
-    - mistune !=0.7.2
-    - nb_config_manager
-    - notebook <5
+    - notebook ==4.2.0b1
     - python
-    - funcsigs # [py2k]
 
 test:
   files:
@@ -36,7 +28,6 @@ test:
     - coverage
     - flake8
     - ipywidgets
-    - nb_config_manager
     - nodejs
     - nose
     - notebook <5
@@ -45,7 +36,6 @@ test:
     - fontconfig # [linux]
     - freetype # [linux]
     - mock # [py2k]
-    - funcsigs # [py2k]
     - npm # [win]
     - npm # [linux32]
 
