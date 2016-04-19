@@ -34,9 +34,9 @@ links to community pages:
 
 -  `mailing list <https://groups.google.com/forum/#!forum/nbpresent>`__
    for general or long-term discussion and announcements
--  `issues <https://github.com/Anaconda-Server/nbpresent/issues>`__ for
+-  `issues <https://github.com/Anaconda-Platform/nbpresent/issues>`__ for
    technical issues, as well as feature requests
--  `chat <https://gitter.im/Anaconda-Server/nbpresent>`__ for quickly
+-  `chat <https://gitter.im/Anaconda-Platform/nbpresent>`__ for quickly
    connecting with other users
 
 Related Projects
@@ -109,7 +109,7 @@ The resulting file can be hosted and viewed (but not edited!) on any
 site.
 
 If you have installed
-`nbbrowserpdf <https://github.com/Anaconda-Server/nbbrowserpdf>`__, you
+`nbbrowserpdf <https://github.com/Anaconda-Platform/nbbrowserpdf>`__, you
 can also export to pdf:
 
 .. code:: shell
@@ -152,7 +152,7 @@ This assumes you have cloned this repository locally:
 
 ::
 
-    git clone https://github.com/Anaconda-Server/nbpresent.git
+    git clone https://github.com/Anaconda-Platform/nbpresent.git
     cd nbpresent
 
 Repo Architecture
@@ -291,16 +291,16 @@ Changelog
 
 -  fixing issue with slides without regions and some layouts crashing
    editor
-   `#58 <https://github.com/Anaconda-Server/nbpresent/issues/58>`__
+   `#58 <https://github.com/Anaconda-Platform/nbpresent/issues/58>`__
 -  adding JS extensibility of themes (partial
-   `#44 <https://github.com/Anaconda-Server/nbpresent/issues/44>`__)
+   `#44 <https://github.com/Anaconda-Platform/nbpresent/issues/44>`__)
 -  see `Extending
-   nbpresent <https://github.com/Anaconda-Server/nbpresent/blob/master/notebooks/Extending%20nbpresent.ipynb>`__
+   nbpresent <https://github.com/Anaconda-Platform/nbpresent/blob/master/notebooks/Extending%20nbpresent.ipynb>`__
 
 1.0.0
 ~~~~~
 
 -  `Theme
-   editor <https://github.com/Anaconda-Server/nbpresent/pull/41>`__
+   editor <https://github.com/Anaconda-Platform/nbpresent/pull/41>`__
 -  Much more consistent UI
 -  Mnay bug fixes and more testing

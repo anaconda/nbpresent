@@ -4,9 +4,9 @@
     "url": "https://github.com/bollwyvl"
   },
   "bugs": {
-    "url": "https://github.com/Anaconda-Server/nbpresent/issues"
+    "url": "https://github.com/Anaconda-Platform/nbpresent/issues"
   },
-  "chat": "https://gitter.im/Anaconda-Server/nbpresent",
+  "chat": "https://gitter.im/Anaconda-Platform/nbpresent",
   "dependencies": {
     "baobab": "^2.2.1",
     "d3": "~3.5.12",
@@ -48,13 +48,13 @@
       "strict": 0
     }
   },
-  "homepage": "https://github.com/Anaconda-Server/nbpresent",
+  "homepage": "https://github.com/Anaconda-Platform/nbpresent",
   "license": "BSD-3-Clause",
   "main": "index.js",
   "name": "nbpresent",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Anaconda-Server/nbpresent.git"
+    "url": "git://github.com/Anaconda-Platform/nbpresent.git"
   },
   "scripts": {
     "all": "npm run dist && npm run lint && npm run test && npm run docs",

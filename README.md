@@ -15,8 +15,8 @@ After [installing](#install) (and potentially enabling) as appropriate for your 
 When _Authoring_, you can click on the `(?)` icon to see a number of in-Notebook guided tours that show all the features, as well as see links to community pages:
 
 - [mailing list](https://groups.google.com/forum/#!forum/nbpresent) for general or long-term discussion and announcements
-- [issues](https://github.com/Anaconda-Server/nbpresent/issues) for technical issues, as well as feature requests
-- [chat](https://gitter.im/Anaconda-Server/nbpresent) for quickly connecting with other users
+- [issues](https://github.com/Anaconda-Platform/nbpresent/issues) for technical issues, as well as feature requests
+- [chat](https://gitter.im/Anaconda-Platform/nbpresent) for quickly connecting with other users
 
 ## Related Projects
 - [live_reveal/RISE](https://github.com/damianavila/RISE), the original inspiration for this work, based on [reveal.js](https://github.com/hakimel/reveal.js/).
@@ -61,7 +61,7 @@ nbpresent -i notebooks/README.ipynb -o README.html
 ```
 The resulting file can be hosted and viewed (but not edited!) on any site.
 
-If you have installed [nbbrowserpdf](https://github.com/Anaconda-Server/nbbrowserpdf), you can also export to pdf:
+If you have installed [nbbrowserpdf](https://github.com/Anaconda-Platform/nbbrowserpdf), you can also export to pdf:
 ```shell
 nbpresent -i notebooks/README.ipynb -f pdf -o README.pdf
 ```
@@ -95,7 +95,7 @@ Here's the whole doc:
 ## Develop
 This assumes you have cloned this repository locally:
 ```
-git clone https://github.com/Anaconda-Server/nbpresent.git
+git clone https://github.com/Anaconda-Platform/nbpresent.git
 cd nbpresent
 ```
 
@@ -154,11 +154,11 @@ If developing in a [conda](http://conda.pydata.org/docs/) environment, you would
 - more reproducible builds
 
 ### 1.1.0 (Unreleased)
-- fixing issue with slides without regions and some layouts crashing editor [#58](https://github.com/Anaconda-Server/nbpresent/issues/58)
-- adding JS extensibility of themes (partial [#44](https://github.com/Anaconda-Server/nbpresent/issues/44))
-  - see [Extending nbpresent](https://github.com/Anaconda-Server/nbpresent/blob/master/notebooks/Extending%20nbpresent.ipynb)
+- fixing issue with slides without regions and some layouts crashing editor [#58](https://github.com/Anaconda-Platform/nbpresent/issues/58)
+- adding JS extensibility of themes (partial [#44](https://github.com/Anaconda-Platform/nbpresent/issues/44))
+  - see [Extending nbpresent](https://github.com/Anaconda-Platform/nbpresent/blob/master/notebooks/Extending%20nbpresent.ipynb)
 
 ### 1.0.0
-- [Theme editor](https://github.com/Anaconda-Server/nbpresent/pull/41)
+- [Theme editor](https://github.com/Anaconda-Platform/nbpresent/pull/41)
 - Much more consistent UI
 - Mnay bug fixes and more testing
