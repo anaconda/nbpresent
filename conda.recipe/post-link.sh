@@ -1,2 +1,2 @@
-"${PREFIX}/bin/jupyter" nbextension enable --sys-prefix --py nbpresent
-"${PREFIX}/bin/jupyter" serverextension enable --sys-prefix --py nbpresent
+"${PREFIX}/bin/jupyter-nbextension" enable nbpresent --py --sys-prefix
+"${PREFIX}/bin/jupyter-serverextension" enable nbpresent --py --sys-prefix

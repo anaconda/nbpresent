@@ -1,1 +1,1 @@
-"%PREFIX%\Scripts\jupyter" nbextension enable --sys-prefix  --py nbpresent && "%PREFIX%\Scripts\jupyter" serverextension enable --sys-prefix --py nbpresent && if errorlevel 1 exit 1
+"%PREFIX%\Scripts\jupyter-nbextension.exe" enable nbpresent --py --sys-prefix && "%PREFIX%\Scripts\jupyter-serverextension.exe" enable --py nbpresent --sys-prefix && if errorlevel 1 exit 1
