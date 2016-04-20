@@ -1,5 +1,6 @@
-import os
+import codecs
 import glob
+import os
 import subprocess
 
 try:
@@ -155,11 +156,12 @@ class NBPresentTestController(jstest.JSController):
         if hasattr(self, "stream_capturer"):
             captured = self.stream_capturer.get_buffer().decode(
                 'utf-8', 'replace')
-            with open(TEST_LOG, "a+") as fp:
+            with codecs.open(TEST_LOG, "a+", encoding="utf-8") as fp:
                 fp.write("-----------------------\n{} results:\n{}\n".format(
                     self.section,
                     self.server_command))
                 fp.write(captured)
+                print("JUPYTER JSTESTLOG", captured)
 
         super(NBPresentTestController, self).cleanup()
 
