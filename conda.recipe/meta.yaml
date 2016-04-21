@@ -17,8 +17,6 @@ requirements:
     - notebook >=4.2.0
     - python
     - setuptools
-    - npm # [win]
-    - npm # [linux32]
 
   run:
     - notebook >=4.2.0
@@ -40,9 +38,6 @@ test:
     - fontconfig # [linux]
     - freetype # [linux]
     - mock # [py2k]
-    - npm # [win]
-    - npm # [linux32]
-
 
 about:
   summary: Next generation slides for Jupyter Notebooks
