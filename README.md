@@ -144,6 +144,9 @@ If developing in a [conda](http://conda.pydata.org/docs/) environment, you would
 
 ## Changelog
 
+### 3.0.0
+- Update to notebook 4.2
+
 ### 2.0.0
 - Theme editor removed. Significant work required to stabilize to public release quality.
 - Adding some themes extracted from reveal.js

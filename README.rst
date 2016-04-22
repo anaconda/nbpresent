@@ -34,8 +34,8 @@ links to community pages:
 
 -  `mailing list <https://groups.google.com/forum/#!forum/nbpresent>`__
    for general or long-term discussion and announcements
--  `issues <https://github.com/Anaconda-Platform/nbpresent/issues>`__ for
-   technical issues, as well as feature requests
+-  `issues <https://github.com/Anaconda-Platform/nbpresent/issues>`__
+   for technical issues, as well as feature requests
 -  `chat <https://gitter.im/Anaconda-Platform/nbpresent>`__ for quickly
    connecting with other users
 
@@ -109,8 +109,8 @@ The resulting file can be hosted and viewed (but not edited!) on any
 site.
 
 If you have installed
-`nbbrowserpdf <https://github.com/Anaconda-Platform/nbbrowserpdf>`__, you
-can also export to pdf:
+`nbbrowserpdf <https://github.com/Anaconda-Platform/nbbrowserpdf>`__,
+you can also export to pdf:
 
 .. code:: shell
 
@@ -271,6 +271,11 @@ Chore Automation
 
 Changelog
 ---------
+
+3.0.0
+~~~~~
+
+-  Update to notebook 4.2
 
 2.0.0
 ~~~~~
