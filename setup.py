@@ -20,7 +20,7 @@ setup(
     author="Nicholas Bollweg",
     author_email="nbollweg@continuum.io",
     license="BSD-3-Clause",
-    url="https://github.com/Anaconda-Server/nbpresent",
+    url="https://github.com/Anaconda-Platform/nbpresent",
     keywords="ipython jupyter markdown presentation slides revealjs d3",
     classifiers=[
         "Development Status :: 4 - Beta",

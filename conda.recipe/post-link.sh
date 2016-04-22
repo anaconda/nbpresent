@@ -1,1 +1,2 @@
-"${PREFIX}/bin/python" -m nbpresent.install --overwrite --enable --prefix="${PREFIX}"
+"${PREFIX}/bin/jupyter-nbextension" enable nbpresent --py --sys-prefix
+"${PREFIX}/bin/jupyter-serverextension" enable nbpresent --py --sys-prefix
