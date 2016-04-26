@@ -8,6 +8,12 @@ from nbpresent.tasks import (
 )
 
 
+try:
+    CPU_COUNT = cpu_count()
+except NotImplementedError:
+    CPU_COUNT = 1
+
+
 def _run(mod_opt, *args, **opts):
     print("started {0} with {1}".format(*mod_opt))
     task = import_module("nbpresent.tasks.{}".format(mod_opt[0]))
@@ -19,7 +25,7 @@ def _run(mod_opt, *args, **opts):
 def main(**opts):
     clean.main()
 
-    pool = Pool(processes=cpu_count())
+    pool = Pool(processes=CPU_COUNT)
 
     tasks = [
         "less",
