@@ -17,6 +17,8 @@ requirements:
     - notebook >=4.2.0
     - python
     - setuptools
+    - vs2008_runtime # [win-64]
+    - vs2015_runtime # [win-64]
 
   run:
     - notebook >=4.2.0
@@ -38,6 +40,8 @@ test:
     - fontconfig # [linux]
     - freetype # [linux]
     - mock # [py2k]
+    - vs2008_runtime # [win-64]
+    - vs2015_runtime # [win-64]
 
 about:
   summary: Next generation slides for Jupyter Notebooks
