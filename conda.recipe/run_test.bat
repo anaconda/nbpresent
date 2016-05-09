@@ -5,4 +5,7 @@ CALL npm run test || EXIT /B 1
 IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
 
 REM force clean of pkg trash
-rmdir /s /q "\\?\%PREFIX%\..\pkgs\.trash"
+pushd
+cd %PREFIX%\..\pkgs
+rmdir /s /q "\\?\%cd%\.trash"
+popd
