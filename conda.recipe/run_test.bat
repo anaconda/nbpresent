@@ -1,1 +1,5 @@
-"%PREFIX%\npm.cmd" install . --no-spin --no-progress && "%PREFIX%\npm.cmd" run test --no-progress --no-spin && if errorlevel 1 exit 1
+CALL npm install --parseable || EXIT /B 1
+IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
+
+CALL npm run test  || EXIT /B 1
+IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%

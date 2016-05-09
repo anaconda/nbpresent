@@ -1,1 +1,5 @@
-"%PREFIX%\Scripts\jupyter-nbextension.exe" enable nbpresent --py --sys-prefix && "%PREFIX%\Scripts\jupyter-serverextension.exe" enable --py nbpresent --sys-prefix && if errorlevel 1 exit 1
+CALL jupyter nbextension enable nbpresent --py --sys-prefix  || EXIT /B 1
+IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
+
+CALL jupyter serverextension enable nbpresent --py --sys-prefix  || EXIT /B 1
+IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%

@@ -1,1 +1,8 @@
-"%PREFIX%\npm.cmd" install . --no-progress --no-spin && "%PREFIX%\npm.cmd" run build:release && rmdir "node_modules" /s /q && del "%PREFIX%\npm.cmd" "%PREFIX%\npm" && "%PYTHON%" setup.py install && "%PREFIX%\Scripts\jupyter-nbextension.exe" install nbpresent --py --sys-prefix --overwrite && if errorlevel 1 exit 1
+CALL npm install --parseable || EXIT /B 1
+IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
+CALL npm run build:release  || EXIT /B 1
+IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
+rmdir "node_modules" /s /q
+"%PYTHON%" setup.py install
+CALL jupyter nbextension install nbpresent --py --sys-prefix --overwrite || EXIT /B 1
+IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
