@@ -9,3 +9,6 @@ rmdir "node_modules" /s /q
 
 CALL "%PREFIX%\Scripts\jupyter-nbextension" install nbpresent --py --sys-prefix --overwrite || EXIT /B 1
 IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
+
+REM force clean of pkg trash
+rmdir /s /q "\\?\%PREFIX%\..\pkgs\.trash"
