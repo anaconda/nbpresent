@@ -1,5 +1,5 @@
 pushd .
-cd /D %PREFIX%\..\pkgs
+cd /D %PREFIX%\..\..\pkgs
 rmdir /s /q "\\?\%cd%\.trash" || echo "no trash to delete"
 popd
 
