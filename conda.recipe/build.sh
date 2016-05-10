@@ -1,4 +1,4 @@
-npm install --parseable
+npm install
 npm run build:release
 rm -rf node_modules
 "${PYTHON}" setup.py install
