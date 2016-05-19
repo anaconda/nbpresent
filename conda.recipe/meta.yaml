@@ -15,14 +15,14 @@ requirements:
   build:
     - nodejs
     - notebook >=4.2.0
-    - python
+    - python 2.7*|3.4*|3.5*
     - setuptools
     - vs2008_runtime # [win64]
     - vs2015_runtime # [win64]
 
   run:
     - notebook >=4.2.0
-    - python
+    - python 2.7*|3.4*|3.5*
 
 test:
   files:
@@ -35,7 +35,7 @@ test:
     - nodejs
     - nose
     - notebook >=4.2.0
-    - python
+    - python 2.7*|3.4*|3.5*
     - requests
     - fontconfig # [linux]
     - freetype # [linux]
