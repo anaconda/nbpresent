@@ -139,10 +139,14 @@ If developing in a [conda](http://conda.pydata.org/docs/) environment, you would
 | Run the CasperJS and `nose` tests  | `npm run test` |
 | Check code style |  `npm run lint` |
 | Build the conda package | `npm run pkg:conda` |
-| Build **and upload** the pypi package | `npm run pkg:pypi` |
+| Build **and upload** the pypi **test** package | `npm run pkg:pypi` |
+| Build **and upload** the pypi **release** package | `npm run pkg:pypi:release` |
 | Build the ESDoc and Sphinx documentation | `npm run docs` |
 
 ## Changelog
+
+### 3.0.1
+- minor build changes
 
 ### 3.0.0
 - Update to notebook 4.2

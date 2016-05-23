@@ -258,6 +258,18 @@ Chore Automation
 | *       |            |
 | the     |            |
 | pypi    |            |
+| **test* |            |
+| *       |            |
+| package |            |
++---------+------------+
+| Build   | ``npm run  |
+| **and   | pkg:pypi:r |
+| upload* | elease``   |
+| *       |            |
+| the     |            |
+| pypi    |            |
+| **relea |            |
+| se**    |            |
 | package |            |
 +---------+------------+
 | Build   | ``npm run  |
@@ -271,6 +283,11 @@ Chore Automation
 
 Changelog
 ---------
+
+3.0.1
+~~~~~
+
+-  minor build changes
 
 3.0.0
 ~~~~~
