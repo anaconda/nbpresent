@@ -14,7 +14,6 @@ engine:
 
 script:
   - conda install conda conda-build -y -n root
-  - conda clean -y -all  
   - conda build conda.recipe
 
 build_targets: conda

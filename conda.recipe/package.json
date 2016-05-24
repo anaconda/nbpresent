@@ -1,6 +1,6 @@
 {
   "name": "nbpresent-conda-test",
-  "version": "3.0.2",
+  "version": "3.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "casperjs": "^1.1.0-beta3",
     "lodash": "^3.10.1",
-    "casperjs": "^1.1.1",
-    "phantomjs-prebuilt": "^2.1.7"
+    "phantomjs": "<2"
   }
 }
