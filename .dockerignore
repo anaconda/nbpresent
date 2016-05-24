@@ -10,3 +10,4 @@ nbpresent/static/nbpresent/
 node_modules/
 *.xunit.xml
 .coverage
+*.log

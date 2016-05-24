@@ -1,28 +1,23 @@
 package:
   name: nbpresent
-  version: {{ environ.get('GIT_DESCRIBE_TAG', '') }}
+  version: "3.0.2"
 
 source:
-  git_url: ../
+  path: ../
 
 build:
-  number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
-  {% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}_0
-  {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
-
+  number: 1
 
 requirements:
   build:
     - nodejs
     - notebook >=4.2.0
-    - python 2.7*|3.4*|3.5*
+    - python
     - setuptools
-    - vs2008_runtime # [win64]
-    - vs2015_runtime # [win64]
 
   run:
     - notebook >=4.2.0
-    - python 2.7*|3.4*|3.5*
+    - python
 
 test:
   files:
@@ -35,13 +30,11 @@ test:
     - nodejs
     - nose
     - notebook >=4.2.0
-    - python 2.7*|3.4*|3.5*
+    - python
     - requests
     - fontconfig # [linux]
     - freetype # [linux]
     - mock # [py2k]
-    - vs2008_runtime # [win64]
-    - vs2015_runtime # [win64]
 
 about:
   summary: Next generation slides for Jupyter Notebooks

@@ -125,6 +125,40 @@ class NBPresentTestController(jstest.JSController):
                 self.cmd = [
                     jstest.sys.executable, '-c', 'raise SystemExit(1)']
 
+    def _init_server(self):
+        "Start the notebook server in a separate process"
+        self.server_command = command = [
+            jstest.sys.executable,
+            '-m', 'notebook',
+            '--no-browser',
+            '--notebook-dir', self.nbdir.name,
+            '--NotebookApp.base_url=%s' % self.base_url,
+        ]
+        # ipc doesn't work on Windows, and darwin has crazy-long temp paths,
+        # which run afoul of ipc's maximum path length.
+        # if jstest.sys.platform.startswith('linux'):
+        #     command.append('--KernelManager.transport=ipc')
+        self.stream_capturer = c = jstest.StreamCapturer()
+        c.start()
+        env = os.environ.copy()
+        env.update(self.env)
+        # if self.engine == 'phantomjs':
+        #     env['IPYTHON_ALLOW_DRAFT_WEBSOCKETS_FOR_PHANTOMJS'] = '1'
+        self.server = subprocess.Popen(
+            command,
+            stdout=c.writefd,
+            stderr=jstest.subprocess.STDOUT,
+            cwd=self.nbdir.name,
+            env=env,
+        )
+        with patch.dict('os.environ', {'HOME': self.home.name}):
+            runtime_dir = jstest.jupyter_runtime_dir()
+        self.server_info_file = os.path.join(
+            runtime_dir,
+            'nbserver-%i.json' % self.server.pid
+        )
+        self._wait_for_server()
+
     def add_xunit(self):
         """ Hack the setup in the middle (after paths, before server)
         """
