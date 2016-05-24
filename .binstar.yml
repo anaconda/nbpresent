@@ -1,11 +1,10 @@
 package: nbpresent
+user: conda-team
 
 platform:
   - linux-32
   - linux-64
   - osx-64
-  - win-32
-  - win-64
 
 engine:
   - python=2.7
@@ -14,5 +13,42 @@ engine:
 
 script:
   - conda build conda.recipe
+
+build_targets: conda
+
+---
+
+platform:
+  - win-32
+  - win-64
+
+engine: python=2.7
+
+env:
+  - PYTHON_VER=3.4
+  - PYTHON_VER=3.5
+
+script:
+  - set "ENV=%CONDA_DEFAULT_ENV%"
+  - conda update -y conda-build
+  - conda build conda.recipe --python=%PYTHON_VER%
+
+build_targets: conda
+
+---
+
+platform:
+  - win-32
+  - win-64
+
+engine: python=3.5
+
+env:
+  - PYTHON_VER=2.7
+
+script:
+  - set "ENV=%CONDA_DEFAULT_ENV%"
+  - conda update -y conda-build
+  - conda build conda.recipe --python=%PYTHON_VER%
 
 build_targets: conda
