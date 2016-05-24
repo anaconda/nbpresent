@@ -19,13 +19,14 @@ build_targets: conda
 ---
 
 platform:
-- win-32
-- win-64
+  - win-32
+  - win-64
 
 engine: python=3.5
 
 script:
-- conda build conda.recipe --python=2.7
+  - set "ENV=%CONDA_DEFAULT_ENV%"
+  - conda build conda.recipe --python=2.7
 
 ---
 
@@ -36,6 +37,7 @@ platform:
 engine: python=2.7
 
 script:
+  - set "ENV=%CONDA_DEFAULT_ENV%"
   - conda build conda.recipe --python=3.4
 
 ---
@@ -47,4 +49,5 @@ platform:
 engine: python=2.7
 
 script:
+  - set "ENV=%CONDA_DEFAULT_ENV%"
   - conda build conda.recipe --python=3.5
