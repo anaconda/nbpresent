@@ -26,15 +26,15 @@ test:
   requires:
     - coverage
     - flake8
-    - ipywidgets
+    - ipywidgets <5
     - nodejs
     - nose
     - notebook >=4.2.0
     - python
     - requests
-    - fontconfig # [linux]
-    - freetype # [linux]
-    - mock # [py2k]
+    - fontconfig  # [linux]
+    - freetype  # [linux]
+    - mock  # [py2k]
 
 about:
   summary: Next generation slides for Jupyter Notebooks

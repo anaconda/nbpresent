@@ -1,9 +1,7 @@
 package: nbpresent
 
 platform:
-  - linux-32
   - linux-64
-  - osx-64
 
 engine:
   - python=2.7
@@ -14,40 +12,3 @@ script:
   - conda build conda.recipe
 
 build_targets: conda
-
-# These sub-builds (attempt to) avoid env cleanup issues on windows
----
-
-platform:
-  - win-32
-  - win-64
-
-engine: python=3.5
-
-script:
-  - set "ENV=%CONDA_DEFAULT_ENV%"
-  - conda build conda.recipe --python=2.7
-
----
-
-platform:
-  - win-32
-  - win-64
-
-engine: python=2.7
-
-script:
-  - set "ENV=%CONDA_DEFAULT_ENV%"
-  - conda build conda.recipe --python=3.4
-
----
-
-platform:
-  - win-32
-  - win-64
-
-engine: python=2.7
-
-script:
-  - set "ENV=%CONDA_DEFAULT_ENV%"
-  - conda build conda.recipe --python=3.5
