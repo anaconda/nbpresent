@@ -159,33 +159,6 @@ class NBPresentTestController(jstest.JSController):
         )
         self._wait_for_server()
 
-    def add_xunit(self):
-        """ Hack the setup in the middle (after paths, before server)
-        """
-        super(NBPresentTestController, self).add_xunit()
-
-        # commands to run to enable the system-of-interest
-        cmds = [
-            ["nbextension", "install"],
-            ["nbextension", "enable"],
-            ["serverextension", "enable"]
-        ]
-
-        # ensure the system-of-interest is installed and enabled!
-        with patch.dict(os.environ, self.env):
-            args = ["--py", "nbpresent"]
-            prefix = (["--sys-prefix"] if ("CONDA_ENV_PATH" in os.environ) or
-                      ("CONDA_DEFAULT_ENV" in os.environ) else ["--user"])
-
-            for cmd in cmds:
-                final_cmd = ["jupyter"] + cmd + prefix + args
-                proc = subprocess.Popen(final_cmd,
-                                        stdout=subprocess.PIPE,
-                                        env=os.environ)
-                out, err = proc.communicate()
-                if proc.returncode:
-                    raise Exception([proc.returncode, final_cmd, out, err])
-
     def cleanup(self):
         if hasattr(self, "stream_capturer"):
             captured = self.stream_capturer.get_buffer().decode(
@@ -195,7 +168,9 @@ class NBPresentTestController(jstest.JSController):
                     self.section,
                     self.server_command))
                 fp.write(captured)
-                print("JUPYTER JSTESTLOG", captured)
+                print("-----\nJUPYTER JSTESTLOG")
+                print(captured)
+                print("-----\nEND JUPYTER JSTESTLOG")
 
         super(NBPresentTestController, self).cleanup()
 
