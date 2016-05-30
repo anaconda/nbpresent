@@ -1,7 +1,0 @@
-builder:
-  build: .
-
-installer:
-  build: docker/installer
-  ports:
-    - "9999:8888"
