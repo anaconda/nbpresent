@@ -2,7 +2,7 @@
 nbpresent
 =========
 
-|image0| |image1| |image2|
+|image0| |image1| |Build Status| |Coverage Status|
 
     remix your `Jupyter Notebooks <http://jupyter.org>`__ as interactive
     slideshows
@@ -10,12 +10,14 @@ nbpresent
 .. figure:: ./screenshot.png
    :alt: 
 
-.. |image0| image:: https://anaconda.org/anaconda-nb-extensions/nbpresent/badges/build.svg
-   :target: https://anaconda.org/anaconda-nb-extensions/nbpresent/builds
-.. |image1| image:: https://anaconda.org/anaconda-nb-extensions/nbpresent/badges/installer/conda.svg
+.. |image0| image:: https://anaconda.org/anaconda-nb-extensions/nbpresent/badges/installer/conda.svg
    :target: https://anaconda.org/anaconda-nb-extensions/nbpresent
-.. |image2| image:: https://img.shields.io/pypi/v/nbpresent.svg
+.. |image1| image:: https://img.shields.io/pypi/v/nbpresent.svg
    :target: https://pypi.python.org/pypi/nbpresent
+.. |Build Status| image:: https://travis-ci.org/Anaconda-Platform/nbpresent.svg
+   :target: https://travis-ci.org/Anaconda-Platform/nbpresent
+.. |Coverage Status| image:: https://coveralls.io/repos/github/Anaconda-Platform/nbpresent/badge.svg?branch=master
+   :target: https://coveralls.io/github/Anaconda-Platform/nbpresent?branch=master
 
 Using
 -----
@@ -68,35 +70,25 @@ Install
 .. code:: shell
 
     pip install nbpresent
-    python -m nbpresent.install
-
-Then either run
-
-.. code:: python
-
-    %reload_ext nbpresent
-
-*every time you start the notebook* or *enable* the extension for every
-notebook launch:
-
-.. code:: shell
-
-    python -m nbpresent.install --enable --user
-
-    ``nbpresent.install`` accepts all of the same arguments as
-    ``jupyter nbextension install``.
+    jupyter nbextension install nbpresent --py --overwrite
+    jupyter nbextension enable nbpresent --py
+    jupyter serverextension enable nbpresent --py
 
 ``conda``
 ~~~~~~~~~
 
 .. code:: shell
 
-    conda install -c anaconda-nb-extensions nbpresent
+    conda install -c conda-forge nbpresent
 
-This will enable ``nbpresent`` by default.
+This will enable the ``nbpresent`` ``nbextension`` and
+``serverextension`` automatically!
 
 Export
 ------
+
+HTML
+~~~~
 
 Stock ``nbconvert`` doesn't store quite enough information, so you'll
 need to do something like this:
@@ -108,6 +100,15 @@ need to do something like this:
 The resulting file can be hosted and viewed (but not edited!) on any
 site.
 
+You can also pass in and get back streams:
+
+.. code:: shell
+
+    cmd_that_generates_ipynb | nbpresent > README.html
+
+PDF (Experimental)
+~~~~~~~~~~~~~~~~~~
+
 If you have installed
 `nbbrowserpdf <https://github.com/Anaconda-Platform/nbbrowserpdf>`__,
 you can also export to pdf:
@@ -115,12 +116,6 @@ you can also export to pdf:
 .. code:: shell
 
     nbpresent -i notebooks/README.ipynb -f pdf -o README.pdf
-
-You can also pass in and get back streams:
-
-.. code:: shell
-
-    cmd_that_generates_ipynb | nbpresent -f pdf > README.pdf
 
 Here's the whole doc:
 
@@ -170,12 +165,13 @@ Getting Started
 
 You'll need conda installed, either from
 `Anaconda <https://www.continuum.io/downloads>`__ or
-`miniconda <http://conda.pydata.org/miniconda.html>`__. You can import a
-Python 3.5 development environment named ``nbpresent`` from
+`miniconda <http://conda.pydata.org/miniconda.html>`__. You can create a
+Python development environment named ``nbpresent`` from
 ``./environment.yml``.
 
 .. code:: shell
 
+    conda create -n nbpresent python=YOUR_FAVORITE_PYTHON
     conda update env
     source activate nbpresent
 
@@ -184,21 +180,26 @@ We *still* use ``npm`` for a lot of dependencies, so then run:
 .. code:: shell
 
     npm install
+
+Finally, you are ready to build the assets!
+
+.. code:: shell
+
     npm run build
 
 Ensure development asset loading
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To ensure that you always get the right assets, install the nbextension
-with the ``symlink``, ``force`` and ``enable`` options:
+with the ``symlink`` options:
 
 .. code:: shell
 
-    python -m nbpresent.install --overwrite --symlink --enable --user
+    jupyter nbextension install nbpresent --overwrite --symlink --sys-prefix
+    jupyter nbextension enable nbpresent --sys-prefix
+    jupyter serverextension enable nbpresent --sys-prefix
 
-If developing in a `conda <http://conda.pydata.org/docs/>`__
-environment, you would want to pass in ``--prefix`` instead of
-``--user``.
+See `chore automation <#chore-automation>`__ below for more good times.
 
 Chore Automation
 ~~~~~~~~~~~~~~~~
@@ -248,11 +249,6 @@ Chore Automation
 | style   |            |
 +---------+------------+
 | Build   | ``npm run  |
-| the     | pkg:conda` |
-| conda   | `          |
-| package |            |
-+---------+------------+
-| Build   | ``npm run  |
 | **and   | pkg:pypi`` |
 | upload* |            |
 | *       |            |
@@ -283,6 +279,18 @@ Chore Automation
 
 Changelog
 ---------
+
+3.0.2
+~~~~~
+
+-  use `Travis-CI <https://travis-ci.org/Anaconda-Platform/nbpresent>`__
+   for continuous integration
+-  use
+   `Coveralls <https://coveralls.io/github/Anaconda-Platform/nbpresent>`__
+   for code coverage
+-  use a
+   `conda-forge <https://github.com/conda-forge/nbpresent-feedstock>`__
+   for cross-platform ``conda`` package building
 
 3.0.1
 ~~~~~
