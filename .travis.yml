@@ -35,3 +35,6 @@ script:
   - jupyter nbextension enable nbpresent --py --sys-prefix
   - jupyter serverextension enable nbpresent --py --sys-prefix
   - npm run test
+
+after_success:
+  - coveralls
