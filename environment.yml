@@ -1,14 +1,15 @@
 name: nbpresent
 channels:
   - conda-forge
+  - defaults
 dependencies:
   - anaconda-client
   - coverage
   - flake8
-  - ipywidgets
+  - ipywidgets >=5.1.5
   - mock
   - nodejs
   - nose
-  - notebook
+  - notebook >=4.2.0
   - python
   - requests

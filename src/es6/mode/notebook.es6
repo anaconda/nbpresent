@@ -99,9 +99,7 @@ export class NotebookMode extends BaseMode {
    */
   cellCreated(cell){
     _.defer(() => {
-      console.log(cell.metadata.nbpresent);
       delete cell.metadata.nbpresent;
-      console.log(cell.metadata.nbpresent);
     });
   }
 
