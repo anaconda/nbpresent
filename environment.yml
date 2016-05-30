@@ -12,5 +12,4 @@ dependencies:
   - nose
   - notebook >=4.2.0
   - python
-  - python-coveralls
   - requests
