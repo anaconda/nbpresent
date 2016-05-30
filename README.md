@@ -35,7 +35,7 @@ pip install nbpresent
 python -m nbpresent.install
 ```
 
-Then either run 
+Then either run
 ```python
 %reload_ext nbpresent
 ```
@@ -79,9 +79,9 @@ Here's the whole doc:
 ```
 
     usage: nbpresent [-h] [-i IPYNB] [-o OUTFILE] [-f {html,pdf}]
-    
+
     Generate a static nbpresent presentation from a Jupyter Notebook
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       -i IPYNB, --ipynb IPYNB
@@ -144,6 +144,9 @@ If developing in a [conda](http://conda.pydata.org/docs/) environment, you would
 | Build the ESDoc and Sphinx documentation | `npm run docs` |
 
 ## Changelog
+
+### 3.0.2
+- more major build changes
 
 ### 3.0.1
 - minor build changes
