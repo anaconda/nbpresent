@@ -2,7 +2,9 @@
 # nbpresent
 
 [![](https://anaconda.org/anaconda-nb-extensions/nbpresent/badges/installer/conda.svg
-)](https://anaconda.org/anaconda-nb-extensions/nbpresent) [![](https://img.shields.io/pypi/v/nbpresent.svg)](https://pypi.python.org/pypi/nbpresent) [![Build Status](https://travis-ci.org/Anaconda-Platform/nbpresent.svg)](https://travis-ci.org/Anaconda-Platform/nbpresent) [![Coverage Status](https://coveralls.io/repos/github/Anaconda-Platform/nbpresent/badge.svg?branch=master)](https://coveralls.io/github/Anaconda-Platform/nbpresent?branch=master)
+)](https://anaconda.org/anaconda-nb-extensions/nbpresent) [![](https://img.shields.io/pypi/v/nbpresent.svg)](https://pypi.python.org/pypi/nbpresent)
+[![Build Status (Lin64)](https://travis-ci.org/Anaconda-Platform/nbpresent.svg)](https://travis-ci.org/Anaconda-Platform/nbpresent) [![Build Status (Win64)](https://ci.appveyor.com/api/projects/status/aa6g8ya0oy1m6r9r?svg=true)](https://ci.appveyor.com/project/bollwyvl/nbpresent)
+[![Coverage Status](https://coveralls.io/repos/github/Anaconda-Platform/nbpresent/badge.svg?branch=master)](https://coveralls.io/github/Anaconda-Platform/nbpresent?branch=master)
 
 > remix your [Jupyter Notebooks](http://jupyter.org) as interactive slideshows
 

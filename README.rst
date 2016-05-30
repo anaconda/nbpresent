@@ -2,7 +2,8 @@
 nbpresent
 =========
 
-|image0| |image1| |Build Status| |Coverage Status|
+|image0| |image1| |Build Status (Lin64)| |Build Status (Win64)|
+|Coverage Status|
 
     remix your `Jupyter Notebooks <http://jupyter.org>`__ as interactive
     slideshows
@@ -14,8 +15,10 @@ nbpresent
    :target: https://anaconda.org/anaconda-nb-extensions/nbpresent
 .. |image1| image:: https://img.shields.io/pypi/v/nbpresent.svg
    :target: https://pypi.python.org/pypi/nbpresent
-.. |Build Status| image:: https://travis-ci.org/Anaconda-Platform/nbpresent.svg
+.. |Build Status (Lin64)| image:: https://travis-ci.org/Anaconda-Platform/nbpresent.svg
    :target: https://travis-ci.org/Anaconda-Platform/nbpresent
+.. |Build Status (Win64)| image:: https://ci.appveyor.com/api/projects/status/aa6g8ya0oy1m6r9r?svg=true
+   :target: https://ci.appveyor.com/project/bollwyvl/nbpresent
 .. |Coverage Status| image:: https://coveralls.io/repos/github/Anaconda-Platform/nbpresent/badge.svg?branch=master
    :target: https://coveralls.io/github/Anaconda-Platform/nbpresent?branch=master
 
