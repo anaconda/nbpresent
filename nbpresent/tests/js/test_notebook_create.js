@@ -70,7 +70,15 @@ function create_test(){
     .waitWhileVisible(".nbp-sorter")
     .waitWhileVisible(".nbp-regiontree")
     .canSeeAndClick([
-      ["the presenter button", "#nbp-present-btn"],
-      ["the presenter", ".nbp-presenter"]
+      ["the app bar button", "#nbp-app-btn"],
+      ["the history button", ".nbp-app-bar .fa-history"],
+      ["the initial load", ".nbp-snapshot .fa-gift"],
+      ["the presenter button", "#nbp-present-btn"]
+    ])
+    .cantSee([
+      ["any cell content", ".nbp-present"]
+    ])
+    .canSeeAndClick([
+      ["fin", "body"]
     ]);
 }

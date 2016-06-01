@@ -8,10 +8,10 @@ import {MiniSlide} from "./mini";
 
 
 class RegionTree {
-  constructor(slide, region, handlers){
+  constructor(slide, region, mode){
     this.slide = slide;
     this.selectedRegion = region;
-    this.handlers = handlers;
+    this.mode = mode;
 
     this.mini = (new MiniSlide(this.selectedRegion))
       .regions((d) => {
@@ -51,7 +51,7 @@ class RegionTree {
     * @return {RegionTree} */
   layout(layout){
     this.slide.set("layout", layout);
-    this.handlers.snapshot("Slide Layout", ICON.manual);
+    this.mode.snapshot("Slide Layout", ICON.manual);
     return this;
   }
 
@@ -98,7 +98,7 @@ class RegionTree {
         height: 0.8
       }
     });
-    this.handlers.snapshot("New Region", ICON.addRegion);
+    this.mode.snapshot("New Region", ICON.addRegion);
   }
 
   update(){
@@ -249,11 +249,11 @@ class RegionTree {
     })
     .on("mouseup", (d) => {
       el.on("mousemove", null);
-      this.handlers.snapshot(`Set ${d.attr.key}`, ICON.keyboard);
+      this.mode.snapshot(`Set ${d.attr.key}`, ICON.keyboard);
     })
     .on("mouseexit", (d) => {
       el.on("mousemove", null);
-      this.handlers.snapshot(`Set ${d.attr.key}`, ICON.keyboard);
+      this.mode.snapshot(`Set ${d.attr.key}`, ICON.keyboard);
     });
   }
 

@@ -25,5 +25,5 @@ function basic_test(){
     t.assertResourceExists(function(resource) {
       return resource.url.match(pattern);
     });
-  };
+  }
 }

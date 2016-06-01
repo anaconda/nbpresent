@@ -180,7 +180,7 @@ export class Editor {
           return memo;
         }, {}));
 
-    this.handlers.snapshot("Move/Resize Region", ICON.manual);
+    this.mode.snapshot("Move/Resize Region", ICON.manual);
   }
 
   /**
@@ -300,7 +300,7 @@ export class Editor {
         [region, "attrs", attr],
         this.regions.get([region, "attrs", attr]) + (delta * amount)
       );
-      this.handlers.snapshot("Nudge Region", ICON.manual);
+      this.mode.snapshot("Nudge Region", ICON.manual);
     }
     return this;
   }
