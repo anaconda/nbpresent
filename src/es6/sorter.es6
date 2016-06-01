@@ -32,8 +32,10 @@ const MODE_NAMES = [
   * defining the relationship between notebook cells {@link PART}s and slide
   * regions. Not available in {@link StandaloneMode} */
 class Sorter {
-  constructor(tree) {
+  constructor(tree, {mode}) {
     this.tree = tree;
+    this.mode = mode;
+
     this.cellManager = new NotebookCellManager();
 
     this.cellManager.clearThumbnails();
@@ -215,6 +217,7 @@ class Sorter {
             if(m[0] > 0 && m[0] < bb.width && m[1] > 0 && m[1] < bb.height){
               that.unlinkSlide(d.key);
               that.selectedSlide.set(that.appendSlide(other.key, d.key));
+              that.mode.snapshot(`Reordered Slides`, ICON.film);
               replaced = true;
             }
           });
@@ -276,7 +279,10 @@ class Sorter {
           .text((d) => d.title());
         tome.append("button")
           .classed({btn: 1})
-          .on("click", (d)=> d.execute())
+          .on("click", (d) => {
+            d.execute();
+            this.mode.snapshot(`${d.title()} Import`, d.icon());
+          })
           .call((btn)=>{
             btn.append("i")
               .attr("class", (d) => `fa fa-2x fa-${d.icon()}`);
@@ -489,6 +495,7 @@ class Sorter {
       .on("click", () => this.$themePicker.remove())
       .on("mouseover", ({key}) => {
         this.slides.set([this.selectedSlide.get(), "theme"], key);
+        this.mode.snapshot(`Set Slide Theme`, ICON.themer);
       });
 
     theme.exit().remove();
@@ -547,8 +554,10 @@ class Sorter {
         cell: cellId,
         part
       });
+      this.mode.snapshot(`Link Cell Part`, ICON.link);
     }else{
       this.slides.unset([slide, "regions", region, "content"]);
+      this.mode.snapshot(`Unlink Cell Part`, ICON.unlink);
     }
     return this;
   }
@@ -561,6 +570,7 @@ class Sorter {
       return;
     }
     this.slides.unset([slide, "regions", region]);
+    this.mode.snapshot(`Delete region`, ICON.trash);
     this.selectedRegion.unset();
     return this;
   }
@@ -588,6 +598,7 @@ class Sorter {
           selected ? selected : last.length ? last[0].key : null,
           slide.key
         );
+      this.mode.snapshot(`Add Slide`, ICON.addSlide);
 
       this.selectedSlide.set(appended);
     }
@@ -607,7 +618,11 @@ class Sorter {
     if(id){
       this.focusMode(["editor"]);
       // TODO: do this with an id and big tree ref?
-      this.editor = new Editor(this.slides.select([id]), this.selectedRegion);
+      this.editor = new Editor(
+        this.slides.select([id]),
+        this.selectedRegion,
+        {snapshot: (message, icon) => this.mode.snapshot(message, icon)}
+      );
     }
     this.draw();
   }
@@ -630,6 +645,7 @@ class Sorter {
     }
     this.unlinkSlide(id);
     this.slides.unset(id);
+    this.mode.snapshot(`Remove Slide`, ICON.trash);
   }
 
   nextSlide(id){

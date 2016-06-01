@@ -10,6 +10,7 @@ import {NotebookPresenter} from "../presenter/notebook";
 import {Sorter} from "../sorter";
 import {ThemeManager} from "../theme/manager";
 import {Helper} from "../help/helper";
+import {Historian} from "../history/historian";
 
 import {BaseMode} from "./base";
 
@@ -19,16 +20,24 @@ import {NotebookActions} from "../actions/notebook";
 export const THEMER = "themer",
   SORTER = "sorter",
   HELPER = "helper",
+  HISTORIAN = "historian",
   MODES = [
-    THEMER,
+    HELPER,
+    HISTORIAN,
     SORTER,
-    HELPER
+    THEMER
   ];
 
-export class NotebookMode extends BaseMode {
 
+export class NotebookMode extends BaseMode {
   init() {
     super.init();
+
+    this.history = this.tree.select(["history"]);
+    this.history.set({
+      head: null,
+      snapshots: {}
+    });
 
     this.enabled = this.tree.select(["app", "enabled"]);
     this.enabled.on("update", () => this.enabledChanged());
@@ -38,12 +47,16 @@ export class NotebookMode extends BaseMode {
 
     let debouncedSave = _.debounce(() => this.metadata(true), 1e3);
 
-    [this.slides, this.themes].map(({on}) => on("update", debouncedSave));
+    this.tree.watch({
+      slides: this.slides,
+      themes: this.themes
+    }).on("update", () => debouncedSave());
 
     this.slides.on("update", () => this.update());
 
     this.initActions();
     this.initEvents();
+    this.initSnapshot();
 
     this.$body = d3.select("body");
 
@@ -76,6 +89,11 @@ export class NotebookMode extends BaseMode {
           icon: `${ICON.themer} fa-2x`,
           label: "Themes",
           click: () => this.mode.set(this.mode.get() === THEMER ? null : THEMER)
+        }],
+        [{
+          icon: `${ICON.history} fa-2x`,
+          label: "History",
+          click: () => this.mode.set(this.mode.get() === HISTORIAN ? null : HISTORIAN)
         }],
         [{
           icon: `${ICON.help} fa-2x`,
@@ -149,16 +167,37 @@ export class NotebookMode extends BaseMode {
   metadata(update){
     let md = Jupyter.notebook.metadata;
     if(update){
-      md.nbpresent = {
-        slides: this.slides.serialize(),
-        themes: this.themes.serialize()
-      };
+      let slides = this.slides.serialize(),
+        themes = this.themes.serialize();
+      md.nbpresent = {slides, themes};
     }else{
       return md.nbpresent || {
         slides: {},
         themes: {}
       }
     }
+  }
+
+  initSnapshot(){
+    this.snapshot("Load from Server", ICON.nbpresent);
+  }
+
+  snapshot(message, icon){
+    let history = this.tree.get(["history"]),
+      snapshotId = (new Date()).toISOString(),
+      state = {
+        slides: this.slides.serialize(),
+        themes: this.themes.serialize()
+      };
+
+    this.history.set(["snapshots", snapshotId], {
+      state,
+      parent: history.head,
+      message: message,
+      icon: icon
+    });
+
+    this.history.set(["head"], snapshotId);
   }
 
   enabledChanged(){
@@ -182,10 +221,12 @@ export class NotebookMode extends BaseMode {
 
 
   modeClass(mode){
+    // TODO: some plugin thing or another
     return {
       themer: ThemeManager,
       sorter: Sorter,
-      helper: Helper
+      helper: Helper,
+      historian: Historian
     }[mode];
   }
 
@@ -219,7 +260,6 @@ export class NotebookMode extends BaseMode {
 
     return this;
   }
-
 
   ensurePresenter(){
     if(!(this.presenter)){

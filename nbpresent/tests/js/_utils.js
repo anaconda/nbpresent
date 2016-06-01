@@ -65,6 +65,29 @@ root.canSeeAndClick = function(message, visible, click){
   return that;
 }
 
+root.cantSee = function(message, invisible){
+  var things = message,
+    that = this;
+
+  if(arguments.length !== 1){
+    things = [[message, invisible]];
+  }
+
+  things.map(function(thing){
+    var message = thing[0],
+      invisible = thing[1];
+
+    that = that
+      .waitWhileVisible(invisible)
+      .then(function(){
+        this.test.assertNotExists(invisible, "I CAN'T see " + message);
+        this.screenshot("no " + message);
+      });
+  });
+
+  return that;
+};
+
 root.hasMeta = function(path, tests){
   var meta;
 

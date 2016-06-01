@@ -1,12 +1,14 @@
 import {d3} from "nbpresent-deps";
 
+import {bbox} from "./d3.bbox";
+
+import {ICON} from "./icons";
 import {PART} from "./parts";
 
 import {RegionTree} from "./regiontree";
 import {NotebookCellManager} from "./cells/notebook";
 import {NotebookActions} from "./actions/notebook";
 
-import {bbox} from "./d3.bbox";
 
 const DIRS = ["left", "right", "up", "down"],
   DIR_ATTR = {
@@ -29,11 +31,7 @@ export class Editor {
     * @param {baobab.Cursor} slide - the slide to edit
     * @param {object} selectedRegion - the slide id and region id
     * @listens {/slides/{slide}}  */
-  constructor(slide, selectedRegion) {
-    /** whether this Editor has been killed.
-      * @type {bool} */
-    this.destroyed = false;
-
+  constructor(slide, selectedRegion, mode) {
     /** cursor pointed at a specific slide.
       * @type {baobab.Cursor} */
     this.slide = slide;
@@ -42,6 +40,14 @@ export class Editor {
       * @type {object}
       * @param {baobab.Cursor} the region/slide to edit */
     this.selectedRegion = selectedRegion;
+
+    /** Handlers, like snapshot
+      * @type {object} */
+    this.mode = mode;
+
+    /** whether this Editor has been killed.
+      * @type {bool} */
+    this.destroyed = false;
 
     /** a sub-cursor for just region changes
       * @type {baobab.Cursor} */
@@ -66,7 +72,8 @@ export class Editor {
     // TODO: move this?
     /** sub-ui for editing regions
       * @type {RegionTree} */
-    this.sidebar = new RegionTree(this.slide, this.selectedRegion);
+    this.sidebar = new RegionTree(this.slide, this.selectedRegion,
+                                  this.mode);
 
     // ready to behave
     this.initBehavior()
@@ -172,6 +179,8 @@ export class Editor {
           memo[key] = value.invert($el.attr(key));
           return memo;
         }, {}));
+
+    this.mode.snapshot("Move/Resize Region", ICON.manual);
   }
 
   /**
@@ -290,7 +299,8 @@ export class Editor {
       this.regions.set(
         [region, "attrs", attr],
         this.regions.get([region, "attrs", attr]) + (delta * amount)
-      )
+      );
+      this.mode.snapshot("Nudge Region", ICON.manual);
     }
     return this;
   }

@@ -1,0 +1,59 @@
+body.nbp-curating {
+  .nbp-historian{
+    margin-right: 0;
+    transition: margin-right @tx-dur @tx-fn;
+  }
+}
+
+.nbp-historian {
+  .nbp-ui();
+
+  overflow-y: auto;
+
+  z-index: @z-help;
+
+  position: fixed;
+
+  right: @app-bar-width;
+  width: @sorter-slide-width * 1.5;
+  top: 0;
+  bottom: 0;
+
+  margin-right: -@sorter-slide-width * 1.5;
+  transition: margin-right @tx-dur @tx-fn;
+  padding-top: 32px;
+
+  background-color: @ui-bg;
+
+  hr {
+    margin: 0 20px;
+    padding: 0;
+    border-top: solid 1px fade(@jpy-brand, 50%);
+  }
+
+  h1, h2, h3 {
+    color: @jpy-brand;
+    text-align: center;
+  }
+
+  h2{
+    font-size: 18px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-color: @ui-bg;
+    top: 0;
+  }
+
+  .nbp-snapshot {
+    border-left: solid 3px transparent;
+
+    &.nbp-history-head {
+      border-left: solid 3px @jpy-brand;
+    }
+
+    &.nbp-history-not-head-parent{
+      opacity: 0.25;
+    }
+  }
+}
