@@ -570,6 +570,7 @@ class Sorter {
       return;
     }
     this.slides.unset([slide, "regions", region]);
+    this.mode.snapshot(`Delete region`, ICON.trash);
     this.selectedRegion.unset();
     return this;
   }
