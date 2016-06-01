@@ -8,6 +8,8 @@ body.nbp-curating {
 .nbp-historian {
   .nbp-ui();
 
+  overflow-y: auto;
+
   z-index: @z-help;
 
   position: fixed;
@@ -19,6 +21,7 @@ body.nbp-curating {
 
   margin-right: -@sorter-slide-width * 1.5;
   transition: margin-right @tx-dur @tx-fn;
+  padding-top: 32px;
 
   background-color: @ui-bg;
 
@@ -35,6 +38,11 @@ body.nbp-curating {
 
   h2{
     font-size: 18px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-color: @ui-bg;
+    top: 0;
   }
 
   .nbp-snapshot {

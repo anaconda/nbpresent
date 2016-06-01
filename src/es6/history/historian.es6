@@ -27,13 +27,13 @@ export class Historian {
     this.$ui = this.$body.append("div")
       .classed({"nbp-historian": 1});
 
+    this.$shots = this.$ui.append("div")
+      .classed({"nbp-snapshots": 1});
+
     this.$h2 = this.$ui.append("h2")
       .text("history ")
 
     this.$h2.append("hr");
-
-    this.$shots = this.$ui.append("div")
-      .classed({"nbp-snapshots": 1});
   }
 
   update(){
