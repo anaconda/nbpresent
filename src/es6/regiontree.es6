@@ -8,9 +8,10 @@ import {MiniSlide} from "./mini";
 
 
 class RegionTree {
-  constructor(slide, region){
+  constructor(slide, region, handlers){
     this.slide = slide;
     this.selectedRegion = region;
+    this.handlers = handlers;
 
     this.mini = (new MiniSlide(this.selectedRegion))
       .regions((d) => {
@@ -50,6 +51,7 @@ class RegionTree {
     * @return {RegionTree} */
   layout(layout){
     this.slide.set("layout", layout);
+    this.handlers.snapshot("Slide Layout", ICON.manual);
     return this;
   }
 
@@ -85,12 +87,6 @@ class RegionTree {
       .call(toolbar.update);
   }
 
-  toggleStyle(style){
-    let {region} = this.selectedRegion.get() || {},
-      path = ["regions", region, "style", style];
-    this.slide.set(path, !(this.slide.get(path)));
-  }
-
   addRegion(){
     let id = uuid.v4();
     this.slide.set(["regions", id], {
@@ -102,6 +98,7 @@ class RegionTree {
         height: 0.8
       }
     });
+    this.handlers.snapshot("New Region", ICON.addRegion);
   }
 
   update(){
@@ -191,6 +188,7 @@ class RegionTree {
             let el = d3.select(this),
               val = parseFloat(el.property("value"));
             that.slide.set(["regions", d.region.key, d.attr.key], val);
+            that.handlers.snapshot(`Set ${d.attr.key}`, ICON.keyboard);
           });
       })
       .on("mousedown", function(d){
@@ -249,11 +247,13 @@ class RegionTree {
 
       that.slide.set(path, that.slide.get(path) + dx)
     })
-    .on("mouseup", function(){
+    .on("mouseup", (d) => {
       el.on("mousemove", null);
+      this.handlers.snapshot(`Set ${d.attr.key}`, ICON.keyboard);
     })
-    .on("mouseexit", function(){
+    .on("mouseexit", (d) => {
       el.on("mousemove", null);
+      this.handlers.snapshot(`Set ${d.attr.key}`, ICON.keyboard);
     });
   }
 
