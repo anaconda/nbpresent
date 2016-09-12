@@ -19,7 +19,7 @@ export class NotebookPresenter extends Presenter {
   initActions(){
     let _actions = [{
         name: "prev-slide",
-        keys: ["left"],
+        keys: ["left","pageup"],
         value: {
           icon: 'fa-step-backward',
           help: 'previous slide',
@@ -27,7 +27,7 @@ export class NotebookPresenter extends Presenter {
         }
       }, {
         name: "next-slide",
-        keys: ["right", "space"],
+        keys: ["right", "space","pagedown"],
         value: {
           icon: 'fa-step-forward',
           help: 'next slide',
